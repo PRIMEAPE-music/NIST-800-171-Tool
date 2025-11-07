@@ -1,0 +1,148 @@
+{
+  "families": {
+    "AC": {
+      "code": "AC",
+      "name": "Access Control",
+      "description": "Access control policies and procedures to limit system access to authorized users.",
+      "controlCount": 22,
+      "controlIds": ["3.1.1", "3.1.2", "3.1.3", "3.1.4", "3.1.5", "3.1.6", "3.1.7", "3.1.8", "3.1.9", "3.1.10", "3.1.11", "3.1.12", "3.1.13", "3.1.14", "3.1.15", "3.1.16", "3.1.17", "3.1.18", "3.1.19", "3.1.20", "3.1.21", "3.1.22"]
+    },
+    "AT": {
+      "code": "AT",
+      "name": "Awareness and Training",
+      "description": "Security awareness and training to ensure personnel understand security responsibilities.",
+      "controlCount": 3,
+      "controlIds": ["3.2.1", "3.2.2", "3.2.3"]
+    },
+    "AU": {
+      "code": "AU",
+      "name": "Audit and Accountability",
+      "description": "Audit and accountability policies to ensure user actions can be traced.",
+      "controlCount": 9,
+      "controlIds": ["3.3.1", "3.3.2", "3.3.3", "3.3.4", "3.3.5", "3.3.6", "3.3.7", "3.3.8", "3.3.9"]
+    },
+    "CA": {
+      "code": "CA",
+      "name": "Security Assessment",
+      "description": "Security assessment and authorization activities to evaluate security controls.",
+      "controlCount": 9,
+      "controlIds": ["3.12.1", "3.12.2", "3.12.3", "3.12.4"]
+    },
+    "CM": {
+      "code": "CM",
+      "name": "Configuration Management",
+      "description": "Configuration management policies to establish and maintain baseline configurations.",
+      "controlCount": 11,
+      "controlIds": ["3.4.1", "3.4.2", "3.4.3", "3.4.4", "3.4.5", "3.4.6", "3.4.7", "3.4.8", "3.4.9"]
+    },
+    "CP": {
+      "code": "CP",
+      "name": "Contingency Planning",
+      "description": "Contingency planning for backup and disaster recovery operations.",
+      "controlCount": 3,
+      "controlIds": ["3.6.1", "3.6.2", "3.6.3"]
+    },
+    "IA": {
+      "code": "IA",
+      "name": "Identification and Authentication",
+      "description": "Identification and authentication policies to verify user identities.",
+      "controlCount": 11,
+      "controlIds": ["3.5.1", "3.5.2", "3.5.3", "3.5.4", "3.5.5", "3.5.6", "3.5.7", "3.5.8", "3.5.9", "3.5.10", "3.5.11"]
+    },
+    "IR": {
+      "code": "IR",
+      "name": "Incident Response",
+      "description": "Incident response capability to detect and respond to security incidents.",
+      "controlCount": 5,
+      "controlIds": ["3.6.1", "3.6.2", "3.6.3"]
+    },
+    "MA": {
+      "code": "MA",
+      "name": "Maintenance",
+      "description": "System maintenance policies and procedures.",
+      "controlCount": 6,
+      "controlIds": ["3.7.1", "3.7.2", "3.7.3", "3.7.4", "3.7.5", "3.7.6"]
+    },
+    "MP": {
+      "code": "MP",
+      "name": "Media Protection",
+      "description": "Media protection policies to protect system media.",
+      "controlCount": 7,
+      "controlIds": ["3.8.1", "3.8.2", "3.8.3", "3.8.4", "3.8.5", "3.8.6", "3.8.7"]
+    },
+    "PE": {
+      "code": "PE",
+      "name": "Physical Protection",
+      "description": "Physical protection policies to protect facilities and equipment.",
+      "controlCount": 6,
+      "controlIds": ["3.10.1", "3.10.2", "3.10.3", "3.10.4", "3.10.5", "3.10.6"]
+    },
+    "PS": {
+      "code": "PS",
+      "name": "Personnel Security",
+      "description": "Personnel security policies to ensure trustworthy workforce.",
+      "controlCount": 8,
+      "controlIds": ["3.9.1", "3.9.2"]
+    },
+    "RA": {
+      "code": "RA",
+      "name": "Risk Assessment",
+      "description": "Risk assessment policies to identify and assess risks.",
+      "controlCount": 5,
+      "controlIds": ["3.11.1", "3.11.2", "3.11.3"]
+    },
+    "SA": {
+      "code": "SA",
+      "name": "System and Services Acquisition",
+      "description": "System and services acquisition policies and procedures.",
+      "controlCount": 3,
+      "controlIds": ["03.16.01", "03.16.02", "03.16.03"]
+    },
+    "SC": {
+      "code": "SC",
+      "name": "System and Communications Protection",
+      "description": "System and communications protection policies.",
+      "controlCount": 13,
+      "controlIds": ["03.13.01", "03.13.04", "03.13.06", "03.13.08", "03.13.09", "03.13.10", "03.13.11", "03.13.12", "03.13.13", "03.13.15"]
+    },
+    "SI": {
+      "code": "SI",
+      "name": "System and Information Integrity",
+      "description": "System and information integrity policies.",
+      "controlCount": 7,
+      "controlIds": ["03.14.01", "03.14.02", "03.14.03", "03.14.06", "03.14.08"]
+    },
+    "SR": {
+      "code": "SR",
+      "name": "Supply Chain Risk Management",
+      "description": "Supply chain risk management policies and procedures.",
+      "controlCount": 3,
+      "controlIds": ["03.17.01", "03.17.02", "03.17.03"]
+    },
+    "PL": {
+      "code": "PL",
+      "name": "Planning",
+      "description": "Security planning policies and procedures.",
+      "controlCount": 3,
+      "controlIds": ["03.15.01", "03.15.02", "03.15.03"]
+    }
+  },
+  "priorityLevels": {
+    "Critical": {
+      "description": "Controls that are essential for protecting CUI and must be implemented immediately",
+      "examples": ["MFA", "Encryption", "Access Control"]
+    },
+    "High": {
+      "description": "Controls that significantly reduce risk and should be prioritized",
+      "examples": ["Remote Access Control", "Wireless Security"]
+    },
+    "Medium": {
+      "description": "Controls that provide important security functions",
+      "examples": ["Session Management", "Maintenance Controls"]
+    },
+    "Low": {
+      "description": "Controls that support overall security posture",
+      "examples": ["Security Notices", "Awareness Training"]
+    }
+  }
+}

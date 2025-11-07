@@ -1,0 +1,243 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// NIST 800-171 Controls
+// ============================================================================
+
+model Control {
+  id              Int      @id @default(autoincrement())
+  controlId       String   @unique @map("control_id") // Format: "03.01.01" for Rev 3
+  family          String // AC|AT|AU|CA|CM|CP|IA|IR|MA|MP|PE|PS|RA|SA|SC|SI|SR|PL
+  title           String
+  requirementText String   @map("requirement_text")
+  discussionText  String?  @map("discussion_text")
+  priority        String   @default("Medium") // Critical, High, Medium, Low
+  revision        String   @default("3") // NIST 800-171 Revision number
+  publicationDate String   @default("May 2024") @map("publication_date") // Publication date
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  status         ControlStatus?
+  assessments    Assessment[]
+  evidence       Evidence[]
+  poams          Poam[]
+  policyMappings ControlPolicyMapping[]
+  changeHistory  ChangeHistory[]
+
+  @@index([family])
+  @@index([priority])
+  @@index([revision])
+  @@map("controls")
+}
+
+// ============================================================================
+// Control Implementation Status
+// ============================================================================
+
+model ControlStatus {
+  id                  Int       @id @default(autoincrement())
+  controlId           Int       @unique @map("control_id")
+  status              String    @default("Not Started") // Not Started, In Progress, Implemented, Verified
+  implementationDate  DateTime? @map("implementation_date")
+  lastReviewedDate    DateTime? @map("last_reviewed_date")
+  nextReviewDate      DateTime? @map("next_review_date")
+  assignedTo          String?   @map("assigned_to")
+  implementationNotes String?   @map("implementation_notes")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  control Control @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  @@map("control_status")
+}
+
+// ============================================================================
+// Compliance Assessments
+// ============================================================================
+
+model Assessment {
+  id               Int      @id @default(autoincrement())
+  controlId        Int      @map("control_id")
+  assessmentDate   DateTime @map("assessment_date")
+  isImplemented    Boolean  @default(false) @map("is_implemented")
+  hasEvidence      Boolean  @default(false) @map("has_evidence")
+  isTested         Boolean  @default(false) @map("is_tested")
+  meetsRequirement Boolean  @default(false) @map("meets_requirement")
+  riskScore        Int      @default(0) @map("risk_score") // 0-100
+  assessorNotes    String?  @map("assessor_notes")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  // Relations
+  control Control @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  @@map("assessments")
+}
+
+// ============================================================================
+// Evidence Files
+// ============================================================================
+
+model Evidence {
+  id           Int      @id @default(autoincrement())
+  controlId    Int      @map("control_id")
+  fileName     String   @map("file_name") // Stored file name (sanitized + timestamp)
+  originalName String   @map("original_name") // Original uploaded file name
+  filePath     String   @map("file_path") // Relative path from uploads directory
+  fileType     String   @map("file_type") // MIME type (application/pdf, image/png, etc.)
+  fileSize     Int      @map("file_size") // Size in bytes
+  description  String?  // Optional user description
+  uploadedBy   String?  @map("uploaded_by") // User who uploaded (optional for single-user app)
+  uploadedDate DateTime @default(now()) @map("uploaded_date")
+  version      Int      @default(1)
+  tags         String?  // JSON array stored as string: ["policy", "audit"]
+  isArchived   Boolean  @default(false) @map("is_archived")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  control Control @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  // Indexes for performance
+  @@index([controlId])
+  @@index([uploadedDate])
+  @@index([fileType])
+
+  @@map("evidence")
+}
+
+// ============================================================================
+// POAMs (Plan of Action & Milestones)
+// ============================================================================
+
+model Poam {
+  id                   Int       @id @default(autoincrement())
+  controlId            Int       @map("control_id")
+  gapDescription       String    @map("gap_description")
+  remediationPlan      String    @map("remediation_plan")
+  assignedTo           String?
+  priority             String    @default("Medium") // High, Medium, Low
+  status               String    @default("Open") // Open, In Progress, Completed, Risk Accepted
+  startDate            DateTime? @map("start_date")
+  targetCompletionDate DateTime? @map("target_completion_date")
+  actualCompletionDate DateTime? @map("actual_completion_date")
+  resourcesRequired    String?   @map("resources_required")
+  budgetEstimate       Float?    @map("budget_estimate")
+  riskAcceptanceNotes  String?   @map("risk_acceptance_notes")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  control    Control         @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  milestones PoamMilestone[]
+
+  @@index([controlId])
+  @@index([status])
+  @@index([priority])
+  @@map("poams")
+}
+
+// ============================================================================
+// POAM Milestones
+// ============================================================================
+
+model PoamMilestone {
+  id                   Int       @id @default(autoincrement())
+  poamId               Int       @map("poam_id")
+  milestoneDescription String    @map("milestone_description")
+  dueDate              DateTime  @map("due_date")
+  completionDate       DateTime? @map("completion_date")
+  status               String    @default("Pending") // Pending, In Progress, Completed
+  notes                String?
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  poam Poam @relation(fields: [poamId], references: [id], onDelete: Cascade)
+
+  @@index([poamId])
+  @@index([status])
+  @@map("poam_milestones")
+}
+
+// ============================================================================
+// Microsoft 365 Policies
+// ============================================================================
+
+model M365Policy {
+  id                Int      @id @default(autoincrement())
+  policyType        String   @map("policy_type") // Intune, Purview, AzureAD
+  policyId          String   @unique @map("policy_id") // From M365
+  policyName        String   @map("policy_name")
+  policyDescription String?  @map("policy_description")
+  lastSynced        DateTime @map("last_synced")
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  controlMappings ControlPolicyMapping[]
+
+  @@map("m365_policies")
+}
+
+// ============================================================================
+// Control to M365 Policy Mappings
+// ============================================================================
+
+model ControlPolicyMapping {
+  id                Int      @id @default(autoincrement())
+  controlId         Int      @map("control_id")
+  policyId          Int      @map("policy_id")
+  mappingConfidence String   @default("Medium") @map("mapping_confidence") // High, Medium, Low
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  // Relations
+  control Control    @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  policy  M365Policy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  @@unique([controlId, policyId])
+  @@map("control_policy_mappings")
+}
+
+// ============================================================================
+// Change History / Audit Log
+// ============================================================================
+
+model ChangeHistory {
+  id           Int      @id @default(autoincrement())
+  controlId    Int      @map("control_id")
+  fieldChanged String   @map("field_changed")
+  oldValue     String?  @map("old_value")
+  newValue     String?  @map("new_value")
+  changedBy    String?  @map("changed_by") // Made optional for system changes
+  changedAt    DateTime @default(now()) @map("changed_at")
+
+  // Relations
+  control Control @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  @@map("change_history")
+}
+
+// ============================================================================
+// Application Settings
+// ============================================================================
+
+model Setting {
+  id           Int      @id @default(autoincrement())
+  settingKey   String   @unique @map("setting_key")
+  settingValue String   @map("setting_value")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}

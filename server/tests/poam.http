@@ -1,0 +1,77 @@
+### Get all POAMs
+GET http://localhost:3001/api/poams
+
+### Get POAMs filtered by status
+GET http://localhost:3001/api/poams?status=In Progress
+
+### Get POAMs for specific control
+GET http://localhost:3001/api/poams?controlId=1
+
+### Get overdue POAMs
+GET http://localhost:3001/api/poams?overdue=true
+
+### Get POAM by ID
+GET http://localhost:3001/api/poams/1
+
+### Get POAM statistics
+GET http://localhost:3001/api/poams/stats
+
+### Create new POAM
+POST http://localhost:3001/api/poams
+Content-Type: application/json
+
+{
+  "controlId": 1,
+  "gapDescription": "Multi-factor authentication is not enforced for all users accessing the system",
+  "remediationPlan": "Deploy MFA policies via Azure AD conditional access for all users and applications",
+  "assignedTo": "IT Security Team",
+  "priority": "High",
+  "targetCompletionDate": "2025-01-31T00:00:00Z",
+  "resourcesRequired": "Azure AD Premium licenses",
+  "budgetEstimate": 5000
+}
+
+### Update POAM
+PUT http://localhost:3001/api/poams/1
+Content-Type: application/json
+
+{
+  "status": "In Progress",
+  "startDate": "2024-11-10T00:00:00Z"
+}
+
+### Update POAM status only
+PATCH http://localhost:3001/api/poams/1/status
+Content-Type: application/json
+
+{
+  "status": "In Progress"
+}
+
+### Delete POAM
+DELETE http://localhost:3001/api/poams/1
+
+### Add milestone to POAM
+POST http://localhost:3001/api/poams/1/milestones
+Content-Type: application/json
+
+{
+  "milestoneDescription": "Purchase Azure AD Premium licenses for all users",
+  "dueDate": "2024-12-01T00:00:00Z"
+}
+
+### Update milestone
+PUT http://localhost:3001/api/poams/1/milestones/1
+Content-Type: application/json
+
+{
+  "status": "Completed",
+  "completionDate": "2024-11-25T00:00:00Z",
+  "notes": "Licenses purchased through Microsoft 365 admin center"
+}
+
+### Complete milestone
+PATCH http://localhost:3001/api/poams/1/milestones/1/complete
+
+### Delete milestone
+DELETE http://localhost:3001/api/poams/1/milestones/1

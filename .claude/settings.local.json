@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(npm install:*)",
+      "Bash(tree:*)",
+      "Bash(npm create:*)",
+      "Bash(npm init:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(timeout 10 npm run dev)",
+      "Bash(npx prisma init --datasource-provider sqlite)",
+      "Bash(npx prisma:*)",
+      "Bash(cat:*)",
+      "Bash(node:*)",
+      "Bash(dir:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 5 bash:*)",
+      "Bash(curl:*)",
+      "Bash(if not exist .env copy .env.example .env)",
+      "Bash(npm run prisma:generate:*)",
+      "Bash(npm run prisma:migrate:*)",
+      "Bash(timeout /t 3)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(if not exist \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\uploads\" mkdir \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\uploads\")",
+      "Bash(cmd /c:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
