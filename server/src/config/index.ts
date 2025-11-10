@@ -66,17 +66,28 @@ export const config: Config = {
   },
 };
 
-// Validate required environment variables in production
-if (config.nodeEnv === 'production') {
-  const requiredEnvVars = [
-    'DATABASE_URL',
-    'SESSION_SECRET',
-    'COOKIE_SECRET',
-  ];
+// Validate required environment variables
+const requiredEnvVars = [
+  'DATABASE_URL',
+  'SESSION_SECRET',
+];
 
-  for (const envVar of requiredEnvVars) {
-    if (!process.env[envVar]) {
-      throw new Error(`Missing required environment variable: ${envVar}`);
+// Add Azure AD validation only if attempting to use M365 integration
+const azureEnvVars = ['AZURE_TENANT_ID', 'AZURE_CLIENT_ID', 'AZURE_CLIENT_SECRET'];
+const hasAnyAzureConfig = azureEnvVars.some(envVar => process.env[envVar] && process.env[envVar] !== 'your-tenant-id-here' && process.env[envVar] !== 'your-client-id-here' && process.env[envVar] !== 'your-client-secret-here');
+
+if (hasAnyAzureConfig) {
+  // If any Azure config is provided, all must be provided
+  for (const envVar of azureEnvVars) {
+    if (!process.env[envVar] || process.env[envVar]?.startsWith('your-')) {
+      console.warn(`⚠️  Warning: ${envVar} is not configured. M365 integration will not work.`);
     }
+  }
+}
+
+// Validate critical env vars
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    throw new Error(`Missing required environment variable: ${envVar}`);
   }
 }

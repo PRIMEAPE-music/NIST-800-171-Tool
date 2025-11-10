@@ -25,7 +25,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { m365Service } from '@/services/m365.service';
 import { format } from 'date-fns';
 
-export const M365Integration: React.FC = () => {
+const M365Dashboard: React.FC = () => {
   const queryClient = useQueryClient();
 
   // Fetch dashboard data
@@ -381,3 +381,5 @@ export const M365Integration: React.FC = () => {
     </Container>
   );
 };
+
+export default M365Dashboard;

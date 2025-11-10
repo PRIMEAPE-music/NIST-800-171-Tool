@@ -13,7 +13,10 @@
     "prisma:seed": "ts-node src/seed.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test:auth": "ts-node -r tsconfig-paths/register src/scripts/test-auth.ts",
+    "test:m365": "ts-node -r tsconfig-paths/register src/scripts/test-m365-services.ts",
+    "test:sync": "ts-node -r tsconfig-paths/register src/scripts/test-sync.ts"
   },
   "keywords": [
     "nist-800-171",
@@ -23,7 +26,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@azure/msal-node": "^2.15.0",
+    "@azure/msal-node": "^2.16.3",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@prisma/client": "^6.19.0",
     "cookie-parser": "^1.4.6",
@@ -31,6 +34,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "helmet": "^8.0.0",
+    "isomorphic-fetch": "^3.0.0",
     "mime-types": "^3.0.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
@@ -44,6 +48,8 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/isomorphic-fetch": "^0.0.39",
+    "@types/microsoft-graph": "^2.40.1",
     "@types/mime-types": "^3.0.1",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.0.0",

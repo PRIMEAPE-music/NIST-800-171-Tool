@@ -97,11 +97,11 @@ model Evidence {
   filePath     String   @map("file_path") // Relative path from uploads directory
   fileType     String   @map("file_type") // MIME type (application/pdf, image/png, etc.)
   fileSize     Int      @map("file_size") // Size in bytes
-  description  String?  // Optional user description
+  description  String? // Optional user description
   uploadedBy   String?  @map("uploaded_by") // User who uploaded (optional for single-user app)
   uploadedDate DateTime @default(now()) @map("uploaded_date")
   version      Int      @default(1)
-  tags         String?  // JSON array stored as string: ["policy", "audit"]
+  tags         String? // JSON array stored as string: ["policy", "audit"]
   isArchived   Boolean  @default(false) @map("is_archived")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
@@ -113,7 +113,6 @@ model Evidence {
   @@index([controlId])
   @@index([uploadedDate])
   @@index([fileType])
-
   @@map("evidence")
 }
 
@@ -175,11 +174,12 @@ model PoamMilestone {
 
 model M365Policy {
   id                Int      @id @default(autoincrement())
-  policyType        String   @map("policy_type") // Intune, Purview, AzureAD
-  policyId          String   @unique @map("policy_id") // From M365
+  policyType        String   @map("policy_type") // 'Intune' | 'Purview' | 'AzureAD'
+  policyId          String   @unique @map("policy_id") // External ID from M365
   policyName        String   @map("policy_name")
   policyDescription String?  @map("policy_description")
-  lastSynced        DateTime @map("last_synced")
+  policyData        String   @map("policy_data") // JSON string of full policy object
+  lastSynced        DateTime @default(now()) @map("last_synced")
   isActive          Boolean  @default(true) @map("is_active")
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
@@ -198,7 +198,8 @@ model ControlPolicyMapping {
   id                Int      @id @default(autoincrement())
   controlId         Int      @map("control_id")
   policyId          Int      @map("policy_id")
-  mappingConfidence String   @default("Medium") @map("mapping_confidence") // High, Medium, Low
+  mappingConfidence String   @default("Medium") @map("mapping_confidence") // 'High' | 'Medium' | 'Low'
+  mappingNotes      String?  @map("mapping_notes")
   createdAt         DateTime @default(now()) @map("created_at")
 
   // Relations
@@ -207,6 +208,41 @@ model ControlPolicyMapping {
 
   @@unique([controlId, policyId])
   @@map("control_policy_mappings")
+}
+
+// ============================================================================
+// M365 Integration Settings
+// ============================================================================
+
+model M365Settings {
+  id               Int       @id @default(autoincrement())
+  tenantId         String?   @map("tenant_id")
+  clientId         String?   @map("client_id")
+  lastSyncDate     DateTime? @map("last_sync_date")
+  syncEnabled      Boolean   @default(false) @map("sync_enabled")
+  autoSyncInterval Int       @default(24) @map("auto_sync_interval") // hours
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  @@map("m365_settings")
+}
+
+// ============================================================================
+// Sync History Log
+// ============================================================================
+
+model M365SyncLog {
+  id              Int      @id @default(autoincrement())
+  syncDate        DateTime @default(now()) @map("sync_date")
+  syncType        String   @map("sync_type") // 'Manual' | 'Automatic'
+  policiesUpdated Int      @default(0) @map("policies_updated")
+  controlsUpdated Int      @default(0) @map("controls_updated")
+  status          String   @map("status") // 'Success' | 'Failed' | 'Partial'
+  errorMessage    String?  @map("error_message")
+  syncDuration    Int?     @map("sync_duration") // milliseconds
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("m365_sync_logs")
 }
 
 // ============================================================================

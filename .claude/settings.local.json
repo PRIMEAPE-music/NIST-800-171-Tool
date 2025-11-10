@@ -25,7 +25,10 @@
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
       "Bash(if not exist \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\uploads\" mkdir \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\uploads\")",
-      "Bash(cmd /c:*)"
+      "Bash(cmd /c:*)",
+      "Bash(sqlite3:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

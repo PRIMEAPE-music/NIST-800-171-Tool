@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { theme } from '@/styles/theme';
 import { Layout } from '@/components/layout/Layout';
 import { AppRoutes } from '@/routes';
@@ -23,9 +24,11 @@ const App: React.FC = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
-          <Layout>
-            <AppRoutes />
-          </Layout>
+          <AuthProvider>
+            <Layout>
+              <AppRoutes />
+            </Layout>
+          </AuthProvider>
         </Router>
       </ThemeProvider>
     </QueryClientProvider>

@@ -1,0 +1,29 @@
+### Test Intune Compliance Policies
+GET http://localhost:3001/api/m365/intune/compliance-policies
+
+### Test Intune Configuration Policies
+GET http://localhost:3001/api/m365/intune/configuration-policies
+
+### Test All Intune Data
+GET http://localhost:3001/api/m365/intune/all
+
+### Test Intune Security Features
+GET http://localhost:3001/api/m365/intune/security-features
+
+### Test Purview Sensitivity Labels
+GET http://localhost:3001/api/m365/purview/sensitivity-labels
+
+### Test Purview Summary
+GET http://localhost:3001/api/m365/purview/summary
+
+### Test Azure AD Conditional Access
+GET http://localhost:3001/api/m365/azuread/conditional-access
+
+### Test Azure AD MFA Status
+GET http://localhost:3001/api/m365/azuread/mfa-status
+
+### Test Azure AD Security Summary
+GET http://localhost:3001/api/m365/azuread/security-summary
+
+### Test M365 Dashboard (Combined)
+GET http://localhost:3001/api/m365/dashboard

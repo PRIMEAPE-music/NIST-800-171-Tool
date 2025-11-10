@@ -1,0 +1,159 @@
+{
+  "mappings": [
+    {
+      "controlId": "03.01.01",
+      "controlTitle": "Limit system access to authorized users",
+      "policyTypes": ["AzureAD"],
+      "searchCriteria": {
+        "policyTypeMatch": "ConditionalAccess",
+        "keywords": ["access", "authentication", "authorized"]
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "Conditional Access policies directly control who can access systems"
+    },
+    {
+      "controlId": "03.01.02",
+      "controlTitle": "Limit system access to types of transactions and functions",
+      "policyTypes": ["AzureAD"],
+      "searchCriteria": {
+        "policyTypeMatch": "ConditionalAccess",
+        "keywords": ["role", "application", "permissions"]
+      },
+      "mappingConfidence": "Medium",
+      "mappingReason": "Conditional Access can limit access to specific applications"
+    },
+    {
+      "controlId": "03.01.03",
+      "controlTitle": "Control the flow of CUI",
+      "policyTypes": ["Purview"],
+      "searchCriteria": {
+        "keywords": ["dlp", "data loss prevention", "information protection"]
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "DLP policies control data flow and prevent unauthorized sharing"
+    },
+    {
+      "controlId": "03.01.05",
+      "controlTitle": "Employ principle of least privilege",
+      "policyTypes": ["AzureAD"],
+      "searchCriteria": {
+        "policyTypeMatch": "ConditionalAccess",
+        "keywords": ["least privilege", "role", "permissions"]
+      },
+      "mappingConfidence": "Medium",
+      "mappingReason": "Conditional Access can enforce least privilege access patterns"
+    },
+    {
+      "controlId": "03.05.01",
+      "controlTitle": "Identify system users",
+      "policyTypes": ["AzureAD"],
+      "searchCriteria": {
+        "keywords": ["authentication", "identity"]
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "Azure AD provides user identification and authentication"
+    },
+    {
+      "controlId": "03.05.02",
+      "controlTitle": "Authenticate users",
+      "policyTypes": ["AzureAD"],
+      "searchCriteria": {
+        "keywords": ["authentication", "sign-in"]
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "Azure AD handles all user authentication"
+    },
+    {
+      "controlId": "03.05.03",
+      "controlTitle": "Use multifactor authentication",
+      "policyTypes": ["AzureAD"],
+      "searchCriteria": {
+        "policyTypeMatch": "ConditionalAccess",
+        "keywords": ["mfa", "multifactor", "multi-factor"],
+        "requiresMFA": true
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "Conditional Access policies can enforce MFA requirements"
+    },
+    {
+      "controlId": "03.05.10",
+      "controlTitle": "Store and transmit only encrypted passwords",
+      "policyTypes": ["AzureAD"],
+      "searchCriteria": {
+        "keywords": ["password", "encryption", "hash"]
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "Azure AD automatically encrypts and hashes all passwords"
+    },
+    {
+      "controlId": "03.13.01",
+      "controlTitle": "Monitor control and protect communications at system boundaries",
+      "policyTypes": ["Intune"],
+      "searchCriteria": {
+        "keywords": ["defender", "firewall", "boundary", "network"]
+      },
+      "mappingConfidence": "Medium",
+      "mappingReason": "Intune can enforce firewall and Defender for Endpoint policies"
+    },
+    {
+      "controlId": "03.13.08",
+      "controlTitle": "Implement cryptographic mechanisms to prevent unauthorized disclosure",
+      "policyTypes": ["Purview", "Intune"],
+      "searchCriteria": {
+        "keywords": ["encryption", "sensitive", "label"]
+      },
+      "mappingConfidence": "Medium",
+      "mappingReason": "Sensitivity labels and encryption policies protect data"
+    },
+    {
+      "controlId": "03.13.11",
+      "controlTitle": "Employ cryptographic mechanisms to protect CUI at rest",
+      "policyTypes": ["Intune"],
+      "searchCriteria": {
+        "keywords": ["bitlocker", "encryption", "at rest"]
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "Intune policies can enforce BitLocker encryption"
+    },
+    {
+      "controlId": "03.13.16",
+      "controlTitle": "Protect mobile code",
+      "policyTypes": ["Intune"],
+      "searchCriteria": {
+        "keywords": ["mobile", "application", "app protection"]
+      },
+      "mappingConfidence": "Medium",
+      "mappingReason": "Intune app protection policies secure mobile applications"
+    },
+    {
+      "controlId": "03.14.01",
+      "controlTitle": "Identify and document known vulnerabilities",
+      "policyTypes": ["Intune"],
+      "searchCriteria": {
+        "keywords": ["compliance", "vulnerability", "assessment"]
+      },
+      "mappingConfidence": "Low",
+      "mappingReason": "Intune compliance reports can help identify device vulnerabilities"
+    },
+    {
+      "controlId": "03.14.02",
+      "controlTitle": "Take corrective action on identified vulnerabilities",
+      "policyTypes": ["Intune"],
+      "searchCriteria": {
+        "keywords": ["remediation", "compliance", "update"]
+      },
+      "mappingConfidence": "Low",
+      "mappingReason": "Intune can enforce remediation through compliance policies"
+    },
+    {
+      "controlId": "03.14.04",
+      "controlTitle": "Update malicious code protection mechanisms",
+      "policyTypes": ["Intune"],
+      "searchCriteria": {
+        "keywords": ["antivirus", "defender", "malware", "protection"]
+      },
+      "mappingConfidence": "High",
+      "mappingReason": "Intune policies enforce Defender antivirus and updates"
+    }
+  ]
+}

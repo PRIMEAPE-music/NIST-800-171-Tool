@@ -1,0 +1,29 @@
+### Trigger Manual Sync
+POST http://localhost:3001/api/m365/sync
+Content-Type: application/json
+
+{
+  "forceRefresh": true
+}
+
+### Get Sync Status
+GET http://localhost:3001/api/m365/sync/status
+
+### Get Integration Stats
+GET http://localhost:3001/api/m365/stats
+
+### Get All Policies
+GET http://localhost:3001/api/m365/policies
+
+### Get Intune Policies Only
+GET http://localhost:3001/api/m365/policies?policyType=Intune
+
+### Get Purview Policies Only
+GET http://localhost:3001/api/m365/policies?policyType=Purview
+
+### Get Azure AD Policies Only
+GET http://localhost:3001/api/m365/policies?policyType=AzureAD
+
+### Get Mappings for Control 3.5.3 (MFA)
+# Note: Replace :controlId with actual database ID
+GET http://localhost:3001/api/m365/control/1/mappings
