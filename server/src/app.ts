@@ -51,6 +51,7 @@ app.get('/', (_req: Request, res: Response) => {
       assessments: '/api/assessments',
       poams: '/api/poams',
       evidence: '/api/evidence',
+      reports: '/api/reports',
     },
   });
 });
@@ -93,6 +94,7 @@ app.get('/api', (_req: Request, res: Response) => {
       assessments: '/api/assessments',
       poams: '/api/poams',
       evidence: '/api/evidence',
+      reports: '/api/reports',
       health: '/health',
     },
   });

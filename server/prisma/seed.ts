@@ -194,9 +194,53 @@ async function seedPoams() {
   console.log(`✅ Seeded ${poamCount} POAMs with milestones\n`);
 }
 
+async function seedSettings() {
+  console.log('\n🌱 Seeding default settings...\n');
+
+  const defaultSettings = [
+    // M365 Configuration (encrypted values stored, these are placeholders)
+    { key: 'm365_tenant_id', value: '', category: 'm365' },
+    { key: 'm365_client_id', value: '', category: 'm365' },
+    { key: 'm365_client_secret', value: '', category: 'm365' },
+    { key: 'm365_redirect_uri', value: 'http://localhost:3000/auth/callback', category: 'm365' },
+    { key: 'm365_last_sync', value: '', category: 'm365' },
+    { key: 'm365_auto_sync_enabled', value: 'false', category: 'm365' },
+    { key: 'm365_sync_interval_hours', value: '24', category: 'm365' },
+
+    // Organization Settings
+    { key: 'org_name', value: '', category: 'organization' },
+    { key: 'org_compliance_officer_name', value: '', category: 'organization' },
+    { key: 'org_compliance_officer_email', value: '', category: 'organization' },
+    { key: 'org_assessment_frequency_days', value: '90', category: 'organization' },
+
+    // User Preferences
+    { key: 'pref_date_format', value: 'MM/DD/YYYY', category: 'preferences' },
+    { key: 'pref_items_per_page', value: '50', category: 'preferences' },
+    { key: 'pref_default_view', value: 'table', category: 'preferences' },
+    { key: 'pref_notifications_enabled', value: 'true', category: 'preferences' },
+
+    // System Settings
+    { key: 'system_last_backup', value: '', category: 'system' },
+    { key: 'system_auto_backup_enabled', value: 'false', category: 'system' },
+  ];
+
+  let settingsCount = 0;
+  for (const setting of defaultSettings) {
+    await prisma.setting.upsert({
+      where: { key: setting.key },
+      update: {},
+      create: setting,
+    });
+    settingsCount++;
+  }
+
+  console.log(`✅ Seeded ${settingsCount} default settings\n`);
+}
+
 async function main() {
   await seedControls();
   await seedPoams();
+  await seedSettings();
 }
 
 main()

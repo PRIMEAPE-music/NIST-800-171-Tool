@@ -269,11 +269,48 @@ model ChangeHistory {
 // ============================================================================
 
 model Setting {
-  id           Int      @id @default(autoincrement())
-  settingKey   String   @unique @map("setting_key")
-  settingValue String   @map("setting_value")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String // JSON-encoded value for flexibility
+  category  String // m365, organization, preferences, system
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([category])
   @@map("settings")
+}
+
+// ============================================================================
+// Report History
+// ============================================================================
+
+model ReportHistory {
+  id          Int      @id @default(autoincrement())
+  reportType  String   @map("report_type")
+  reportName  String   @map("report_name")
+  format      String
+  filePath    String?  @map("file_path")
+  fileSize    Int?     @map("file_size")
+  filters     String? // JSON string of applied filters
+  generatedAt DateTime @default(now()) @map("generated_at")
+  generatedBy String?  @map("generated_by")
+  status      String   @default("completed")
+
+  @@map("report_history")
+}
+
+// ============================================================================
+// Report Templates
+// ============================================================================
+
+model ReportTemplate {
+  id          Int      @id @default(autoincrement())
+  name        String
+  reportType  String   @map("report_type")
+  format      String
+  filters     String? // JSON string of report filters
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("report_templates")
 }

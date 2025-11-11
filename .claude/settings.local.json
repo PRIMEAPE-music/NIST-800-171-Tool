@@ -28,7 +28,14 @@
       "Bash(cmd /c:*)",
       "Bash(sqlite3:*)",
       "Bash(npm run build:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(if not exist \"reports\" mkdir \"reports\")",
+      "Bash(if not exist \"src\\services\\reports\" mkdir \"src\\services\\reports\")",
+      "Bash(if not exist \"src\\services\\reports\\generators\" mkdir \"src\\services\\reports\\generators\")",
+      "Bash(if not exist \"src\\components\\reports\" mkdir \"src\\components\\reports\")",
+      "Bash(npm run prisma:seed:*)",
+      "Bash(if not exist \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\client\\src\\components\\settings\" mkdir \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\client\\src\\components\\settings\")",
+      "Bash(timeout /t 5)"
     ],
     "deny": [],
     "ask": []

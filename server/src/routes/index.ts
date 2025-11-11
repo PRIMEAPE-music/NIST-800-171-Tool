@@ -5,6 +5,8 @@ import poamRoutes from './poam.routes';
 import evidenceRoutes from './evidence.routes';
 import authRoutes from './auth.routes';
 import m365Routes from './m365.routes';
+import reportRoutes from './reportRoutes';
+import settingsRoutes from './settings.routes';
 
 const router = Router();
 
@@ -15,9 +17,7 @@ router.use('/poams', poamRoutes);
 router.use('/evidence', evidenceRoutes);
 router.use('/auth', authRoutes);
 router.use('/m365', m365Routes);
-
-// Future routes will be added here:
-// router.use('/reports', reportRoutes);
-// router.use('/settings', settingsRoutes);
+router.use('/reports', reportRoutes);
+router.use('/settings', settingsRoutes);
 
 export default router;
