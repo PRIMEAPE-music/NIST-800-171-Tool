@@ -32,6 +32,61 @@ class PolicySyncService {
   }
 
   /**
+   * Calculate match confidence score for a policy-control pair
+   */
+  private calculateMatchScore(
+    policy: { policyName: string; policyDescription: string | null },
+    template: any
+  ): { score: number; matchedKeywords: string[] } {
+    const searchText = `${policy.policyName} ${policy.policyDescription || ''}`.toLowerCase();
+    const matchedKeywords: string[] = [];
+    let score = 0;
+
+    // Check each keyword
+    for (const keyword of template.searchCriteria.keywords) {
+      const keywordLower = keyword.toLowerCase();
+
+      // Check policy name (higher weight)
+      if (policy.policyName.toLowerCase().includes(keywordLower)) {
+        matchedKeywords.push(keyword);
+        score += 2; // Name matches are worth more
+      }
+      // Check policy description (lower weight)
+      else if (policy.policyDescription?.toLowerCase().includes(keywordLower)) {
+        matchedKeywords.push(keyword);
+        score += 1;
+      }
+    }
+
+    // Calculate percentage of keywords matched
+    const matchPercentage = matchedKeywords.length / template.searchCriteria.keywords.length;
+
+    // Apply template confidence weight
+    const templateWeight: Record<string, number> = {
+      'High': 1.0,
+      'Medium': 0.75,
+      'Low': 0.5,
+    };
+    const weight = templateWeight[template.mappingConfidence] || 0.75;
+
+    const finalScore = (matchPercentage * score * weight) / template.searchCriteria.keywords.length;
+
+    return {
+      score: Math.min(1.0, finalScore), // Cap at 1.0
+      matchedKeywords,
+    };
+  }
+
+  /**
+   * Convert numeric score to confidence level
+   */
+  private scoreToConfidence(score: number): 'High' | 'Medium' | 'Low' {
+    if (score >= 0.7) return 'High';
+    if (score >= 0.4) return 'Medium';
+    return 'Low';
+  }
+
+  /**
    * Sync all M365 policies to database
    */
   async syncAllPolicies(forceRefresh: boolean = false): Promise<SyncResult> {
@@ -141,7 +196,7 @@ class PolicySyncService {
     let count = 0;
 
     // Sync compliance policies
-    for (const policy of data.compliancePolicies) {
+    for (const policy of data.compliancePolicies || []) {
       await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
@@ -162,8 +217,8 @@ class PolicySyncService {
       count++;
     }
 
-    // Sync configuration policies
-    for (const policy of data.configurationPolicies) {
+    // Sync legacy configuration policies
+    for (const policy of data.configurationPolicies || []) {
       await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
@@ -178,6 +233,72 @@ class PolicySyncService {
           policyId: policy.id,
           policyName: policy.displayName,
           policyDescription: policy.description || '',
+          policyData: JSON.stringify(policy),
+        },
+      });
+      count++;
+    }
+
+    // Sync Settings Catalog policies
+    for (const policy of data.settingsCatalogPolicies || []) {
+      await prisma.m365Policy.upsert({
+        where: { policyId: policy.id },
+        update: {
+          policyName: policy.name || policy.displayName,
+          policyDescription: policy.description || '',
+          policyData: JSON.stringify(policy),
+          lastSynced: new Date(),
+          isActive: true,
+        },
+        create: {
+          policyType: 'Intune',
+          policyId: policy.id,
+          policyName: policy.name || policy.displayName,
+          policyDescription: policy.description || '',
+          policyData: JSON.stringify(policy),
+        },
+      });
+      count++;
+    }
+
+    // Sync Endpoint Security policies
+    for (const policy of data.endpointSecurityPolicies || []) {
+      await prisma.m365Policy.upsert({
+        where: { policyId: policy.id },
+        update: {
+          policyName: policy.displayName || policy.name,
+          policyDescription: policy.description || `Template: ${(policy as any).templateId || 'Unknown'}`,
+          policyData: JSON.stringify(policy),
+          lastSynced: new Date(),
+          isActive: true,
+        },
+        create: {
+          policyType: 'Intune',
+          policyId: policy.id,
+          policyName: policy.displayName || policy.name,
+          policyDescription: policy.description || `Template: ${(policy as any).templateId || 'Unknown'}`,
+          policyData: JSON.stringify(policy),
+        },
+      });
+      count++;
+    }
+
+    // Sync App Protection policies
+    for (const policy of data.appProtectionPolicies || []) {
+      await prisma.m365Policy.upsert({
+        where: { policyId: policy.id },
+        update: {
+          policyName: policy.displayName || policy.name,
+          policyDescription: policy.description || `Platform: ${policy['@odata.type'] || 'Unknown'}`,
+          policyData: JSON.stringify(policy),
+          lastSynced: new Date(),
+          isActive: true,
+        },
+        create: {
+          policyType: 'Intune',
+          policyId: policy.id,
+          policyName: policy.displayName || policy.name,
+          policyDescription: policy.description || `Platform: ${policy['@odata.type'] || 'Unknown'}`,
           policyData: JSON.stringify(policy),
         },
       });
@@ -265,22 +386,29 @@ class PolicySyncService {
       }
 
       // Find matching policies based on criteria
-      // Note: SQLite doesn't support case-insensitive mode, so we use contains without mode
+      // Search both policy names AND descriptions for better matching
       const policies = await prisma.m365Policy.findMany({
         where: {
           policyType: {
             in: template.policyTypes,
           },
           isActive: true,
-          OR: template.searchCriteria.keywords.map((keyword: string) => ({
-            policyName: {
-              contains: keyword,
+          OR: template.searchCriteria.keywords.flatMap((keyword: string) => [
+            {
+              policyName: {
+                contains: keyword,
+              },
             },
-          })),
+            {
+              policyDescription: {
+                contains: keyword,
+              },
+            },
+          ]),
         },
       });
 
-      // Create mappings
+      // Create mappings with calculated confidence
       for (const policy of policies) {
         const existing = await prisma.controlPolicyMapping.findFirst({
           where: {
@@ -290,15 +418,28 @@ class PolicySyncService {
         });
 
         if (!existing) {
-          await prisma.controlPolicyMapping.create({
-            data: {
-              controlId: control.id,
-              policyId: policy.id,
-              mappingConfidence: template.mappingConfidence,
-              mappingNotes: template.mappingReason,
-            },
-          });
-          count++;
+          // Calculate match score
+          const { score, matchedKeywords } = this.calculateMatchScore(policy, template);
+          const calculatedConfidence = this.scoreToConfidence(score);
+
+          // Only create mapping if score meets minimum threshold (0.3 = 30%)
+          if (score >= 0.3) {
+            const mappingNotes = `${template.mappingReason}\nMatched keywords: ${matchedKeywords.join(', ')}\nScore: ${(score * 100).toFixed(0)}%`;
+
+            await prisma.controlPolicyMapping.create({
+              data: {
+                controlId: control.id,
+                policyId: policy.id,
+                mappingConfidence: calculatedConfidence,
+                mappingNotes,
+              },
+            });
+            count++;
+
+            console.log(`✓ Mapped ${policy.policyName} → ${control.controlId} (${calculatedConfidence} confidence, ${(score * 100).toFixed(0)}% score)`);
+          } else {
+            console.log(`✗ Skipped ${policy.policyName} → ${control.controlId} (score ${(score * 100).toFixed(0)}% below threshold)`);
+          }
         }
       }
     }

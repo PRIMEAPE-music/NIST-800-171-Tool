@@ -140,9 +140,21 @@ class SettingsService {
     const prefs = settings.filter((s) => s.category === 'preferences');
     return {
       dateFormat: this.findValue(prefs, 'pref_date_format') || 'MM/DD/YYYY',
+      timeFormat: this.findValue(prefs, 'pref_time_format') || '12h',
       itemsPerPage: parseInt(this.findValue(prefs, 'pref_items_per_page') || '50'),
       defaultView: (this.findValue(prefs, 'pref_default_view') || 'table') as 'table' | 'grid',
       notificationsEnabled: this.findValue(prefs, 'pref_notifications_enabled') === 'true',
+      showCompletedControls: this.findValue(prefs, 'pref_show_completed_controls') === 'true',
+      showNotStartedControls: this.findValue(prefs, 'pref_show_not_started_controls') === 'true',
+      defaultControlFamily: this.findValue(prefs, 'pref_default_control_family') || 'all',
+      defaultStatusFilter: this.findValue(prefs, 'pref_default_status_filter') || 'all',
+      defaultPriorityFilter: this.findValue(prefs, 'pref_default_priority_filter') || 'all',
+      assessmentReminderDays: parseInt(this.findValue(prefs, 'pref_assessment_reminder_days') || '7'),
+      poamReminderDays: parseInt(this.findValue(prefs, 'pref_poam_reminder_days') || '7'),
+      showFamilyDescriptions: this.findValue(prefs, 'pref_show_family_descriptions') === 'true',
+      expandControlDetailsDefault: this.findValue(prefs, 'pref_expand_control_details_default') === 'true',
+      customTags: this.findValue(prefs, 'pref_custom_tags') || '[]',
+      dashboardRefreshSeconds: parseInt(this.findValue(prefs, 'pref_dashboard_refresh_seconds') || '60'),
     };
   }
 

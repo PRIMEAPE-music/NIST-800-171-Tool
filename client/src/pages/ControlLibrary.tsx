@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -18,6 +18,7 @@ import { ControlFilters } from '@/components/controls/ControlFilters';
 import { ControlTable } from '@/components/controls/ControlTable';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
+import { usePreferences } from '@/hooks/usePreferences';
 
 // Filter state interface
 interface FilterState {
@@ -28,6 +29,7 @@ interface FilterState {
 }
 
 export const ControlLibrary: React.FC = () => {
+  const { preferences } = usePreferences();
   const [filters, setFilters] = useState<FilterState>({
     families: [],
     statuses: [],
@@ -39,10 +41,16 @@ export const ControlLibrary: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [filterDrawerOpen, setFilterDrawerOpen] = useState<boolean>(false);
   const [selectedControls, setSelectedControls] = useState<number[]>([]);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(preferences.itemsPerPage);
+
+  // Update items per page when preferences change
+  useEffect(() => {
+    setItemsPerPage(preferences.itemsPerPage);
+  }, [preferences.itemsPerPage]);
 
   // Fetch controls with filters
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['controls', filters, sortBy, sortOrder, page],
+    queryKey: ['controls', filters, sortBy, sortOrder, page, itemsPerPage],
     queryFn: () =>
       controlService.getAllControls({
         family: filters.families.join(',') || undefined,
@@ -52,7 +60,7 @@ export const ControlLibrary: React.FC = () => {
         sortBy,
         sortOrder,
         page,
-        limit: 50,
+        limit: itemsPerPage,
       }),
   });
 

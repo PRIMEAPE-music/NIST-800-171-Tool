@@ -10,6 +10,7 @@ import {
   Chip
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { usePreferences } from '@/hooks/usePreferences';
 
 interface ActivityItem {
   id: number;
@@ -30,6 +31,7 @@ interface RecentActivityFeedProps {
 
 const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ activity }) => {
   const navigate = useNavigate();
+  const { formatDate } = usePreferences();
 
   const getActivityDescription = (item: ActivityItem) => {
     switch (item.fieldChanged) {
@@ -56,7 +58,7 @@ const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ activity }) => 
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
+    return formatDate(date);
   };
 
   return (

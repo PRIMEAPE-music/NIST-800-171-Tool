@@ -5,6 +5,8 @@ import { intuneService } from '../services/intune.service';
 import { purviewService } from '../services/purview.service';
 import { azureADService } from '../services/azureAD.service';
 import { policySyncService } from '../services/policySync.service';
+import policyViewerService from '../services/policyViewer.service';
+import { PolicySearchParams } from '../types/policyViewer.types';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -292,6 +294,255 @@ router.get('/control/:controlId/mappings', async (req, res) => {
     const mappings = await policySyncService.getPolicyMappingsForControl(controlId);
 
     res.json({ success: true, count: mappings.length, mappings });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/suggested-mappings
+ * Get suggested mappings for review
+ */
+router.get('/suggested-mappings', async (req, res) => {
+  try {
+    const { confidence } = req.query;
+
+    const where: any = {};
+    if (confidence) {
+      where.mappingConfidence = confidence;
+    }
+
+    const suggestions = await prisma.controlPolicyMapping.findMany({
+      where,
+      include: {
+        control: {
+          select: {
+            controlId: true,
+            title: true,
+            family: true,
+          },
+        },
+        policy: {
+          select: {
+            policyName: true,
+            policyType: true,
+            policyDescription: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    res.json(suggestions);
+  } catch (error) {
+    console.error('Error fetching suggested mappings:', error);
+    res.status(500).json({ error: 'Failed to fetch suggested mappings' });
+  }
+});
+
+/**
+ * POST /api/m365/mappings/:id/approve
+ * Approve a mapping
+ */
+router.post('/mappings/:id/approve', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const mapping = await prisma.controlPolicyMapping.update({
+      where: { id: parseInt(id) },
+      data: {
+        mappingNotes: prisma.raw(`mapping_notes || '\n[Approved by user]'`),
+      },
+    });
+
+    res.json({ success: true, mapping });
+  } catch (error) {
+    console.error('Error approving mapping:', error);
+    res.status(500).json({ error: 'Failed to approve mapping' });
+  }
+});
+
+/**
+ * DELETE /api/m365/mappings/:id
+ * Reject and delete a mapping
+ */
+router.delete('/mappings/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.controlPolicyMapping.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting mapping:', error);
+    res.status(500).json({ error: 'Failed to delete mapping' });
+  }
+});
+
+/**
+ * POST /api/m365/mappings/bulk-approve
+ * Bulk approve mappings
+ */
+router.post('/mappings/bulk-approve', async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Invalid ids array' });
+    }
+
+    // Update each mapping individually to append approval note
+    const updatePromises = ids.map(id =>
+      prisma.controlPolicyMapping.findUnique({
+        where: { id: parseInt(id) },
+      }).then(mapping => {
+        if (mapping) {
+          return prisma.controlPolicyMapping.update({
+            where: { id: parseInt(id) },
+            data: {
+              mappingNotes: `${mapping.mappingNotes || ''}\n[Bulk approved by user]`,
+            },
+          });
+        }
+        return null;
+      })
+    );
+
+    await Promise.all(updatePromises);
+
+    res.json({ success: true, count: ids.length });
+  } catch (error) {
+    console.error('Error bulk approving mappings:', error);
+    res.status(500).json({ error: 'Failed to bulk approve mappings' });
+  }
+});
+
+/**
+ * POST /api/m365/mappings/bulk-reject
+ * Bulk reject mappings
+ */
+router.post('/mappings/bulk-reject', async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Invalid ids array' });
+    }
+
+    await prisma.controlPolicyMapping.deleteMany({
+      where: { id: { in: ids.map(id => parseInt(id)) } },
+    });
+
+    res.json({ success: true, count: ids.length });
+  } catch (error) {
+    console.error('Error bulk rejecting mappings:', error);
+    res.status(500).json({ error: 'Failed to bulk reject mappings' });
+  }
+});
+
+// ============================================================================
+// POLICY VIEWER ENDPOINTS
+// ============================================================================
+
+/**
+ * GET /api/m365/policies/viewer
+ * Get policies with detailed formatting for viewer (with search/filter)
+ */
+router.get('/policies/viewer', async (req, res) => {
+  try {
+    const {
+      policyType,
+      searchTerm,
+      isActive,
+      controlId,
+      sortBy,
+      sortOrder,
+    } = req.query;
+
+    const params: PolicySearchParams = {
+      policyType: policyType as any,
+      searchTerm: searchTerm as string,
+      isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
+      controlId: controlId as string,
+      sortBy: sortBy as any,
+      sortOrder: sortOrder as any,
+    };
+
+    const policies = await policyViewerService.getPolicies(params);
+
+    res.json({
+      success: true,
+      count: policies.length,
+      policies,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/policies/viewer/stats
+ * Get policy viewer statistics
+ */
+router.get('/policies/viewer/stats', async (req, res) => {
+  try {
+    const stats = await policyViewerService.getStats();
+    res.json({ success: true, stats });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/policies/viewer/export
+ * Export all policy data
+ */
+router.get('/policies/viewer/export', async (req, res) => {
+  try {
+    const exportData = await policyViewerService.getExportData();
+    res.json({
+      success: true,
+      data: exportData,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/policies/viewer/:id
+ * Get single policy detail
+ */
+router.get('/policies/viewer/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const policy = await policyViewerService.getPolicyById(id);
+
+    if (!policy) {
+      return res.status(404).json({
+        success: false,
+        error: 'Policy not found',
+      });
+    }
+
+    res.json({
+      success: true,
+      policy,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

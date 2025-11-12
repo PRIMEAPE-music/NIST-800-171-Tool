@@ -8,9 +8,12 @@ import { POAMManager } from '@/pages/POAMManager';
 import { EvidenceLibrary } from '@/pages/EvidenceLibrary';
 import { EvidenceGapReport } from '@/pages/EvidenceGapReport';
 import { M365Integration } from '@/pages/M365Integration';
+import SuggestedMappingsPage from '@/pages/SuggestedMappings';
+import PolicyViewer from '@/pages/PolicyViewer';
 import { Reports } from '@/pages/Reports';
 import { Settings } from '@/pages/Settings';
 import AssessmentWizard from '@/components/assessment/AssessmentWizard';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -25,6 +28,15 @@ export const AppRoutes: React.FC = () => {
       <Route path="/evidence" element={<EvidenceLibrary />} />
       <Route path="/evidence/gaps" element={<EvidenceGapReport />} />
       <Route path="/m365" element={<M365Integration />} />
+      <Route path="/m365/suggested-mappings" element={<SuggestedMappingsPage />} />
+      <Route
+        path="/policy-viewer"
+        element={
+          <ErrorBoundary>
+            <PolicyViewer />
+          </ErrorBoundary>
+        }
+      />
       <Route path="/reports" element={<Reports />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

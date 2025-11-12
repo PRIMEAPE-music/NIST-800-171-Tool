@@ -1,7 +1,6 @@
 import { Client } from '@microsoft/microsoft-graph-client';
 import 'isomorphic-fetch'; // Required for Graph client
 import { authService } from './auth.service';
-import { graphEndpoint } from '../config/msal.config';
 
 class GraphClientService {
   private client: Client | null = null;
@@ -31,7 +30,7 @@ class GraphClientService {
   }
 
   /**
-   * Make a GET request to Graph API
+   * Make a GET request to Graph API (v1.0)
    */
   async get<T>(endpoint: string): Promise<T> {
     try {
@@ -40,6 +39,20 @@ class GraphClientService {
       return response as T;
     } catch (error) {
       console.error(`Graph API GET error on ${endpoint}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Make a GET request to Graph API beta endpoint
+   */
+  async getBeta<T>(endpoint: string): Promise<T> {
+    try {
+      const client = await this.getClient();
+      const response = await client.api(endpoint).version('beta').get();
+      return response as T;
+    } catch (error) {
+      console.error(`Graph API BETA GET error on ${endpoint}:`, error);
       throw error;
     }
   }

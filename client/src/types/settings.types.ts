@@ -22,9 +22,21 @@ export interface OrganizationSettings {
 
 export interface UserPreferences {
   dateFormat: string;
+  timeFormat: string;
   itemsPerPage: number;
   defaultView: 'table' | 'grid';
   notificationsEnabled: boolean;
+  showCompletedControls: boolean;
+  showNotStartedControls: boolean;
+  defaultControlFamily: string;
+  defaultStatusFilter: string;
+  defaultPriorityFilter: string;
+  assessmentReminderDays: number;
+  poamReminderDays: number;
+  showFamilyDescriptions: boolean;
+  expandControlDetailsDefault: boolean;
+  customTags: string;
+  dashboardRefreshSeconds: number;
 }
 
 export interface SystemSettings {

@@ -45,45 +45,34 @@
     },
     {
       "controlId": "03.05.01",
-      "controlTitle": "Identify system users",
-      "policyTypes": ["AzureAD"],
+      "controlTitle": "Baseline Configuration",
+      "policyTypes": ["Intune"],
       "searchCriteria": {
-        "keywords": ["authentication", "identity"]
+        "keywords": ["baseline", "configuration", "security", "settings catalog"]
       },
       "mappingConfidence": "High",
-      "mappingReason": "Azure AD provides user identification and authentication"
+      "mappingReason": "Intune configuration policies establish and enforce baseline security configurations"
     },
     {
       "controlId": "03.05.02",
-      "controlTitle": "Authenticate users",
-      "policyTypes": ["AzureAD"],
+      "controlTitle": "Configuration Change Control",
+      "policyTypes": ["Intune"],
       "searchCriteria": {
-        "keywords": ["authentication", "sign-in"]
+        "keywords": ["configuration", "change", "control", "update"]
       },
-      "mappingConfidence": "High",
-      "mappingReason": "Azure AD handles all user authentication"
+      "mappingConfidence": "Medium",
+      "mappingReason": "Intune configuration policies control and track configuration changes"
     },
     {
       "controlId": "03.05.03",
-      "controlTitle": "Use multifactor authentication",
+      "controlTitle": "Access Restrictions for Change",
       "policyTypes": ["AzureAD"],
       "searchCriteria": {
         "policyTypeMatch": "ConditionalAccess",
-        "keywords": ["mfa", "multifactor", "multi-factor"],
-        "requiresMFA": true
+        "keywords": ["admin", "privileged", "role"]
       },
-      "mappingConfidence": "High",
-      "mappingReason": "Conditional Access policies can enforce MFA requirements"
-    },
-    {
-      "controlId": "03.05.10",
-      "controlTitle": "Store and transmit only encrypted passwords",
-      "policyTypes": ["AzureAD"],
-      "searchCriteria": {
-        "keywords": ["password", "encryption", "hash"]
-      },
-      "mappingConfidence": "High",
-      "mappingReason": "Azure AD automatically encrypts and hashes all passwords"
+      "mappingConfidence": "Medium",
+      "mappingReason": "Conditional Access can restrict who can make configuration changes"
     },
     {
       "controlId": "03.13.01",
@@ -116,44 +105,34 @@
       "mappingReason": "Intune policies can enforce BitLocker encryption"
     },
     {
-      "controlId": "03.13.16",
-      "controlTitle": "Protect mobile code",
+      "controlId": "03.13.13",
+      "controlTitle": "Mobile Code",
       "policyTypes": ["Intune"],
       "searchCriteria": {
-        "keywords": ["mobile", "application", "app protection"]
+        "keywords": ["mobile", "application", "app protection", "ios", "android"]
       },
       "mappingConfidence": "Medium",
       "mappingReason": "Intune app protection policies secure mobile applications"
     },
     {
       "controlId": "03.14.01",
-      "controlTitle": "Identify and document known vulnerabilities",
+      "controlTitle": "Flaw Remediation",
       "policyTypes": ["Intune"],
       "searchCriteria": {
-        "keywords": ["compliance", "vulnerability", "assessment"]
+        "keywords": ["compliance", "update", "remediation", "flaw", "patch", "vulnerability"]
       },
-      "mappingConfidence": "Low",
-      "mappingReason": "Intune compliance reports can help identify device vulnerabilities"
+      "mappingConfidence": "Medium",
+      "mappingReason": "Intune compliance policies and update rings help identify and remediate vulnerabilities"
     },
     {
       "controlId": "03.14.02",
-      "controlTitle": "Take corrective action on identified vulnerabilities",
+      "controlTitle": "Malicious Code Protection",
       "policyTypes": ["Intune"],
       "searchCriteria": {
-        "keywords": ["remediation", "compliance", "update"]
-      },
-      "mappingConfidence": "Low",
-      "mappingReason": "Intune can enforce remediation through compliance policies"
-    },
-    {
-      "controlId": "03.14.04",
-      "controlTitle": "Update malicious code protection mechanisms",
-      "policyTypes": ["Intune"],
-      "searchCriteria": {
-        "keywords": ["antivirus", "defender", "malware", "protection"]
+        "keywords": ["antivirus", "defender", "malware", "protection", "asr", "attack surface"]
       },
       "mappingConfidence": "High",
-      "mappingReason": "Intune policies enforce Defender antivirus and updates"
+      "mappingReason": "Intune policies enforce Defender antivirus, ASR rules, and malware protection"
     }
   ]
 }

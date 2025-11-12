@@ -218,6 +218,18 @@ async function seedSettings() {
     { key: 'pref_items_per_page', value: '50', category: 'preferences' },
     { key: 'pref_default_view', value: 'table', category: 'preferences' },
     { key: 'pref_notifications_enabled', value: 'true', category: 'preferences' },
+    { key: 'pref_show_completed_controls', value: 'true', category: 'preferences' },
+    { key: 'pref_show_not_started_controls', value: 'true', category: 'preferences' },
+    { key: 'pref_default_control_family', value: 'all', category: 'preferences' },
+    { key: 'pref_default_status_filter', value: 'all', category: 'preferences' },
+    { key: 'pref_default_priority_filter', value: 'all', category: 'preferences' },
+    { key: 'pref_assessment_reminder_days', value: '7', category: 'preferences' },
+    { key: 'pref_poam_reminder_days', value: '7', category: 'preferences' },
+    { key: 'pref_show_family_descriptions', value: 'true', category: 'preferences' },
+    { key: 'pref_expand_control_details_default', value: 'false', category: 'preferences' },
+    { key: 'pref_custom_tags', value: JSON.stringify([]), category: 'preferences' },
+    { key: 'pref_time_format', value: '12h', category: 'preferences' },
+    { key: 'pref_dashboard_refresh_seconds', value: '60', category: 'preferences' },
 
     // System Settings
     { key: 'system_last_backup', value: '', category: 'system' },

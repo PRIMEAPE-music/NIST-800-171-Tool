@@ -1,0 +1,855 @@
+{
+  "exportDate": "2025-11-12T16:10:24.670Z",
+  "policies": [
+    {
+      "id": 4,
+      "policyType": "AzureAD",
+      "policyId": "8a006eff-db25-4968-8767-2d5215cabe33",
+      "policyName": "NIST 800-171: Require Compliant Device for CUI Apps (Report Only)",
+      "policyDescription": "State: enabledForReportingButNotEnforced",
+      "lastSynced": "2025-11-12T16:09:11.997Z",
+      "isActive": false,
+      "parsedData": {
+        "displayName": "NIST 800-171: Require Compliant Device for CUI Apps (Report Only)",
+        "createdDateTime": "2025-10-06T15:22:56.4027201Z",
+        "settings": {
+          "state": "enabledForReportingButNotEnforced",
+          "conditions": {
+            "userRiskLevels": [],
+            "signInRiskLevels": [],
+            "clientAppTypes": [
+              "browser",
+              "mobileAppsAndDesktopClients"
+            ],
+            "servicePrincipalRiskLevels": [],
+            "insiderRiskLevels": null,
+            "locations": null,
+            "devices": null,
+            "clientApplications": null,
+            "authenticationFlows": null,
+            "applications": {
+              "includeApplications": [
+                "00000002-0000-0ff1-ce00-000000000000",
+                "00000003-0000-0ff1-ce00-000000000000",
+                "Office365"
+              ],
+              "excludeApplications": [],
+              "includeUserActions": [],
+              "includeAuthenticationContextClassReferences": [],
+              "applicationFilter": null
+            },
+            "users": {
+              "includeUsers": [],
+              "excludeUsers": [
+                "3b5d366f-421b-4ccb-a58b-fb95a33ce9e9",
+                "458a66d0-d056-4921-b8e3-2cf41a0b1ccf",
+                "6c0c66cc-0f8d-4a78-b644-2e0781aa8863"
+              ],
+              "includeGroups": [
+                "635133ab-eb39-4254-b6a4-5cce3db2fe7d"
+              ],
+              "excludeGroups": [],
+              "includeRoles": [],
+              "excludeRoles": [
+                "62e90394-69f5-4237-9190-012177145e10",
+                "3a2c62db-5318-420d-8d74-23affee5d9d5",
+                "194ae4cb-b126-40b2-bd5b-6091b380977d"
+              ],
+              "includeGuestsOrExternalUsers": null,
+              "excludeGuestsOrExternalUsers": null
+            },
+            "platforms": {
+              "includePlatforms": [
+                "all"
+              ],
+              "excludePlatforms": [
+                "android",
+                "iOS",
+                "macOS",
+                "linux"
+              ]
+            }
+          },
+          "grantControls": {
+            "operator": "AND",
+            "builtInControls": [
+              "mfa",
+              "compliantDevice"
+            ],
+            "customAuthenticationFactors": [],
+            "termsOfUse": [],
+            "authenticationStrength@odata.context": "https://graph.microsoft.com/v1.0/$metadata#identity/conditionalAccess/policies('8a006eff-db25-4968-8767-2d5215cabe33')/grantControls/authenticationStrength/$entity",
+            "authenticationStrength": null
+          }
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 49,
+      "policyType": "Intune",
+      "policyId": "T_682304a6-9ad2-4d35-b300-7b63a01ef08d",
+      "policyName": "NIST 800-171 App Protection - Android",
+      "policyDescription": "Protects CUI on Android devices by blocking copy/paste and save-as to unmanaged apps.",
+      "lastSynced": "2025-11-12T16:09:11.994Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "NIST 800-171 App Protection - Android",
+        "description": "Protects CUI on Android devices by blocking copy/paste and save-as to unmanaged apps.",
+        "createdDateTime": "2025-10-27T21:48:19.2964181Z",
+        "modifiedDateTime": "2025-10-27T21:48:19Z",
+        "settings": {}
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 48,
+      "policyType": "Intune",
+      "policyId": "T_3a99fadb-d381-499b-96bb-d7006486a6ae",
+      "policyName": "NIST 800-171 App Protection - iOS",
+      "policyDescription": "Protects CUI on iOS devices by blocking copy/paste and save-as to unmanaged apps.",
+      "lastSynced": "2025-11-12T16:09:11.992Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "NIST 800-171 App Protection - iOS",
+        "description": "Protects CUI on iOS devices by blocking copy/paste and save-as to unmanaged apps.",
+        "createdDateTime": "2025-10-27T21:45:30.7158725Z",
+        "modifiedDateTime": "2025-10-27T21:45:30Z",
+        "settings": {}
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 90,
+      "policyType": "Intune",
+      "policyId": "637d7322-2cdf-464a-9552-5bedd17fca71",
+      "policyName": "Windows - Harden SAM Enumeration",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.990Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-10-16T16:04:35.0810467Z",
+        "modifiedDateTime": "2025-10-16T16:04:35.0810467Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 89,
+      "policyType": "Intune",
+      "policyId": "49c6d56a-ebe8-43f4-9910-fc195830eafa",
+      "policyName": "Windows - Disable Elevated Install",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.987Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-10-16T16:14:30.8192725Z",
+        "modifiedDateTime": "2025-10-16T16:14:30.8192725Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 88,
+      "policyType": "Intune",
+      "policyId": "819941cb-dff0-4a37-893f-44a83667854f",
+      "policyName": "Windows - Disable Autoplay",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.985Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-10-16T15:23:20.4972627Z",
+        "modifiedDateTime": "2025-10-16T15:23:20.4972627Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 87,
+      "policyType": "Intune",
+      "policyId": "4be427f0-a99e-4e0c-bbc8-ac05f83b201d",
+      "policyName": "Security Baseline for Windows 10",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.982Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-09-30T20:23:03.2853526Z",
+        "modifiedDateTime": "2025-11-05T20:22:39.2694214Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            },
+            {
+              "id": "2"
+            },
+            {
+              "id": "3"
+            },
+            {
+              "id": "4"
+            },
+            {
+              "id": "5"
+            },
+            {
+              "id": "6"
+            },
+            {
+              "id": "7"
+            },
+            {
+              "id": "8"
+            },
+            {
+              "id": "9"
+            },
+            {
+              "id": "10"
+            },
+            {
+              "id": "11"
+            },
+            {
+              "id": "12"
+            },
+            {
+              "id": "13"
+            },
+            {
+              "id": "14"
+            },
+            {
+              "id": "15"
+            },
+            {
+              "id": "16"
+            },
+            {
+              "id": "17"
+            },
+            {
+              "id": "18"
+            },
+            {
+              "id": "19"
+            },
+            {
+              "id": "20"
+            },
+            {
+              "id": "21"
+            },
+            {
+              "id": "22"
+            },
+            {
+              "id": "23"
+            },
+            {
+              "id": "24"
+            }
+          ]
+        }
+      },
+      "mappedControls": [
+        {
+          "controlId": "03.05.01",
+          "controlTitle": "Baseline Configuration",
+          "mappingConfidence": "Medium",
+          "mappingNotes": "Intune configuration policies establish and enforce baseline security configurations\nMatched keywords: baseline, security\nScore: 50%"
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "policyType": "Intune",
+      "policyId": "320ceb56-e84d-410b-9f1b-cf64163361ed",
+      "policyName": "Security Baseline for Tablets",
+      "policyDescription": "shortened pin requirements for ease of production access",
+      "lastSynced": "2025-11-12T16:09:11.979Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "description": "shortened pin requirements for ease of production access",
+        "createdDateTime": "2025-11-10T21:43:21.0098625Z",
+        "modifiedDateTime": "2025-11-10T21:45:41.6495419Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            },
+            {
+              "id": "2"
+            },
+            {
+              "id": "3"
+            },
+            {
+              "id": "4"
+            },
+            {
+              "id": "5"
+            },
+            {
+              "id": "6"
+            },
+            {
+              "id": "7"
+            },
+            {
+              "id": "8"
+            },
+            {
+              "id": "9"
+            },
+            {
+              "id": "10"
+            },
+            {
+              "id": "11"
+            },
+            {
+              "id": "12"
+            },
+            {
+              "id": "13"
+            },
+            {
+              "id": "14"
+            },
+            {
+              "id": "15"
+            },
+            {
+              "id": "16"
+            },
+            {
+              "id": "17"
+            },
+            {
+              "id": "18"
+            },
+            {
+              "id": "19"
+            },
+            {
+              "id": "20"
+            },
+            {
+              "id": "21"
+            },
+            {
+              "id": "22"
+            },
+            {
+              "id": "23"
+            },
+            {
+              "id": "24"
+            }
+          ]
+        }
+      },
+      "mappedControls": [
+        {
+          "controlId": "03.05.01",
+          "controlTitle": "Baseline Configuration",
+          "mappingConfidence": "Medium",
+          "mappingNotes": "Intune configuration policies establish and enforce baseline security configurations\nMatched keywords: baseline, security\nScore: 50%"
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "policyType": "Intune",
+      "policyId": "23158bd3-9c5b-4cda-b951-d0f1f3b4d2d0",
+      "policyName": "Onboard Devices to Purview & Defender",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.976Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-11-03T18:12:46.1659227Z",
+        "modifiedDateTime": "2025-11-03T18:12:46.1659227Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 84,
+      "policyType": "Intune",
+      "policyId": "e1671cee-80f6-454b-87ec-f6fc7a2f3895",
+      "policyName": "NIST 800-171 BitLocker Policy",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.973Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-10-01T21:02:59.6814029Z",
+        "modifiedDateTime": "2025-10-16T16:58:58.1564938Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            },
+            {
+              "id": "2"
+            },
+            {
+              "id": "3"
+            },
+            {
+              "id": "4"
+            },
+            {
+              "id": "5"
+            },
+            {
+              "id": "6"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 83,
+      "policyType": "Intune",
+      "policyId": "1a818215-253a-4f21-8bbf-bd4142fbe1c2",
+      "policyName": "NIST 800-171 ASR Rules - Block",
+      "policyDescription": "switch to this after monitoring via Defender for a week",
+      "lastSynced": "2025-11-12T16:09:11.971Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "description": "switch to this after monitoring via Defender for a week",
+        "createdDateTime": "2025-10-06T15:07:07.350738Z",
+        "modifiedDateTime": "2025-10-16T15:12:53.75139Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 82,
+      "policyType": "Intune",
+      "policyId": "0ba0b599-a325-456f-afb7-6ce48073e5e4",
+      "policyName": "NIST 800-171 ASR Rules - Audit",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.968Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-10-06T15:06:19.0189043Z",
+        "modifiedDateTime": "2025-10-28T21:58:03.7300447Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 81,
+      "policyType": "Intune",
+      "policyId": "f83cb8df-780e-4c79-b9f8-2a3aecc62a6a",
+      "policyName": "NIST 800-171 Android Enterprise Policy",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.965Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-10-14T14:11:18.9075413Z",
+        "modifiedDateTime": "2025-10-14T14:11:18.9075413Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            },
+            {
+              "id": "2"
+            },
+            {
+              "id": "3"
+            },
+            {
+              "id": "4"
+            },
+            {
+              "id": "5"
+            },
+            {
+              "id": "6"
+            },
+            {
+              "id": "7"
+            },
+            {
+              "id": "8"
+            },
+            {
+              "id": "9"
+            },
+            {
+              "id": "10"
+            },
+            {
+              "id": "11"
+            },
+            {
+              "id": "12"
+            },
+            {
+              "id": "13"
+            },
+            {
+              "id": "14"
+            },
+            {
+              "id": "15"
+            },
+            {
+              "id": "16"
+            },
+            {
+              "id": "17"
+            },
+            {
+              "id": "18"
+            },
+            {
+              "id": "19"
+            },
+            {
+              "id": "20"
+            },
+            {
+              "id": "21"
+            },
+            {
+              "id": "22"
+            },
+            {
+              "id": "23"
+            },
+            {
+              "id": "24"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 80,
+      "policyType": "Intune",
+      "policyId": "43e92e50-a4c1-41cf-b51b-498d63a58575",
+      "policyName": "Microsoft Defender for Endpoint Security Baseline",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.961Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "createdDateTime": "2025-10-02T14:47:33.4338265Z",
+        "modifiedDateTime": "2025-10-02T14:47:33.4338265Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            },
+            {
+              "id": "2"
+            },
+            {
+              "id": "3"
+            },
+            {
+              "id": "4"
+            },
+            {
+              "id": "5"
+            },
+            {
+              "id": "6"
+            },
+            {
+              "id": "7"
+            },
+            {
+              "id": "8"
+            },
+            {
+              "id": "9"
+            },
+            {
+              "id": "10"
+            },
+            {
+              "id": "11"
+            },
+            {
+              "id": "12"
+            },
+            {
+              "id": "13"
+            },
+            {
+              "id": "14"
+            },
+            {
+              "id": "15"
+            },
+            {
+              "id": "16"
+            },
+            {
+              "id": "17"
+            },
+            {
+              "id": "18"
+            },
+            {
+              "id": "19"
+            },
+            {
+              "id": "20"
+            },
+            {
+              "id": "21"
+            },
+            {
+              "id": "22"
+            },
+            {
+              "id": "23"
+            },
+            {
+              "id": "24"
+            }
+          ]
+        }
+      },
+      "mappedControls": [
+        {
+          "controlId": "03.05.01",
+          "controlTitle": "Baseline Configuration",
+          "mappingConfidence": "Medium",
+          "mappingNotes": "Intune configuration policies establish and enforce baseline security configurations\nMatched keywords: baseline, security\nScore: 50%"
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "policyType": "Intune",
+      "policyId": "e5d6199e-c0fa-4301-a086-65f3d7ff0ff7",
+      "policyName": "Default EDR policy for all devices",
+      "policyDescription": "Default EDR policy for targeting all tenants devices, created by MDE.",
+      "lastSynced": "2025-11-12T16:09:11.959Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "description": "Default EDR policy for targeting all tenants devices, created by MDE.",
+        "createdDateTime": "2025-10-14T18:55:37.196938Z",
+        "modifiedDateTime": "2025-10-14T18:55:37.196938Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 78,
+      "policyType": "Intune",
+      "policyId": "ce19bd57-1196-41db-8ba0-0f97e6160db6",
+      "policyName": "Compliance Health Check (Settings)",
+      "policyDescription": "Bitlocker & Defender",
+      "lastSynced": "2025-11-12T16:09:11.956Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "Unknown",
+        "description": "Bitlocker & Defender",
+        "createdDateTime": "2025-09-30T21:43:54.5264866Z",
+        "modifiedDateTime": "2025-10-01T18:53:54.8206966Z",
+        "settings": {
+          "endpointSecuritySettings": [
+            {
+              "id": "0"
+            },
+            {
+              "id": "1"
+            },
+            {
+              "id": "2"
+            },
+            {
+              "id": "3"
+            },
+            {
+              "id": "4"
+            },
+            {
+              "id": "5"
+            },
+            {
+              "id": "6"
+            },
+            {
+              "id": "7"
+            },
+            {
+              "id": "8"
+            }
+          ]
+        }
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 3,
+      "policyType": "Intune",
+      "policyId": "98d28c49-ff42-4fa3-ac45-c6c24a85bf2a",
+      "policyName": "NIST 800-171 iOS Config Policy",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.953Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "NIST 800-171 iOS Config Policy",
+        "createdDateTime": "2025-10-14T15:10:32.2577916Z",
+        "modifiedDateTime": "2025-10-14T15:10:32.2577916Z",
+        "settings": {
+          "passcodeRequired": true,
+          "passcodeMinimumLength": 8
+        },
+        "odataType": "#microsoft.graph.iosGeneralDeviceConfiguration"
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 2,
+      "policyType": "Intune",
+      "policyId": "36d18f76-97ea-45a2-b845-d244c6bee3d5",
+      "policyName": "NIST 800-171 - Windows Update Ring",
+      "policyDescription": "Enforces automatic updates and deadlines to meet NIST/CMMC requirements.",
+      "lastSynced": "2025-11-12T16:09:11.950Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "NIST 800-171 - Windows Update Ring",
+        "description": "Enforces automatic updates and deadlines to meet NIST/CMMC requirements.",
+        "createdDateTime": "2025-10-29T14:52:04.3460846Z",
+        "modifiedDateTime": "2025-10-29T14:52:04.3460846Z",
+        "settings": {
+          "automaticUpdateMode": "autoInstallAndRebootAtScheduledTime",
+          "microsoftUpdateServiceAllowed": true,
+          "qualityUpdatesDeferralPeriodInDays": 3,
+          "featureUpdatesDeferralPeriodInDays": 7,
+          "deliveryOptimizationMode": "userDefined"
+        },
+        "odataType": "#microsoft.graph.windowsUpdateForBusinessConfiguration"
+      },
+      "mappedControls": []
+    },
+    {
+      "id": 1,
+      "policyType": "Intune",
+      "policyId": "7c0d5340-61b2-45ae-9b1b-4e4633320ce3",
+      "policyName": "NIST 800-171 Windows Device Compliance",
+      "policyDescription": "",
+      "lastSynced": "2025-11-12T16:09:11.946Z",
+      "isActive": true,
+      "parsedData": {
+        "displayName": "NIST 800-171 Windows Device Compliance",
+        "createdDateTime": "2025-10-06T14:40:34.791857Z",
+        "modifiedDateTime": "2025-11-04T16:16:31.6186613Z",
+        "settings": {
+          "passwordRequired": true,
+          "passwordMinimumLength": 8,
+          "passwordExpirationDays": 60,
+          "passwordPreviousPasswordBlockCount": 10,
+          "passwordRequiredType": "deviceDefault",
+          "requireHealthyDeviceReport": false,
+          "osMinimumVersion": "10.0.19045",
+          "bitLockerEnabled": false,
+          "storageRequireEncryption": true,
+          "secureBootEnabled": true,
+          "codeIntegrityEnabled": true
+        },
+        "odataType": "#microsoft.graph.windows10CompliancePolicy"
+      },
+      "mappedControls": []
+    }
+  ],
+  "stats": {
+    "totalPolicies": 19,
+    "activePolicies": 18,
+    "inactivePolicies": 1,
+    "byType": {
+      "Intune": 18,
+      "Purview": 0,
+      "AzureAD": 1
+    },
+    "lastSyncDate": "2025-11-12T16:09:11.997Z",
+    "policiesWithMappings": 3
+  }
+}

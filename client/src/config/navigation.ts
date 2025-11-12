@@ -4,6 +4,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import FolderIcon from '@mui/icons-material/Folder';
 import CloudIcon from '@mui/icons-material/Cloud';
+import PolicyIcon from '@mui/icons-material/Policy';
 import DescriptionIcon from '@mui/icons-material/Description';
 import SettingsIcon from '@mui/icons-material/Settings';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
@@ -57,6 +58,12 @@ export const navigationItems: NavigationItem[] = [
     path: '/m365',
     icon: CloudIcon,
     description: 'Microsoft 365 policy sync',
+  },
+  {
+    label: 'Policy Viewer',
+    path: '/policy-viewer',
+    icon: PolicyIcon,
+    description: 'View and manage M365 policies',
   },
   {
     label: 'Reports',

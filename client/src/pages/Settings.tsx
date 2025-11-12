@@ -9,10 +9,12 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { settingsService } from '../services/settings.service';
 import M365SettingsTab from '../components/settings/M365SettingsTab';
 import OrganizationSettingsTab from '../components/settings/OrganizationSettingsTab';
+import { UserPreferences } from '../components/settings/UserPreferences';
+import { DataManagement } from '../components/settings/DataManagement';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,6 +40,7 @@ function TabPanel(props: TabPanelProps) {
 
 export const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const queryClient = useQueryClient();
 
   const { data: settings, isLoading, error, refetch } = useQuery({
     queryKey: ['settings'],
@@ -46,6 +49,43 @@ export const Settings: React.FC = () => {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
+  };
+
+  // Helper to convert preferences object to flat key-value pairs
+  const getPreferencesAsKeyValue = (): Record<string, string> => {
+    if (!settings?.preferences) return {};
+
+    const prefs = settings.preferences as any;
+    return {
+      pref_date_format: prefs.dateFormat || 'MM/DD/YYYY',
+      pref_items_per_page: prefs.itemsPerPage?.toString() || '50',
+      pref_default_view: prefs.defaultView || 'table',
+      pref_notifications_enabled: prefs.notificationsEnabled?.toString() || 'true',
+      pref_show_completed_controls: prefs.showCompletedControls?.toString() || 'true',
+      pref_show_not_started_controls: prefs.showNotStartedControls?.toString() || 'true',
+      pref_default_control_family: prefs.defaultControlFamily || 'all',
+      pref_default_status_filter: prefs.defaultStatusFilter || 'all',
+      pref_default_priority_filter: prefs.defaultPriorityFilter || 'all',
+      pref_assessment_reminder_days: prefs.assessmentReminderDays?.toString() || '7',
+      pref_poam_reminder_days: prefs.poamReminderDays?.toString() || '7',
+      pref_show_family_descriptions: prefs.showFamilyDescriptions?.toString() || 'true',
+      pref_expand_control_details_default: prefs.expandControlDetailsDefault?.toString() || 'false',
+      pref_custom_tags: prefs.customTags || '[]',
+      pref_time_format: prefs.timeFormat || '12h',
+      pref_dashboard_refresh_seconds: prefs.dashboardRefreshSeconds?.toString() || '60',
+    };
+  };
+
+  // Save user preferences
+  const handleSaveUserPreferences = async (preferences: Record<string, string>) => {
+    await settingsService.updateSettingsCategory('preferences', preferences);
+    await refetch();
+  };
+
+  // Reset user preferences to defaults
+  const handleResetUserPreferences = async () => {
+    await settingsService.resetCategory('preferences');
+    await refetch();
   };
 
   if (isLoading) {
@@ -109,19 +149,17 @@ export const Settings: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={activeTab} index={2}>
-          <Box sx={{ p: 3 }}>
-            <Alert severity="info">
-              User preferences will be implemented in Phase 8.2
-            </Alert>
-          </Box>
+          {settings && (
+            <UserPreferences
+              initialPreferences={getPreferencesAsKeyValue()}
+              onSave={handleSaveUserPreferences}
+              onReset={handleResetUserPreferences}
+            />
+          )}
         </TabPanel>
 
         <TabPanel value={activeTab} index={3}>
-          <Box sx={{ p: 3 }}>
-            <Alert severity="info">
-              Data management features will be implemented in Phase 8.3
-            </Alert>
-          </Box>
+          <DataManagement />
         </TabPanel>
       </Paper>
     </Container>

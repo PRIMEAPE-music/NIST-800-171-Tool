@@ -1,0 +1,71 @@
+### Policy Viewer API Endpoints Testing
+### Base URL: http://localhost:3001/api/m365
+
+# ============================================================================
+# Policy Viewer Endpoints
+# ============================================================================
+
+### Get all policies for viewer
+GET http://localhost:3001/api/m365/policies/viewer
+
+### Get Intune policies only
+GET http://localhost:3001/api/m365/policies/viewer?policyType=Intune
+
+### Get Purview policies only
+GET http://localhost:3001/api/m365/policies/viewer?policyType=Purview
+
+### Get Azure AD policies only
+GET http://localhost:3001/api/m365/policies/viewer?policyType=AzureAD
+
+### Search policies by name or description
+GET http://localhost:3001/api/m365/policies/viewer?searchTerm=compliance
+
+### Get active policies only
+GET http://localhost:3001/api/m365/policies/viewer?isActive=true
+
+### Get inactive policies only
+GET http://localhost:3001/api/m365/policies/viewer?isActive=false
+
+### Get policies mapped to specific control (replace with actual control ID)
+GET http://localhost:3001/api/m365/policies/viewer?controlId=3.5.3
+
+### Get policies sorted by name
+GET http://localhost:3001/api/m365/policies/viewer?sortBy=name&sortOrder=asc
+
+### Get policies sorted by last synced date
+GET http://localhost:3001/api/m365/policies/viewer?sortBy=lastSynced&sortOrder=desc
+
+### Get policies sorted by type
+GET http://localhost:3001/api/m365/policies/viewer?sortBy=type&sortOrder=asc
+
+### Combined filters - Active Intune policies with search term
+GET http://localhost:3001/api/m365/policies/viewer?policyType=Intune&isActive=true&searchTerm=device
+
+### Get single policy detail (replace :id with actual policy ID)
+GET http://localhost:3001/api/m365/policies/viewer/1
+
+### Get viewer statistics
+GET http://localhost:3001/api/m365/policies/viewer/stats
+
+### Export policy data
+GET http://localhost:3001/api/m365/policies/viewer/export
+
+# ============================================================================
+# Test with different policy IDs
+# ============================================================================
+
+### Get policy with ID 2
+GET http://localhost:3001/api/m365/policies/viewer/2
+
+### Get policy with ID 3
+GET http://localhost:3001/api/m365/policies/viewer/3
+
+# ============================================================================
+# Error Handling Tests
+# ============================================================================
+
+### Test with non-existent policy ID
+GET http://localhost:3001/api/m365/policies/viewer/99999
+
+### Test with invalid policy type
+GET http://localhost:3001/api/m365/policies/viewer?policyType=InvalidType

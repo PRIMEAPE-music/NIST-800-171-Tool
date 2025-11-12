@@ -7,6 +7,7 @@ import authRoutes from './auth.routes';
 import m365Routes from './m365.routes';
 import reportRoutes from './reportRoutes';
 import settingsRoutes from './settings.routes';
+import backupRoutes from './backup.routes';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/auth', authRoutes);
 router.use('/m365', m365Routes);
 router.use('/reports', reportRoutes);
 router.use('/settings', settingsRoutes);
+router.use('/backup', backupRoutes);
 
 export default router;
