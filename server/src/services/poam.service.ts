@@ -443,6 +443,271 @@ export class PoamService {
       );
     }
   }
+
+  // ============================================================================
+  // Gap Analysis POA&M Methods (for POAMItem model)
+  // ============================================================================
+
+  /**
+   * Generate POA&M from gaps
+   */
+  async generatePOAMFromGaps(options: {
+    controlId?: string;
+    severity?: string[];
+    status?: string[];
+  } = {}) {
+    const where: any = {};
+
+    if (options.controlId) {
+      const control = await prisma.control.findUnique({
+        where: { controlId: options.controlId },
+      });
+      if (control) {
+        where.controlId = control.id;
+      }
+    }
+
+    if (options.severity) {
+      where.severity = { in: options.severity };
+    }
+
+    if (options.status) {
+      where.status = { in: options.status };
+    } else {
+      // Default to open and in_progress gaps
+      where.status = { in: ['open', 'in_progress'] };
+    }
+
+    const gaps = await prisma.controlGap.findMany({
+      where,
+      include: {
+        control: true,
+      },
+      orderBy: [
+        { severity: 'desc' },
+        { controlId: 'asc' },
+      ],
+    });
+
+    const poamItems = gaps.map(gap => ({
+      controlId: gap.control.controlId,
+      controlTitle: gap.control.title,
+      weakness: gap.gapDescription,
+      riskLevel: gap.severity,
+      likelihood: this.calculateLikelihood(gap.severity),
+      impact: this.calculateImpact(gap.gapType),
+      remediationPlan: gap.remediationGuidance,
+      responsibleParty: gap.assignedTo || 'TBD',
+      status: gap.status,
+      targetDate: gap.dueDate || this.calculateTargetDate(gap.severity),
+      milestones: this.generateMilestones(gap.gapType, gap.severity),
+    }));
+
+    return poamItems;
+  }
+
+  /**
+   * Create POA&M item from gap
+   */
+  async createPOAMItemFromGap(gapId: number) {
+    const gap = await prisma.controlGap.findUnique({
+      where: { id: gapId },
+      include: { control: true },
+    });
+
+    if (!gap) throw new Error('Gap not found');
+
+    const poamItem = await prisma.pOAMItem.create({
+      data: {
+        controlId: gap.controlId,
+        gapId: gap.id,
+        weakness: gap.gapDescription,
+        riskLevel: gap.severity,
+        likelihood: this.calculateLikelihood(gap.severity),
+        impact: this.calculateImpact(gap.gapType),
+        remediationPlan: gap.remediationGuidance,
+        requiredResources: this.estimateResources(gap.gapType),
+        responsibleParty: gap.assignedTo || 'TBD',
+        milestones: JSON.stringify(this.generateMilestones(gap.gapType, gap.severity)),
+        status: 'open',
+        targetDate: gap.dueDate || this.calculateTargetDate(gap.severity),
+        sourceOfFinding: 'gap_analysis',
+      },
+    });
+
+    return poamItem;
+  }
+
+  /**
+   * Calculate likelihood based on severity
+   */
+  private calculateLikelihood(severity: string): string {
+    switch (severity) {
+      case 'critical': return 'high';
+      case 'high': return 'medium';
+      case 'medium': return 'medium';
+      case 'low': return 'low';
+      default: return 'medium';
+    }
+  }
+
+  /**
+   * Calculate impact based on gap type
+   */
+  private calculateImpact(gapType: string): string {
+    switch (gapType) {
+      case 'technical': return 'high';
+      case 'policy': return 'medium';
+      case 'procedure': return 'medium';
+      case 'evidence': return 'low';
+      default: return 'medium';
+    }
+  }
+
+  /**
+   * Calculate target date based on severity
+   */
+  private calculateTargetDate(severity: string): Date {
+    const now = new Date();
+    const daysToAdd = {
+      'critical': 30,
+      'high': 60,
+      'medium': 90,
+      'low': 120,
+    }[severity] || 90;
+
+    now.setDate(now.getDate() + daysToAdd);
+    return now;
+  }
+
+  /**
+   * Generate milestones for gap remediation
+   */
+  private generateMilestones(gapType: string, severity: string) {
+    const targetDays = {
+      'critical': 30,
+      'high': 60,
+      'medium': 90,
+      'low': 120,
+    }[severity] || 90;
+
+    if (gapType === 'policy') {
+      return [
+        {
+          description: 'Policy template selected or drafted',
+          targetDays: Math.round(targetDays * 0.3),
+          status: 'pending',
+        },
+        {
+          description: 'Policy customized for organization',
+          targetDays: Math.round(targetDays * 0.5),
+          status: 'pending',
+        },
+        {
+          description: 'Management review and approval',
+          targetDays: Math.round(targetDays * 0.7),
+          status: 'pending',
+        },
+        {
+          description: 'Policy published and communicated',
+          targetDays: targetDays,
+          status: 'pending',
+        },
+      ];
+    }
+
+    if (gapType === 'technical') {
+      return [
+        {
+          description: 'Solution identified and approved',
+          targetDays: Math.round(targetDays * 0.2),
+          status: 'pending',
+        },
+        {
+          description: 'Configuration completed in test environment',
+          targetDays: Math.round(targetDays * 0.5),
+          status: 'pending',
+        },
+        {
+          description: 'Testing and validation completed',
+          targetDays: Math.round(targetDays * 0.7),
+          status: 'pending',
+        },
+        {
+          description: 'Deployed to production',
+          targetDays: Math.round(targetDays * 0.9),
+          status: 'pending',
+        },
+        {
+          description: 'Verification and documentation',
+          targetDays: targetDays,
+          status: 'pending',
+        },
+      ];
+    }
+
+    if (gapType === 'procedure') {
+      return [
+        {
+          description: 'Procedure documented',
+          targetDays: Math.round(targetDays * 0.4),
+          status: 'pending',
+        },
+        {
+          description: 'Management approval obtained',
+          targetDays: Math.round(targetDays * 0.6),
+          status: 'pending',
+        },
+        {
+          description: 'Staff training completed',
+          targetDays: Math.round(targetDays * 0.9),
+          status: 'pending',
+        },
+        {
+          description: 'Procedure implemented and verified',
+          targetDays: targetDays,
+          status: 'pending',
+        },
+      ];
+    }
+
+    // Evidence
+    return [
+      {
+        description: 'Evidence requirements identified',
+        targetDays: Math.round(targetDays * 0.3),
+        status: 'pending',
+      },
+      {
+        description: 'Evidence collected',
+        targetDays: Math.round(targetDays * 0.7),
+        status: 'pending',
+      },
+      {
+        description: 'Evidence organized and verified',
+        targetDays: targetDays,
+        status: 'pending',
+      },
+    ];
+  }
+
+  /**
+   * Estimate resources needed
+   */
+  private estimateResources(gapType: string): string {
+    switch (gapType) {
+      case 'policy':
+        return '8-16 hours (policy development), management review time';
+      case 'technical':
+        return '16-40 hours (implementation and testing), possible licensing costs';
+      case 'procedure':
+        return '8-24 hours (documentation and training)';
+      case 'evidence':
+        return '2-8 hours (collection and organization)';
+      default:
+        return 'TBD';
+    }
+  }
 }
 
 export const poamService = new PoamService();

@@ -169,6 +169,26 @@ class ControlController {
   }
 
   /**
+   * GET /api/controls/:controlId/policies
+   * Get M365 policies mapped to this control with their settings
+   */
+  async getPoliciesForControl(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { controlId } = req.params;
+
+      const policies = await controlService.getPoliciesForControl(controlId);
+
+      res.status(200).json({
+        success: true,
+        data: policies,
+      });
+    } catch (error) {
+      logger.error(`Error in getPoliciesForControl (${req.params.controlId}):`, error);
+      next(error);
+    }
+  }
+
+  /**
    * POST /api/controls/bulk
    * Bulk operations on controls
    */

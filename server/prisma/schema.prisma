@@ -34,6 +34,10 @@ model Control {
   poams          Poam[]
   policyMappings ControlPolicyMapping[]
   changeHistory  ChangeHistory[]
+  gaps           ControlGap[]
+  poamItems      POAMItem[]
+  coverage       ControlCoverage?
+  controlEvidence ControlEvidence[]
 
   @@index([family])
   @@index([priority])
@@ -200,13 +204,17 @@ model ControlPolicyMapping {
   policyId          Int      @map("policy_id")
   mappingConfidence String   @default("Medium") @map("mapping_confidence") // 'High' | 'Medium' | 'Low'
   mappingNotes      String?  @map("mapping_notes")
+  mappedSettings    String?  @map("mapped_settings") // JSON array of settings that map to this control
+  isAutoMapped      Boolean  @default(true) @map("is_auto_mapped") // True if auto-generated, false if manual
   createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
 
   // Relations
   control Control    @relation(fields: [controlId], references: [id], onDelete: Cascade)
   policy  M365Policy @relation(fields: [policyId], references: [id], onDelete: Cascade)
 
   @@unique([controlId, policyId])
+  @@index([isAutoMapped])
   @@map("control_policy_mappings")
 }
 
@@ -313,4 +321,152 @@ model ReportTemplate {
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("report_templates")
+}
+
+// ============================================================================
+// Gap Analysis Tables
+// ============================================================================
+
+// Gap types for each control
+model ControlGap {
+  id                  Int      @id @default(autoincrement())
+  controlId           Int      @map("control_id")
+  control             Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  // Gap categorization
+  gapType             String   @map("gap_type") // 'technical', 'policy', 'procedure', 'evidence'
+  gapTitle            String   @map("gap_title")
+  gapDescription      String   @map("gap_description")
+  nistRequirement     String   @map("nist_requirement")
+  severity            String   // 'critical', 'high', 'medium', 'low'
+
+  // Remediation
+  status              String   @default("open") // 'open', 'in_progress', 'resolved', 'accepted'
+  remediationGuidance String   @map("remediation_guidance")
+  assignedTo          String?  @map("assigned_to")
+  dueDate             DateTime? @map("due_date")
+  resolvedDate        DateTime? @map("resolved_date")
+  notes               String?
+
+  // Metadata
+  source              String   @default("checklist") // 'checklist', 'manual', 'assessment'
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  poamItem            POAMItem?
+
+  @@index([controlId])
+  @@index([gapType])
+  @@index([status])
+  @@index([severity])
+  @@map("control_gaps")
+}
+
+// Plan of Action & Milestones
+model POAMItem {
+  id                  Int      @id @default(autoincrement())
+  controlId           Int      @map("control_id")
+  control             Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  // Link to gap (optional - POA&M can exist without gap)
+  gapId               Int?     @unique @map("gap_id")
+  gap                 ControlGap? @relation(fields: [gapId], references: [id])
+
+  // POA&M details
+  weakness            String
+  riskLevel           String   @map("risk_level") // 'critical', 'high', 'medium', 'low'
+  likelihood          String   // 'high', 'medium', 'low'
+  impact              String   // 'high', 'medium', 'low'
+
+  // Remediation plan
+  remediationPlan     String   @map("remediation_plan")
+  requiredResources   String?  @map("required_resources")
+  responsibleParty    String   @map("responsible_party")
+  milestones          String   // JSON array of milestones
+
+  // Tracking
+  status              String   @default("open") // 'open', 'in_progress', 'closed'
+  targetDate          DateTime @map("target_date")
+  completionDate      DateTime? @map("completion_date")
+
+  // Evidence
+  evidence            String?
+
+  // Metadata
+  sourceOfFinding     String   @default("internal_assessment") @map("source_of_finding")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@index([controlId])
+  @@index([status])
+  @@index([riskLevel])
+  @@index([targetDate])
+  @@map("poam_items")
+}
+
+// Track control coverage metrics
+model ControlCoverage {
+  id                    Int      @id @default(autoincrement())
+  controlId             Int      @unique @map("control_id")
+  control               Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  // Coverage percentages (0-100)
+  technicalCoverage     Int      @default(0) @map("technical_coverage")
+  policyCoverage        Int      @default(0) @map("policy_coverage")
+  proceduralCoverage    Int      @default(0) @map("procedural_coverage")
+  evidenceCoverage      Int      @default(0) @map("evidence_coverage")
+  overallCoverage       Int      @default(0) @map("overall_coverage")
+
+  // Counts
+  totalGaps             Int      @default(0) @map("total_gaps")
+  criticalGaps          Int      @default(0) @map("critical_gaps")
+  highGaps              Int      @default(0) @map("high_gaps")
+  mediumGaps            Int      @default(0) @map("medium_gaps")
+  lowGaps               Int      @default(0) @map("low_gaps")
+
+  // Status
+  complianceStatus      String   @default("unknown") @map("compliance_status") // 'compliant', 'partial', 'non_compliant', 'unknown'
+
+  // Timestamps
+  lastAssessed          DateTime @default(now()) @map("last_assessed")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  @@index([complianceStatus])
+  @@index([overallCoverage])
+  @@map("control_coverage")
+}
+
+// Evidence collection tracking
+model ControlEvidence {
+  id                  Int      @id @default(autoincrement())
+  controlId           Int      @map("control_id")
+  control             Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  // Evidence details
+  evidenceType        String   @map("evidence_type") // 'policy', 'screenshot', 'log', 'report', 'procedure', 'other'
+  evidenceTitle       String   @map("evidence_title")
+  evidenceDescription String?  @map("evidence_description")
+
+  // File information
+  fileName            String?  @map("file_name")
+  filePath            String?  @map("file_path")
+  fileSize            Int?     @map("file_size")
+  mimeType            String?  @map("mime_type")
+
+  // Status
+  status              String   @default("required") // 'required', 'uploaded', 'verified', 'rejected'
+  uploadedBy          String?  @map("uploaded_by")
+  verifiedBy          String?  @map("verified_by")
+
+  // Timestamps
+  uploadedAt          DateTime? @map("uploaded_at")
+  verifiedAt          DateTime? @map("verified_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@index([controlId])
+  @@index([status])
+  @@index([evidenceType])
+  @@map("control_evidence")
 }

@@ -5,6 +5,7 @@ import {
   PolicyViewerStats,
   ParsedPolicyData,
   MappedControl,
+  MappedSetting,
 } from '../types/policyViewer.types';
 
 const prisma = new PrismaClient();
@@ -174,12 +175,26 @@ class PolicyViewerService {
 
     // Transform mapped controls
     const mappedControls: MappedControl[] =
-      policy.controlMappings?.map((mapping: any) => ({
-        controlId: mapping.control.controlId,
-        controlTitle: mapping.control.title,
-        mappingConfidence: mapping.mappingConfidence,
-        mappingNotes: mapping.mappingNotes,
-      })) || [];
+      policy.controlMappings?.map((mapping: any) => {
+        // Parse mapped settings JSON if present
+        let mappedSettings: MappedSetting[] | undefined;
+        if (mapping.mappedSettings) {
+          try {
+            mappedSettings = JSON.parse(mapping.mappedSettings);
+          } catch (error) {
+            console.error(`Failed to parse mappedSettings for mapping ${mapping.id}:`, error);
+            mappedSettings = undefined;
+          }
+        }
+
+        return {
+          controlId: mapping.control.controlId,
+          controlTitle: mapping.control.title,
+          mappingConfidence: mapping.mappingConfidence,
+          mappingNotes: mapping.mappingNotes,
+          mappedSettings,
+        };
+      }) || [];
 
     return {
       id: policy.id,

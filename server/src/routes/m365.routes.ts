@@ -6,10 +6,20 @@ import { purviewService } from '../services/purview.service';
 import { azureADService } from '../services/azureAD.service';
 import { policySyncService } from '../services/policySync.service';
 import policyViewerService from '../services/policyViewer.service';
+import settingsMapperService from '../services/settingsMapper.service';
+import { improvementActionMappingService } from '../services/improvementActionMapping.service';
 import { PolicySearchParams } from '../types/policyViewer.types';
+import secureScoreRoutes from './secureScore.routes';
+import complianceManagerRoutes from './complianceManager.routes';
 
 const router = Router();
 const prisma = new PrismaClient();
+
+// Mount Secure Score routes
+router.use('/secure-score', secureScoreRoutes);
+
+// Mount Compliance Manager routes
+router.use('/compliance-manager', complianceManagerRoutes);
 
 /**
  * GET /api/m365/intune/compliance-policies
@@ -542,6 +552,141 @@ router.get('/policies/viewer/:id', async (req, res) => {
     res.json({
       success: true,
       policy,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+// ============================================================================
+// GAP ANALYSIS ENDPOINTS
+// ============================================================================
+
+/**
+ * GET /api/m365/gap-analysis
+ * Get comprehensive gap analysis showing controls with missing or non-compliant settings
+ */
+router.get('/gap-analysis', async (req, res) => {
+  try {
+    const analysis = await settingsMapperService.getGapAnalysis();
+
+    res.json({
+      success: true,
+      analysis,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/gap-analysis/export
+ * Export gap analysis report with actionable remediation steps
+ */
+router.get('/gap-analysis/export', async (req, res) => {
+  try {
+    const { format = 'json' } = req.query;
+    const analysis = await settingsMapperService.getGapAnalysis();
+
+    if (format === 'json') {
+      // JSON export with full details
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="m365-gap-analysis-${new Date().toISOString().split('T')[0]}.json"`
+      );
+      res.json({
+        exportDate: new Date().toISOString(),
+        summary: {
+          totalControls: analysis.totalControls,
+          controlsFullyCovered: analysis.controlsFullyCovered,
+          controlsPartiallyCovered: analysis.controlsPartiallyCovered,
+          controlsNotCovered: analysis.controlsNotCovered,
+          coveragePercentage: analysis.coveragePercentage,
+        },
+        gaps: analysis.gaps,
+      });
+    } else if (format === 'csv') {
+      // CSV export for spreadsheet analysis
+      const csvRows = [
+        ['Control ID', 'Control Title', 'Family', 'Priority', 'Gap Type', 'Recommended Actions'].join(','),
+      ];
+
+      for (const gap of analysis.gaps) {
+        const actions = gap.recommendedActions.join('; ').replace(/"/g, '""');
+        csvRows.push(
+          [
+            gap.controlId,
+            `"${gap.controlTitle.replace(/"/g, '""')}"`,
+            gap.family,
+            gap.priority,
+            gap.gapType,
+            `"${actions}"`,
+          ].join(',')
+        );
+      }
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="m365-gap-analysis-${new Date().toISOString().split('T')[0]}.csv"`
+      );
+      res.send(csvRows.join('\n'));
+    } else {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid format. Use "json" or "csv"',
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/recommendations/:controlId
+ * Get Microsoft 365 implementation recommendations for a specific control
+ */
+router.get('/recommendations/:controlId', async (req, res) => {
+  try {
+    const { controlId } = req.params;
+    const recommendations = await settingsMapperService.getRecommendations(controlId);
+
+    res.json({
+      success: true,
+      recommendations,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/improvement-actions/:controlId
+ * Get improvement actions with policy mappings showing which policies satisfy each action
+ */
+router.get('/improvement-actions/:controlId', async (req, res) => {
+  try {
+    const { controlId } = req.params;
+    const actions = await improvementActionMappingService.getImprovementActionsWithPolicies(controlId);
+
+    res.json({
+      success: true,
+      controlId,
+      count: actions.length,
+      actions,
     });
   } catch (error) {
     res.status(500).json({

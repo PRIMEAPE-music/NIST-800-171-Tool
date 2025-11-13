@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { intuneService } from './intune.service';
 import { purviewService } from './purview.service';
 import { azureADService } from './azureAD.service';
+import settingsMapperService from './settingsMapper.service';
 import { PolicyType, SyncResult } from '../types/m365.types';
 import fs from 'fs';
 import path from 'path';
@@ -132,8 +133,10 @@ class PolicySyncService {
         policiesUpdated += azureADCount;
       }
 
-      // Auto-map policies to controls
-      controlsUpdated = await this.autoMapPolicies();
+      // Auto-map policies to controls using settings-based mapper
+      console.log('🎯 Running settings-based auto-mapper...');
+      const mappingStats = await settingsMapperService.mapAllPolicies();
+      controlsUpdated = mappingStats.totalMappingsCreated;
 
       // Update sync settings
       await prisma.m365Settings.upsert({

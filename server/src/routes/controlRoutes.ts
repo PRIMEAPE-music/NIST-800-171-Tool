@@ -36,6 +36,9 @@ router.get('/control/:controlId', controlController.getControlByControlId);
 // GET /api/controls/:id - Get control by database ID
 router.get('/:id', controlController.getControlById);
 
+// GET /api/controls/:controlId/policies - Get M365 policies mapped to this control
+router.get('/:controlId/policies', controlController.getPoliciesForControl);
+
 // PUT /api/controls/:id - Update control (notes, assignedTo, nextReviewDate)
 router.put('/:id', controlController.updateControl);
 

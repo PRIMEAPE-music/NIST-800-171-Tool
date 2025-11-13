@@ -1,6 +1,7 @@
 import { prisma } from '@/config/database';
 import { logger } from '@/utils/logger';
 import { ControlStatus, ControlFamily, ControlPriority } from '@/types/enums';
+import { controlProgressService } from './controlProgress.service';
 
 /**
  * Statistics Service
@@ -274,7 +275,7 @@ export class StatisticsService {
    */
   async getSummaryStats() {
     try {
-      const [total, implementedCount, verifiedCount, criticalCount] = await Promise.all([
+      const [total, implementedCount, verifiedCount, criticalCount, improvementActionProgress] = await Promise.all([
         prisma.control.count(),
         prisma.controlStatus.count({
           where: { status: ControlStatus.IMPLEMENTED },
@@ -292,6 +293,7 @@ export class StatisticsService {
             },
           },
         }),
+        controlProgressService.getProgressSummary(),
       ]);
 
       const compliantCount = implementedCount + verifiedCount;
@@ -302,6 +304,17 @@ export class StatisticsService {
         compliant: compliantCount,
         compliancePercentage,
         criticalGaps: criticalCount,
+        improvementActions: {
+          totalActions: improvementActionProgress.totalActions,
+          completedActions: improvementActionProgress.completedActions,
+          progressPercentage: improvementActionProgress.overallProgress,
+          controlsWithProgress: {
+            total: improvementActionProgress.totalControls,
+            completed: improvementActionProgress.completedControls,
+            inProgress: improvementActionProgress.inProgressControls,
+            notStarted: improvementActionProgress.notStartedControls,
+          },
+        },
       };
     } catch (error) {
       logger.error('Error calculating summary statistics:', error);

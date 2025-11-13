@@ -2,6 +2,7 @@ import { prisma } from '@/config/database';
 import { Prisma } from '@prisma/client';
 import { logger } from '@/utils/logger';
 import { ControlStatus } from '@/types/enums';
+import { controlProgressService } from './controlProgress.service';
 
 export class ControlService {
   /**
@@ -51,7 +52,7 @@ export class ControlService {
       const sortOrder = filters?.sortOrder || 'asc';
 
       // Fetch controls and total count in parallel
-      const [controls, total] = await Promise.all([
+      const [controls, total, progressMap] = await Promise.all([
         prisma.control.findMany({
           where,
           include: {
@@ -69,10 +70,20 @@ export class ControlService {
           take: limit,
         }),
         prisma.control.count({ where }),
+        controlProgressService.calculateAllControlsProgress(),
       ]);
 
+      // Enrich controls with progress data
+      const enrichedControls = controls.map((control) => {
+        const progress = progressMap.get(control.controlId);
+        return {
+          ...control,
+          improvementActionProgress: progress || null,
+        };
+      });
+
       return {
-        controls,
+        controls: enrichedControls,
         pagination: {
           total,
           page,
@@ -91,7 +102,7 @@ export class ControlService {
    */
   async getControlById(id: number) {
     try {
-      return await prisma.control.findUnique({
+      const control = await prisma.control.findUnique({
         where: { id },
         include: {
           status: true,
@@ -116,6 +127,18 @@ export class ControlService {
           },
         },
       });
+
+      if (!control) {
+        return null;
+      }
+
+      // Add improvement action progress
+      const progress = await controlProgressService.calculateControlProgress(control.controlId);
+
+      return {
+        ...control,
+        improvementActionProgress: progress,
+      };
     } catch (error) {
       logger.error(`Error fetching control ${id}:`, error);
       throw error;
@@ -127,7 +150,7 @@ export class ControlService {
    */
   async getControlByControlId(controlId: string) {
     try {
-      return await prisma.control.findUnique({
+      const control = await prisma.control.findUnique({
         where: { controlId },
         include: {
           status: true,
@@ -143,6 +166,18 @@ export class ControlService {
           },
         },
       });
+
+      if (!control) {
+        return null;
+      }
+
+      // Add improvement action progress
+      const progress = await controlProgressService.calculateControlProgress(control.controlId);
+
+      return {
+        ...control,
+        improvementActionProgress: progress,
+      };
     } catch (error) {
       logger.error(`Error fetching control ${controlId}:`, error);
       throw error;
@@ -403,6 +438,68 @@ export class ControlService {
       return result;
     } catch (error) {
       logger.error('Error performing bulk update:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get M365 policies mapped to a control with their settings
+   */
+  async getPoliciesForControl(controlId: string) {
+    try {
+      // First, get the control to ensure it exists and get its database ID
+      const control = await prisma.control.findUnique({
+        where: { controlId },
+      });
+
+      if (!control) {
+        throw new Error(`Control ${controlId} not found`);
+      }
+
+      // Fetch all policy mappings for this control
+      const mappings = await prisma.controlPolicyMapping.findMany({
+        where: {
+          controlId: control.id,
+          isAutoMapped: true, // Only show auto-mapped settings
+        },
+        include: {
+          policy: {
+            select: {
+              id: true,
+              policyId: true,
+              policyName: true,
+              policyType: true,
+            },
+          },
+        },
+      });
+
+      // Transform to the format expected by the frontend
+      const policiesWithSettings = mappings.map((mapping) => {
+        // Parse mapped settings JSON
+        let mappedSettings: any[] = [];
+        if (mapping.mappedSettings) {
+          try {
+            mappedSettings = JSON.parse(mapping.mappedSettings);
+          } catch (error) {
+            logger.error(`Failed to parse mappedSettings for mapping ${mapping.id}:`, error);
+          }
+        }
+
+        return {
+          id: mapping.policy.id,
+          policyId: mapping.policy.policyId,
+          policyName: mapping.policy.policyName,
+          policyType: mapping.policy.policyType as 'Intune' | 'Purview' | 'AzureAD',
+          mappingConfidence: mapping.mappingConfidence as 'High' | 'Medium' | 'Low',
+          mappedSettings,
+        };
+      });
+
+      logger.info(`Found ${policiesWithSettings.length} policies for control ${controlId}`);
+      return policiesWithSettings;
+    } catch (error) {
+      logger.error(`Error fetching policies for control ${controlId}:`, error);
       throw error;
     }
   }
