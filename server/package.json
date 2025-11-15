@@ -17,7 +17,8 @@
     "test:auth": "ts-node -r tsconfig-paths/register src/scripts/test-auth.ts",
     "test:m365": "ts-node -r tsconfig-paths/register src/scripts/test-m365-services.ts",
     "test:sync": "ts-node -r tsconfig-paths/register src/scripts/test-sync.ts",
-    "cleanup:reports": "ts-node src/scripts/cleanupOldReports.ts"
+    "cleanup:reports": "ts-node src/scripts/cleanupOldReports.ts",
+    "backup:rev3": "ts-node src/scripts/create-migration-backup.ts"
   },
   "keywords": [
     "nist-800-171",
@@ -35,6 +36,7 @@
     "canvas": "^3.2.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "csv-writer": "^1.6.0",
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",
     "express": "^4.21.1",
