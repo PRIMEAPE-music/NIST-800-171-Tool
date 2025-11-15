@@ -1,13 +1,14 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+// AssessmentIcon removed - no longer used
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import FolderIcon from '@mui/icons-material/Folder';
 import CloudIcon from '@mui/icons-material/Cloud';
 import PolicyIcon from '@mui/icons-material/Policy';
 import DescriptionIcon from '@mui/icons-material/Description';
 import SettingsIcon from '@mui/icons-material/Settings';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
+// FactCheckIcon removed - no longer used
+import FindInPageIcon from '@mui/icons-material/FindInPage';
 
 export interface NavigationItem {
   label: string;
@@ -29,18 +30,8 @@ export const navigationItems: NavigationItem[] = [
     icon: ListAltIcon,
     description: 'All 111 NIST 800-171 Rev 3 controls',
   },
-  {
-    label: 'Assessment Wizard',
-    path: '/assessment',
-    icon: FactCheckIcon,
-    description: 'Conduct control assessments',
-  },
-  {
-    label: 'Gap Analysis',
-    path: '/gap-analysis',
-    icon: AssessmentIcon,
-    description: 'Assess and prioritize compliance gaps',
-  },
+  // Assessment Wizard removed - use control detail pages instead
+  // Gap Analysis standalone page removed - use Gap Analysis tab on control detail pages
   {
     label: 'POAMs',
     path: '/poams',
@@ -64,6 +55,12 @@ export const navigationItems: NavigationItem[] = [
     path: '/policy-viewer',
     icon: PolicyIcon,
     description: 'View and manage M365 policies',
+  },
+  {
+    label: 'M365 Gap Analysis',
+    path: '/m365/gap-analysis',
+    icon: FindInPageIcon,
+    description: 'Identify M365 compliance gaps',
   },
   {
     label: 'Reports',
