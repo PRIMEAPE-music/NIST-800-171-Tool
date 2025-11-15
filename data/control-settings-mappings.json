@@ -1,9 +1,9 @@
 {
-  "version": "NIST SP 800-171 Revision 3 (Optimized)",
-  "lastUpdated": "2024-11-15",
+  "version": "NIST SP 800-171 Revision 3 (Enhanced)",
+  "lastUpdated": "2025-11-15",
   "totalControls": 26,
   "mappingStrategy": "keyword-based",
-  "description": "Optimized keyword-based settings search templates matching actual Microsoft 365 policy property names",
+  "description": "Enhanced keyword-based settings search with dual-strategy matching for both legacy policies and Settings Catalog policies",
   "controls": [
     {
       "controlId": "03.01.01",
@@ -375,7 +375,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["os", "minimum", "version"]
+            "settingNameKeywords": ["os", "minimum", "version", "operating", "system", "build"]
           },
           "validation": {
             "expectedValue": "10.0",
@@ -394,7 +394,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["secure", "boot", "enabled"]
+            "settingNameKeywords": ["secure", "boot", "enabled", "uefi", "firmware"]
           },
           "validation": {
             "expectedValue": true,
@@ -413,7 +413,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["code", "integrity", "enabled"]
+            "settingNameKeywords": ["code", "integrity", "enabled", "hypervisor", "hvci"]
           },
           "validation": {
             "expectedValue": true,
@@ -439,7 +439,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["automatic", "update", "mode"]
+            "settingNameKeywords": ["automatic", "update", "mode", "windows", "patch"]
           },
           "validation": {
             "expectedValue": ["autoInstallAtMaintenanceTime", "autoInstallAndRebootAtMaintenanceTime", "autoInstallAndRebootAtScheduledTime"],
@@ -458,7 +458,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["quality", "updates", "deferral"]
+            "settingNameKeywords": ["quality", "updates", "deferral", "patch", "delay"]
           },
           "validation": {
             "expectedValue": 7,
@@ -477,7 +477,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["deadline", "quality", "updates"]
+            "settingNameKeywords": ["deadline", "quality", "updates", "patch", "install"]
           },
           "validation": {
             "expectedValue": 7,
@@ -503,7 +503,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["early", "launch", "malware"]
+            "settingNameKeywords": ["early", "launch", "malware", "defender", "antivirus", "antimalware", "protection"]
           },
           "validation": {
             "expectedValue": true,
@@ -607,7 +607,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["bitlocker", "enabled"]
+            "settingNameKeywords": ["bitlocker", "enabled", "encrypt", "encryption", "disk"]
           },
           "validation": {
             "expectedValue": true,
@@ -626,7 +626,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["storage", "require", "encryption"]
+            "settingNameKeywords": ["storage", "require", "encryption", "encrypt", "disk", "device"]
           },
           "validation": {
             "expectedValue": true,
@@ -652,7 +652,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["early", "launch", "malware", "enabled"]
+            "settingNameKeywords": ["early", "launch", "malware", "enabled", "defender", "antivirus", "antimalware", "protection"]
           },
           "validation": {
             "expectedValue": true,
@@ -678,7 +678,7 @@
           "policyTypes": ["Intune"],
           "searchStrategy": {
             "mode": "keyword",
-            "settingNameKeywords": ["microsoft", "update", "service", "allowed"]
+            "settingNameKeywords": ["microsoft", "update", "service", "allowed", "defender", "signature", "antivirus"]
           },
           "validation": {
             "expectedValue": true,

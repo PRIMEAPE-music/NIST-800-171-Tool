@@ -34,58 +34,59 @@ class PolicySyncService {
 
   /**
    * Calculate match confidence score for a policy-control pair
+   * NOTE: Currently unused - kept for potential future use
    */
-  private calculateMatchScore(
-    policy: { policyName: string; policyDescription: string | null },
-    template: any
-  ): { score: number; matchedKeywords: string[] } {
-    const searchText = `${policy.policyName} ${policy.policyDescription || ''}`.toLowerCase();
-    const matchedKeywords: string[] = [];
-    let score = 0;
+  // private calculateMatchScore(
+  //   policy: { policyName: string; policyDescription: string | null },
+  //   template: any
+  // ): { score: number; matchedKeywords: string[] } {
+  //   const matchedKeywords: string[] = [];
+  //   let score = 0;
 
-    // Check each keyword
-    for (const keyword of template.searchCriteria.keywords) {
-      const keywordLower = keyword.toLowerCase();
+  //   // Check each keyword
+  //   for (const keyword of template.searchCriteria.keywords) {
+  //     const keywordLower = keyword.toLowerCase();
 
-      // Check policy name (higher weight)
-      if (policy.policyName.toLowerCase().includes(keywordLower)) {
-        matchedKeywords.push(keyword);
-        score += 2; // Name matches are worth more
-      }
-      // Check policy description (lower weight)
-      else if (policy.policyDescription?.toLowerCase().includes(keywordLower)) {
-        matchedKeywords.push(keyword);
-        score += 1;
-      }
-    }
+  //     // Check policy name (higher weight)
+  //     if (policy.policyName.toLowerCase().includes(keywordLower)) {
+  //       matchedKeywords.push(keyword);
+  //       score += 2; // Name matches are worth more
+  //     }
+  //     // Check policy description (lower weight)
+  //     else if (policy.policyDescription?.toLowerCase().includes(keywordLower)) {
+  //       matchedKeywords.push(keyword);
+  //       score += 1;
+  //     }
+  //   }
 
-    // Calculate percentage of keywords matched
-    const matchPercentage = matchedKeywords.length / template.searchCriteria.keywords.length;
+  //   // Calculate percentage of keywords matched
+  //   const matchPercentage = matchedKeywords.length / template.searchCriteria.keywords.length;
 
-    // Apply template confidence weight
-    const templateWeight: Record<string, number> = {
-      'High': 1.0,
-      'Medium': 0.75,
-      'Low': 0.5,
-    };
-    const weight = templateWeight[template.mappingConfidence] || 0.75;
+  //   // Apply template confidence weight
+  //   const templateWeight: Record<string, number> = {
+  //     'High': 1.0,
+  //     'Medium': 0.75,
+  //     'Low': 0.5,
+  //   };
+  //   const weight = templateWeight[template.mappingConfidence] || 0.75;
 
-    const finalScore = (matchPercentage * score * weight) / template.searchCriteria.keywords.length;
+  //   const finalScore = (matchPercentage * score * weight) / template.searchCriteria.keywords.length;
 
-    return {
-      score: Math.min(1.0, finalScore), // Cap at 1.0
-      matchedKeywords,
-    };
-  }
+  //   return {
+  //     score: Math.min(1.0, finalScore), // Cap at 1.0
+  //     matchedKeywords,
+  //   };
+  // }
 
   /**
    * Convert numeric score to confidence level
+   * NOTE: Currently unused - kept for potential future use
    */
-  private scoreToConfidence(score: number): 'High' | 'Medium' | 'Low' {
-    if (score >= 0.7) return 'High';
-    if (score >= 0.4) return 'Medium';
-    return 'Low';
-  }
+  // private scoreToConfidence(score: number): 'High' | 'Medium' | 'Low' {
+  //   if (score >= 0.7) return 'High';
+  //   if (score >= 0.4) return 'Medium';
+  //   return 'Low';
+  // }
 
   /**
    * Sync all M365 policies to database
@@ -373,82 +374,83 @@ class PolicySyncService {
 
   /**
    * Automatically map policies to controls based on templates
+   * NOTE: Currently unused - kept for potential future use
    */
-  private async autoMapPolicies(): Promise<number> {
-    let count = 0;
+  // private async autoMapPolicies(): Promise<number> {
+  //   let count = 0;
 
-    for (const template of this.mappingTemplates) {
-      // Find control by controlId (e.g., "03.01.01")
-      const control = await prisma.control.findFirst({
-        where: { controlId: template.controlId },
-      });
+  //   for (const template of this.mappingTemplates) {
+  //     // Find control by controlId (e.g., "03.01.01")
+  //     const control = await prisma.control.findFirst({
+  //       where: { controlId: template.controlId },
+  //     });
 
-      if (!control) {
-        console.warn(`Control ${template.controlId} not found in database`);
-        continue;
-      }
+  //     if (!control) {
+  //       console.warn(`Control ${template.controlId} not found in database`);
+  //       continue;
+  //     }
 
-      // Find matching policies based on criteria
-      // Search both policy names AND descriptions for better matching
-      const policies = await prisma.m365Policy.findMany({
-        where: {
-          policyType: {
-            in: template.policyTypes,
-          },
-          isActive: true,
-          OR: template.searchCriteria.keywords.flatMap((keyword: string) => [
-            {
-              policyName: {
-                contains: keyword,
-              },
-            },
-            {
-              policyDescription: {
-                contains: keyword,
-              },
-            },
-          ]),
-        },
-      });
+  //     // Find matching policies based on criteria
+  //     // Search both policy names AND descriptions for better matching
+  //     const policies = await prisma.m365Policy.findMany({
+  //       where: {
+  //         policyType: {
+  //           in: template.policyTypes,
+  //         },
+  //         isActive: true,
+  //         OR: template.searchCriteria.keywords.flatMap((keyword: string) => [
+  //           {
+  //             policyName: {
+  //               contains: keyword,
+  //             },
+  //           },
+  //           {
+  //             policyDescription: {
+  //               contains: keyword,
+  //             },
+  //           },
+  //         ]),
+  //       },
+  //     });
 
-      // Create mappings with calculated confidence
-      for (const policy of policies) {
-        const existing = await prisma.controlPolicyMapping.findFirst({
-          where: {
-            controlId: control.id,
-            policyId: policy.id,
-          },
-        });
+  //     // Create mappings with calculated confidence
+  //     for (const policy of policies) {
+  //       const existing = await prisma.controlPolicyMapping.findFirst({
+  //         where: {
+  //           controlId: control.id,
+  //           policyId: policy.id,
+  //         },
+  //       });
 
-        if (!existing) {
-          // Calculate match score
-          const { score, matchedKeywords } = this.calculateMatchScore(policy, template);
-          const calculatedConfidence = this.scoreToConfidence(score);
+  //       if (!existing) {
+  //         // Calculate match score
+  //         const { score, matchedKeywords } = this.calculateMatchScore(policy, template);
+  //         const calculatedConfidence = this.scoreToConfidence(score);
 
-          // Only create mapping if score meets minimum threshold (0.3 = 30%)
-          if (score >= 0.3) {
-            const mappingNotes = `${template.mappingReason}\nMatched keywords: ${matchedKeywords.join(', ')}\nScore: ${(score * 100).toFixed(0)}%`;
+  //         // Only create mapping if score meets minimum threshold (0.3 = 30%)
+  //         if (score >= 0.3) {
+  //           const mappingNotes = `${template.mappingReason}\nMatched keywords: ${matchedKeywords.join(', ')}\nScore: ${(score * 100).toFixed(0)}%`;
 
-            await prisma.controlPolicyMapping.create({
-              data: {
-                controlId: control.id,
-                policyId: policy.id,
-                mappingConfidence: calculatedConfidence,
-                mappingNotes,
-              },
-            });
-            count++;
+  //           await prisma.controlPolicyMapping.create({
+  //             data: {
+  //               controlId: control.id,
+  //               policyId: policy.id,
+  //               mappingConfidence: calculatedConfidence,
+  //               mappingNotes,
+  //             },
+  //           });
+  //           count++;
 
-            console.log(`✓ Mapped ${policy.policyName} → ${control.controlId} (${calculatedConfidence} confidence, ${(score * 100).toFixed(0)}% score)`);
-          } else {
-            console.log(`✗ Skipped ${policy.policyName} → ${control.controlId} (score ${(score * 100).toFixed(0)}% below threshold)`);
-          }
-        }
-      }
-    }
+  //           console.log(`✓ Mapped ${policy.policyName} → ${control.controlId} (${calculatedConfidence} confidence, ${(score * 100).toFixed(0)}% score)`);
+  //         } else {
+  //           console.log(`✗ Skipped ${policy.policyName} → ${control.controlId} (score ${(score * 100).toFixed(0)}% below threshold)`);
+  //         }
+  //       }
+  //     }
+  //   }
 
-    return count;
-  }
+  //   return count;
+  // }
 
   /**
    * Get sync status and history

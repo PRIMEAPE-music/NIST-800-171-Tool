@@ -1,27 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node count-controls.js)",
-      "Bash(node check-control-properties.js)",
-      "Bash(del check-families.js count-controls.js check-control-properties.js generate-complete-mappings.js 2)",
-      "Bash(nul)",
-      "Bash(node create-97-control-mappings.js)",
-      "Bash(node -e \"const data = require(''./data/control-m365-mappings.json''); console.log(''Total controls mapped:'', data.mappings.length); console.log(''File declares:'', data.totalControls);\")",
-      "Bash(node -e \"const nist = require(''./data/nist-800-171-controls.json''); console.log(''All control IDs in NIST file:''); nist.controls.forEach(c => console.log(c.controlId));\")",
-      "Bash(all-nist-controls.txt)",
-      "Bash(node -e \"const nist = require(''./data/nist-800-171-controls.json''); const mapped = require(''./data/control-m365-mappings.json''); console.log(''NIST controls:'', nist.controls.length); console.log(''Currently mapped:'', mapped.mappings.length); console.log(''Need to remove:'', mapped.mappings.length - 97);\")",
-      "Bash(node -e \"const nist = require(''./data/nist-800-171-controls.json''); const byPriority = {High: [], Medium: [], Low: []}; nist.controls.forEach(c => byPriority[c.priority].push(c.controlId)); console.log(''High priority:'', byPriority.High.length); console.log(''Medium priority:'', byPriority.Medium.length); console.log(''Low priority:'', byPriority.Low.length); console.log(''Total:'', nist.controls.length);\")",
-      "Bash(node create-final-97-mappings.js)",
-      "Bash(node -e \"JSON.parse(require(''fs'').readFileSync(''data/control-m365-mappings.json'', ''utf8'')); console.log(''✅ JSON is valid'');\")",
-      "Bash(node -e \"const data = require(''./data/control-m365-mappings.json''); console.log(''Total controls:'', data.mappings.length); if (data.mappings.length === 97) { console.log(''✅ Control count is correct: 97''); } else { console.log(''❌ Expected 97 but got'', data.mappings.length); }\")",
-      "Bash(node validate-mappings.js)",
-      "Bash(node test-backend-load.js)",
-      "Bash(mkdir -p data/backups)",
-      "Bash(test -f \"data/control-settings-mappings.json\")",
-      "Bash(node -e \"JSON.parse(require(''fs'').readFileSync(''control-settings-mappings.json'', ''utf8'')); console.log(''✅ JSON is valid'');\")",
-      "Bash(node -e \"const data = require(''./control-settings-mappings.json''); console.log(''Controls:'', data.controls.length); console.log(''Version:'', data.version); console.log(''Strategy:'', data.mappingStrategy);\")",
-      "Bash(node -e \"const data = require(''./control-settings-mappings.json''); const firstControl = data.controls[0]; console.log(''First control:'', firstControl.controlId); console.log(''Title:'', firstControl.controlTitle); console.log(''Mappings:'', firstControl.settingsMappings.length); console.log(''First mapping ID:'', firstControl.settingsMappings[0].id); console.log(''Has searchStrategy:'', !!firstControl.settingsMappings[0].searchStrategy); console.log(''Has validation:'', !!firstControl.settingsMappings[0].validation); console.log(''Has compliance:'', !!firstControl.settingsMappings[0].compliance);\")",
-      "Bash(npx tsc --noEmit)"
+      "Bash(node check-catalog-structure.js)",
+      "Bash(node -e \"const data = require(''./data/control-settings-mappings.json''); const malwareControl = data.controls.find(c => c.controlId === ''03.14.02'' || c.controlId === ''03.05.11''); if (malwareControl) { console.log(JSON.stringify(malwareControl, null, 2)); }\")",
+      "Bash(node -e \"const data = require(''./data/control-settings-mappings.json''); console.log(''Total controls:'', data.controls.length); data.controls.forEach(c => { console.log(c.controlId + '': '' + c.settingsMappings.length + '' mappings''); });\")"
     ],
     "deny": [],
     "ask": []

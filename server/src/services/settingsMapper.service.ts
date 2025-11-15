@@ -9,7 +9,6 @@ import { PrismaClient } from '@prisma/client';
 import {
   SettingsMappingLibrary,
   ControlMappingDefinition,
-  SettingMapping,
   PolicyMappingInput,
   PolicyMappingOutput,
   ControlMappingResult,
@@ -117,7 +116,7 @@ class SettingsMapperService {
     const controlMappings: ControlMappingResult[] = [];
 
     // Iterate through all controls in the library
-    for (const [controlId, controlDef] of Object.entries(library.controls)) {
+    for (const [, controlDef] of Object.entries(library.controls)) {
       const mappingResult = this.mapPolicyToControl(policy, controlDef);
 
       // Only include mappings that have matched settings
@@ -223,11 +222,95 @@ class SettingsMapperService {
   /**
    * Extract settings from policy data
    * Returns a flat object of all settings
+   * Handles both root-level settings and nested settings arrays
    */
   private extractPolicySettings(policyData: any, policyType: string): Record<string, any> {
-    // For all policy types, settings are directly in the policy object
-    // We return the entire policy data object so settings mapper can access any field
-    return policyData;
+    const extractedSettings: Record<string, any> = {};
+
+    // First, copy all root-level properties (works for legacy policies)
+    for (const [key, value] of Object.entries(policyData)) {
+      // Skip metadata fields
+      if (
+        key !== 'id' &&
+        key !== '@odata.type' &&
+        key !== '@odata.context' &&
+        key !== 'displayName' &&
+        key !== 'name' &&
+        key !== 'description' &&
+        key !== 'createdDateTime' &&
+        key !== 'lastModifiedDateTime' &&
+        key !== 'createdBy' &&
+        key !== 'lastModifiedBy' &&
+        key !== 'createdTime' &&
+        key !== 'lastModifiedTime' &&
+        key !== 'platformType' &&
+        key !== 'templateId'
+      ) {
+        extractedSettings[key] = value;
+      }
+    }
+
+    // Handle Intune Settings Catalog policies (settings array)
+    if (policyData.settings && Array.isArray(policyData.settings)) {
+      console.log(`   📋 Extracting ${policyData.settings.length} settings from nested array`);
+
+      policyData.settings.forEach((setting: any, index: number) => {
+        if (setting.settingInstance) {
+          const settingId = setting.settingInstance.settingDefinitionId || `setting_${index}`;
+
+          // Extract the setting value
+          let value = null;
+          if (setting.settingInstance.simpleSettingValue) {
+            value = setting.settingInstance.simpleSettingValue.value;
+          } else if (setting.settingInstance.choiceSettingValue) {
+            value = setting.settingInstance.choiceSettingValue.value;
+          } else if (setting.settingInstance.groupSettingCollectionValue) {
+            value = setting.settingInstance.groupSettingCollectionValue;
+          }
+
+          // Create a friendly key from the setting ID
+          const friendlyKey = settingId
+            .replace(/device_vendor_msft_/gi, '')
+            .replace(/policy_/gi, '')
+            .replace(/\//g, '_')
+            .replace(/{/g, '')
+            .replace(/}/g, '');
+
+          extractedSettings[friendlyKey] = value;
+        }
+      });
+    }
+
+    // Handle Endpoint Security policies (also use settings array)
+    if (policyType === 'Intune' && policyData.settings && !Array.isArray(policyData.settings)) {
+      // Sometimes settings is an object with value arrays
+      for (const [key, value] of Object.entries(policyData.settings)) {
+        extractedSettings[key] = value;
+      }
+    }
+
+    // Handle Purview DLP policies
+    if (policyType === 'Purview') {
+      if (policyData.Mode) extractedSettings.dlpMode = policyData.Mode;
+      if (policyData.Enabled !== undefined) extractedSettings.enabled = policyData.Enabled;
+    }
+
+    // Handle Azure AD Conditional Access
+    if (policyType === 'AzureAD') {
+      if (policyData.state) extractedSettings.state = policyData.state;
+      if (policyData.conditions) extractedSettings.conditions = policyData.conditions;
+      if (policyData.grantControls) extractedSettings.grantControls = policyData.grantControls;
+      if (policyData.sessionControls) extractedSettings.sessionControls = policyData.sessionControls;
+    }
+
+    const settingsCount = Object.keys(extractedSettings).length;
+    if (settingsCount > 0) {
+      console.log(`   ✅ Extracted ${settingsCount} settings for mapping`);
+    } else {
+      console.log(`   ⚠️  No settings extracted (policy may only have metadata)`);
+    }
+
+    return extractedSettings;
   }
 
   /**
@@ -434,7 +517,6 @@ class SettingsMapperService {
       console.log(`\n🔍 Processing control ${controlId}: ${control.controlTitle}`);
 
       // Search for settings across all mappings for this control
-      let controlHasMatches = false;
       const matchedPolicies = new Map<number, { settings: any[], confidence: string }>();
 
       for (const mapping of settingsMappings) {
@@ -451,7 +533,6 @@ class SettingsMapperService {
         console.log(`      ✓ Found ${matchedSettings.length} matching settings`);
 
         if (matchedSettings.length > 0) {
-          controlHasMatches = true;
           settingsMatchedTotal += matchedSettings.length;
 
           // Group by policy
@@ -808,14 +889,19 @@ class SettingsMapperService {
       let settings: any = {};
 
       try {
-        // Parse settings JSON - try policyData first, then settings field
+        // Parse policy data
+        let parsedData: any;
         if (policy.policyData) {
           if (typeof policy.policyData === 'string') {
-            settings = JSON.parse(policy.policyData);
+            parsedData = JSON.parse(policy.policyData);
           } else {
-            settings = policy.policyData;
+            parsedData = policy.policyData;
           }
         }
+
+        // Extract settings using the improved extraction function
+        // This properly handles nested Settings Catalog arrays
+        settings = this.extractPolicySettings(parsedData, policy.policyType);
       } catch (error) {
         console.warn(`Failed to parse settings for policy ${policy.id}:`, error);
         continue;

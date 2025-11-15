@@ -377,41 +377,76 @@ class PolicyViewerService {
     if (rawData.faceIdBlocked !== undefined)
       settings.faceIdBlocked = rawData.faceIdBlocked;
 
-    // === Endpoint Security (Intents) Settings ===
+    // === Settings Catalog & Endpoint Security Settings ===
+    // Handle nested settings arrays (Settings Catalog policies)
     if (rawData.settings && Array.isArray(rawData.settings)) {
-      settings.endpointSecuritySettings = rawData.settings
-        .map((s: any) => {
-          const setting: any = {
-            id: s.id,
+      // This is likely a Settings Catalog policy with nested structure
+      const catalogSettings: any[] = [];
+
+      rawData.settings.forEach((setting: any, index: number) => {
+        if (setting.settingInstance) {
+          // Settings Catalog structure
+          const settingId = setting.settingInstance.settingDefinitionId || `setting_${index}`;
+
+          // Extract the setting value
+          let value = null;
+          if (setting.settingInstance.simpleSettingValue) {
+            value = setting.settingInstance.simpleSettingValue.value;
+          } else if (setting.settingInstance.choiceSettingValue) {
+            value = setting.settingInstance.choiceSettingValue.value;
+          } else if (setting.settingInstance.groupSettingCollectionValue) {
+            value = setting.settingInstance.groupSettingCollectionValue;
+          }
+
+          // Create a friendly key from the setting ID
+          const friendlyKey = settingId
+            .replace(/device_vendor_msft_/gi, '')
+            .replace(/policy_/gi, '')
+            .replace(/\//g, '_')
+            .replace(/{/g, '')
+            .replace(/}/g, '');
+
+          catalogSettings.push({
+            id: settingId,
+            friendlyName: friendlyKey,
+            value: value
+          });
+        } else {
+          // Old Endpoint Security structure
+          const endpointSetting: any = {
+            id: setting.id || `setting_${index}`,
           };
 
-          // Extract displayName
-          if (s.displayName) {
-            setting.displayName = s.displayName;
+          if (setting.displayName) {
+            endpointSetting.displayName = setting.displayName;
           }
 
-          // Extract definitionId
-          if (s.definitionId) {
-            setting.definitionId = s.definitionId;
+          if (setting.definitionId) {
+            endpointSetting.definitionId = setting.definitionId;
           }
 
-          // Extract value - could be in different formats
-          if (s.value !== undefined) {
-            setting.value = s.value;
-          } else if (s.valueJson) {
-            // Try to parse valueJson if it's a string
+          if (setting.value !== undefined) {
+            endpointSetting.value = setting.value;
+          } else if (setting.valueJson) {
             try {
-              setting.value = typeof s.valueJson === 'string'
-                ? JSON.parse(s.valueJson)
-                : s.valueJson;
+              endpointSetting.value = typeof setting.valueJson === 'string'
+                ? JSON.parse(setting.valueJson)
+                : setting.valueJson;
             } catch {
-              setting.value = s.valueJson;
+              endpointSetting.value = setting.valueJson;
             }
           }
 
-          return setting;
-        })
-        .filter((s: any) => s.displayName || s.definitionId || s.value !== undefined); // Filter out empty settings
+          if (endpointSetting.displayName || endpointSetting.definitionId || endpointSetting.value !== undefined) {
+            catalogSettings.push(endpointSetting);
+          }
+        }
+      });
+
+      if (catalogSettings.length > 0) {
+        settings.catalogSettings = catalogSettings;
+        settings.settingsCount = catalogSettings.length;
+      }
     }
 
     // === Assignment Information ===
