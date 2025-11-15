@@ -136,6 +136,9 @@ export const ControlTable: React.FC<ControlTableProps> = ({
               </TableCell>
               <TableCell sx={{ color: '#E0E0E0', fontWeight: 'bold' }}>Status</TableCell>
               <TableCell sx={{ color: '#E0E0E0', fontWeight: 'bold' }}>Assigned To</TableCell>
+              <TableCell sx={{ color: '#E0E0E0', fontWeight: 'bold', minWidth: 180 }}>
+                M365 Progress
+              </TableCell>
               <TableCell align="center" sx={{ color: '#E0E0E0', fontWeight: 'bold' }}>
                 Evidence
               </TableCell>
@@ -209,6 +212,52 @@ export const ControlTable: React.FC<ControlTableProps> = ({
                   <Typography variant="body2" sx={{ color: '#B0B0B0' }}>
                     {control.status?.assignedTo || '—'}
                   </Typography>
+                </TableCell>
+                <TableCell onClick={() => handleRowClick(control.id)}>
+                  {control.improvementActionProgress && control.improvementActionProgress.totalActions > 0 ? (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ flex: 1, minWidth: 80 }}>
+                        <Box
+                          sx={{
+                            height: 6,
+                            bgcolor: 'rgba(255, 255, 255, 0.1)',
+                            borderRadius: 1,
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              height: '100%',
+                              width: `${control.improvementActionProgress.progressPercentage}%`,
+                              bgcolor:
+                                control.improvementActionProgress.progressPercentage >= 80
+                                  ? '#4caf50'
+                                  : control.improvementActionProgress.progressPercentage >= 50
+                                  ? '#ffc107'
+                                  : control.improvementActionProgress.progressPercentage >= 25
+                                  ? '#ff9800'
+                                  : '#f44336',
+                              transition: 'width 0.3s ease',
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: '#B0B0B0',
+                          minWidth: 50,
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {control.improvementActionProgress.completedActions}/{control.improvementActionProgress.totalActions}
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Typography variant="caption" sx={{ color: '#666' }}>
+                      N/A
+                    </Typography>
+                  )}
                 </TableCell>
                 <TableCell align="center" onClick={() => handleRowClick(control.id)}>
                   <Typography variant="body2" sx={{ color: '#B0B0B0' }}>

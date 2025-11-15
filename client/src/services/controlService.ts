@@ -23,6 +23,16 @@ export interface Control {
   };
   evidence?: any[];
   assessments?: any[];
+  improvementActionProgress?: {
+    controlId: string;
+    totalActions: number;
+    completedActions: number;
+    inProgressActions: number;
+    notStartedActions: number;
+    unknownActions: number;
+    progressPercentage: number;
+    status: 'Completed' | 'InProgress' | 'NotStarted' | 'NotApplicable';
+  };
 }
 
 export interface ComplianceStats {
@@ -45,6 +55,17 @@ export interface ComplianceStats {
   };
   recentActivity: any[];
   topGaps: any[];
+  improvementActions?: {
+    totalActions: number;
+    completedActions: number;
+    progressPercentage: number;
+    controlsWithProgress: {
+      total: number;
+      completed: number;
+      inProgress: number;
+      notStarted: number;
+    };
+  };
 }
 
 export interface ControlFilters {
@@ -202,9 +223,19 @@ export const controlService = {
   },
 
   /**
-   * Get statistics for dashboard (alias for getComplianceStats)
+   * Get statistics for dashboard (includes improvement actions)
    */
   async getStatistics(): Promise<ComplianceStats> {
-    return this.getComplianceStats();
+    // Fetch both compliance stats and summary stats in parallel
+    const [complianceStats, summaryResponse] = await Promise.all([
+      this.getComplianceStats(),
+      api.get<{ success: boolean; data: any }>('/controls/stats/summary')
+    ]);
+
+    // Merge improvement actions data into compliance stats
+    return {
+      ...complianceStats,
+      improvementActions: summaryResponse.data.data.improvementActions
+    };
   },
 };

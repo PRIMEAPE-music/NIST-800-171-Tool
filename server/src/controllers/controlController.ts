@@ -189,6 +189,26 @@ class ControlController {
   }
 
   /**
+   * GET /api/controls/:controlId/settings
+   * Validate control settings using keyword-based search
+   */
+  async validateControlSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { controlId } = req.params;
+
+      const result = await controlService.validateControlSettings(controlId);
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      logger.error(`Error in validateControlSettings (${req.params.controlId}):`, error);
+      next(error);
+    }
+  }
+
+  /**
    * POST /api/controls/bulk
    * Bulk operations on controls
    */

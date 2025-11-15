@@ -10,10 +10,12 @@ import { controlService } from '@/services/controlService';
 import OverallComplianceCard from '@/components/dashboard/OverallComplianceCard';
 import ControlsByStatusCard from '@/components/dashboard/ControlsByStatusCard';
 import PriorityDistributionCard from '@/components/dashboard/PriorityDistributionCard';
+import ImprovementActionsCard from '@/components/dashboard/ImprovementActionsCard';
 import FamilyComplianceChart from '@/components/dashboard/FamilyComplianceChart';
 import RecentActivityFeed from '@/components/dashboard/RecentActivityFeed';
 import TopGapsCard from '@/components/dashboard/TopGapsCard';
 import QuickActions from '@/components/dashboard/QuickActions';
+import SecureScoreCard from '@/components/dashboard/SecureScoreCard';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
 
 export const Dashboard: React.FC = () => {
@@ -54,24 +56,34 @@ export const Dashboard: React.FC = () => {
       </Box>
 
       {/* Row 1: Key Metrics */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 3, mb: 3 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3, mb: 3 }}>
         <OverallComplianceCard stats={stats?.overall} />
         <ControlsByStatusCard stats={stats?.overall?.byStatus} />
-        <PriorityDistributionCard stats={stats?.byPriority} />
       </Box>
 
-      {/* Row 2: Family Breakdown */}
+      {/* Row 1.5: Microsoft Secure Score */}
+      <Box sx={{ mb: 3 }}>
+        <SecureScoreCard />
+      </Box>
+
+      {/* Row 2: Progress Metrics */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3, mb: 3 }}>
+        <PriorityDistributionCard stats={stats?.byPriority} />
+        <ImprovementActionsCard data={stats?.improvementActions} />
+      </Box>
+
+      {/* Row 3: Family Breakdown */}
       <Box sx={{ mb: 3 }}>
         <FamilyComplianceChart familyData={stats?.byFamily} />
       </Box>
 
-      {/* Row 3: Activity and Gaps */}
+      {/* Row 4: Activity and Gaps */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3, mb: 3 }}>
         <RecentActivityFeed activity={stats?.recentActivity || []} />
         <TopGapsCard gaps={stats?.topGaps || []} />
       </Box>
 
-      {/* Row 4: Quick Actions */}
+      {/* Row 5: Quick Actions */}
       <Box>
         <QuickActions onRefresh={refetch} />
       </Box>

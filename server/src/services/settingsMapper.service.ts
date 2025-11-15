@@ -49,8 +49,26 @@ class SettingsMapperService {
     }
 
     const libraryData = fs.readFileSync(libraryPath, 'utf-8');
+    const parsedData = JSON.parse(libraryData);
 
-    this.mappingLibrary = JSON.parse(libraryData) as SettingsMappingLibrary;
+    // Check if this is the new keyword-based structure (array) vs old structure (object)
+    if (parsedData.mappingStrategy === 'keyword-based' && Array.isArray(parsedData.controls)) {
+      console.log(
+        `⚠️  Settings mapping file is using new keyword-based structure. ` +
+        `Old auto-mapper will be skipped. Use validateControlSettings() instead.`
+      );
+      // Return empty structure to allow old code to continue without errors
+      this.mappingLibrary = {
+        $schema: parsedData.version || 'NIST SP 800-171 Revision 3',
+        version: parsedData.version || 'NIST SP 800-171 Revision 3',
+        lastUpdated: parsedData.lastUpdated || new Date().toISOString(),
+        description: 'Keyword-based structure - use validateControlSettings()',
+        controls: {}
+      };
+    } else {
+      // Old object-based structure
+      this.mappingLibrary = parsedData as SettingsMappingLibrary;
+    }
 
     console.log(
       `✓ Loaded settings mapping library v${this.mappingLibrary.version} ` +
@@ -221,6 +239,18 @@ class SettingsMapperService {
 
     console.log('🔍 Starting settings-based auto-mapping...');
 
+    // Check if we should use keyword-based mapping
+    const keywordMappings = await this.loadKeywordBasedMappings();
+    const isKeywordBased = keywordMappings.mappingStrategy === 'keyword-based' && Array.isArray(keywordMappings.controls);
+
+    if (isKeywordBased) {
+      console.log('✨ Using new keyword-based auto-mapping approach');
+      return await this.mapAllPoliciesKeywordBased();
+    }
+
+    // Fall back to old mapping approach
+    console.log('⚠️  Using legacy auto-mapping approach');
+
     // Load library
     this.loadMappingLibrary();
 
@@ -353,6 +383,186 @@ class SettingsMapperService {
 
     console.log('📊 Settings Mapping Statistics:');
     console.log(`   ├─ Policies analyzed: ${stats.totalPolicies}`);
+    console.log(`   ├─ Mappings created: ${stats.totalMappingsCreated}`);
+    console.log(`   ├─ Controls covered: ${stats.controlsCovered}`);
+    console.log(`   ├─ Settings matched: ${stats.settingsMatched}`);
+    console.log(`   ├─ High confidence: ${stats.mappingsByConfidence.High}`);
+    console.log(`   ├─ Medium confidence: ${stats.mappingsByConfidence.Medium}`);
+    console.log(`   ├─ Low confidence: ${stats.mappingsByConfidence.Low}`);
+    console.log(`   └─ Duration: ${stats.duration}ms`);
+
+    return stats;
+  }
+
+  /**
+   * Map all policies using keyword-based approach
+   * This is the new auto-mapper for the keyword-based structure
+   */
+  private async mapAllPoliciesKeywordBased(): Promise<SettingsMappingStats> {
+    const startTime = Date.now();
+
+    // Load keyword-based mappings
+    const keywordMappings = await this.loadKeywordBasedMappings();
+    const controls = keywordMappings.controls || [];
+
+    console.log(`📋 Found ${controls.length} controls with keyword-based mappings`);
+
+    // Delete old auto-mapped mappings
+    const deleteResult = await prisma.controlPolicyMapping.deleteMany({
+      where: { isAutoMapped: true },
+    });
+    console.log(`🗑️  Deleted ${deleteResult.count} old auto-mapped records`);
+
+    const allMappings: ControlPolicyMappingCreate[] = [];
+    let settingsMatchedTotal = 0;
+
+    // Process each control
+    for (const control of controls) {
+      const { controlId, settingsMappings } = control;
+
+      // Get control from database
+      const dbControl = await prisma.control.findUnique({
+        where: { controlId },
+        select: { id: true },
+      });
+
+      if (!dbControl) {
+        console.warn(`⚠️  Control ${controlId} not found in database`);
+        continue;
+      }
+
+      console.log(`\n🔍 Processing control ${controlId}: ${control.controlTitle}`);
+
+      // Search for settings across all mappings for this control
+      let controlHasMatches = false;
+      const matchedPolicies = new Map<number, { settings: any[], confidence: string }>();
+
+      for (const mapping of settingsMappings) {
+        console.log(`   📝 Searching for: ${mapping.description}`);
+        console.log(`      Keywords: ${mapping.searchStrategy.settingNameKeywords.join(', ')}`);
+        console.log(`      Policy types: ${mapping.policyTypes.join(', ')}`);
+
+        // Search for matching settings
+        const matchedSettings = await this.searchSettingsByKeywords(
+          mapping.policyTypes,
+          mapping.searchStrategy
+        );
+
+        console.log(`      ✓ Found ${matchedSettings.length} matching settings`);
+
+        if (matchedSettings.length > 0) {
+          controlHasMatches = true;
+          settingsMatchedTotal += matchedSettings.length;
+
+          // Group by policy
+          for (const setting of matchedSettings) {
+            const validation = this.validateSettingValue(
+              setting.settingValue,
+              mapping.validation
+            );
+
+            const settingData = {
+              settingName: setting.settingName,
+              settingValue: setting.settingValue,
+              meetsRequirement: validation.isCompliant,
+              requiredValue: mapping.validation.expectedValue,
+              validationType: mapping.validation.dataType,
+              validationMessage: validation.message,
+            };
+
+            if (!matchedPolicies.has(setting.policyId)) {
+              matchedPolicies.set(setting.policyId, {
+                settings: [],
+                confidence: mapping.compliance.confidence,
+              });
+            }
+
+            const policyData = matchedPolicies.get(setting.policyId)!;
+            policyData.settings.push(settingData);
+
+            // Upgrade confidence if this mapping has higher confidence
+            if (
+              mapping.compliance.confidence === 'High' ||
+              (mapping.compliance.confidence === 'Medium' && policyData.confidence === 'Low')
+            ) {
+              policyData.confidence = mapping.compliance.confidence;
+            }
+          }
+        }
+      }
+
+      // Create mappings for each policy that matched
+      for (const [policyId, data] of matchedPolicies.entries()) {
+        const compliantCount = data.settings.filter((s) => s.meetsRequirement).length;
+        const totalCount = data.settings.length;
+
+        allMappings.push({
+          controlId: controlId,
+          policyId: policyId,
+          mappingConfidence: data.confidence as 'High' | 'Medium' | 'Low',
+          mappingNotes: `Keyword-based mapping: ${compliantCount}/${totalCount} settings meet requirements. ` +
+            `Settings: ${data.settings.map((s) => s.settingName).join(', ')}`,
+          mappedSettings: data.settings,
+          isAutoMapped: true,
+        });
+      }
+    }
+
+    console.log(`✅ Generated ${allMappings.length} control-policy mappings`);
+
+    // Insert new mappings
+    let insertedCount = 0;
+    for (const mapping of allMappings) {
+      try {
+        // Get control ID from controlId string
+        const control = await prisma.control.findUnique({
+          where: { controlId: mapping.controlId },
+          select: { id: true },
+        });
+
+        if (!control) continue;
+
+        await prisma.controlPolicyMapping.create({
+          data: {
+            controlId: control.id,
+            policyId: mapping.policyId,
+            mappingConfidence: mapping.mappingConfidence,
+            mappingNotes: mapping.mappingNotes,
+            mappedSettings: JSON.stringify(mapping.mappedSettings),
+            isAutoMapped: mapping.isAutoMapped,
+          },
+        });
+        insertedCount++;
+      } catch (error: any) {
+        // Skip duplicates (shouldn't happen with unique constraint)
+        if (error.code !== 'P2002') {
+          console.error(`Error inserting mapping:`, error);
+        }
+      }
+    }
+
+    // Calculate statistics
+    const mappingsByConfidence = {
+      High: allMappings.filter((m) => m.mappingConfidence === 'High').length,
+      Medium: allMappings.filter((m) => m.mappingConfidence === 'Medium').length,
+      Low: allMappings.filter((m) => m.mappingConfidence === 'Low').length,
+    };
+
+    const controlsCovered = new Set(allMappings.map((m) => m.controlId)).size;
+
+    const duration = Date.now() - startTime;
+
+    const stats: SettingsMappingStats = {
+      totalPolicies: await prisma.m365Policy.count(),
+      totalMappingsCreated: insertedCount,
+      mappingsByConfidence,
+      controlsCovered,
+      settingsMatched: settingsMatchedTotal,
+      duration,
+    };
+
+    console.log('📊 Keyword-Based Mapping Statistics:');
+    console.log(`   ├─ Total controls processed: ${controls.length}`);
     console.log(`   ├─ Mappings created: ${stats.totalMappingsCreated}`);
     console.log(`   ├─ Controls covered: ${stats.controlsCovered}`);
     console.log(`   ├─ Settings matched: ${stats.settingsMatched}`);
@@ -540,6 +750,364 @@ class SettingsMapperService {
         ((controlsWithMappings.filter((c) => c.policyMappings.length > 0).length /
           allControlIds.length) *
           100),
+    };
+  }
+
+  /**
+   * Load keyword-based settings mappings file
+   */
+  private async loadKeywordBasedMappings(): Promise<any> {
+    try {
+      const mappingsPath = path.join(__dirname, '../../../data/control-settings-mappings.json');
+      const data = fs.readFileSync(mappingsPath, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error loading keyword-based settings mappings:', error);
+      return { controls: [] };
+    }
+  }
+
+  /**
+   * Search for settings in policies using keyword-based matching
+   */
+  private async searchSettingsByKeywords(
+    policyTypes: string[],
+    searchStrategy: {
+      mode: string;
+      settingNameKeywords: string[];
+      settingPathPatterns?: string[];
+      excludeKeywords?: string[];
+    }
+  ): Promise<Array<{
+    policyId: number;
+    policyName: string;
+    policyType: string;
+    settingName: string;
+    settingValue: any;
+    matchScore: number;
+  }>> {
+    // Get all policies of specified types
+    const policies = await prisma.m365Policy.findMany({
+      where: {
+        policyType: { in: policyTypes }
+      }
+    });
+
+    console.log(`         → Searching ${policies.length} ${policyTypes.join('/')} policies`);
+
+    const matches: Array<{
+      policyId: number;
+      policyName: string;
+      policyType: string;
+      settingName: string;
+      settingValue: any;
+      matchScore: number;
+    }> = [];
+
+    for (const policy of policies) {
+      let settings: any = {};
+
+      try {
+        // Parse settings JSON - try policyData first, then settings field
+        if (policy.policyData) {
+          if (typeof policy.policyData === 'string') {
+            settings = JSON.parse(policy.policyData);
+          } else {
+            settings = policy.policyData;
+          }
+        }
+      } catch (error) {
+        console.warn(`Failed to parse settings for policy ${policy.id}:`, error);
+        continue;
+      }
+
+      // Search through all settings in this policy
+      const policyMatches = this.findMatchingSettings(
+        settings,
+        searchStrategy.settingNameKeywords,
+        searchStrategy.settingPathPatterns,
+        searchStrategy.excludeKeywords
+      );
+
+      // Add matches with policy context
+      for (const match of policyMatches) {
+        matches.push({
+          policyId: policy.id,
+          policyName: policy.policyName,
+          policyType: policy.policyType,
+          settingName: match.path,
+          settingValue: match.value,
+          matchScore: match.score
+        });
+      }
+    }
+
+    return matches;
+  }
+
+  /**
+   * Recursively find settings matching keywords in a nested object
+   */
+  private findMatchingSettings(
+    obj: any,
+    keywords: string[],
+    pathPatterns?: string[],
+    excludeKeywords?: string[],
+    currentPath: string = ''
+  ): Array<{ path: string; value: any; score: number }> {
+    const matches: Array<{ path: string; value: any; score: number }> = [];
+
+    if (obj === null || obj === undefined) {
+      return matches;
+    }
+
+    // Handle arrays
+    if (Array.isArray(obj)) {
+      obj.forEach((item, index) => {
+        const itemPath = currentPath ? `${currentPath}[${index}]` : `[${index}]`;
+        matches.push(...this.findMatchingSettings(item, keywords, pathPatterns, excludeKeywords, itemPath));
+      });
+      return matches;
+    }
+
+    // Handle objects
+    if (typeof obj === 'object') {
+      for (const [key, value] of Object.entries(obj)) {
+        const newPath = currentPath ? `${currentPath}.${key}` : key;
+
+        // Check if this setting name matches keywords
+        const keyLower = key.toLowerCase();
+        const pathLower = newPath.toLowerCase();
+
+        // Check exclude keywords first
+        if (excludeKeywords && excludeKeywords.some(exclude =>
+          keyLower.includes(exclude.toLowerCase()) || pathLower.includes(exclude.toLowerCase())
+        )) {
+          continue; // Skip this setting
+        }
+
+        // Check if keywords match
+        const keywordMatches = keywords.filter(keyword =>
+          keyLower.includes(keyword.toLowerCase()) || pathLower.includes(keyword.toLowerCase())
+        );
+
+        // Calculate match percentage
+        const matchPercentage = keywordMatches.length / keywords.length;
+
+        // Require at least 50% keyword match (at least half the keywords must match)
+        // OR if there are only 1-2 keywords, require all to match
+        const minMatchThreshold = keywords.length <= 2 ? 1.0 : 0.5;
+
+        // Check path patterns if specified
+        let pathMatch = !pathPatterns || pathPatterns.length === 0;
+        if (pathPatterns && pathPatterns.length > 0) {
+          pathMatch = pathPatterns.some(pattern => {
+            const regexPattern = pattern.replace(/\*/g, '.*').toLowerCase();
+            return new RegExp(`^${regexPattern}$`).test(pathLower);
+          });
+        }
+
+        // If this is a match, add it
+        if (matchPercentage >= minMatchThreshold && pathMatch) {
+          const score = matchPercentage;
+          matches.push({
+            path: newPath,
+            value: value,
+            score: score
+          });
+        }
+
+        // Recursively search nested objects
+        if (typeof value === 'object' && value !== null) {
+          matches.push(...this.findMatchingSettings(value, keywords, pathPatterns, excludeKeywords, newPath));
+        }
+      }
+    }
+
+    return matches;
+  }
+
+  /**
+   * Validate a setting value against expected criteria
+   */
+  private validateSettingValue(
+    actualValue: any,
+    validation: {
+      expectedValue: any;
+      operator: string;
+      dataType: string;
+      allowedValues?: any[];
+    }
+  ): { isCompliant: boolean; message: string } {
+    const { expectedValue, operator, dataType, allowedValues } = validation;
+
+    // Type conversion based on dataType
+    let actual = actualValue;
+    let expected = expectedValue;
+
+    if (dataType === 'integer') {
+      actual = parseInt(actualValue);
+      expected = parseInt(expectedValue);
+    } else if (dataType === 'boolean') {
+      actual = actualValue === true || actualValue === 'true' || actualValue === 1;
+      expected = expectedValue === true || expectedValue === 'true';
+    }
+
+    // Perform comparison based on operator
+    let isCompliant = false;
+    let message = '';
+
+    switch (operator) {
+      case '==':
+        isCompliant = actual === expected;
+        message = isCompliant
+          ? `Value matches expected: ${expected}`
+          : `Value ${actual} does not match expected ${expected}`;
+        break;
+
+      case '>=':
+        isCompliant = actual >= expected;
+        message = isCompliant
+          ? `Value ${actual} meets minimum requirement of ${expected}`
+          : `Value ${actual} is below minimum requirement of ${expected}`;
+        break;
+
+      case '<=':
+        isCompliant = actual <= expected;
+        message = isCompliant
+          ? `Value ${actual} meets maximum requirement of ${expected}`
+          : `Value ${actual} exceeds maximum requirement of ${expected}`;
+        break;
+
+      case '>':
+        isCompliant = actual > expected;
+        message = isCompliant
+          ? `Value ${actual} exceeds minimum of ${expected}`
+          : `Value ${actual} does not exceed ${expected}`;
+        break;
+
+      case '<':
+        isCompliant = actual < expected;
+        message = isCompliant
+          ? `Value ${actual} is below maximum of ${expected}`
+          : `Value ${actual} is not below ${expected}`;
+        break;
+
+      case 'contains':
+        if (Array.isArray(actual)) {
+          isCompliant = actual.includes(expected);
+        } else if (typeof actual === 'string') {
+          isCompliant = actual.includes(expected);
+        }
+        message = isCompliant
+          ? `Value contains ${expected}`
+          : `Value does not contain ${expected}`;
+        break;
+
+      case 'in':
+        if (allowedValues) {
+          isCompliant = allowedValues.includes(actual);
+          message = isCompliant
+            ? `Value ${actual} is in allowed list`
+            : `Value ${actual} not in allowed list: ${allowedValues.join(', ')}`;
+        } else if (Array.isArray(expected)) {
+          isCompliant = expected.includes(actual);
+          message = isCompliant
+            ? `Value ${actual} is in expected list`
+            : `Value ${actual} not in expected list`;
+        }
+        break;
+
+      case 'matches':
+        try {
+          const regex = new RegExp(expected);
+          isCompliant = regex.test(String(actual));
+          message = isCompliant
+            ? `Value matches pattern ${expected}`
+            : `Value does not match pattern ${expected}`;
+        } catch (error) {
+          message = `Invalid regex pattern: ${expected}`;
+        }
+        break;
+
+      default:
+        message = `Unknown operator: ${operator}`;
+    }
+
+    return { isCompliant, message };
+  }
+
+  /**
+   * Validate control settings using keyword-based search
+   */
+  async validateControlSettings(controlId: string) {
+    // Validate Rev 3 format
+    if (!controlId.match(/^03\.\d{2}\.\d{2}$/)) {
+      throw new Error('Invalid control ID format. Expected 03.XX.YY');
+    }
+
+    // Load keyword-based settings mappings
+    const settingsMappings = await this.loadKeywordBasedMappings();
+    const controlMappings = settingsMappings.controls.find((c: any) => c.controlId === controlId);
+
+    if (!controlMappings || !controlMappings.settingsMappings || controlMappings.settingsMappings.length === 0) {
+      return {
+        controlId,
+        hasSettings: false,
+        message: 'No settings mappings defined for this control',
+        mappings: []
+      };
+    }
+
+    // Search for and validate each settings mapping
+    const validationResults = [];
+
+    for (const mapping of controlMappings.settingsMappings) {
+      // Search for matching settings across policies
+      const matchedSettings = await this.searchSettingsByKeywords(
+        mapping.policyTypes,
+        mapping.searchStrategy
+      );
+
+      // Validate each matched setting
+      const settingResults = matchedSettings.map(setting => {
+        const validation = this.validateSettingValue(
+          setting.settingValue,
+          mapping.validation
+        );
+
+        return {
+          mappingId: mapping.id,
+          description: mapping.description,
+          policyId: setting.policyId,
+          policyName: setting.policyName,
+          policyType: setting.policyType,
+          settingName: setting.settingName,
+          settingValue: setting.settingValue,
+          expectedValue: mapping.validation.expectedValue,
+          isCompliant: validation.isCompliant,
+          validationMessage: validation.message,
+          confidence: mapping.compliance.confidence,
+          nistRequirement: mapping.compliance.nistRequirement,
+          matchScore: setting.matchScore
+        };
+      });
+
+      validationResults.push({
+        mappingId: mapping.id,
+        description: mapping.description,
+        settingsFound: matchedSettings.length,
+        results: settingResults
+      });
+    }
+
+    return {
+      controlId,
+      controlTitle: controlMappings.controlTitle,
+      priority: controlMappings.priority,
+      hasSettings: validationResults.some(r => r.settingsFound > 0),
+      totalMappings: controlMappings.settingsMappings.length,
+      validationResults
     };
   }
 

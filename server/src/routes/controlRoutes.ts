@@ -36,6 +36,9 @@ router.get('/control/:controlId', controlController.getControlByControlId);
 // GET /api/controls/:id - Get control by database ID
 router.get('/:id', controlController.getControlById);
 
+// GET /api/controls/:controlId/settings - Validate control settings using keyword-based search
+router.get('/:controlId/settings', controlController.validateControlSettings);
+
 // GET /api/controls/:controlId/policies - Get M365 policies mapped to this control
 router.get('/:controlId/policies', controlController.getPoliciesForControl);
 

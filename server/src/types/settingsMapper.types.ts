@@ -193,3 +193,59 @@ export interface GapAnalysisResult {
   gaps: ControlGap[];
   coveragePercentage: number; // 0-100
 }
+
+// ============================================================================
+// Keyword-Based Settings Search Types
+// ============================================================================
+
+export interface SettingsSearchStrategy {
+  mode: 'keyword';
+  settingNameKeywords: string[];
+  settingPathPatterns?: string[];
+  excludeKeywords?: string[];
+}
+
+export interface SettingsValidation {
+  expectedValue: any;
+  operator: '==' | '>=' | '<=' | '>' | '<' | 'contains' | 'matches' | 'in';
+  dataType: 'boolean' | 'integer' | 'string' | 'array' | 'object';
+  allowedValues?: any[];
+}
+
+export interface SettingsCompliance {
+  confidence: 'High' | 'Medium' | 'Low';
+  nistRequirement: string;
+  rationale: string;
+}
+
+export interface SettingsMapping {
+  id: string;
+  description: string;
+  policyTypes: string[];
+  searchStrategy: SettingsSearchStrategy;
+  validation: SettingsValidation;
+  compliance: SettingsCompliance;
+}
+
+export interface ControlSettingsMapping {
+  controlId: string;
+  controlTitle: string;
+  priority: 'Critical' | 'High' | 'Medium' | 'Low';
+  settingsMappings: SettingsMapping[];
+}
+
+export interface KeywordSettingValidationResult {
+  mappingId: string;
+  description: string;
+  policyId: number;
+  policyName: string;
+  policyType: string;
+  settingName: string;
+  settingValue: any;
+  expectedValue: any;
+  isCompliant: boolean;
+  validationMessage: string;
+  confidence: string;
+  nistRequirement: string;
+  matchScore: number;
+}

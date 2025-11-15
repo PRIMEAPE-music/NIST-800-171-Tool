@@ -10,15 +10,22 @@ import {
   Collapse,
   Divider,
   Tooltip,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
   Info as InfoIcon,
   CheckCircle as ActiveIcon,
   Cancel as InactiveIcon,
+  CheckCircleOutline as CompliantIcon,
+  HighlightOff as NonCompliantIcon,
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
-import { PolicyDetail } from '../../types/policyViewer.types';
+import { PolicyDetail, MappedControl } from '../../types/policyViewer.types';
 
 interface BasePolicyCardProps {
   policy: PolicyDetail;
@@ -33,7 +40,7 @@ const BasePolicyCard: React.FC<BasePolicyCardProps> = ({
   onOpenDetail,
   children,
 }) => {
-  const [expanded, setExpanded] = React.useState(false);
+  const [settingsExpanded, setSettingsExpanded] = React.useState(false);
 
   return (
     <Card
@@ -116,29 +123,80 @@ const BasePolicyCard: React.FC<BasePolicyCardProps> = ({
                 </Tooltip>
               ))}
             </Box>
+
+            {/* Mapped Settings Details - Collapsible */}
+            {policy.mappedControls.some((c) => c.mappedSettings && c.mappedSettings.length > 0) && (
+              <Box sx={{ mt: 2 }}>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={1}
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => setSettingsExpanded(!settingsExpanded)}
+                >
+                  <IconButton
+                    size="small"
+                    sx={{
+                      transform: settingsExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: '0.3s',
+                    }}
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                  <Typography variant="subtitle2" sx={{ color: '#E0E0E0' }}>
+                    Setting-Level Mappings ({policy.mappedControls.reduce((acc, c) => acc + (c.mappedSettings?.length || 0), 0)} settings)
+                  </Typography>
+                </Box>
+                <Collapse in={settingsExpanded} timeout="auto" unmountOnExit>
+                  <Paper variant="outlined" sx={{ mt: 1, p: 2, bgcolor: '#1a1a1a', borderColor: '#4A4A4A' }}>
+                    {policy.mappedControls.map((control) => {
+                      if (!control.mappedSettings || control.mappedSettings.length === 0) {
+                        return null;
+                      }
+
+                      return (
+                        <Box key={control.controlId} sx={{ mb: 2 }}>
+                          <Typography variant="caption" fontWeight="bold" display="block" mb={0.5} sx={{ color: '#90CAF9' }}>
+                            {control.controlId} - {control.controlTitle}
+                          </Typography>
+                          <List dense disablePadding>
+                            {control.mappedSettings.map((setting, idx) => (
+                              <ListItem key={idx} sx={{ py: 0.5 }}>
+                                <ListItemIcon sx={{ minWidth: 32 }}>
+                                  {setting.meetsRequirement ? (
+                                    <CompliantIcon color="success" fontSize="small" />
+                                  ) : (
+                                    <NonCompliantIcon color="error" fontSize="small" />
+                                  )}
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={
+                                    <Typography variant="body2" sx={{ color: '#E0E0E0' }}>
+                                      <strong>{setting.settingName}:</strong> {String(setting.settingValue)}
+                                    </Typography>
+                                  }
+                                  secondary={
+                                    <Typography variant="caption" sx={{ color: '#B0B0B0' }}>
+                                      {setting.validationMessage ||
+                                        (setting.meetsRequirement ? 'Meets requirement' : 'Does not meet requirement')}
+                                    </Typography>
+                                  }
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
+                        </Box>
+                      );
+                    })}
+                  </Paper>
+                </Collapse>
+              </Box>
+            )}
           </Box>
         )}
-
-        {/* Expandable Details */}
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <Divider sx={{ my: 2 }} />
-          {children}
-        </Collapse>
       </CardContent>
 
-      <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
-        <IconButton
-          onClick={() => setExpanded(!expanded)}
-          aria-expanded={expanded}
-          aria-label="show more"
-          size="small"
-          sx={{
-            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: '0.3s',
-          }}
-        >
-          <ExpandMoreIcon />
-        </IconButton>
+      <CardActions sx={{ justifyContent: 'flex-end', px: 2, pb: 2 }}>
         <Tooltip title="View full details">
           <IconButton onClick={() => onOpenDetail(policy)} size="small">
             <InfoIcon />

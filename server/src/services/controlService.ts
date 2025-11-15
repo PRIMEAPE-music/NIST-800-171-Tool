@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { logger } from '@/utils/logger';
 import { ControlStatus } from '@/types/enums';
 import { controlProgressService } from './controlProgress.service';
+import settingsMapperService from './settingsMapper.service';
 
 export class ControlService {
   /**
@@ -500,6 +501,18 @@ export class ControlService {
       return policiesWithSettings;
     } catch (error) {
       logger.error(`Error fetching policies for control ${controlId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Validate control settings using keyword-based search
+   */
+  async validateControlSettings(controlId: string) {
+    try {
+      return await settingsMapperService.validateControlSettings(controlId);
+    } catch (error) {
+      logger.error(`Error validating control settings for ${controlId}:`, error);
       throw error;
     }
   }

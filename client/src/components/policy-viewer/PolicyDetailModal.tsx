@@ -11,9 +11,15 @@ import {
   Divider,
   IconButton,
   Paper,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import {
   Close as CloseIcon,
+  CheckCircleOutline as CompliantIcon,
+  HighlightOff as NonCompliantIcon,
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 import { PolicyDetail } from '../../types/policyViewer.types';
@@ -135,14 +141,14 @@ const PolicyDetailModal: React.FC<PolicyDetailModalProps> = ({
             <Box display="flex" flexDirection="column" gap={1}>
               {policy.mappedControls.map((control) => (
                 <Paper key={control.controlId} sx={{ p: 2 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="start">
+                  <Box display="flex" justifyContent="space-between" alignItems="start" mb={2}>
                     <Box>
                       <Typography variant="subtitle2">{control.controlId}</Typography>
                       <Typography variant="body2" color="text.secondary">
                         {control.controlTitle}
                       </Typography>
                       {control.mappingNotes && (
-                        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
                           Note: {control.mappingNotes}
                         </Typography>
                       )}
@@ -159,6 +165,41 @@ const PolicyDetailModal: React.FC<PolicyDetailModalProps> = ({
                       }
                     />
                   </Box>
+
+                  {/* Mapped Settings Details */}
+                  {control.mappedSettings && control.mappedSettings.length > 0 && (
+                    <Box sx={{ mt: 2, bgcolor: 'rgba(0, 0, 0, 0.2)', p: 2, borderRadius: 1, border: '1px solid #4A4A4A' }}>
+                      <Typography variant="subtitle2" gutterBottom sx={{ color: '#E0E0E0' }}>
+                        Mapped Settings:
+                      </Typography>
+                      <List dense disablePadding>
+                        {control.mappedSettings.map((setting, idx) => (
+                          <ListItem key={idx} sx={{ py: 0.5, px: 0 }}>
+                            <ListItemIcon sx={{ minWidth: 32 }}>
+                              {setting.meetsRequirement ? (
+                                <CompliantIcon color="success" fontSize="small" />
+                              ) : (
+                                <NonCompliantIcon color="error" fontSize="small" />
+                              )}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={
+                                <Typography variant="body2" sx={{ color: '#E0E0E0' }}>
+                                  <strong>{setting.settingName}:</strong> {String(setting.settingValue)}
+                                </Typography>
+                              }
+                              secondary={
+                                <Typography variant="caption" sx={{ color: '#B0B0B0' }}>
+                                  {setting.validationMessage ||
+                                    (setting.meetsRequirement ? 'Meets requirement' : 'Does not meet requirement')}
+                                </Typography>
+                              }
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Box>
+                  )}
                 </Paper>
               ))}
             </Box>

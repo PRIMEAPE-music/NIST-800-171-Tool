@@ -20,6 +20,8 @@ import { OverviewTab } from '@/components/controls/OverviewTab';
 import { EvidenceTab } from '@/components/controls/EvidenceTab';
 import { HistoryTab } from '@/components/controls/HistoryTab';
 import { RelatedTab } from '@/components/controls/RelatedTab';
+import { M365SettingsTab } from '@/components/controls/M365SettingsTab';
+import { GapAnalysisTab } from '@/components/controls/GapAnalysisTab';
 import { StatusUpdateDialog } from '@/components/controls/StatusUpdateDialog';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
 
@@ -146,6 +148,8 @@ export const ControlDetail: React.FC = () => {
           }}
         >
           <Tab label="Overview" />
+          <Tab label="M365 Settings" />
+          <Tab label="Gap Analysis" />
           <Tab label={`Evidence (${control.evidence?.length || 0})`} />
           <Tab label="History" />
           <Tab label="Related" />
@@ -190,14 +194,22 @@ export const ControlDetail: React.FC = () => {
         </TabPanel>
 
         <TabPanel value={activeTab} index={1}>
-          <EvidenceTab control={control} />
+          <M365SettingsTab control={control} />
         </TabPanel>
 
         <TabPanel value={activeTab} index={2}>
-          <HistoryTab history={[]} />
+          <GapAnalysisTab controlId={control.controlId} />
         </TabPanel>
 
         <TabPanel value={activeTab} index={3}>
+          <EvidenceTab control={control} />
+        </TabPanel>
+
+        <TabPanel value={activeTab} index={4}>
+          <HistoryTab history={[]} />
+        </TabPanel>
+
+        <TabPanel value={activeTab} index={5}>
           <RelatedTab control={control} />
         </TabPanel>
       </Paper>

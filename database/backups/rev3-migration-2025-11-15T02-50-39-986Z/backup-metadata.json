@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-11-15T02-50-39-986Z",
+  "databaseVersion": "Rev 2 (pre-migration)",
+  "targetVersion": "Rev 3",
+  "tables": {
+    "controls": 97
+  },
+  "notes": "Backup created before NIST 800-171 Rev 3 migration"
+}

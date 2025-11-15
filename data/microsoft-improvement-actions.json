@@ -1,0 +1,670 @@
+{
+  "$schema": "Microsoft Secure Score Improvement Actions mapped to NIST 800-171 Controls",
+  "version": "1.0.0",
+  "lastUpdated": "2025-11-12",
+  "description": "Maps Microsoft 365 Secure Score improvement actions to NIST 800-171 Rev 2 controls",
+  "mappings": {
+    "03.01.01": {
+      "controlId": "03.01.01",
+      "controlTitle": "Limit system access to authorized users",
+      "improvementActions": [
+        {"title": "Prevent unauthorized access to systems that require user log-in", "category": "Identity", "priority": "High"},
+        {"title": "Block legacy authentication", "category": "Identity", "priority": "High"},
+        {"title": "Configure location based conditional access policy", "category": "Identity", "priority": "Medium"},
+        {"title": "Create Conditional Access templates", "category": "Identity", "priority": "Medium"},
+        {"title": "Disable user access upon termination", "category": "Identity", "priority": "High"},
+        {"title": "Prevent a former employee from logging in and block access", "category": "Identity", "priority": "High"},
+        {"title": "Integrate on-premise identity platform", "category": "Identity", "priority": "Medium"},
+        {"title": "Use password hash sync in hybrid environments", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.01.02": {
+      "controlId": "03.01.02",
+      "controlTitle": "Limit system access to types of transactions and functions",
+      "improvementActions": [
+        {"title": "Restrict apps to a set of user in a tenants", "category": "Apps", "priority": "High"},
+        {"title": "Control application permissions within business communication platform", "category": "Apps", "priority": "Medium"},
+        {"title": "Enable self-service application access", "category": "Identity", "priority": "Low"},
+        {"title": "Restrict access to privileged accounts", "category": "Identity", "priority": "High"},
+        {"title": "Limit the use of administrative role access", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.01.03": {
+      "controlId": "03.01.03",
+      "controlTitle": "Control the flow of CUI",
+      "improvementActions": [
+        {"title": "Create and deploy data loss prevention policies", "category": "Data", "priority": "High"},
+        {"title": "Create customized DLP policies for personally identifiable information (PII)", "category": "Data", "priority": "High"},
+        {"title": "Create customized DLP policies for sensitive financial data", "category": "Data", "priority": "High"},
+        {"title": "Create customized DLP policies for government data", "category": "Data", "priority": "High"},
+        {"title": "Create customized DLP policies for ePHI", "category": "Data", "priority": "High"},
+        {"title": "Create customized DLP policies for personal data", "category": "Data", "priority": "High"},
+        {"title": "Create customized or use default DLP policies for endpoints", "category": "Data", "priority": "High"},
+        {"title": "Use default DLP policies for US Personally Identifiable Information Data", "category": "Data", "priority": "Medium"},
+        {"title": "Block unauthorized email forwarding", "category": "Data", "priority": "Medium"},
+        {"title": "Govern email forwarding", "category": "Data", "priority": "Medium"},
+        {"title": "Configure scanner to discover the files matched to DLP rules", "category": "Data", "priority": "Medium"},
+        {"title": "Onboard devices for data loss prevention services", "category": "Device", "priority": "Medium"},
+        {"title": "Review the reports for data loss prevention", "category": "Data", "priority": "Low"},
+        {"title": "Create a DLP policy for a non-cloud app", "category": "Apps", "priority": "Medium"}
+      ]
+    },
+    "03.01.05": {
+      "controlId": "03.01.05",
+      "controlTitle": "Employ principle of least privilege",
+      "improvementActions": [
+        {"title": "Govern global administrative roles", "category": "Identity", "priority": "High"},
+        {"title": "Limit use of administrative roles", "category": "Identity", "priority": "High"},
+        {"title": "Limit the use of administrative role access", "category": "Identity", "priority": "High"},
+        {"title": "Group entitlements according to business functional role or team needs", "category": "Identity", "priority": "Medium"},
+        {"title": "Enable privileged access for business applications", "category": "Identity", "priority": "Medium"},
+        {"title": "Review privileged access requests", "category": "Identity", "priority": "Medium"},
+        {"title": "Configure a privileged access policy", "category": "Identity", "priority": "Medium"},
+        {"title": "Manage privileged accounts", "category": "Identity", "priority": "High"},
+        {"title": "Use role-based privileged account management", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.01.06": {
+      "controlId": "03.01.06",
+      "controlTitle": "Use non-privileged accounts when accessing nonsecurity functions",
+      "improvementActions": [
+        {"title": "Protect and manage local admin passwords for domain joined computers", "category": "Device", "priority": "High"},
+        {"title": "Deny account elevation requests from standard user accounts", "category": "Device", "priority": "High"},
+        {"title": "Require domain users to elevate when setting a network location", "category": "Device", "priority": "Medium"}
+      ]
+    },
+    "03.01.08": {
+      "controlId": "03.01.08",
+      "controlTitle": "Limit unsuccessful logon attempts",
+      "improvementActions": [
+        {"title": "Implement account lockout", "category": "Identity", "priority": "High"},
+        {"title": "Establish lockout mechanism in macOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Ensure lockout configuration is managed in macOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Set account lockout threshold to 5 or lower in macOS devices", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.01.12": {
+      "controlId": "03.01.12",
+      "controlTitle": "Monitor and control remote access sessions",
+      "improvementActions": [
+        {"title": "Add an on-premises application for remote access through application proxy", "category": "Apps", "priority": "Medium"},
+        {"title": "Secure hybrid access with Application Proxy", "category": "Apps", "priority": "High"},
+        {"title": "Enforce real-time application access monitoring for on-premise applications", "category": "Apps", "priority": "High"},
+        {"title": "Enable remote help for your tenant", "category": "Device", "priority": "Low"}
+      ]
+    },
+    "03.01.13": {
+      "controlId": "03.01.13",
+      "controlTitle": "Employ cryptographic mechanisms to protect confidentiality of remote access",
+      "improvementActions": [
+        {"title": "Configure VPN integration", "category": "Infrastructure", "priority": "Medium"},
+        {"title": "Set 'Remote Desktop security level' to 'TLS'", "category": "Device", "priority": "High"},
+        {"title": "Digitally encrypt secure channel data", "category": "Infrastructure", "priority": "High"}
+      ]
+    },
+    "03.01.18": {
+      "controlId": "03.01.18",
+      "controlTitle": "Encrypt CUI on mobile devices",
+      "improvementActions": [
+        {"title": "Require mobile devices to use encryption", "category": "Device", "priority": "High"},
+        {"title": "Enable whole-disk encryption for devices", "category": "Device", "priority": "High"},
+        {"title": "Ensure full disk encryption compatibility with all drives", "category": "Device", "priority": "High"},
+        {"title": "Resume full disk encryption on all drives", "category": "Device", "priority": "Medium"},
+        {"title": "Block jail broken and rooted mobile devices", "category": "Device", "priority": "High"},
+        {"title": "Set PIN character length for full-drive encryption", "category": "Device", "priority": "Medium"},
+        {"title": "Require additional authentication at startup", "category": "Device", "priority": "Medium"},
+        {"title": "Create mobile device security policies", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.01.19": {
+      "controlId": "03.01.19",
+      "controlTitle": "Identify, report, and correct system flaws in a timely manner",
+      "improvementActions": [
+        {"title": "Enable automatic updates for software and products", "category": "Device", "priority": "High"},
+        {"title": "Manage updates to operating systems", "category": "Device", "priority": "High"},
+        {"title": "Update antivirus definitions", "category": "Device", "priority": "High"},
+        {"title": "Keep antivirus definitions for macOS devices up to date", "category": "Device", "priority": "Medium"},
+        {"title": "Keep antivirus definitions for Linux devices up to date", "category": "Device", "priority": "Medium"},
+        {"title": "Deploy updates for Linux endpoint security solutions", "category": "Device", "priority": "Medium"},
+        {"title": "Manage software update policies on macOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Enable software installation policies in macOS devices", "category": "Device", "priority": "Medium"}
+      ]
+    },
+    "03.01.20": {
+      "controlId": "03.01.20",
+      "controlTitle": "Verify and control/limit connections to external systems",
+      "improvementActions": [
+        {"title": "Implement a cloud access security broker tool", "category": "Apps", "priority": "High"},
+        {"title": "Discover and manage trends in shadow IT application usage", "category": "Apps", "priority": "High"},
+        {"title": "Prevent use of unauthorized software and cloud apps", "category": "Apps", "priority": "High"},
+        {"title": "Govern discovered apps", "category": "Apps", "priority": "Medium"},
+        {"title": "Connect cloud apps to security portal", "category": "Apps", "priority": "Medium"},
+        {"title": "Configure and validate network connections", "category": "Infrastructure", "priority": "Medium"}
+      ]
+    },
+    "03.01.21": {
+      "controlId": "03.01.21",
+      "controlTitle": "Limit use of portable storage devices on external systems",
+      "improvementActions": [
+        {"title": "Create removable storage groups", "category": "Device", "priority": "Medium"},
+        {"title": "Block untrusted and unsigned processes that run from USB", "category": "Device", "priority": "High"},
+        {"title": "Do not allow file sharing to third-party servers that use plain text passwords", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.02.01": {
+      "controlId": "03.02.01",
+      "controlTitle": "Ensure managers and systems administrators receive security awareness training",
+      "improvementActions": [
+        {"title": "Assign trainings and send reminders", "category": "Identity", "priority": "Medium"},
+        {"title": "Run simulation attacks", "category": "Identity", "priority": "High"},
+        {"title": "Retain training records", "category": "Data", "priority": "Low"}
+      ]
+    },
+    "03.02.02": {
+      "controlId": "03.02.02",
+      "controlTitle": "Ensure personnel are trained to carry out their assigned information security-related duties",
+      "improvementActions": [
+        {"title": "Assign trainings and send reminders", "category": "Identity", "priority": "Medium"},
+        {"title": "Provide insider risk management notices", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.03.01": {
+      "controlId": "03.03.01",
+      "controlTitle": "Create, protect, and retain system audit logs and records",
+      "improvementActions": [
+        {"title": "Enable audit logging", "category": "Infrastructure", "priority": "High"},
+        {"title": "Search the audit log in compliance portal", "category": "Data", "priority": "Medium"},
+        {"title": "Review audit data", "category": "Data", "priority": "Medium"},
+        {"title": "Automate log retention", "category": "Data", "priority": "Medium"},
+        {"title": "Configure automatic log upload", "category": "Device", "priority": "Medium"},
+        {"title": "Review cloud audit log categories and activities", "category": "Apps", "priority": "Medium"},
+        {"title": "Integrate endpoint logs and transactions to a SIEM tool", "category": "Infrastructure", "priority": "High"}
+      ]
+    },
+    "03.03.02": {
+      "controlId": "03.03.02",
+      "controlTitle": "Ensure audit events are logged and enable review",
+      "improvementActions": [
+        {"title": "Review audit logs in Unified Endpoint Management solution", "category": "Device", "priority": "Medium"},
+        {"title": "Audit user account status", "category": "Identity", "priority": "Medium"},
+        {"title": "Review account provisioning activities", "category": "Identity", "priority": "Medium"},
+        {"title": "Review administrator role assignments periodically", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.03.03": {
+      "controlId": "03.03.03",
+      "controlTitle": "Review and update logged events",
+      "improvementActions": [
+        {"title": "Review automated alerts", "category": "Device", "priority": "Medium"},
+        {"title": "Automate alert notifications", "category": "Device", "priority": "Medium"},
+        {"title": "Review malware and non-malware reports", "category": "Device", "priority": "Medium"}
+      ]
+    },
+    "03.03.04": {
+      "controlId": "03.03.04",
+      "controlTitle": "Alert in case of audit logging process failure",
+      "improvementActions": [
+        {"title": "Implement email security and health alerts", "category": "Apps", "priority": "High"},
+        {"title": "Send security and health alerts to syslog server", "category": "Infrastructure", "priority": "Medium"},
+        {"title": "Generate alerts for authentication risks", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.03.05": {
+      "controlId": "03.03.05",
+      "controlTitle": "Correlate audit record review, analysis, and reporting",
+      "improvementActions": [
+        {"title": "Perform a trend analysis on threats", "category": "Device", "priority": "Medium"},
+        {"title": "Collect and analyze information about cyber threats", "category": "Device", "priority": "High"},
+        {"title": "Review insights and reports for conditional access policies", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.03.06": {
+      "controlId": "03.03.06",
+      "controlTitle": "Protect audit information and audit logging tools",
+      "improvementActions": [
+        {"title": "Restrict access to audit information", "category": "Data", "priority": "High"},
+        {"title": "Verify logging settings", "category": "Infrastructure", "priority": "Medium"}
+      ]
+    },
+    "03.03.08": {
+      "controlId": "03.03.08",
+      "controlTitle": "Protect audit information from unauthorized access and modification",
+      "improvementActions": [
+        {"title": "Restrict access to audit information", "category": "Data", "priority": "High"}
+      ]
+    },
+    "03.03.09": {
+      "controlId": "03.03.09",
+      "controlTitle": "Limit management of audit logging to privileged subset",
+      "improvementActions": [
+        {"title": "Restrict access to audit information", "category": "Data", "priority": "High"},
+        {"title": "Manage role-based access", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.04.01": {
+      "controlId": "03.04.01",
+      "controlTitle": "Establish baseline configurations for systems",
+      "improvementActions": [
+        {"title": "Improve PC configuration management security", "category": "Device", "priority": "High"},
+        {"title": "Install a configuration profile on your Windows devices", "category": "Device", "priority": "Medium"},
+        {"title": "Install a configuration profile on your macOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Install a configuration profile on your iOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Install a configuration profile on your Android enterprise devices", "category": "Device", "priority": "Medium"},
+        {"title": "Create a device configuration profile for Android devices", "category": "Device", "priority": "Medium"},
+        {"title": "Deploy security baseline policy", "category": "Device", "priority": "High"},
+        {"title": "Enable Windows 10 security baseline", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.04.02": {
+      "controlId": "03.04.02",
+      "controlTitle": "Establish and maintain baseline configurations and inventories",
+      "improvementActions": [
+        {"title": "Review the software inventory", "category": "Device", "priority": "Medium"},
+        {"title": "Create and manage device tags and groups", "category": "Device", "priority": "Medium"},
+        {"title": "Classify assets", "category": "Data", "priority": "Medium"}
+      ]
+    },
+    "03.04.05": {
+      "controlId": "03.04.05",
+      "controlTitle": "Define, document, approve, and enforce physical and logical access restrictions",
+      "improvementActions": [
+        {"title": "Use compliance policies to set rules for devices", "category": "Device", "priority": "High"},
+        {"title": "Create a compliance policy", "category": "Device", "priority": "High"},
+        {"title": "Create a compliance policy for Windows devices", "category": "Device", "priority": "Medium"},
+        {"title": "Create a compliance policy for macOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Create a compliance policy for iOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Create a compliance policy for Android devices", "category": "Device", "priority": "Medium"},
+        {"title": "Monitor device compliance", "category": "Device", "priority": "Medium"}
+      ]
+    },
+    "03.04.06": {
+      "controlId": "03.04.06",
+      "controlTitle": "Employ the principle of least functionality",
+      "improvementActions": [
+        {"title": "Control application permissions within business communication platform", "category": "Apps", "priority": "Medium"},
+        {"title": "Restrict apps to a set of user in a tenants", "category": "Apps", "priority": "High"},
+        {"title": "Control applications with application control", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.04.07": {
+      "controlId": "03.04.07",
+      "controlTitle": "Restrict, disable, or prevent the use of nonessential functions",
+      "improvementActions": [
+        {"title": "Disable autoplay for all drives", "category": "Device", "priority": "High"},
+        {"title": "Set default behavior for 'AutoRun' to 'Enabled: Do not execute any autorun commands'", "category": "Device", "priority": "High"},
+        {"title": "Disable 'Autoplay for non-volume devices'", "category": "Device", "priority": "High"},
+        {"title": "Disable Solicited Remote Assistance", "category": "Device", "priority": "Medium"},
+        {"title": "Disable Print Spooler Service on domain controllers", "category": "Infrastructure", "priority": "High"},
+        {"title": "Disable SMBv1 client driver", "category": "Device", "priority": "High"},
+        {"title": "Disable SMBv1 server support", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.05.01": {
+      "controlId": "03.05.01",
+      "controlTitle": "Identify system users, processes acting on behalf of users, and devices",
+      "improvementActions": [
+        {"title": "Manage device identities", "category": "Identity", "priority": "High"},
+        {"title": "Integrate on-premise identity platform", "category": "Identity", "priority": "High"},
+        {"title": "Integrate company-controlled endpoint device data with the cloud identity platform", "category": "Identity", "priority": "Medium"},
+        {"title": "Monitor system access across the organization", "category": "Identity", "priority": "High"},
+        {"title": "Create a new user for your organization with appropriate assignments.", "category": "Identity", "priority": "Low"}
+      ]
+    },
+    "03.05.02": {
+      "controlId": "03.05.02",
+      "controlTitle": "Authenticate organizational users",
+      "improvementActions": [
+        {"title": "Use an identity protection solution", "category": "Identity", "priority": "High"},
+        {"title": "Monitor cloud identity risks", "category": "Identity", "priority": "High"},
+        {"title": "Use single sign-on mechanism for authentication within business communication platform", "category": "Apps", "priority": "High"},
+        {"title": "Integrate form-based authentication applications into a central identity and access management engine", "category": "Apps", "priority": "Medium"},
+        {"title": "Choosing right authentication method for hybrid identity solution", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.05.03": {
+      "controlId": "03.05.03",
+      "controlTitle": "Use multifactor authentication for local and network access",
+      "improvementActions": [
+        {"title": "Enable multi-factor authentication for admins", "category": "Identity", "priority": "Critical"},
+        {"title": "Enable multi-factor authentication for non-administrative users", "category": "Identity", "priority": "High"},
+        {"title": "Enable multi-factor authentication registration", "category": "Identity", "priority": "High"},
+        {"title": "Implement passwordless authentication mechanism for a dedicated user workstation", "category": "Identity", "priority": "Medium"},
+        {"title": "Implement passwordless authentication with mobile application solution", "category": "Identity", "priority": "Medium"},
+        {"title": "Implement passwordless authentication for shared machines or highly privileged identities", "category": "Identity", "priority": "Medium"},
+        {"title": "Enable passwordless sign-in with authenticator for IOS", "category": "Identity", "priority": "Medium"},
+        {"title": "Configure a temporary access pass for a passwordless authentication method", "category": "Identity", "priority": "Low"},
+        {"title": "Enable certificate-based authentication", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.05.05": {
+      "controlId": "03.05.05",
+      "controlTitle": "Prevent reuse of identifiers for a defined period",
+      "improvementActions": [
+        {"title": "Remove dormant accounts from sensitive groups", "category": "Identity", "priority": "High"},
+        {"title": "Investigate user accounts for inactivity", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.05.07": {
+      "controlId": "03.05.07",
+      "controlTitle": "Enforce a minimum password length",
+      "improvementActions": [
+        {"title": "Require mobile devices to use an alphanumeric password", "category": "Identity", "priority": "High"},
+        {"title": "Set minimum password length to 15 or more characters in macOS devices", "category": "Identity", "priority": "High"},
+        {"title": "Create complex passwords on mobile devices", "category": "Identity", "priority": "High"},
+        {"title": "Require mobile devices to use a password", "category": "Identity", "priority": "High"},
+        {"title": "Enforce authenticators strength and complexity", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.05.08": {
+      "controlId": "03.05.08",
+      "controlTitle": "Prohibit password reuse",
+      "improvementActions": [
+        {"title": "Establish password history requirements in macOS devices", "category": "Identity", "priority": "Medium"},
+        {"title": "Disallow password reuse on mobile devices", "category": "Identity", "priority": "Medium"},
+        {"title": "Limit utilization of the same password across multiple endpoints", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.05.09": {
+      "controlId": "03.05.09",
+      "controlTitle": "Allow temporary password use for system logons with immediate change",
+      "improvementActions": [
+        {"title": "Enforce immediate temporary password change", "category": "Identity", "priority": "High"},
+        {"title": "Configure a temporary access pass for a passwordless authentication method", "category": "Identity", "priority": "Low"}
+      ]
+    },
+    "03.05.10": {
+      "controlId": "03.05.10",
+      "controlTitle": "Store and transmit only cryptographically-protected passwords",
+      "improvementActions": [
+        {"title": "Do not store LAN Manager hash in the SAM when the password is changed", "category": "Device", "priority": "High"},
+        {"title": "Disable the local storage of passwords and credentials", "category": "Device", "priority": "High"},
+        {"title": "Disable password storage in web browser", "category": "Apps", "priority": "Medium"},
+        {"title": "Disable 'WDigest Authentication'", "category": "Device", "priority": "High"},
+        {"title": "Stop clear text credentials exposure", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.05.11": {
+      "controlId": "03.05.11",
+      "controlTitle": "Obscure feedback of authentication information",
+      "improvementActions": [
+        {"title": "Conceal information with lock screen", "category": "Device", "priority": "Medium"},
+        {"title": "Require mobile devices to lock upon inactivity", "category": "Device", "priority": "High"},
+        {"title": "Log off idle sessions", "category": "Device", "priority": "Medium"}
+      ]
+    },
+    "03.06.01": {
+      "controlId": "03.06.01",
+      "controlTitle": "Establish an operational incident-handling capability",
+      "improvementActions": [
+        {"title": "Manage security related incidents", "category": "Device", "priority": "High"},
+        {"title": "Investigate and respond to suspicious activities", "category": "Device", "priority": "High"},
+        {"title": "Investigate components associated with a threat alert", "category": "Device", "priority": "High"},
+        {"title": "Investigate incidents using automated solutions", "category": "Device", "priority": "High"},
+        {"title": "Manage threat detection alerts", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.06.02": {
+      "controlId": "03.06.02",
+      "controlTitle": "Track, document, and report incidents",
+      "improvementActions": [
+        {"title": "Investigate and remediate delivered malicious emails", "category": "Apps", "priority": "High"},
+        {"title": "Investigate compromised mailboxes", "category": "Apps", "priority": "High"},
+        {"title": "Facilitate the investigation of compromised user account mailboxes", "category": "Apps", "priority": "High"},
+        {"title": "Review and investigate restricted users", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.06.03": {
+      "controlId": "03.06.03",
+      "controlTitle": "Test incident response capability",
+      "improvementActions": [
+        {"title": "Run simulation attacks", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.07.01": {
+      "controlId": "03.07.01",
+      "controlTitle": "Perform maintenance on systems",
+      "improvementActions": [
+        {"title": "Manage Mobile Device Management (MDM) Devices remotely", "category": "Device", "priority": "Medium"},
+        {"title": "Enable ability to remotely wipe data from mobile devices", "category": "Device", "priority": "High"},
+        {"title": "Collect diagnostics from a Windows device remotely", "category": "Device", "priority": "Low"}
+      ]
+    },
+    "03.07.02": {
+      "controlId": "03.07.02",
+      "controlTitle": "Provide controls on the tools, techniques, and personnel used in system maintenance",
+      "improvementActions": [
+        {"title": "Manage Mobile Device Management (MDM) Devices remotely", "category": "Device", "priority": "Medium"},
+        {"title": "Review and respond to access requests in Privileged Access Management solution for on-premise accounts", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.08.03": {
+      "controlId": "03.08.03",
+      "controlTitle": "Sanitize or destroy information system media before disposal",
+      "improvementActions": [
+        {"title": "Retain terminated user data", "category": "Data", "priority": "Medium"},
+        {"title": "Enable ability to remotely wipe data from mobile devices", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.09.01": {
+      "controlId": "03.09.01",
+      "controlTitle": "Screen individuals prior to authorizing access",
+      "improvementActions": [
+        {"title": "Review user accounts", "category": "Identity", "priority": "Medium"},
+        {"title": "Investigate user accounts for inactivity", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.09.02": {
+      "controlId": "03.09.02",
+      "controlTitle": "Ensure CUI protection during personnel transfers and terminations",
+      "improvementActions": [
+        {"title": "Disable user access upon termination", "category": "Identity", "priority": "High"},
+        {"title": "Prevent a former employee from logging in and block access", "category": "Identity", "priority": "High"},
+        {"title": "Retain terminated user data", "category": "Data", "priority": "Medium"},
+        {"title": "Protect against and prevent data theft from departing employees", "category": "Data", "priority": "High"}
+      ]
+    },
+    "03.10.01": {
+      "controlId": "03.10.01",
+      "controlTitle": "Limit physical access to organizational systems and facilities",
+      "improvementActions": [
+        {"title": "Import physical badging data", "category": "Identity", "priority": "Low"}
+      ]
+    },
+    "03.11.01": {
+      "controlId": "03.11.01",
+      "controlTitle": "Periodically assess risk",
+      "improvementActions": [
+        {"title": "Explore security recommendations", "category": "Device", "priority": "Medium"},
+        {"title": "Perform real-time threat detection", "category": "Device", "priority": "High"},
+        {"title": "Review cloud traffic logs for ongoing visibility", "category": "Apps", "priority": "Medium"},
+        {"title": "Monitor and review risky sign-ins reports", "category": "Identity", "priority": "High"},
+        {"title": "Identify and monitor risky accounts", "category": "Identity", "priority": "High"}
+      ]
+    },
+    "03.12.01": {
+      "controlId": "03.12.01",
+      "controlTitle": "Periodically assess the security controls in organizational systems",
+      "improvementActions": [
+        {"title": "Create and manage access reviews", "category": "Identity", "priority": "High"},
+        {"title": "Create an access review of groups and applications", "category": "Identity", "priority": "High"},
+        {"title": "Establish access reviews for high privileged roles", "category": "Identity", "priority": "High"},
+        {"title": "Review access to applications", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.12.04": {
+      "controlId": "03.12.04",
+      "controlTitle": "Develop and implement plans of action to correct deficiencies",
+      "improvementActions": [
+        {"title": "Remediate threats and vulnerabilities", "category": "Device", "priority": "High"},
+        {"title": "Review and approve remediation actions in risk-based Vulnerability Management software", "category": "Device", "priority": "Medium"}
+      ]
+    },
+    "03.13.01": {
+      "controlId": "03.13.01",
+      "controlTitle": "Monitor, control, and protect communications at external system boundaries",
+      "improvementActions": [
+        {"title": "Create a Web Application Firewall (WAF) policy to protect against web-layer attacks", "category": "Infrastructure", "priority": "High"},
+        {"title": "Enable bot protection rule sets for Web Application Firewall (WAF)", "category": "Infrastructure", "priority": "High"},
+        {"title": "Implement network security group rules in Web Application Firewall", "category": "Infrastructure", "priority": "High"},
+        {"title": "Add boundary protection by preventing users from browsing untrusted sites", "category": "Apps", "priority": "Medium"},
+        {"title": "Use boundary protection to limit access to services based on the location of the client", "category": "Infrastructure", "priority": "High"}
+      ]
+    },
+    "03.13.02": {
+      "controlId": "03.13.02",
+      "controlTitle": "Employ architectural designs and implementation techniques at organizational system boundaries",
+      "improvementActions": [
+        {"title": "Create dedicated virtual networks", "category": "Infrastructure", "priority": "Medium"},
+        {"title": "Create a virtual network portal", "category": "Infrastructure", "priority": "Medium"},
+        {"title": "Route traffic through managed network access points", "category": "Infrastructure", "priority": "High"}
+      ]
+    },
+    "03.13.05": {
+      "controlId": "03.13.05",
+      "controlTitle": "Implement subnetworks for publicly accessible components",
+      "improvementActions": [
+        {"title": "Create dedicated virtual networks", "category": "Infrastructure", "priority": "Medium"},
+        {"title": "Create a virtual network portal", "category": "Infrastructure", "priority": "Medium"}
+      ]
+    },
+    "03.13.08": {
+      "controlId": "03.13.08",
+      "controlTitle": "Implement cryptographic mechanisms to prevent unauthorized disclosure",
+      "improvementActions": [
+        {"title": "Restrict access to content by applying encryption", "category": "Data", "priority": "High"},
+        {"title": "Protect data at rest with application-layer encryption", "category": "Data", "priority": "High"},
+        {"title": "Use anonymization to encrypt sensitive information", "category": "Data", "priority": "Medium"},
+        {"title": "Anonymize user names to users in certain roles", "category": "Data", "priority": "Low"}
+      ]
+    },
+    "03.13.10": {
+      "controlId": "03.13.10",
+      "controlTitle": "Establish and manage cryptographic keys",
+      "improvementActions": [
+        {"title": "Control your tenant root keys", "category": "Infrastructure", "priority": "High"},
+        {"title": "Restrict access to private keys", "category": "Infrastructure", "priority": "High"},
+        {"title": "Protect authenticators", "category": "Identity", "priority": "High"},
+        {"title": "Refresh authenticators", "category": "Identity", "priority": "Medium"}
+      ]
+    },
+    "03.13.11": {
+      "controlId": "03.13.11",
+      "controlTitle": "Employ cryptographic mechanisms to protect confidentiality of remote access sessions",
+      "improvementActions": [
+        {"title": "Protect data in transit using encryption", "category": "Data", "priority": "High"},
+        {"title": "Enforce email encryption", "category": "Data", "priority": "High"},
+        {"title": "Enable peer-to-peer encryption for sending digitally signed and encrypted messages", "category": "Data", "priority": "Medium"},
+        {"title": "Enable end-to-end encryption for sensitive meetings", "category": "Apps", "priority": "High"},
+        {"title": "Apply watermark to sensitive meeting information", "category": "Apps", "priority": "Medium"}
+      ]
+    },
+    "03.13.16": {
+      "controlId": "03.13.16",
+      "controlTitle": "Protect the confidentiality of CUI at rest",
+      "improvementActions": [
+        {"title": "Implement file encryption", "category": "Data", "priority": "High"},
+        {"title": "Protect data at rest with application-layer encryption", "category": "Data", "priority": "High"},
+        {"title": "Set PIN character length for full-drive encryption", "category": "Device", "priority": "Medium"},
+        {"title": "Require additional authentication at startup", "category": "Device", "priority": "Medium"},
+        {"title": "Apply sensitivity labels to protect ePHI", "category": "Data", "priority": "High"},
+        {"title": "Apply sensitivity labels to protect financial data", "category": "Data", "priority": "High"},
+        {"title": "Apply sensitivity labels to protect sensitive or critical data", "category": "Data", "priority": "High"},
+        {"title": "Apply sensitivity labels to protect personal data", "category": "Data", "priority": "High"},
+        {"title": "Utilize sensitivity labels for data restriction", "category": "Data", "priority": "High"}
+      ]
+    },
+    "03.14.01": {
+      "controlId": "03.14.01",
+      "controlTitle": "Identify, report, and correct information and information system flaws in a timely manner",
+      "improvementActions": [
+        {"title": "Implement a threat and vulnerability management tool", "category": "Device", "priority": "High"},
+        {"title": "Identify and investigate software vulnerabilities", "category": "Device", "priority": "High"},
+        {"title": "Review and approve remediation actions in risk-based Vulnerability Management software", "category": "Device", "priority": "Medium"},
+        {"title": "Remediate threats and vulnerabilities", "category": "Device", "priority": "High"},
+        {"title": "Reduce attack surface", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.14.02": {
+      "controlId": "03.14.02",
+      "controlTitle": "Provide protection from malicious code",
+      "improvementActions": [
+        {"title": "Turn on endpoint security solution", "category": "Device", "priority": "High"},
+        {"title": "Implement anti-malware policies", "category": "Device", "priority": "High"},
+        {"title": "Detect and block malware and viruses", "category": "Device", "priority": "High"},
+        {"title": "Protect against potentially unwanted applications", "category": "Device", "priority": "Medium"},
+        {"title": "Enable antivirus cloud-delivered protection for macOS", "category": "Device", "priority": "Medium"},
+        {"title": "Enable antivirus cloud-delivered protection for Linux", "category": "Device", "priority": "Medium"},
+        {"title": "Enable cloud-delivered protection", "category": "Device", "priority": "High"},
+        {"title": "Enable antivirus real-time protection for macOS", "category": "Device", "priority": "High"},
+        {"title": "Enable antivirus real-time protection for Linux", "category": "Device", "priority": "High"},
+        {"title": "Use group policy settings to configure your antivirus solution", "category": "Device", "priority": "Medium"},
+        {"title": "Turn on scanning of downloaded files and attachments for antivirus solution", "category": "Device", "priority": "High"},
+        {"title": "Turn on email scanning for antivirus solution", "category": "Device", "priority": "High"},
+        {"title": "Enable antivirus PUA protection in block mode for Linux devices", "category": "Device", "priority": "Medium"},
+        {"title": "Enable antivirus PUA protection in block mode for macOS devices", "category": "Device", "priority": "Medium"},
+        {"title": "Use tamper protection to protect security settings", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.14.03": {
+      "controlId": "03.14.03",
+      "controlTitle": "Monitor system security alerts and advisories and take action",
+      "improvementActions": [
+        {"title": "Set up anti-phishing policies", "category": "Apps", "priority": "High"},
+        {"title": "Investigate and remediate delivered malicious emails", "category": "Apps", "priority": "High"},
+        {"title": "Set up Safe Links policies", "category": "Apps", "priority": "High"},
+        {"title": "Detect malicious files and attachments", "category": "Apps", "priority": "High"},
+        {"title": "Implement spam filter", "category": "Apps", "priority": "Medium"},
+        {"title": "Implement outbound spam policy", "category": "Apps", "priority": "Medium"},
+        {"title": "Quarantine email messages", "category": "Apps", "priority": "Medium"},
+        {"title": "Set up Sender Policy Framework to prevent spoofing", "category": "Apps", "priority": "High"},
+        {"title": "Enable DomainKeys Identified Mail (DKIM)", "category": "Apps", "priority": "High"},
+        {"title": "Enhance email security through SPF, DKIM, and DMARC", "category": "Apps", "priority": "High"}
+      ]
+    },
+    "03.14.04": {
+      "controlId": "03.14.04",
+      "controlTitle": "Update malicious code protection mechanisms",
+      "improvementActions": [
+        {"title": "Update antivirus definitions", "category": "Device", "priority": "High"},
+        {"title": "Keep antivirus definitions for macOS devices up to date", "category": "Device", "priority": "Medium"},
+        {"title": "Keep antivirus definitions for Linux devices up to date", "category": "Device", "priority": "Medium"},
+        {"title": "Enable preset security policies for users", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.14.05": {
+      "controlId": "03.14.05",
+      "controlTitle": "Perform periodic scans and real-time scans",
+      "improvementActions": [
+        {"title": "Schedule threat scans for Mac", "category": "Device", "priority": "Medium"},
+        {"title": "Enable antivirus real-time protection for macOS", "category": "Device", "priority": "High"},
+        {"title": "Enable antivirus real-time protection for Linux", "category": "Device", "priority": "High"}
+      ]
+    },
+    "03.14.06": {
+      "controlId": "03.14.06",
+      "controlTitle": "Monitor system security alerts and advisories",
+      "improvementActions": [
+        {"title": "View and analyze threat protection reports", "category": "Device", "priority": "Medium"},
+        {"title": "Review diagnostic data to verify that anti-malware software is deployed and up-to-date", "category": "Device", "priority": "Medium"},
+        {"title": "Review malware and non-malware reports", "category": "Device", "priority": "Medium"},
+        {"title": "Consult a threat expert", "category": "Device", "priority": "Low"}
+      ]
+    },
+    "03.14.07": {
+      "controlId": "03.14.07",
+      "controlTitle": "Identify unauthorized use of the system",
+      "improvementActions": [
+        {"title": "Detect and remediate risky sign-ins", "category": "Identity", "priority": "High"},
+        {"title": "Detect and remediate risky users", "category": "Identity", "priority": "High"},
+        {"title": "Monitor and review risky sign-ins reports", "category": "Identity", "priority": "High"},
+        {"title": "Automatically detect compromised user accounts", "category": "Identity", "priority": "High"},
+        {"title": "Detect leaked credentials", "category": "Identity", "priority": "High"},
+        {"title": "Detect and remediate illicit access consent grants", "category": "Apps", "priority": "High"},
+        {"title": "Detect risky OAuth apps", "category": "Apps", "priority": "High"},
+        {"title": "Detect misuse of privileged role access", "category": "Identity", "priority": "High"},
+        {"title": "Investigate insider risk management alerts", "category": "Identity", "priority": "High"},
+        {"title": "Investigate insider risk management activities", "category": "Identity", "priority": "High"}
+      ]
+    }
+  }
+}

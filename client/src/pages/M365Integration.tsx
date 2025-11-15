@@ -20,13 +20,17 @@ import {
   Security as SecurityIcon,
   Devices as DevicesIcon,
   Policy as PolicyIcon,
+  Assessment as AssessmentIcon,
+  TrendingUp as TrendingUpIcon,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { m365Service } from '@/services/m365.service';
 import { format } from 'date-fns';
 
 export const M365Integration: React.FC = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // Fetch dashboard data
   const { data: dashboardData, isLoading: dashboardLoading, error: dashboardError } = useQuery({
@@ -95,14 +99,23 @@ export const M365Integration: React.FC = () => {
             Last synced: {lastSync}
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={syncMutation.isPending ? <CircularProgress size={20} /> : <SyncIcon />}
-          onClick={handleSync}
-          disabled={syncMutation.isPending}
-        >
-          {syncMutation.isPending ? 'Syncing...' : 'Sync Now'}
-        </Button>
+        <Box display="flex" gap={2}>
+          <Button
+            variant="outlined"
+            startIcon={<AssessmentIcon />}
+            onClick={() => navigate('/m365/gap-analysis')}
+          >
+            Gap Analysis
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={syncMutation.isPending ? <CircularProgress size={20} /> : <SyncIcon />}
+            onClick={handleSync}
+            disabled={syncMutation.isPending}
+          >
+            {syncMutation.isPending ? 'Syncing...' : 'Sync Now'}
+          </Button>
+        </Box>
       </Box>
 
       {/* Sync Result Alert */}
@@ -118,6 +131,53 @@ export const M365Integration: React.FC = () => {
           Sync failed. Please try again.
         </Alert>
       )}
+
+      {/* Gap Analysis Quick Access Card */}
+      <Card
+        sx={{
+          mb: 4,
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          cursor: 'pointer',
+          transition: 'transform 0.2s, box-shadow 0.2s',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: 6,
+          },
+        }}
+        onClick={() => navigate('/m365/gap-analysis')}
+      >
+        <CardContent>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <AssessmentIcon />
+                M365 Gap Analysis
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>
+                Identify controls with missing or non-compliant Microsoft 365 settings
+              </Typography>
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: 'rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'rgba(255, 255, 255, 0.3)',
+                  },
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/m365/gap-analysis');
+                }}
+              >
+                View Gap Analysis
+              </Button>
+            </Box>
+            <TrendingUpIcon sx={{ fontSize: 64, opacity: 0.3 }} />
+          </Box>
+        </CardContent>
+      </Card>
 
       {/* Statistics Cards */}
       <Grid container spacing={3} mb={4}>
