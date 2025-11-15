@@ -175,7 +175,7 @@ class SettingsMapperService {
       compliancePercentages.map((pct, idx) => ({
         settingName: mappedSettings[idx].settingName,
         settingValue: mappedSettings[idx].settingValue,
-        requiredValue: mappedSettings[idx].requiredValue,
+        requiredValue: mappedSettings[idx].requiredValue || false,
         validationType: mappedSettings[idx].validationType || 'boolean',
         meetsRequirement: mappedSettings[idx].meetsRequirement,
         compliancePercentage: pct,
@@ -603,10 +603,13 @@ class SettingsMapperService {
 
       return {
         settingNames: settingMapping.settingNames,
+        settingDisplayName: settingMapping.settingDisplayName,
         validationType: settingMapping.validationType,
         requiredValue: settingMapping.requiredValue,
         policyTypes: settingMapping.policyTypes,
+        policySubType: settingMapping.policySubType,
         description: settingMapping.description,
+        contextualHelp: settingMapping.contextualHelp,
         isSatisfied,
         satisfiedBy: satisfiedBy
           ? {

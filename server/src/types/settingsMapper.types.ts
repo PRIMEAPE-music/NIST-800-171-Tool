@@ -47,10 +47,13 @@ export type ValidationRule =
 
 export interface SettingMapping {
   settingNames: string[]; // Array of synonyms (e.g., ["passwordMinimumLength", "passcodeMinimumLength"])
+  settingDisplayName?: string; // User-friendly display name for the setting
   validationType: ValidationRuleType;
   requiredValue: ValidationRule;
   policyTypes: ('Intune' | 'Purview' | 'AzureAD')[]; // Which policy types this applies to
+  policySubType?: string; // Specific policy type (e.g., "Device Compliance Policy", "App Protection Policy")
   description: string;
+  contextualHelp?: string; // Additional context and guidance for users
 }
 
 export interface ControlMappingDefinition {
