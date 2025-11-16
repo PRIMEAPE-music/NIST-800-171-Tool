@@ -1,0 +1,70 @@
+Current Controls in nist-improvement-actions.json
+=================================================
+
+AC (Access Control): 18 controls
+  03.01.01, 03.01.02, 03.01.03, 03.01.04, 03.01.05, 03.01.06, 03.01.07, 03.01.08,
+  03.01.09, 03.01.10, 03.01.11, 03.01.12, 03.01.16, 03.01.18, 03.01.19, 03.01.20,
+  03.01.21, 03.01.22
+
+AT (Awareness & Training): 2 controls
+  03.02.01, 03.02.02
+
+AU (Audit & Accountability): 8 controls
+  03.03.01, 03.03.02, 03.03.03, 03.03.04, 03.03.05, 03.03.06, 03.03.07, 03.03.08
+
+CM (Configuration Management): 10 controls
+  03.04.01, 03.04.02, 03.04.03, 03.04.04, 03.04.05, 03.04.06, 03.04.08, 03.04.10,
+  03.04.11, 03.04.12
+
+CP (Contingency Planning): 3 controls
+  03.06.01, 03.06.02, 03.06.03
+
+IA (Identification & Authentication): 7 controls
+  03.05.01, 03.05.02, 03.05.03, 03.05.04, 03.05.05, 03.05.07, 03.05.11
+
+IR (Incident Response): 2 controls
+  03.06.04, 03.06.05
+
+MA (Maintenance): 3 controls
+  03.07.02, 03.07.05, 03.07.06
+
+MP (Media Protection): 6 controls
+  03.08.01, 03.08.02, 03.08.03, 03.08.04, 03.08.05, 03.08.07
+
+PS (Personnel Security): 2 controls
+  03.09.01, 03.09.02
+
+PE (Physical & Environmental Protection): 5 controls
+  03.10.01, 03.10.02, 03.10.03, 03.10.04, 03.10.05
+
+PL (Planning): 3 controls
+  03.11.01, 03.11.02, 03.11.03
+
+RA (Risk Assessment): 4 controls
+  03.12.01, 03.12.02, 03.12.03, 03.12.04
+
+SC (System & Communications Protection): 14 controls
+  03.13.01, 03.13.02, 03.13.03, 03.13.04, 03.13.05, 03.13.06, 03.13.07, 03.13.08,
+  03.13.09, 03.13.10, 03.13.11, 03.13.12, 03.13.13, 03.13.15
+
+SI (System & Information Integrity): 6 controls
+  03.14.01, 03.14.02, 03.14.03, 03.14.04, 03.14.05, 03.14.06
+
+SA (System & Services Acquisition): 3 controls
+  03.15.01, 03.15.02, 03.15.03
+
+SR (Supply Chain Risk Management): 3 controls
+  03.17.01, 03.17.02, 03.17.03
+
+TOTAL: 99 controls
+
+DISCREPANCY:
+- Expected: 97 controls
+- Actual: 99 controls
+- Difference: +2 controls
+
+FAMILY COMPARISON:
+Expected AC: 22, Actual AC: 18  --> MISSING 4 AC controls!
+All other families match the expected counts.
+
+This means there are 4 missing AC controls and 2 extra controls somewhere else.

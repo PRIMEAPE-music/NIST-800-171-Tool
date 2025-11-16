@@ -15,17 +15,20 @@ datasource db {
 // ============================================================================
 
 model Control {
-  id              Int      @id @default(autoincrement())
-  controlId       String   @unique @map("control_id") // Format: "03.01.01" for Rev 3
-  family          String // AC|AT|AU|CA|CM|CP|IA|IR|MA|MP|PE|PS|RA|SA|SC|SI|SR|PL
-  title           String
-  requirementText String   @map("requirement_text")
-  discussionText  String?  @map("discussion_text")
-  priority        String   @default("Medium") // Critical, High, Medium, Low
-  revision        String   @default("3") // NIST 800-171 Revision number
-  publicationDate String   @default("May 2024") @map("publication_date") // Publication date
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id                      Int      @id @default(autoincrement())
+  controlId               String   @unique @map("control_id") // Format: "03.01.01" for Rev 3
+  family                  String // AC|AT|AU|CA|CM|CP|IA|IR|MA|MP|PE|PS|RA|SA|SC|SI|SR|PL
+  title                   String
+  requirementText         String   @map("requirement_text")
+  discussionText          String?  @map("discussion_text")
+  references              String?  @map("references") // Full references text
+  sourceControls          String?  @map("source_controls") // JSON array of source control IDs
+  supportingPublications  String?  @map("supporting_publications") // JSON array of supporting publications
+  priority                String   @default("Medium") // Critical, High, Medium, Low
+  revision                String   @default("3") // NIST 800-171 Revision number
+  publicationDate         String   @default("May 2024") @map("publication_date") // Publication date
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
 
   // Relations
   status         ControlStatus?

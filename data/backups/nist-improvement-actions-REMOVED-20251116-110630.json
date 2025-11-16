@@ -1,0 +1,1857 @@
+{
+  "version": "1.0.0",
+  "revision": "NIST SP 800-171 Revision 3",
+  "publicationDate": "May 2024",
+  "lastUpdated": "2024-11-16",
+  "totalControls": 97,
+  "totalActions": 141,
+  "totalMappings": 194,
+  "description": "Mapping of NIST 800-171 Rev 3 active controls to Microsoft Purview Compliance Manager improvement actions",
+  "mappings": {
+    "03.01.01": {
+      "controlId": "03.01.01",
+      "controlTitle": "Account Management",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "46e91838-ea12-4315-b120-688f4917e560",
+          "title": "Enable deletion of an existing user",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "6f2b622d-e380-455f-a401-7f3617638d3e",
+          "title": "Audit user account status",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.02": {
+      "controlId": "03.01.02",
+      "controlTitle": "Account Types",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "6f2b622d-e380-455f-a401-7f3617638d3e",
+          "title": "Audit user account status",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.03": {
+      "controlId": "03.01.03",
+      "controlTitle": "Account Management (External)",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "dd3ee96b-dba7-4ec7-8f78-7482b87f14b6",
+          "title": "Manage on-premises application provisioning",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "b98b15c9-f85f-4357-90ee-2ba866164950",
+          "title": "Monitor groups access",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.04": {
+      "controlId": "03.01.04",
+      "controlTitle": "Automated Account Actions",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "dd3ee96b-dba7-4ec7-8f78-7482b87f14b6",
+          "title": "Manage on-premises application provisioning",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.05": {
+      "controlId": "03.01.05",
+      "controlTitle": "Privilege Management",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "f0d6fc16-778d-433e-8da6-59ce89c98b52",
+          "title": "Limit the use of administrative role access",
+          "category": "Identity",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "b50e0477-6463-43de-ac2f-fc60d6063b04",
+          "title": "Restrict access to privileged accounts",
+          "category": "Identity",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "c09a752e-f78b-4ea4-9946-fe564a3b41a1",
+          "title": "Use role-based privileged account management",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.06": {
+      "controlId": "03.01.06",
+      "controlTitle": "Account Elevation",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "3f1ac16f-ffac-4c51-872b-c977cd4df6f7",
+          "title": "Deny account elevation requests from standard user accounts",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": ["Windows"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "916f06a5-b800-4049-a490-9fbb1558e0e7",
+          "title": "Disable 'Always install with elevated privileges'",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["Windows"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.07": {
+      "controlId": "03.01.07",
+      "controlTitle": "Privileged Function Access",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "7027cdd2-03dd-4cfe-8fde-d5f68a5a15dd",
+          "title": "Maintain segregation of duties",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "617354f0-d430-45c0-97eb-6847f3da4c78",
+          "title": "Detect misuse of privileged role access",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.08": {
+      "controlId": "03.01.08",
+      "controlTitle": "Least Privilege",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "f0d6fc16-778d-433e-8da6-59ce89c98b52",
+          "title": "Limit the use of administrative role access",
+          "category": "Identity",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "bc7f43a7-7662-40d9-bd32-e5981d0e6b72",
+          "title": "Configure a privileged access policy",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.09": {
+      "controlId": "03.01.09",
+      "controlTitle": "Privacy and Security Notices",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "bbd7952e-ce69-4a01-9a1c-35e23524dabc",
+          "title": "Provide privacy information for organizations",
+          "category": "Governance",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "bc6f73bf-cd13-4431-bb40-d93b67b35eac",
+          "title": "Display privacy statements for end users",
+          "category": "Governance",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.10": {
+      "controlId": "03.01.10",
+      "controlTitle": "Concurrent Session Control",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+          "title": "Turn on idle session timeout",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.11": {
+      "controlId": "03.01.11",
+      "controlTitle": "Session Lock",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "d10de840-5160-4754-9de9-400601183d48",
+          "title": "Require mobile devices to lock upon inactivity",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["iOS", "Android"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "73ca6f00-05dc-4f18-869b-d97cb68848d7",
+          "title": "Log off idle sessions",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.12": {
+      "controlId": "03.01.12",
+      "controlTitle": "Session Termination",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+          "title": "Turn on idle session timeout",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.16": {
+      "controlId": "03.01.16",
+      "controlTitle": "Remote Access",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "60a3eb36-d646-4efd-982e-0a8ac444cf84",
+          "title": "Add an on-premises application for remote access through application proxy",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "2aaa27af-16a0-4008-8ec3-3de63480f677",
+          "title": "Route traffic through managed network access points",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.18": {
+      "controlId": "03.01.18",
+      "controlTitle": "Mobile Device Access",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "2baa7422-fb9a-482f-84e0-f24a0346d281",
+          "title": "Manage Mobile Device Management (MDM) Devices remotely",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["iOS", "Android"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "25f873b6-53ea-40d0-8720-2b84f32baa05",
+          "title": "Create a compliance policy",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.19": {
+      "controlId": "03.01.19",
+      "controlTitle": "Use of External Systems",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "16d49f7b-858e-4ec8-83cb-8c7b79e0e2ad",
+          "title": "Require mobile devices to use encryption",
+          "category": "Device Management",
+          "priority": "Critical",
+          "requiredPlatforms": ["iOS", "Android"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "8e372f54-c936-410a-a6af-4be75178b7a4",
+          "title": "Enable ability to remotely wipe data from mobile devices",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["iOS", "Android"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.20": {
+      "controlId": "03.01.20",
+      "controlTitle": "External System Use",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+          "title": "Prevent use of unauthorized software and cloud apps",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.21": {
+      "controlId": "03.01.21",
+      "controlTitle": "Publicly Accessible Content",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "ac9eb34d-0a79-4f59-ae2d-1ffe69653794",
+          "title": "Govern calendar sharing",
+          "category": "Governance",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.01.22": {
+      "controlId": "03.01.22",
+      "controlTitle": "Use of User-Provided Information Systems and Components",
+      "family": "AC",
+      "improvementActions": [
+        {
+          "actionId": "974fc52a-6bed-4fa4-86dc-ef9ce69636ed",
+          "title": "Govern managed apps",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.02.01": {
+      "controlId": "03.02.01",
+      "controlTitle": "Literacy Training and Awareness",
+      "family": "AT",
+      "improvementActions": [
+        {
+          "actionId": "d29e3d65-16a8-483d-9dbc-20f354406937",
+          "title": "Run simulation attacks",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.02.02": {
+      "controlId": "03.02.02",
+      "controlTitle": "Role-Based Training",
+      "family": "AT",
+      "improvementActions": [
+        {
+          "actionId": "d29e3d65-16a8-483d-9dbc-20f354406937",
+          "title": "Run simulation attacks",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.01": {
+      "controlId": "03.03.01",
+      "controlTitle": "Event Logging",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+          "title": "Search the audit log in compliance portal",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "79985842-c55b-48fc-b1bc-246f97e17d0f",
+          "title": "Use the system clock to generate time stamps for audit records",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.02": {
+      "controlId": "03.03.02",
+      "controlTitle": "Content of Audit Records",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+          "title": "Search the audit log in compliance portal",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.03": {
+      "controlId": "03.03.03",
+      "controlTitle": "Audit Record Retention",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "a5526fe2-1f71-4b8b-9d04-009326eb2ee5",
+          "title": "Generate and review reports for device compliance trends",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.04": {
+      "controlId": "03.03.04",
+      "controlTitle": "Response to Audit Logging Process Failures",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "3f298850-3510-45db-80a2-3d60f5d0e7f2",
+          "title": "Send security and health alerts to syslog server",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.05": {
+      "controlId": "03.03.05",
+      "controlTitle": "Audit Record Review, Analysis, and Reporting",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+          "title": "Search the audit log in compliance portal",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "b7367d05-1f7f-4def-8f9a-4c30076a9b0e",
+          "title": "Review cloud traffic logs for ongoing visibility",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.06": {
+      "controlId": "03.03.06",
+      "controlTitle": "Audit Record Reduction and Report Generation",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+          "title": "Search the audit log in compliance portal",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.07": {
+      "controlId": "03.03.07",
+      "controlTitle": "Time Stamps",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "79985842-c55b-48fc-b1bc-246f97e17d0f",
+          "title": "Use the system clock to generate time stamps for audit records",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.03.08": {
+      "controlId": "03.03.08",
+      "controlTitle": "Protection of Audit Information",
+      "family": "AU",
+      "improvementActions": [
+        {
+          "actionId": "058cb140-f876-4a39-b903-fa5adf64a15f",
+          "title": "Restrict access to audit information",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.01": {
+      "controlId": "03.04.01",
+      "controlTitle": "Baseline Configuration",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "2f191dfd-38aa-49c7-b37d-4d484aa03af7",
+          "title": "Deploy security baseline policy",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "972db95a-6937-432e-a70b-997b85d94edd",
+          "title": "Create a compliance policy for Windows devices",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["Windows"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.02": {
+      "controlId": "03.04.02",
+      "controlTitle": "Configuration Change Control",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "50c3469b-7d63-46e7-b791-37861ff92ad4",
+          "title": "Configure and validate network connections",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.03": {
+      "controlId": "03.04.03",
+      "controlTitle": "Configuration Settings",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "2f191dfd-38aa-49c7-b37d-4d484aa03af7",
+          "title": "Deploy security baseline policy",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.04": {
+      "controlId": "03.04.04",
+      "controlTitle": "Impact Analyses",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+          "title": "Review and approve remediation actions in risk-based Vulnerability Management software",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.05": {
+      "controlId": "03.04.05",
+      "controlTitle": "Access Restrictions for Change",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "7027cdd2-03dd-4cfe-8fde-d5f68a5a15dd",
+          "title": "Maintain segregation of duties",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.06": {
+      "controlId": "03.04.06",
+      "controlTitle": "Least Functionality",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+          "title": "Prevent use of unauthorized software and cloud apps",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "7d36827a-b389-4c8d-8aa5-6b22684d1cfe",
+          "title": "Review the software inventory",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.08": {
+      "controlId": "03.04.08",
+      "controlTitle": "Information System Component Inventory",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "7d36827a-b389-4c8d-8aa5-6b22684d1cfe",
+          "title": "Review the software inventory",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "bb597ab2-6b1d-4699-be44-9110455a6579",
+          "title": "View device health and compliance reports",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.10": {
+      "controlId": "03.04.10",
+      "controlTitle": "Malicious Code Protection Mechanisms",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "d4fb6a75-19fc-4bba-8737-6296471fef8e",
+          "title": "Disable autoplay for all drives",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": ["Windows"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.11": {
+      "controlId": "03.04.11",
+      "controlTitle": "User-Installed Software",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "ccef3a90-2faa-4abf-bc83-d6536478191a",
+          "title": "Enable software installation policies in macOS devices",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["macOS"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+          "title": "Prevent use of unauthorized software and cloud apps",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.04.12": {
+      "controlId": "03.04.12",
+      "controlTitle": "Automated Malicious Code Detection and Blocking",
+      "family": "CM",
+      "improvementActions": [
+        {
+          "actionId": "dbd6a4ca-c084-4df3-bc62-5d66344ba712",
+          "title": "Review diagnostic data to verify that anti-malware software is deployed and up-to-date",
+          "category": "Device Management",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "c61a4527-1a9c-4090-b3b9-20fdd367972f",
+          "title": "Review malware and non-malware reports",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.06.01": {
+      "controlId": "03.06.01",
+      "controlTitle": "System Backup",
+      "family": "CP",
+      "improvementActions": [
+        {
+          "actionId": "a5526fe2-1f71-4b8b-9d04-009326eb2ee5",
+          "title": "Generate and review reports for device compliance trends",
+          "category": "Data Protection",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.06.02": {
+      "controlId": "03.06.02",
+      "controlTitle": "Alternate Processing Site",
+      "family": "CP",
+      "improvementActions": [
+        {
+          "actionId": "a5526fe2-1f71-4b8b-9d04-009326eb2ee5",
+          "title": "Generate and review reports for device compliance trends",
+          "category": "Data Protection",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.06.03": {
+      "controlId": "03.06.03",
+      "controlTitle": "Information System Recovery and Reconstitution",
+      "family": "CP",
+      "improvementActions": [
+        {
+          "actionId": "a5526fe2-1f71-4b8b-9d04-009326eb2ee5",
+          "title": "Generate and review reports for device compliance trends",
+          "category": "Data Protection",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.05.01": {
+      "controlId": "03.05.01",
+      "controlTitle": "Authenticator Management",
+      "family": "IA",
+      "improvementActions": [
+        {
+          "actionId": "e56f5118-5cf5-4821-bbdc-e996fbd5bd61",
+          "title": "Enable multi-factor authentication for admins",
+          "category": "Identity",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "5fbc75bf-cfe1-498d-b7a9-9153e112669c",
+          "title": "Protect authenticators",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.05.02": {
+      "controlId": "03.05.02",
+      "controlTitle": "Identifier Management",
+      "family": "IA",
+      "improvementActions": [
+        {
+          "actionId": "6f2b622d-e380-455f-a401-7f3617638d3e",
+          "title": "Audit user account status",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.05.03": {
+      "controlId": "03.05.03",
+      "controlTitle": "Authenticator Feedback",
+      "family": "IA",
+      "improvementActions": [
+        {
+          "actionId": "8cae54e1-9bfc-4b5b-8dd9-bd711eddc2df",
+          "title": "Disable the local storage of passwords and credentials",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "ac9f73fb-9ce6-4ee7-a099-99f0afe7313c",
+          "title": "Disable password storage in web browser",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.05.04": {
+      "controlId": "03.05.04",
+      "controlTitle": "Authenticator Management - Cryptographic",
+      "family": "IA",
+      "improvementActions": [
+        {
+          "actionId": "e32edbed-0f0b-4a80-a3a6-58c79c39541d",
+          "title": "Restrict access to private keys",
+          "category": "Data Protection",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.05.05": {
+      "controlId": "03.05.05",
+      "controlTitle": "Password-Based Authentication",
+      "family": "IA",
+      "improvementActions": [
+        {
+          "actionId": "7cd4c197-0825-4907-b38a-301e68a53d92",
+          "title": "Require mobile devices to use a password",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["iOS", "Android"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "2c0ba57b-d4ee-4dd4-be1a-126ccb7f6ffa",
+          "title": "Enforce authenticators strength and complexity",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "5c81d08f-ecad-472d-857f-6f42a8739077",
+          "title": "Disallow password reuse on mobile devices",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": ["iOS", "Android"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.05.07": {
+      "controlId": "03.05.07",
+      "controlTitle": "Multi-Factor Authentication",
+      "family": "IA",
+      "improvementActions": [
+        {
+          "actionId": "e56f5118-5cf5-4821-bbdc-e996fbd5bd61",
+          "title": "Enable multi-factor authentication for admins",
+          "category": "Identity",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "9f0e19a2-99ea-4a69-b4fd-beb435cf69c7",
+          "title": "Enable multi-factor authentication for non-administrative users",
+          "category": "Identity",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.05.11": {
+      "controlId": "03.05.11",
+      "controlTitle": "Re-Authentication",
+      "family": "IA",
+      "improvementActions": [
+        {
+          "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+          "title": "Turn on idle session timeout",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.07.02": {
+      "controlId": "03.07.02",
+      "controlTitle": "Maintenance Tools",
+      "family": "MA",
+      "improvementActions": [
+        {
+          "actionId": "069d732d-0e03-4441-8b00-8a6436af0ecc",
+          "title": "Manually update remote devices",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "6f8f8ec8-639b-4782-8b08-1daba4d7aa85",
+          "title": "Enable remote help for tenants",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.07.05": {
+      "controlId": "03.07.05",
+      "controlTitle": "Maintenance Personnel",
+      "family": "MA",
+      "improvementActions": [
+        {
+          "actionId": "2a3873cd-f53c-446c-928a-7c5eb3a60edb",
+          "title": "Establish access reviews for high privileged roles",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.07.06": {
+      "controlId": "03.07.06",
+      "controlTitle": "Timely Maintenance",
+      "family": "MA",
+      "improvementActions": [
+        {
+          "actionId": "f525c14a-c5cc-4fca-beff-ec47d4456f6a",
+          "title": "Manage software update policies on macOS devices",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["macOS"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "9f4859b8-edb3-48cb-80c1-36bb789e4c1a",
+          "title": "Keep antivirus definitions for macOS devices up to date",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["macOS"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.08.01": {
+      "controlId": "03.08.01",
+      "controlTitle": "Media Protection Policy and Procedures",
+      "family": "MP",
+      "improvementActions": [
+        {
+          "actionId": "51011470-328b-4f0f-b7d0-3a7c47876128",
+          "title": "Create removable storage groups",
+          "category": "Data Protection",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.08.02": {
+      "controlId": "03.08.02",
+      "controlTitle": "Media Access",
+      "family": "MP",
+      "improvementActions": [
+        {
+          "actionId": "51011470-328b-4f0f-b7d0-3a7c47876128",
+          "title": "Create removable storage groups",
+          "category": "Data Protection",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.08.03": {
+      "controlId": "03.08.03",
+      "controlTitle": "Media Marking",
+      "family": "MP",
+      "improvementActions": [
+        {
+          "actionId": "76cf86ef-3224-497c-b9e9-9b681afa4054",
+          "title": "Create and publish sensitivity label policies for content in relevant sites and applications",
+          "category": "Data Protection",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "41c9c296-4884-42e8-8657-37dd707ffe85",
+          "title": "Utilize sensitivity labels for data restriction",
+          "category": "Data Protection",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.08.04": {
+      "controlId": "03.08.04",
+      "controlTitle": "Media Storage",
+      "family": "MP",
+      "improvementActions": [
+        {
+          "actionId": "51011470-328b-4f0f-b7d0-3a7c47876128",
+          "title": "Create removable storage groups",
+          "category": "Data Protection",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.08.05": {
+      "controlId": "03.08.05",
+      "controlTitle": "Media Transport",
+      "family": "MP",
+      "improvementActions": [
+        {
+          "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+          "title": "Protect data in transit using encryption",
+          "category": "Data Protection",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.08.07": {
+      "controlId": "03.08.07",
+      "controlTitle": "Media Sanitization",
+      "family": "MP",
+      "improvementActions": [
+        {
+          "actionId": "8e372f54-c936-410a-a6af-4be75178b7a4",
+          "title": "Enable ability to remotely wipe data from mobile devices",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["iOS", "Android"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.09.01": {
+      "controlId": "03.09.01",
+      "controlTitle": "Position Risk Designation",
+      "family": "PS",
+      "improvementActions": [
+        {
+          "actionId": "2a3873cd-f53c-446c-928a-7c5eb3a60edb",
+          "title": "Establish access reviews for high privileged roles",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.09.02": {
+      "controlId": "03.09.02",
+      "controlTitle": "Personnel Screening",
+      "family": "PS",
+      "improvementActions": [
+        {
+          "actionId": "b0427627-2e88-4020-93f8-f2451cb46ad8",
+          "title": "Import physical badging data",
+          "category": "Governance",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.10.01": {
+      "controlId": "03.10.01",
+      "controlTitle": "Physical Access Authorizations",
+      "family": "PE",
+      "improvementActions": [
+        {
+          "actionId": "b0427627-2e88-4020-93f8-f2451cb46ad8",
+          "title": "Import physical badging data",
+          "category": "Governance",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.10.02": {
+      "controlId": "03.10.02",
+      "controlTitle": "Physical Access Control",
+      "family": "PE",
+      "improvementActions": [
+        {
+          "actionId": "b0427627-2e88-4020-93f8-f2451cb46ad8",
+          "title": "Import physical badging data",
+          "category": "Governance",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.10.03": {
+      "controlId": "03.10.03",
+      "controlTitle": "Physical Access Monitoring",
+      "family": "PE",
+      "improvementActions": [
+        {
+          "actionId": "b0427627-2e88-4020-93f8-f2451cb46ad8",
+          "title": "Import physical badging data",
+          "category": "Governance",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.10.04": {
+      "controlId": "03.10.04",
+      "controlTitle": "Delivery and Removal",
+      "family": "PE",
+      "improvementActions": [
+        {
+          "actionId": "b0427627-2e88-4020-93f8-f2451cb46ad8",
+          "title": "Import physical badging data",
+          "category": "Governance",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.10.05": {
+      "controlId": "03.10.05",
+      "controlTitle": "Alternate Work Site",
+      "family": "PE",
+      "improvementActions": [
+        {
+          "actionId": "60a3eb36-d646-4efd-982e-0a8ac444cf84",
+          "title": "Add an on-premises application for remote access through application proxy",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.11.01": {
+      "controlId": "03.11.01",
+      "controlTitle": "System Security Plan",
+      "family": "PL",
+      "improvementActions": [
+        {
+          "actionId": "bbd7952e-ce69-4a01-9a1c-35e23524dabc",
+          "title": "Provide privacy information for organizations",
+          "category": "Governance",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.11.02": {
+      "controlId": "03.11.02",
+      "controlTitle": "Rules of Behavior",
+      "family": "PL",
+      "improvementActions": [
+        {
+          "actionId": "bbd7952e-ce69-4a01-9a1c-35e23524dabc",
+          "title": "Provide privacy information for organizations",
+          "category": "Governance",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "bc6f73bf-cd13-4431-bb40-d93b67b35eac",
+          "title": "Display privacy statements for end users",
+          "category": "Governance",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.11.03": {
+      "controlId": "03.11.03",
+      "controlTitle": "Security and Privacy Requirements for Contractors",
+      "family": "PL",
+      "improvementActions": [
+        {
+          "actionId": "b98b15c9-f85f-4357-90ee-2ba866164950",
+          "title": "Monitor groups access",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.12.01": {
+      "controlId": "03.12.01",
+      "controlTitle": "Risk Assessment",
+      "family": "RA",
+      "improvementActions": [
+        {
+          "actionId": "56d3f8ae-c9a0-4c9d-ad74-089e4b9a7444",
+          "title": "View the timeline of risky events",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+          "title": "Review and approve remediation actions in risk-based Vulnerability Management software",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.12.02": {
+      "controlId": "03.12.02",
+      "controlTitle": "Vulnerability Monitoring and Scanning",
+      "family": "RA",
+      "improvementActions": [
+        {
+          "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+          "title": "Review and approve remediation actions in risk-based Vulnerability Management software",
+          "category": "Security Operations",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.12.03": {
+      "controlId": "03.12.03",
+      "controlTitle": "Vulnerability Remediation",
+      "family": "RA",
+      "improvementActions": [
+        {
+          "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+          "title": "Review and approve remediation actions in risk-based Vulnerability Management software",
+          "category": "Security Operations",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "22afd25e-8da7-41db-97c1-9029a07fb6eb",
+          "title": "Use automated investigation and remediation capabilities",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.12.04": {
+      "controlId": "03.12.04",
+      "controlTitle": "Information Sharing",
+      "family": "RA",
+      "improvementActions": [
+        {
+          "actionId": "fbde19bb-03a3-4155-931c-500d9e95d0ec",
+          "title": "Collect and analyze information about cyber threats",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.01": {
+      "controlId": "03.13.01",
+      "controlTitle": "Boundary Protection",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "95523ad1-bcd3-48a6-b094-90cf6c480f7f",
+          "title": "Use boundary protection to limit access to services based on the location of the client",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "b075ebf3-c66c-4de6-bfb3-0c6e3537c62b",
+          "title": "Add boundary protection by preventing users from browsing untrusted sites",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.02": {
+      "controlId": "03.13.02",
+      "controlTitle": "Security Function Isolation",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "7027cdd2-03dd-4cfe-8fde-d5f68a5a15dd",
+          "title": "Maintain segregation of duties",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.03": {
+      "controlId": "03.13.03",
+      "controlTitle": "Security Services",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "808d00d7-7234-41fa-bb17-e147a0bb52e8",
+          "title": "Configure endpoint security solution integration",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.04": {
+      "controlId": "03.13.04",
+      "controlTitle": "Denial-of-Service Protection",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "122c3878-a307-4585-b27c-1ec16ad90d11",
+          "title": "Perform real-time threat detection",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.05": {
+      "controlId": "03.13.05",
+      "controlTitle": "Split Tunneling for Remote Devices",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "2aaa27af-16a0-4008-8ec3-3de63480f677",
+          "title": "Route traffic through managed network access points",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.06": {
+      "controlId": "03.13.06",
+      "controlTitle": "Validated Cryptography",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+          "title": "Protect data in transit using encryption",
+          "category": "Data Protection",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "1bfe3300-979f-4fcd-8aee-b22057645b77",
+          "title": "Protect data at rest with application-layer encryption",
+          "category": "Data Protection",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.07": {
+      "controlId": "03.13.07",
+      "controlTitle": "Wireless Access",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "50c3469b-7d63-46e7-b791-37861ff92ad4",
+          "title": "Configure and validate network connections",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.08": {
+      "controlId": "03.13.08",
+      "controlTitle": "Transmission and Storage Confidentiality",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+          "title": "Protect data in transit using encryption",
+          "category": "Data Protection",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "1bfe3300-979f-4fcd-8aee-b22057645b77",
+          "title": "Protect data at rest with application-layer encryption",
+          "category": "Data Protection",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.09": {
+      "controlId": "03.13.09",
+      "controlTitle": "Network Disconnect",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+          "title": "Turn on idle session timeout",
+          "category": "Identity",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.10": {
+      "controlId": "03.13.10",
+      "controlTitle": "Cryptographic Key Establishment and Management",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "e32edbed-0f0b-4a80-a3a6-58c79c39541d",
+          "title": "Restrict access to private keys",
+          "category": "Data Protection",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.11": {
+      "controlId": "03.13.11",
+      "controlTitle": "Cryptographic Protection",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+          "title": "Protect data in transit using encryption",
+          "category": "Data Protection",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.12": {
+      "controlId": "03.13.12",
+      "controlTitle": "Collaborative Computing Devices and Applications",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "51778fea-7950-499b-8169-2c367b09c5a4",
+          "title": "Prevent unauthorized access to systems that require user log-in",
+          "category": "Device Management",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.13": {
+      "controlId": "03.13.13",
+      "controlTitle": "Mobile Code",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "3331e7e3-d08f-42b2-88fb-63d1e6d7998d",
+          "title": "Block Flash activation in Office documents",
+          "category": "Security Operations",
+          "priority": "Low",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.13.15": {
+      "controlId": "03.13.15",
+      "controlTitle": "Session Authenticity",
+      "family": "SC",
+      "improvementActions": [
+        {
+          "actionId": "f38cbda6-ca87-483f-880f-1cf6049caf63",
+          "title": "Integrate form-based authentication applications into a central identity and access management engine",
+          "category": "Identity",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.14.01": {
+      "controlId": "03.14.01",
+      "controlTitle": "Flaw Remediation",
+      "family": "SI",
+      "improvementActions": [
+        {
+          "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+          "title": "Review and approve remediation actions in risk-based Vulnerability Management software",
+          "category": "Security Operations",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "6e06bdce-fcb5-4e9e-ac57-70d49f5b203f",
+          "title": "Enable 'Hide Option to Enable or Disable Updates'",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["Windows"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.14.02": {
+      "controlId": "03.14.02",
+      "controlTitle": "Malicious Code Protection",
+      "family": "SI",
+      "improvementActions": [
+        {
+          "actionId": "dbd6a4ca-c084-4df3-bc62-5d66344ba712",
+          "title": "Review diagnostic data to verify that anti-malware software is deployed and up-to-date",
+          "category": "Device Management",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "301069cd-75f3-452c-ba39-9bf10bbc64ec",
+          "title": "Protect Windows devices",
+          "category": "Device Management",
+          "priority": "Critical",
+          "requiredPlatforms": ["Windows"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "8a352ebc-04c9-4bfb-97e1-a8bce092bd13",
+          "title": "Use advanced protection against ransomware",
+          "category": "Security Operations",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.14.03": {
+      "controlId": "03.14.03",
+      "controlTitle": "Malicious Code Protection Updates",
+      "family": "SI",
+      "improvementActions": [
+        {
+          "actionId": "dbd6a4ca-c084-4df3-bc62-5d66344ba712",
+          "title": "Review diagnostic data to verify that anti-malware software is deployed and up-to-date",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "9f4859b8-edb3-48cb-80c1-36bb789e4c1a",
+          "title": "Keep antivirus definitions for macOS devices up to date",
+          "category": "Device Management",
+          "priority": "High",
+          "requiredPlatforms": ["macOS"],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.14.04": {
+      "controlId": "03.14.04",
+      "controlTitle": "System Monitoring",
+      "family": "SI",
+      "improvementActions": [
+        {
+          "actionId": "122c3878-a307-4585-b27c-1ec16ad90d11",
+          "title": "Perform real-time threat detection",
+          "category": "Security Operations",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "17df3487-be60-4568-b879-40448ca20150",
+          "title": "Enable endpoint detection (EDR) and response in block mode",
+          "category": "Security Operations",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.14.05": {
+      "controlId": "03.14.05",
+      "controlTitle": "System Monitoring Tools and Techniques",
+      "family": "SI",
+      "improvementActions": [
+        {
+          "actionId": "122c3878-a307-4585-b27c-1ec16ad90d11",
+          "title": "Perform real-time threat detection",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "ef35e189-b4cb-4ee0-ba6a-201bdd5c78c4",
+          "title": "Configure indicators for IPs and URLs/domains",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.14.06": {
+      "controlId": "03.14.06",
+      "controlTitle": "Security Alerts, Advisories, and Directives",
+      "family": "SI",
+      "improvementActions": [
+        {
+          "actionId": "fbde19bb-03a3-4155-931c-500d9e95d0ec",
+          "title": "Collect and analyze information about cyber threats",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "31df997d-fc61-407f-9da4-81469da154f7",
+          "title": "Remove the learning period for alerts",
+          "category": "Security Operations",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.15.01": {
+      "controlId": "03.15.01",
+      "controlTitle": "Developer Configuration Management",
+      "family": "SA",
+      "improvementActions": [
+        {
+          "actionId": "50c3469b-7d63-46e7-b791-37861ff92ad4",
+          "title": "Configure and validate network connections",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.15.02": {
+      "controlId": "03.15.02",
+      "controlTitle": "Developer Security Testing and Evaluation",
+      "family": "SA",
+      "improvementActions": [
+        {
+          "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+          "title": "Review and approve remediation actions in risk-based Vulnerability Management software",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.15.03": {
+      "controlId": "03.15.03",
+      "controlTitle": "External System Services",
+      "family": "SA",
+      "improvementActions": [
+        {
+          "actionId": "df419ffa-12fc-425a-9fb9-de7fb61cb660",
+          "title": "Discover and manage trends in shadow IT application usage",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.06.04": {
+      "controlId": "03.06.04",
+      "controlTitle": "Incident Handling",
+      "family": "IR",
+      "improvementActions": [
+        {
+          "actionId": "1603d26d-8ed3-45aa-8a95-5ae7811b6d3b",
+          "title": "Manage security related incidents",
+          "category": "Security Operations",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "dcdfa6a5-25df-4505-a20e-e98944a3b6c1",
+          "title": "Automate investigation and response activities",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.06.05": {
+      "controlId": "03.06.05",
+      "controlTitle": "Incident Monitoring",
+      "family": "IR",
+      "improvementActions": [
+        {
+          "actionId": "1603d26d-8ed3-45aa-8a95-5ae7811b6d3b",
+          "title": "Manage security related incidents",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "9d72637c-1a92-4838-abb8-5ac6747e5d8d",
+          "title": "Investigate insider risk management alerts",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.17.01": {
+      "controlId": "03.17.01",
+      "controlTitle": "Supply Chain Risk Assessment",
+      "family": "SR",
+      "improvementActions": [
+        {
+          "actionId": "48ec6bba-bde7-4775-b6db-b7870e940947",
+          "title": "Remediate risky OAuth apps",
+          "category": "Identity",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "4d28a167-40a8-47c8-bc40-d659a5803e51",
+          "title": "Detect new OAuth applications connected to your corporate environment",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.17.02": {
+      "controlId": "03.17.02",
+      "controlTitle": "Acquisition Strategies, Tools, and Methods",
+      "family": "SR",
+      "improvementActions": [
+        {
+          "actionId": "974fc52a-6bed-4fa4-86dc-ef9ce69636ed",
+          "title": "Govern managed apps",
+          "category": "Device Management",
+          "priority": "Medium",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "df419ffa-12fc-425a-9fb9-de7fb61cb660",
+          "title": "Discover and manage trends in shadow IT application usage",
+          "category": "Security Operations",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    },
+    "03.17.03": {
+      "controlId": "03.17.03",
+      "controlTitle": "Supply Chain Protection",
+      "family": "SR",
+      "improvementActions": [
+        {
+          "actionId": "82b4694d-9b63-428e-84cc-51ceb9c2eeb2",
+          "title": "Create and deploy data loss prevention policies",
+          "category": "Data Protection",
+          "priority": "Critical",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        },
+        {
+          "actionId": "2a71f922-3b66-431d-b192-45c679035b9b",
+          "title": "Create customized or use default DLP policies for endpoints",
+          "category": "Data Protection",
+          "priority": "High",
+          "requiredPlatforms": [],
+          "complianceManagerUrl": "https://compliance.microsoft.com/compliancemanager"
+        }
+      ]
+    }
+  }
+}

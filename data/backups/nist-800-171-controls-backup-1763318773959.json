@@ -1,7 +1,7 @@
 {
   "version": "NIST SP 800-171 Revision 3",
   "publicationDate": "May 2024",
-  "totalControls": 97,
+  "totalControls": 98,
   "description": "Complete NIST SP 800-171 Revision 3 controls with full requirement text, discussion, and references. Withdrawn controls excluded.",
   "families": {
     "AC": {
@@ -77,7 +77,7 @@
     "PL": {
       "code": "PL",
       "name": "Planning",
-      "controlCount": 3
+      "controlCount": 4
     },
     "SA": {
       "code": "SA",
@@ -822,6 +822,22 @@
       "sourceControls": [],
       "supportingPublications": [],
       "priority": "Medium"
+    },
+    {
+      "controlId": "03.15.03",
+      "family": "PL",
+      "familyName": "Planning",
+      "title": "for authenticators in the possession of individuals and by 03.01.01,",
+      "requirementText": "03.01.02, 03.01.05, and 03.13.08 for authenticators stored in organizational\nsystems. This includes passwords stored in hashed or encrypted formats or files that\ncontain hashed or encrypted passwords that are accessible with administrator\nprivileges. Actions can be taken to protect authenticators, including maintaining\npossession of authenticators, not sharing authenticators with others, and\nimmediately reporting lost, stolen, or compromised authenticators.\nDevelopers may deliver system components with factory default authentication\ncredentials to allow for initial installation and configuration. Default authentication\ncredentials are often well-known, easily discoverable, and present a significant risk.\nAuthenticator management includes issuing and revoking authenticators for\ntemporary access when they are no longer needed. The use of long passwords or\npassphrases may obviate the need to periodically change authenticators.",
+      "discussionText": null,
+      "references": "3.6. Incident Response",
+      "sourceControls": [
+        "IA-05"
+      ],
+      "supportingPublications": [
+        "SP 800-63-3 [27]"
+      ],
+      "priority": "Critical"
     },
     {
       "controlId": "03.06.01",

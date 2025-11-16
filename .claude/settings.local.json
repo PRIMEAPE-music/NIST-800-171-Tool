@@ -1,9 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node check-catalog-structure.js)",
-      "Bash(node -e \"const data = require(''./data/control-settings-mappings.json''); const malwareControl = data.controls.find(c => c.controlId === ''03.14.02'' || c.controlId === ''03.05.11''); if (malwareControl) { console.log(JSON.stringify(malwareControl, null, 2)); }\")",
-      "Bash(node -e \"const data = require(''./data/control-settings-mappings.json''); console.log(''Total controls:'', data.controls.length); data.controls.forEach(c => { console.log(c.controlId + '': '' + c.settingsMappings.length + '' mappings''); });\")"
+      "Bash(node analyze-improvement-actions.js)",
+      "Bash(node extract-controls.js)",
+      "Bash(node parse-nist-controls.js)",
+      "Bash(node parse-nist-controls-v2.js)",
+      "Bash(npx prisma migrate dev --name add_control_references_and_sources --create-only)",
+      "Bash(npx prisma migrate deploy)",
+      "Bash(npm run seed)",
+      "Bash(npx prisma db seed)",
+      "Bash(npx prisma generate)",
+      "Bash(npx tsx prisma/seed.ts)",
+      "Bash(node verify-controls.js)",
+      "Bash(node test-search.js)",
+      "Bash(curl -s \"http://localhost:5000/api/controls?search=Account&limit=3\")"
     ],
     "deny": [],
     "ask": []

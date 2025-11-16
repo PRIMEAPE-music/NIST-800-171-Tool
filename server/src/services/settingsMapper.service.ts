@@ -1209,7 +1209,7 @@ class SettingsMapperService {
       return {
         controlId,
         hasRecommendations: false,
-        message: 'No M365 recommendations available for this control',
+        message: 'No Microsoft Improvement Actions available for this control',
         recommendations: [],
       };
     }

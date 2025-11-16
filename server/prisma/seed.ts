@@ -7,8 +7,13 @@ const prisma = new PrismaClient();
 interface ControlData {
   controlId: string;
   family: string;
+  familyName?: string;
   title: string;
   requirementText: string;
+  discussionText?: string | null;
+  references?: string | null;
+  sourceControls?: string[];
+  supportingPublications?: string[];
   priority: string;
 }
 
@@ -60,6 +65,10 @@ async function seedControls() {
           family: control.family,
           title: control.title,
           requirementText: control.requirementText,
+          discussionText: control.discussionText || null,
+          references: control.references || null,
+          sourceControls: control.sourceControls ? JSON.stringify(control.sourceControls) : null,
+          supportingPublications: control.supportingPublications ? JSON.stringify(control.supportingPublications) : null,
           priority: control.priority,
           revision: '3',
           publicationDate: controlsData.publicationDate,

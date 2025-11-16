@@ -148,7 +148,7 @@ export const ControlDetail: React.FC = () => {
           }}
         >
           <Tab label="Overview" />
-          <Tab label="M365 Settings" />
+          <Tab label="M365 Policies" />
           <Tab label="Gap Analysis" />
           <Tab label={`Evidence (${control.evidence?.length || 0})`} />
           <Tab label="History" />

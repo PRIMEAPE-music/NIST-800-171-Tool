@@ -392,8 +392,11 @@ export const M365RecommendationsTab: React.FC<M365RecommendationsTabProps> = ({ 
   if (!hasAnyRecommendations && !_isLoadingComplianceEnriched) {
     return (
       <Box sx={{ px: 3 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: '#E0E0E0', mb: 2 }}>
+          Microsoft Implementation Actions Mappings
+        </Typography>
         <Alert severity="info">
-          {recommendations?.message || 'No Microsoft 365 implementation recommendations are available for this control.'}
+          {recommendations?.message || 'No Microsoft Improvement Actions available for this control.'}
         </Alert>
       </Box>
     );
@@ -420,7 +423,7 @@ export const M365RecommendationsTab: React.FC<M365RecommendationsTabProps> = ({ 
           {/* Header */}
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6" gutterBottom sx={{ color: '#E0E0E0' }}>
-              Microsoft 365 Implementation Recommendations
+              Microsoft Implementation Actions Mappings
             </Typography>
             <Typography variant="body2" sx={{ color: '#B0B0B0', mb: 2 }}>
               Configure these M365 settings to satisfy this control. Settings with checkmarks are already configured and compliant.

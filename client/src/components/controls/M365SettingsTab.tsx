@@ -136,7 +136,7 @@ export const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ control }) => 
   return (
     <Box sx={{ px: 3 }}>
       <Typography variant="h6" gutterBottom sx={{ color: '#E0E0E0' }}>
-        Microsoft 365 Settings
+        M365 Policy Settings Mapping
       </Typography>
 
       <Typography variant="body2" sx={{ color: '#B0B0B0', mb: 3 }}>
