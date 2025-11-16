@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { intuneService } from './intune.service';
 import { purviewService } from './purview.service';
 import { azureADService } from './azureAD.service';
-import settingsMapperService from './settingsMapper.service';
+// REMOVED: settingsMapper import - no longer mapping policies to controls
 import { PolicyType, SyncResult } from '../types/m365.types';
 import fs from 'fs';
 import path from 'path';
@@ -10,27 +10,17 @@ import path from 'path';
 const prisma = new PrismaClient();
 
 class PolicySyncService {
-  private mappingTemplates: any[] = [];
+  // REMOVED: Mapping templates - no longer mapping policies to controls
 
   constructor() {
-    this.loadMappingTemplates();
+    // REMOVED: loadMappingTemplates() call
   }
 
   /**
    * Load predefined control-to-policy mapping templates
+   * REMOVED: No longer loading mapping data files
    */
-  private loadMappingTemplates(): void {
-    try {
-      const mappingFile = path.join(__dirname, '../../../data/control-m365-mappings.json');
-      const data = fs.readFileSync(mappingFile, 'utf-8');
-      const parsed = JSON.parse(data);
-      this.mappingTemplates = parsed.mappings || [];
-      console.log(`✅ Loaded ${this.mappingTemplates.length} mapping templates`);
-    } catch (error) {
-      console.error('Error loading mapping templates:', error);
-      this.mappingTemplates = [];
-    }
-  }
+  // private loadMappingTemplates(): void { }
 
   /**
    * Calculate match confidence score for a policy-control pair
@@ -94,7 +84,6 @@ class PolicySyncService {
   async syncAllPolicies(forceRefresh: boolean = false): Promise<SyncResult> {
     const startTime = Date.now();
     let policiesUpdated = 0;
-    let controlsUpdated = 0;
     const errors: string[] = [];
 
     console.log('🔄 Starting M365 policy sync...');
@@ -134,10 +123,8 @@ class PolicySyncService {
         policiesUpdated += azureADCount;
       }
 
-      // Auto-map policies to controls using settings-based mapper
-      console.log('🎯 Running settings-based auto-mapper...');
-      const mappingStats = await settingsMapperService.mapAllPolicies();
-      controlsUpdated = mappingStats.totalMappingsCreated;
+      // REMOVED: Auto-mapping step - no longer mapping policies to controls
+      console.log('✓ Policy sync completed (auto-mapping disabled)');
 
       // Update sync settings
       await prisma.m365Settings.upsert({
@@ -158,19 +145,18 @@ class PolicySyncService {
         data: {
           syncType: forceRefresh ? 'Manual' : 'Automatic',
           policiesUpdated,
-          controlsUpdated,
+          controlsUpdated: 0, // No longer creating control mappings
           status: errors.length > 0 ? 'Partial' : 'Success',
           errorMessage: errors.length > 0 ? errors.join('; ') : null,
           syncDuration: duration,
         },
       });
 
-      console.log(`✅ Sync complete: ${policiesUpdated} policies, ${controlsUpdated} controls updated`);
+      console.log(`✅ Sync complete: ${policiesUpdated} policies synced`);
 
       return {
         success: errors.length === 0,
         policiesUpdated,
-        controlsUpdated,
         duration,
         errors: errors.length > 0 ? errors : undefined,
       };
@@ -478,15 +464,11 @@ class PolicySyncService {
 
   /**
    * Get all policy mappings for a specific control
+   * REMOVED: Policy mapping functionality has been disabled
    */
-  async getPolicyMappingsForControl(controlId: number): Promise<any[]> {
-    return prisma.controlPolicyMapping.findMany({
-      where: { controlId },
-      include: {
-        policy: true,
-      },
-    });
-  }
+  // async getPolicyMappingsForControl(controlId: number): Promise<any[]> {
+  //   return [];
+  // }
 
   /**
    * Get statistics about M365 integration
@@ -494,18 +476,14 @@ class PolicySyncService {
   async getIntegrationStats(): Promise<{
     totalPolicies: number;
     activePolicies: number;
-    mappedControls: number;
     policyBreakdown: Record<PolicyType, number>;
   }> {
-    const [totalPolicies, activePolicies, policyBreakdown, mappedControls] = await Promise.all([
+    const [totalPolicies, activePolicies, policyBreakdown] = await Promise.all([
       prisma.m365Policy.count(),
       prisma.m365Policy.count({ where: { isActive: true } }),
       prisma.m365Policy.groupBy({
         by: ['policyType'],
         _count: true,
-      }),
-      prisma.controlPolicyMapping.findMany({
-        distinct: ['controlId'],
       }),
     ]);
 
@@ -522,7 +500,6 @@ class PolicySyncService {
     return {
       totalPolicies,
       activePolicies,
-      mappedControls: mappedControls.length,
       policyBreakdown: breakdown as Record<PolicyType, number>,
     };
   }

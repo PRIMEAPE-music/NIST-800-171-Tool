@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { logger } from '@/utils/logger';
 import { ControlStatus } from '@/types/enums';
 import { controlProgressService } from './controlProgress.service';
-import settingsMapperService from './settingsMapper.service';
+// REMOVED: settingsMapper import - no longer mapping policies to controls
 
 export class ControlService {
   /**
@@ -115,11 +115,6 @@ export class ControlService {
           poams: {
             include: {
               milestones: true,
-            },
-          },
-          policyMappings: {
-            include: {
-              policy: true,
             },
           },
           changeHistory: {
@@ -507,15 +502,12 @@ export class ControlService {
 
   /**
    * Validate control settings using keyword-based search
+   * REMOVED: Settings validation functionality has been disabled
    */
-  async validateControlSettings(controlId: string) {
-    try {
-      return await settingsMapperService.validateControlSettings(controlId);
-    } catch (error) {
-      logger.error(`Error validating control settings for ${controlId}:`, error);
-      throw error;
-    }
-  }
+  // async validateControlSettings(controlId: string) {
+  //   // Policy mapping functionality has been removed
+  //   return { valid: false, message: 'Policy mapping disabled' };
+  // }
 }
 
 export const controlService = new ControlService();

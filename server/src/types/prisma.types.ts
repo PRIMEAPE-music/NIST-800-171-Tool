@@ -8,7 +8,7 @@ export type Evidence = Prisma.EvidenceGetPayload<object>;
 export type Poam = Prisma.PoamGetPayload<object>;
 export type PoamMilestone = Prisma.PoamMilestoneGetPayload<object>;
 export type M365Policy = Prisma.M365PolicyGetPayload<object>;
-export type ControlPolicyMapping = Prisma.ControlPolicyMappingGetPayload<object>;
+// REMOVED: ControlPolicyMapping - no longer mapping policies to controls
 export type ChangeHistory = Prisma.ChangeHistoryGetPayload<object>;
 export type Setting = Prisma.SettingGetPayload<object>;
 
@@ -19,11 +19,7 @@ export type ControlWithRelations = Prisma.ControlGetPayload<{
     assessments: true;
     evidence: true;
     poams: true;
-    policyMappings: {
-      include: {
-        policy: true;
-      };
-    };
+    // REMOVED: policyMappings - no longer mapping policies to controls
   };
 }>;
 

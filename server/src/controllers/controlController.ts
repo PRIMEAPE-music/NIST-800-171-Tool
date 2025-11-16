@@ -191,16 +191,13 @@ class ControlController {
   /**
    * GET /api/controls/:controlId/settings
    * Validate control settings using keyword-based search
+   * REMOVED: Settings validation functionality has been disabled
    */
   async validateControlSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { controlId } = req.params;
-
-      const result = await controlService.validateControlSettings(controlId);
-
-      res.status(200).json({
-        success: true,
-        data: result,
+      res.status(410).json({
+        success: false,
+        message: 'Policy mapping functionality has been removed',
       });
     } catch (error) {
       logger.error(`Error in validateControlSettings (${req.params.controlId}):`, error);

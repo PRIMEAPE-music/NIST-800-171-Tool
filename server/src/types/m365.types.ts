@@ -1,7 +1,7 @@
 // Microsoft 365 Integration Types
 
 export type PolicyType = 'Intune' | 'Purview' | 'AzureAD';
-export type MappingConfidence = 'High' | 'Medium' | 'Low';
+// REMOVED: MappingConfidence type - no longer mapping policies to controls
 export type SyncStatus = 'Success' | 'Failed' | 'Partial';
 export type SyncType = 'Manual' | 'Automatic';
 
@@ -19,15 +19,7 @@ export interface M365Policy {
   updatedAt: Date;
 }
 
-// Control to Policy Mapping
-export interface ControlPolicyMapping {
-  id: number;
-  controlId: number;
-  policyId: number;
-  mappingConfidence: MappingConfidence;
-  mappingNotes?: string;
-  createdAt: Date;
-}
+// REMOVED: ControlPolicyMapping interface - no longer mapping policies to controls
 
 // M365 Settings
 export interface M365Settings {
@@ -58,7 +50,6 @@ export interface M365SyncLog {
 export interface SyncResult {
   success: boolean;
   policiesUpdated: number;
-  controlsUpdated: number;
   duration: number;
   errors?: string[];
 }
@@ -137,14 +128,4 @@ export interface AzureADMFAStatus {
   percentageCompliance: number;
 }
 
-// Mapping Template Interface (for predefined mappings)
-export interface ControlPolicyMappingTemplate {
-  controlId: string; // e.g., "3.1.1"
-  policyTypes: PolicyType[];
-  searchCriteria: {
-    nameContains?: string[];
-    policyTypeSpecific?: any;
-  };
-  mappingConfidence: MappingConfidence;
-  mappingReason: string;
-}
+// REMOVED: ControlPolicyMappingTemplate interface - no longer mapping policies to controls

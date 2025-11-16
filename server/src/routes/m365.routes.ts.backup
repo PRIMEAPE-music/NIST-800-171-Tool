@@ -6,7 +6,8 @@ import { purviewService } from '../services/purview.service';
 import { azureADService } from '../services/azureAD.service';
 import { policySyncService } from '../services/policySync.service';
 import policyViewerService from '../services/policyViewer.service';
-// REMOVED: Mapping service imports - no longer mapping policies to controls
+import settingsMapperService from '../services/settingsMapper.service';
+import { improvementActionMappingService } from '../services/improvementActionMapping.service';
 import { PolicySearchParams } from '../types/policyViewer.types';
 import secureScoreRoutes from './secureScore.routes';
 import complianceManagerRoutes from './complianceManager.routes';
@@ -293,13 +294,166 @@ router.get('/policies', async (req, res) => {
   }
 });
 
-// REMOVED: Control mappings route - no longer mapping policies to controls
-// REMOVED: Suggested mappings route - no longer mapping policies to controls
-// REMOVED: Approve mapping route - no longer mapping policies to controls
-// REMOVED: Delete mapping route - no longer mapping policies to controls
+/**
+ * GET /api/m365/control/:controlId/mappings
+ * Get policy mappings for a specific control
+ */
+router.get('/control/:controlId/mappings', async (req, res) => {
+  try {
+    const controlId = parseInt(req.params.controlId);
+    const mappings = await policySyncService.getPolicyMappingsForControl(controlId);
 
-// REMOVED: Bulk approve mappings route - no longer mapping policies to controls
-// REMOVED: Bulk reject mappings route - no longer mapping policies to controls
+    res.json({ success: true, count: mappings.length, mappings });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/suggested-mappings
+ * Get suggested mappings for review
+ */
+router.get('/suggested-mappings', async (req, res) => {
+  try {
+    const { confidence } = req.query;
+
+    const where: any = {};
+    if (confidence) {
+      where.mappingConfidence = confidence;
+    }
+
+    const suggestions = await prisma.controlPolicyMapping.findMany({
+      where,
+      include: {
+        control: {
+          select: {
+            controlId: true,
+            title: true,
+            family: true,
+          },
+        },
+        policy: {
+          select: {
+            policyName: true,
+            policyType: true,
+            policyDescription: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    res.json(suggestions);
+  } catch (error) {
+    console.error('Error fetching suggested mappings:', error);
+    res.status(500).json({ error: 'Failed to fetch suggested mappings' });
+  }
+});
+
+/**
+ * POST /api/m365/mappings/:id/approve
+ * Approve a mapping
+ */
+router.post('/mappings/:id/approve', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const mapping = await prisma.controlPolicyMapping.update({
+      where: { id: parseInt(id) },
+      data: {
+        mappingNotes: prisma.raw(`mapping_notes || '\n[Approved by user]'`),
+      },
+    });
+
+    res.json({ success: true, mapping });
+  } catch (error) {
+    console.error('Error approving mapping:', error);
+    res.status(500).json({ error: 'Failed to approve mapping' });
+  }
+});
+
+/**
+ * DELETE /api/m365/mappings/:id
+ * Reject and delete a mapping
+ */
+router.delete('/mappings/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.controlPolicyMapping.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting mapping:', error);
+    res.status(500).json({ error: 'Failed to delete mapping' });
+  }
+});
+
+/**
+ * POST /api/m365/mappings/bulk-approve
+ * Bulk approve mappings
+ */
+router.post('/mappings/bulk-approve', async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Invalid ids array' });
+    }
+
+    // Update each mapping individually to append approval note
+    const updatePromises = ids.map(id =>
+      prisma.controlPolicyMapping.findUnique({
+        where: { id: parseInt(id) },
+      }).then(mapping => {
+        if (mapping) {
+          return prisma.controlPolicyMapping.update({
+            where: { id: parseInt(id) },
+            data: {
+              mappingNotes: `${mapping.mappingNotes || ''}\n[Bulk approved by user]`,
+            },
+          });
+        }
+        return null;
+      })
+    );
+
+    await Promise.all(updatePromises);
+
+    res.json({ success: true, count: ids.length });
+  } catch (error) {
+    console.error('Error bulk approving mappings:', error);
+    res.status(500).json({ error: 'Failed to bulk approve mappings' });
+  }
+});
+
+/**
+ * POST /api/m365/mappings/bulk-reject
+ * Bulk reject mappings
+ */
+router.post('/mappings/bulk-reject', async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Invalid ids array' });
+    }
+
+    await prisma.controlPolicyMapping.deleteMany({
+      where: { id: { in: ids.map(id => parseInt(id)) } },
+    });
+
+    res.json({ success: true, count: ids.length });
+  } catch (error) {
+    console.error('Error bulk rejecting mappings:', error);
+    res.status(500).json({ error: 'Failed to bulk reject mappings' });
+  }
+});
 
 // ============================================================================
 // POLICY VIEWER ENDPOINTS
@@ -411,9 +565,135 @@ router.get('/policies/viewer/:id', async (req, res) => {
 // GAP ANALYSIS ENDPOINTS
 // ============================================================================
 
-// REMOVED: Gap analysis route - no longer mapping policies to controls
-// REMOVED: Gap analysis export route - no longer mapping policies to controls
-// REMOVED: Recommendations route - no longer mapping policies to controls
-// REMOVED: Improvement actions route - no longer mapping policies to controls
+/**
+ * GET /api/m365/gap-analysis
+ * Get comprehensive gap analysis showing controls with missing or non-compliant settings
+ */
+router.get('/gap-analysis', async (req, res) => {
+  try {
+    const analysis = await settingsMapperService.getGapAnalysis();
+
+    res.json({
+      success: true,
+      analysis,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/gap-analysis/export
+ * Export gap analysis report with actionable remediation steps
+ */
+router.get('/gap-analysis/export', async (req, res) => {
+  try {
+    const { format = 'json' } = req.query;
+    const analysis = await settingsMapperService.getGapAnalysis();
+
+    if (format === 'json') {
+      // JSON export with full details
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="m365-gap-analysis-${new Date().toISOString().split('T')[0]}.json"`
+      );
+      res.json({
+        exportDate: new Date().toISOString(),
+        summary: {
+          totalControls: analysis.totalControls,
+          controlsFullyCovered: analysis.controlsFullyCovered,
+          controlsPartiallyCovered: analysis.controlsPartiallyCovered,
+          controlsNotCovered: analysis.controlsNotCovered,
+          coveragePercentage: analysis.coveragePercentage,
+        },
+        gaps: analysis.gaps,
+      });
+    } else if (format === 'csv') {
+      // CSV export for spreadsheet analysis
+      const csvRows = [
+        ['Control ID', 'Control Title', 'Family', 'Priority', 'Gap Type', 'Recommended Actions'].join(','),
+      ];
+
+      for (const gap of analysis.gaps) {
+        const actions = gap.recommendedActions.join('; ').replace(/"/g, '""');
+        csvRows.push(
+          [
+            gap.controlId,
+            `"${gap.controlTitle.replace(/"/g, '""')}"`,
+            gap.family,
+            gap.priority,
+            gap.gapType,
+            `"${actions}"`,
+          ].join(',')
+        );
+      }
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename="m365-gap-analysis-${new Date().toISOString().split('T')[0]}.csv"`
+      );
+      res.send(csvRows.join('\n'));
+    } else {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid format. Use "json" or "csv"',
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/recommendations/:controlId
+ * Get Microsoft 365 implementation recommendations for a specific control
+ */
+router.get('/recommendations/:controlId', async (req, res) => {
+  try {
+    const { controlId } = req.params;
+    const recommendations = await settingsMapperService.getRecommendations(controlId);
+
+    res.json({
+      success: true,
+      recommendations,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/improvement-actions/:controlId
+ * Get improvement actions with policy mappings showing which policies satisfy each action
+ */
+router.get('/improvement-actions/:controlId', async (req, res) => {
+  try {
+    const { controlId } = req.params;
+    const actions = await improvementActionMappingService.getImprovementActionsWithPolicies(controlId);
+
+    res.json({
+      success: true,
+      controlId,
+      count: actions.length,
+      actions,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
 
 export default router;

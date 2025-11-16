@@ -103,12 +103,9 @@ export enum M365PolicyType {
 
 /**
  * Mapping Confidence Levels
+ * REMOVED: No longer mapping policies to controls
  */
-export enum MappingConfidence {
-  HIGH = 'High',
-  MEDIUM = 'Medium',
-  LOW = 'Low',
-}
+// export enum MappingConfidence { }
 
 /**
  * Bulk Operation Types
