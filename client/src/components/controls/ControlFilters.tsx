@@ -25,11 +25,13 @@ interface ControlFiltersProps {
   onClearFilters: () => void;
 }
 
-export const ControlFilters: React.FC<ControlFiltersProps> = ({
+export const ControlFilters: React.FC<ControlFiltersProps> = React.memo(({
   filters,
   onFilterChange,
   onClearFilters,
 }) => {
+  console.log('[ControlFilters] Render - search value:', filters.search);
+
   const handleFamilyChange = (family: string, checked: boolean) => {
     const newFamilies = checked
       ? [...filters.families, family]
@@ -78,21 +80,6 @@ export const ControlFilters: React.FC<ControlFiltersProps> = ({
           </Button>
         )}
       </Box>
-
-      {/* Search */}
-      <TextField
-        fullWidth
-        size="small"
-        placeholder="Search controls..."
-        value={filters.search}
-        onChange={(e) => onFilterChange({ search: e.target.value })}
-        sx={{
-          mb: 2,
-          '& .MuiInputBase-root': { color: '#E0E0E0' },
-          '& .MuiInputLabel-root': { color: '#B0B0B0' },
-          '& .MuiOutlinedInput-notchedOutline': { borderColor: '#4A4A4A' },
-        }}
-      />
 
       <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.08)' }} />
 
@@ -185,6 +172,8 @@ export const ControlFilters: React.FC<ControlFiltersProps> = ({
       </FormGroup>
     </Box>
   );
-};
+});
+
+ControlFilters.displayName = 'ControlFilters';
 
 export default ControlFilters;

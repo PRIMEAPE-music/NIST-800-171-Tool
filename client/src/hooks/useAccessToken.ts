@@ -1,10 +1,11 @@
 import { useMsal } from '@azure/msal-react';
 import { InteractionRequiredAuthError } from '@azure/msal-browser';
+import { useCallback, useMemo } from 'react';
 
 export const useAccessToken = () => {
   const { instance, accounts } = useMsal();
 
-  const getAccessToken = async (scopes: string[]): Promise<string | null> => {
+  const getAccessToken = useCallback(async (scopes: string[]): Promise<string | null> => {
     if (accounts.length === 0) {
       return null;
     }
@@ -34,7 +35,7 @@ export const useAccessToken = () => {
       console.error('Token acquisition error:', error);
       return null;
     }
-  };
+  }, [instance, accounts]);
 
-  return { getAccessToken };
+  return useMemo(() => ({ getAccessToken }), [getAccessToken]);
 };

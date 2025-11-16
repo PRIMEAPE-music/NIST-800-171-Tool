@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { useMsal } from '@azure/msal-react';
 import { AccountInfo } from '@azure/msal-browser';
 import { loginRequest } from '../config/msal.config';
@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
   }, [accounts]);
 
-  const login = async () => {
+  const login = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -42,9 +42,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [instance]);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -59,16 +59,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [instance]);
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     isAuthenticated: accounts.length > 0,
     user,
     login,
     logout,
     isLoading: isLoading || inProgress !== 'none',
     error,
-  };
+  }), [accounts.length, user, login, logout, isLoading, inProgress, error]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

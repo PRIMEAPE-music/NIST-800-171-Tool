@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -7,6 +7,7 @@ import {
   Drawer,
   IconButton,
   Fab,
+  CircularProgress,
 } from '@mui/material';
 import {
   FilterList as FilterIcon,
@@ -30,6 +31,7 @@ interface FilterState {
 
 export const ControlLibrary: React.FC = () => {
   const { preferences } = usePreferences();
+  const [searchInput, setSearchInput] = useState<string>(''); // Local input state
   const [filters, setFilters] = useState<FilterState>({
     families: [],
     statuses: [],
@@ -49,8 +51,8 @@ export const ControlLibrary: React.FC = () => {
   }, [preferences.itemsPerPage]);
 
   // Fetch controls with filters
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['controls', filters, sortBy, sortOrder, page, itemsPerPage],
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
+    queryKey: ['controls', filters.families, filters.statuses, filters.priorities, filters.search, sortBy, sortOrder, page, itemsPerPage],
     queryFn: () =>
       controlService.getAllControls({
         family: filters.families.join(',') || undefined,
@@ -65,11 +67,11 @@ export const ControlLibrary: React.FC = () => {
   });
 
   // Handle filter changes
-  const handleFilterChange = (newFilters: Partial<FilterState>) => {
+  const handleFilterChange = useCallback((newFilters: Partial<FilterState>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
     setPage(1); // Reset to first page on filter change
     setSelectedControls([]); // Clear selection on filter change
-  };
+  }, []);
 
   // Handle sort change
   const handleSortChange = (column: string) => {
@@ -99,7 +101,8 @@ export const ControlLibrary: React.FC = () => {
   };
 
   // Clear filters
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
+    setSearchInput(''); // Also clear local search input
     setFilters({
       families: [],
       statuses: [],
@@ -108,7 +111,7 @@ export const ControlLibrary: React.FC = () => {
     });
     setPage(1);
     setSelectedControls([]);
-  };
+  }, []);
 
   // Check if filters are active
   const hasActiveFilters = useMemo(() => {
@@ -120,7 +123,8 @@ export const ControlLibrary: React.FC = () => {
     );
   }, [filters]);
 
-  if (isLoading) {
+  // Only show full-page loading spinner on initial load, not on refetches
+  if (isLoading && !data) {
     return <LoadingSpinner message="Loading controls..." />;
   }
 
@@ -146,14 +150,19 @@ export const ControlLibrary: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Box>
-          <Typography variant="h4" gutterBottom sx={{ color: '#E0E0E0' }}>
-            Control Library
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#B0B0B0' }}>
-            {data?.pagination.total || 0} NIST 800-171 Rev 3 Controls
-            {hasActiveFilters && ` (${data?.data.length || 0} filtered)`}
-          </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box>
+            <Typography variant="h4" gutterBottom sx={{ color: '#E0E0E0' }}>
+              Control Library
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#B0B0B0' }}>
+              {data?.pagination.total || 0} NIST 800-171 Rev 3 Controls
+              {hasActiveFilters && ` (${data?.data.length || 0} filtered)`}
+            </Typography>
+          </Box>
+          {isFetching && (
+            <CircularProgress size={20} sx={{ color: '#90CAF9' }} />
+          )}
         </Box>
 
         {/* Filter toggle for mobile */}
@@ -163,6 +172,38 @@ export const ControlLibrary: React.FC = () => {
         >
           <FilterIcon />
         </IconButton>
+      </Box>
+
+      {/* Search Bar */}
+      <Box sx={{ mb: 3 }}>
+        <input
+          type="text"
+          placeholder="Search controls... (Press Enter to search)"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleFilterChange({ search: searchInput });
+            }
+          }}
+          onBlur={() => {
+            // Update filter when user clicks away
+            if (searchInput !== filters.search) {
+              handleFilterChange({ search: searchInput });
+            }
+          }}
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            fontSize: '16px',
+            color: '#E0E0E0',
+            backgroundColor: '#2A2A2A',
+            border: '1px solid #4A4A4A',
+            borderRadius: '8px',
+            outline: 'none',
+            boxSizing: 'border-box',
+          }}
+        />
       </Box>
 
       <Box sx={{ display: 'flex', gap: 2 }}>

@@ -13,7 +13,11 @@
       "Bash(npx tsx prisma/seed.ts)",
       "Bash(node verify-controls.js)",
       "Bash(node test-search.js)",
-      "Bash(curl -s \"http://localhost:5000/api/controls?search=Account&limit=3\")"
+      "Bash(curl -s \"http://localhost:5000/api/controls?search=Account&limit=3\")",
+      "Bash(npm run dev)",
+      "Bash(git checkout -b backup-before-mapping-deletion)",
+      "Bash(git add .)",
+      "Bash(git commit -m \"Backup: Pre-deletion state of M365 policy mapping system\")"
     ],
     "deny": [],
     "ask": []

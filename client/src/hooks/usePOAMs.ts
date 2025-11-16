@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { poamApi } from '../services/poam.api';
 import {
@@ -94,7 +94,7 @@ export const usePOAMs = (initialFilters?: PoamFilters) => {
     },
   });
 
-  return {
+  return useMemo(() => ({
     poams,
     stats,
     isLoading,
@@ -112,5 +112,23 @@ export const usePOAMs = (initialFilters?: PoamFilters) => {
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
-  };
+  }), [
+    poams,
+    stats,
+    isLoading,
+    error,
+    filters,
+    setFilters,
+    refetch,
+    createMutation.mutateAsync,
+    createMutation.isPending,
+    updateMutation.mutateAsync,
+    updateMutation.isPending,
+    updateStatusMutation.mutateAsync,
+    deleteMutation.mutateAsync,
+    deleteMutation.isPending,
+    addMilestoneMutation.mutateAsync,
+    completeMilestoneMutation.mutateAsync,
+    deleteMilestoneMutation.mutateAsync,
+  ]);
 };

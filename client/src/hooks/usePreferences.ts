@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { settingsService } from '../services/settings.service';
 
 interface Preferences {
@@ -43,11 +43,7 @@ export const usePreferences = () => {
   const [preferences, setPreferences] = useState<Preferences>(defaultPreferences);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadPreferences();
-  }, []);
-
-  const loadPreferences = async () => {
+  const loadPreferences = useCallback(async () => {
     try {
       const response = await settingsService.getAllSettings();
       const prefs = response.preferences;
@@ -79,9 +75,13 @@ export const usePreferences = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const formatDate = (date: Date | string): string => {
+  useEffect(() => {
+    loadPreferences();
+  }, [loadPreferences]);
+
+  const formatDate = useCallback((date: Date | string): string => {
     const d = typeof date === 'string' ? new Date(date) : date;
 
     switch (preferences.dateFormat) {
@@ -96,9 +96,9 @@ export const usePreferences = () => {
       default:
         return d.toLocaleDateString();
     }
-  };
+  }, [preferences.dateFormat]);
 
-  const formatTime = (date: Date | string): string => {
+  const formatTime = useCallback((date: Date | string): string => {
     const d = typeof date === 'string' ? new Date(date) : date;
 
     if (preferences.timeFormat === '24h') {
@@ -106,18 +106,18 @@ export const usePreferences = () => {
     } else {
       return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     }
-  };
+  }, [preferences.timeFormat]);
 
-  const formatDateTime = (date: Date | string): string => {
+  const formatDateTime = useCallback((date: Date | string): string => {
     return `${formatDate(date)} ${formatTime(date)}`;
-  };
+  }, [formatDate, formatTime]);
 
-  return {
+  return useMemo(() => ({
     preferences,
     loading,
     formatDate,
     formatTime,
     formatDateTime,
     refreshPreferences: loadPreferences,
-  };
+  }), [preferences, loading, formatDate, formatTime, formatDateTime, loadPreferences]);
 };

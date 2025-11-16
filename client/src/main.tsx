@@ -18,9 +18,7 @@ if (!rootElement) {
 }
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <MsalProvider instance={msalInstance}>
-      <App />
-    </MsalProvider>
-  </React.StrictMode>
+  <MsalProvider instance={msalInstance}>
+    <App />
+  </MsalProvider>
 );
