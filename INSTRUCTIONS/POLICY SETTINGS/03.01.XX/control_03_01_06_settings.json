@@ -1,0 +1,905 @@
+{
+  "controlId": "03.01.06",
+  "controlFamily": "AC",
+  "controlTitle": "Least Privilege – Privileged Accounts",
+  "nistRequirements": [
+    {
+      "requirement": "a",
+      "text": "Restrict privileged accounts on the system to [Assignment: organization-defined personnel or roles]."
+    },
+    {
+      "requirement": "b", 
+      "text": "Require that users (or roles) with privileged accounts use non-privileged accounts when accessing non-security functions or non-security information."
+    }
+  ],
+  "researchDate": "2024-11-16",
+  "totalSettings": 28,
+  "settings": [
+    {
+      "id": "AZ-PA-001",
+      "settingName": "globalAdministratorRoleLimit",
+      "displayName": "Global Administrator Role Assignment Limit",
+      "settingPath": "roleManagement.directory.roleAssignments",
+      "policyType": "AzureAD",
+      "policySubType": "RoleManagement",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 5,
+      "validationOperator": "<=",
+      "description": "Limit the number of users assigned to the Global Administrator role to 5 or fewer to restrict privileged account proliferation",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Roles and administrators\n2. Select 'Global Administrator' role\n3. Review assignments and remove unnecessary accounts\n4. Maintain ≤5 Global Administrator accounts\n5. Document all Global Administrator accounts and business justification",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly restricts the number of privileged accounts by limiting Global Administrator role assignments to organization-defined personnel (recommended ≤5)",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-002",
+      "settingName": "emergencyAccessAccounts",
+      "displayName": "Emergency Access (Break-Glass) Accounts",
+      "settingPath": "users",
+      "policyType": "AzureAD",
+      "policySubType": "UserManagement",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 2,
+      "validationOperator": "==",
+      "description": "Maintain exactly 2 cloud-only emergency access accounts permanently assigned Global Administrator role for emergency scenarios",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Users\n2. Create 2 cloud-only accounts (e.g., breakglass1@, breakglass2@)\n3. Assign Global Administrator role permanently\n4. Exclude from Conditional Access policies\n5. Use complex passwords stored in secure physical vault\n6. Configure alerts for any usage\n7. Test quarterly to verify functionality",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-emergency-access",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Emergency access accounts are explicitly designated privileged accounts restricted to emergency scenarios, supporting requirement to restrict privileged accounts to defined personnel",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-003",
+      "settingName": "dedicatedAdminAccountsRequired",
+      "displayName": "Separate Dedicated Admin Accounts",
+      "settingPath": "organizationalPolicy",
+      "policyType": "AzureAD",
+      "policySubType": "GovernancePolicy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Require administrators to use dedicated cloud-only admin accounts separate from their standard user accounts for all administrative tasks",
+      "implementationGuide": "1. Create dedicated admin account for each admin user (e.g., john.admin@)\n2. Ensure admin accounts are cloud-only (not synced from on-premises)\n3. Do NOT assign service licenses (Exchange, Teams) to admin accounts\n4. Configure separate Conditional Access policies for admin accounts\n5. Enforce through governance policy and periodic reviews\n6. Example naming convention: firstname.admin@domain.com or firstname-admin@domain.com",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-global-administrator-accounts",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly enforces requirement b by requiring users with privileged accounts to use separate non-privileged accounts for non-administrative activities like email and collaboration",
+          "nistRequirement": "Requirement b - Use non-privileged accounts for non-security functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-004",
+      "settingName": "adminAccountNoServiceLicenses",
+      "displayName": "No Service Licenses on Admin Accounts",
+      "settingPath": "users.assignedLicenses",
+      "policyType": "AzureAD",
+      "policySubType": "LicenseManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": false,
+      "validationOperator": "==",
+      "description": "Prevent admin accounts from having service-based licenses (Exchange Online, Teams, SharePoint) to eliminate mailbox and collaboration capabilities on privileged accounts",
+      "implementationGuide": "1. Navigate to Microsoft 365 admin center > Active users\n2. Select admin account\n3. Review assigned licenses\n4. Remove service licenses (Exchange Online Plan, Microsoft Teams, SharePoint Online)\n5. Retain only admin licenses if needed (Azure AD Premium P2)\n6. Configure Conditional Access to block Exchange/Teams access for admin accounts",
+      "microsoftDocUrl": "https://blog.admindroid.com/how-to-safeguard-microsoft-365-admin-accounts/",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Prevents privileged accounts from accessing non-security functions like email and Teams by removing service licenses, enforcing separation of privileged and standard user activities",
+          "nistRequirement": "Requirement b - Use non-privileged accounts for non-security functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-005",
+      "settingName": "pimEnabledForAllPrivilegedRoles",
+      "displayName": "PIM Enabled for All Privileged Roles",
+      "settingPath": "privilegedIdentityManagement.settings.roleSettings",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enable Privileged Identity Management (PIM) for all privileged Azure AD roles to provide just-in-time privileged access and eliminate standing admin permissions",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management\n2. Select Azure AD roles\n3. For each privileged role (Global Admin, Privileged Role Admin, Security Admin, etc.):\n   - Remove permanent active assignments\n   - Add eligible assignments instead\n4. Configure role settings for activation requirements\n5. Requires Azure AD Premium P2 license",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "PIM provides just-in-time access to privileged roles, restricting privileged account usage to only when needed for administrative tasks, supporting both requirements a and b",
+          "nistRequirement": "Requirements a & b - Restrict privileged accounts and require justification for privileged access"
+        },
+        {
+          "controlId": "03.01.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "PIM is a core least privilege mechanism that provides time-limited privileged access",
+          "nistRequirement": "Least privilege implementation"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-006",
+      "settingName": "pimActivationRequiresMFA",
+      "displayName": "PIM Activation Requires MFA",
+      "settingPath": "privilegedIdentityManagement.roleSettings.activationRules.mfaRequired",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Require multi-factor authentication when activating any privileged role through PIM to ensure secure access to privileged accounts",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management > Azure AD roles\n2. Select Settings\n3. For each privileged role, select Edit\n4. Under Activation, enable 'Require Microsoft Entra ID multifactor authentication on activation'\n5. Save role settings",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Ensures that privileged account access requires strong authentication, restricting access to authorized personnel only",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-007",
+      "settingName": "pimActivationRequiresJustification",
+      "displayName": "PIM Activation Requires Business Justification",
+      "settingPath": "privilegedIdentityManagement.roleSettings.activationRules.justificationRequired",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Require business justification when activating privileged roles to document the purpose of privileged access and support auditing",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management > Azure AD roles\n2. Select Settings\n3. For each role, select Edit\n4. Under Activation, enable 'Require justification on activation'\n5. Save role settings",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "Medium",
+          "isRequired": true,
+          "mappingRationale": "Provides audit trail for privileged access, supporting restriction of privileged accounts to authorized purposes",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel/purposes"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-008",
+      "settingName": "pimMaxActivationDuration",
+      "displayName": "PIM Maximum Activation Duration",
+      "settingPath": "privilegedIdentityManagement.roleSettings.activationRules.maximumActivationDuration",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 8,
+      "validationOperator": "<=",
+      "description": "Limit the maximum duration for privileged role activation to 8 hours or less to minimize exposure window of privileged access",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management > Azure AD roles\n2. Select Settings\n3. For each role, select Edit\n4. Under Activation, set 'Maximum activation duration (hours)' to 8 or less\n5. Consider shorter durations (4-6 hours) for highly privileged roles\n6. Save role settings",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Time-limited privileged access ensures users only have privileged accounts active when needed for administrative tasks, not for general work",
+          "nistRequirement": "Requirement b - Use privileged accounts only for security functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-009",
+      "settingName": "pimApprovalRequiredHighPrivilegedRoles",
+      "displayName": "PIM Approval Required for Highly Privileged Roles",
+      "settingPath": "privilegedIdentityManagement.roleSettings.activationRules.approvalRequired",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Require approval to activate highly privileged roles (Global Administrator, Privileged Role Administrator) to provide additional oversight for most sensitive privileged accounts",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management > Azure AD roles\n2. Select Settings\n3. For Global Administrator and Privileged Role Administrator roles, select Edit\n4. Under Activation, enable 'Require approval to activate'\n5. Select approvers (senior IT management, security team)\n6. Configure approval notification settings\n7. Save role settings",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-resource-roles-approval-workflow",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Approval workflow further restricts privileged account usage by requiring authorization from another party before activation",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-010",
+      "settingName": "pimEligibleAssignmentsPreferred",
+      "displayName": "Prefer Eligible Over Permanent Role Assignments",
+      "settingPath": "privilegedIdentityManagement.roleAssignments.assignmentType",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "Eligible",
+      "validationOperator": "==",
+      "description": "Prefer eligible role assignments over permanent active assignments to eliminate standing privileged access (zero standing privileges)",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management > Azure AD roles\n2. Select Assignments\n3. Review all active (permanent) assignments\n4. For each permanent assignment (except emergency access accounts):\n   - Remove active assignment\n   - Add eligible assignment\n5. Monitor PIM audit logs for activation patterns\n6. Exception: Break-glass accounts maintain permanent Global Admin",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-add-role-to-user",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Eligible assignments ensure privileged accounts are only active when needed, enforcing separation between privileged and non-privileged activities",
+          "nistRequirement": "Requirement b - Use privileged accounts only when needed"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-011",
+      "settingName": "conditionalAccessAdminAccountsMFA",
+      "displayName": "Conditional Access - Require MFA for Admin Accounts",
+      "settingPath": "conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "include": {
+              "groups": ["All_Admin_Accounts"]
+            }
+          },
+          "applications": {
+            "include": ["All"]
+          }
+        },
+        "grantControls": {
+          "operator": "AND",
+          "builtInControls": ["mfa"]
+        }
+      },
+      "validationOperator": "contains",
+      "description": "Require multi-factor authentication for all administrative accounts when accessing any cloud application",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Conditional Access\n2. Create new policy 'CA-Admins-Require-MFA'\n3. Under Users: Include group containing all admin accounts\n4. Under Users: Exclude emergency access accounts\n5. Under Cloud apps: Select 'All cloud apps'\n6. Under Grant: Select 'Require multifactor authentication'\n7. Enable policy\n8. Test with non-critical admin account before full deployment",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-admin-mfa",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces strong authentication for privileged accounts, restricting access to authorized personnel only",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-012",
+      "settingName": "conditionalAccessBlockAdminLegacyAuth",
+      "displayName": "Conditional Access - Block Legacy Authentication for Admins",
+      "settingPath": "conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "include": {
+              "groups": ["All_Admin_Accounts"]
+            }
+          },
+          "clientAppTypes": ["exchangeActiveSync", "other"]
+        },
+        "grantControls": {
+          "operator": "OR",
+          "builtInControls": ["block"]
+        }
+      },
+      "validationOperator": "contains",
+      "description": "Block legacy authentication protocols for administrative accounts to prevent bypassing of MFA requirements",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Conditional Access\n2. Create new policy 'CA-Admins-Block-Legacy-Auth'\n3. Under Users: Include group containing all admin accounts\n4. Under Users: Exclude emergency access accounts\n5. Under Conditions > Client apps: Select 'Exchange ActiveSync clients' and 'Other clients'\n6. Under Grant: Select 'Block access'\n7. Test in report-only mode first\n8. Enable policy after validation",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-block-legacy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Prevents privileged account compromise through legacy authentication that bypasses MFA, supporting restriction of privileged accounts",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-013",
+      "settingName": "conditionalAccessAdminAccountsSeparatePolicy",
+      "displayName": "Conditional Access - Separate Policies for Admin vs User Accounts",
+      "settingPath": "conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Maintain separate Conditional Access policies for admin accounts vs standard user accounts to enforce stricter controls on privileged accounts",
+      "implementationGuide": "1. Create Azure AD group for all admin accounts\n2. Exclude admin accounts from standard user CA policies\n3. Create dedicated CA policies for admin accounts with stricter controls:\n   - Always require MFA (no trusted location exceptions)\n   - Block legacy authentication\n   - Require compliant or hybrid Azure AD joined devices\n   - Shorter session timeouts\n   - Higher sign-in risk thresholds\n4. Document policy separation in governance documentation",
+      "microsoftDocUrl": "https://practical365.com/why-separate-microsoft-365-administrator-accounts-are-critical-to-security-posture/",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Separate CA policies for admin accounts enforce that privileged accounts have different (stricter) security controls than standard user accounts",
+          "nistRequirement": "Requirement b - Separate privileged and non-privileged account usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-014",
+      "settingName": "conditionalAccessAdminPhishingResistantMFA",
+      "displayName": "Conditional Access - Phishing-Resistant MFA for Admins",
+      "settingPath": "conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "include": {
+              "groups": ["All_Admin_Accounts"]
+            }
+          }
+        },
+        "grantControls": {
+          "authenticationStrength": {
+            "id": "00000000-0000-0000-0000-000000000004"
+          }
+        }
+      },
+      "validationOperator": "contains",
+      "description": "Require phishing-resistant authentication methods (FIDO2, Windows Hello for Business, Certificate-based) for admin accounts",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Conditional Access\n2. Create or update admin MFA policy\n3. Under Grant controls, select 'Require authentication strength'\n4. Choose 'Phishing-resistant MFA' authentication strength\n5. Deploy FIDO2 security keys or enable Windows Hello for Business for admin users\n6. Requires Azure AD Premium P1 or P2",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-strengths",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Phishing-resistant authentication provides strongest protection for privileged accounts against credential theft, supporting restriction to authorized personnel",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-015",
+      "settingName": "auditLogPrivilegedAccountActivities",
+      "displayName": "Audit Logging Enabled for Privileged Account Activities",
+      "settingPath": "compliance.auditLog.unifiedAuditLogIngestionEnabled",
+      "policyType": "Purview",
+      "policySubType": "AuditLogging",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enable unified audit logging to capture all privileged account activities including PIM activations, role assignments, and administrative actions",
+      "implementationGuide": "1. Navigate to Microsoft Purview compliance portal\n2. Go to Audit > Search\n3. If not enabled, select 'Start recording user and admin activity'\n4. Verify with PowerShell: Get-AdminAuditLogConfig | FL UnifiedAuditLogIngestionEnabled\n5. Should return True\n6. Audit logs retained for 180 days (default) or 365 days (E5 license)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-log-enable-disable",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Audit logs provide accountability for privileged account usage, supporting monitoring and enforcement of restrictions",
+          "nistRequirement": "Requirements a & b - Monitor privileged account usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-016",
+      "settingName": "auditLogRetentionPrivilegedAccounts",
+      "displayName": "Extended Audit Log Retention for Privileged Accounts",
+      "settingPath": "compliance.auditLog.retentionPolicies",
+      "policyType": "Purview",
+      "policySubType": "AuditRetention",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 365,
+      "validationOperator": ">=",
+      "description": "Retain audit logs for privileged account activities for minimum 1 year (365 days) to support investigations and compliance",
+      "implementationGuide": "1. Navigate to Microsoft Purview compliance portal\n2. Go to Audit > Audit retention policies\n3. Create new retention policy\n4. Priority: Set high priority\n5. Record type: Select relevant admin activities (AzureActiveDirectoryAccountLogon, ExchangeAdmin, etc.)\n6. Users: Specify admin accounts group or individual admin UPNs\n7. Duration: Set to 365 days or 10 years (E5 Compliance add-on)\n8. Requires Microsoft 365 E5 or E5 Compliance add-on",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-log-retention-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Extended retention supports long-term accountability and forensic investigation of privileged account usage",
+          "nistRequirement": "Requirements a & b - Monitor privileged account usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-017",
+      "settingName": "pimActivityAlerts",
+      "displayName": "PIM Activity Alerts and Notifications",
+      "settingPath": "privilegedIdentityManagement.alerts",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enable PIM alerts and notifications to monitor privileged role activations, assignments, and suspicious activity",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management\n2. Select Alerts\n3. Enable the following alerts:\n   - Roles are being assigned outside of PIM\n   - Roles are being activated too frequently\n   - Administrators aren't using their privileged roles\n   - Too many global administrators\n4. Configure notification recipients (security team, IT management)\n5. Set severity levels and response procedures",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-configure-security-alerts",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Real-time alerts on privileged account usage support monitoring and enforcement of access restrictions",
+          "nistRequirement": "Requirement a - Monitor privileged account restrictions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-018",
+      "settingName": "priorityAccountProtectionAdmins",
+      "displayName": "Priority Account Protection for Admin Accounts",
+      "settingPath": "security.defender.priorityAccounts",
+      "policyType": "Defender",
+      "policySubType": "ThreatProtection",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Designate admin accounts as priority accounts in Microsoft Defender for Office 365 for enhanced threat protection and monitoring",
+      "implementationGuide": "1. Navigate to Microsoft 365 Defender portal > Settings > Email & collaboration\n2. Select Priority accounts\n3. Add all admin accounts as priority accounts\n4. Tag as 'Executive' or 'Security' based on role\n5. Enhanced monitoring includes:\n   - Priority account tag in alerts\n   - Dedicated insights in threat analytics\n   - Enhanced detection for compromised accounts\n6. Requires Microsoft Defender for Office 365 Plan 2",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/priority-accounts-security-recommendations",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Enhanced monitoring and protection for privileged accounts supports detection of unauthorized access attempts",
+          "nistRequirement": "Requirement a - Protect privileged accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-019",
+      "settingName": "adminAccountInventoryMaintained",
+      "displayName": "Privileged Account Inventory and Documentation",
+      "settingPath": "governance.privilegedAccountInventory",
+      "policyType": "AzureAD",
+      "policySubType": "Governance",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Maintain comprehensive inventory of all privileged accounts including assignment justifications, review dates, and responsible parties",
+      "implementationGuide": "1. Create privileged account inventory spreadsheet or database\n2. Document for each privileged account:\n   - User name and UPN\n   - Assigned privileged roles\n   - Business justification for access\n   - Approval date and approver\n   - Last review date\n   - Next review date (quarterly recommended)\n   - Emergency access designation (if applicable)\n3. Review inventory quarterly\n4. Update documentation when roles change\n5. Store securely with restricted access",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-planning",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Inventory enables tracking and validation that privileged accounts are restricted to organization-defined personnel",
+          "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-020",
+      "settingName": "privilegedAccountAccessReviews",
+      "displayName": "Quarterly Access Reviews for Privileged Accounts",
+      "settingPath": "identityGovernance.accessReviews",
+      "policyType": "AzureAD",
+      "policySubType": "AccessReviews",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "enabled": true,
+        "recurrence": {
+          "pattern": {
+            "type": "absoluteMonthly",
+            "interval": 3
+          }
+        },
+        "scope": {
+          "principalScopes": [
+            {
+              "query": "/v1.0/directoryRoles/filter(displayName eq 'Global Administrator' or displayName eq 'Privileged Role Administrator' or displayName eq 'Security Administrator')",
+              "queryType": "MicrosoftGraph"
+            }
+          ]
+        },
+        "settings": {
+          "autoApplyDecisionsEnabled": true,
+          "defaultDecisionEnabled": true,
+          "defaultDecision": "Deny"
+        }
+      },
+      "validationOperator": "contains",
+      "description": "Conduct quarterly access reviews of all privileged role assignments to validate continued need and remove unnecessary privileged access",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Identity Governance > Access reviews\n2. Create new access review\n3. Review name: 'Quarterly Privileged Role Review'\n4. Scope: Select privileged roles (Global Admin, Privileged Role Admin, Security Admin, etc.)\n5. Reviewers: Role-assignable group of senior IT management\n6. Recurrence: Quarterly (every 3 months)\n7. Duration: 3 days\n8. Settings:\n   - Auto-apply results: Yes\n   - If reviewers don't respond: Remove access\n   - Enable recommendations: Yes\n9. Requires Azure AD Premium P2 license",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/create-access-review",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Periodic access reviews validate that privileged accounts remain restricted to authorized personnel and remove unnecessary access",
+          "nistRequirement": "Requirement a - Validate privileged account restrictions"
+        },
+        {
+          "controlId": "03.01.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Access reviews directly implement NIST requirements for periodic privilege validation and removal",
+          "nistRequirement": "Requirements c & d - Review and reassign/remove privileges"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-021",
+      "settingName": "noOnPremisesSyncForAdminAccounts",
+      "displayName": "Admin Accounts Are Cloud-Only (Not Synced from On-Premises)",
+      "settingPath": "users.onPremisesSyncEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "UserManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": false,
+      "validationOperator": "==",
+      "description": "Ensure admin accounts are cloud-only and NOT synchronized from on-premises Active Directory to prevent lateral movement from on-prem compromise",
+      "implementationGuide": "1. Identify all admin accounts in Azure AD\n2. Check onPremisesSyncEnabled property for each admin account\n3. For any synced admin accounts:\n   - Create new cloud-only admin account\n   - Remove directory roles from synced account\n   - Exclude synced account from Azure AD Connect sync (OU filtering)\n   - Assign roles to new cloud-only account\n4. Document exception handling for hybrid environments\n5. Maintain separate on-premises admin accounts for on-prem tasks",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Cloud-only admin accounts prevent on-premises compromises from affecting cloud privileged accounts, supporting separation of privileged account domains",
+          "nistRequirement": "Requirement b - Separate privileged accounts from standard user accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-022",
+      "settingName": "adminAccountNamingConvention",
+      "displayName": "Admin Account Naming Convention",
+      "settingPath": "governance.namingPolicy",
+      "policyType": "AzureAD",
+      "policySubType": "Governance",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "firstname.admin@domain.com or firstname-admin@domain.com",
+      "validationOperator": "matches",
+      "description": "Enforce consistent naming convention for admin accounts to clearly identify privileged accounts (e.g., firstname.admin@ or firstname-admin@)",
+      "implementationGuide": "1. Define admin account naming standard:\n   - Pattern: firstname.admin@domain.com OR\n   - Pattern: firstname-admin@domain.com\n   - Examples: john.admin@contoso.com, jane-admin@contoso.com\n2. Document naming convention in governance policy\n3. Apply naming convention for all new admin accounts\n4. Rename existing admin accounts during next access review\n5. Use naming convention to create dynamic groups for admin accounts\n6. Helps with:\n   - Quick identification of admin accounts\n   - Conditional Access policy targeting\n   - Audit log analysis",
+      "microsoftDocUrl": "https://blog.admindroid.com/how-to-secure-admin-accounts-in-hybrid-environment/",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Clear identification of privileged accounts through naming convention supports governance and monitoring of privileged account restrictions",
+          "nistRequirement": "Requirement a - Identify and restrict privileged accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-023",
+      "settingName": "conditionalAccessAdminSessionTimeout",
+      "displayName": "Conditional Access - Shorter Session Timeout for Admin Accounts",
+      "settingPath": "conditionalAccess.policies.sessionControls.signInFrequency",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "value": 4,
+        "type": "hours",
+        "isEnabled": true
+      },
+      "validationOperator": "contains",
+      "description": "Require admin accounts to re-authenticate every 4 hours to limit exposure window of active privileged sessions",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Conditional Access\n2. Create new policy 'CA-Admins-Session-Timeout'\n3. Under Users: Include group containing all admin accounts\n4. Under Cloud apps: Select 'All cloud apps'\n5. Under Session: Enable 'Sign-in frequency'\n6. Set frequency to 4 hours (or less)\n7. Enable policy\n8. Test with admin account to verify re-authentication prompt",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Shorter session timeouts limit the duration of privileged access, supporting requirement to use privileged accounts only when needed",
+          "nistRequirement": "Requirement b - Limit duration of privileged account usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-024",
+      "settingName": "adminAccountBlockExchangeAccess",
+      "displayName": "Conditional Access - Block Exchange/Teams Access for Admin Accounts",
+      "settingPath": "conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "state": "enabled",
+        "conditions": {
+          "users": {
+            "include": {
+              "groups": ["All_Admin_Accounts"]
+            }
+          },
+          "applications": {
+            "include": ["00000002-0000-0ff1-ce00-000000000000", "cc15fd57-2c6c-4117-a88c-83b1d56b4bbe"]
+          }
+        },
+        "grantControls": {
+          "operator": "OR",
+          "builtInControls": ["block"]
+        }
+      },
+      "validationOperator": "contains",
+      "description": "Block admin accounts from accessing Exchange Online and Microsoft Teams to prevent privileged accounts from being used for email and collaboration",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Conditional Access\n2. Create new policy 'CA-Admins-Block-Email-Teams'\n3. Under Users: Include group containing all admin accounts\n4. Under Users: Exclude emergency access accounts\n5. Under Cloud apps: Select specific apps\n6. Choose 'Office 365 Exchange Online' and 'Microsoft Teams'\n7. Under Grant: Select 'Block access'\n8. Test in report-only mode\n9. Enable policy after validation\n10. Admin users should use separate standard accounts for email/Teams",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Blocking access to email and collaboration tools from privileged accounts directly enforces requirement to use non-privileged accounts for non-security functions",
+          "nistRequirement": "Requirement b - Use non-privileged accounts for non-security functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-025",
+      "settingName": "privilegedAccountMonitoringDashboard",
+      "displayName": "Privileged Account Activity Monitoring Dashboard",
+      "settingPath": "monitoring.insightsAndReporting",
+      "policyType": "AzureAD",
+      "policySubType": "Monitoring",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Implement monitoring dashboard to track privileged account sign-ins, role activations, and administrative activities",
+      "implementationGuide": "1. Options for monitoring dashboards:\n   Option A - Azure Monitor Workbooks:\n   - Navigate to Microsoft Entra admin center > Monitoring > Workbooks\n   - Use built-in 'Sign-ins' workbook filtered for admin accounts\n   - Use 'PIM Activity' workbook for role activations\n   \n   Option B - Microsoft Sentinel:\n   - Deploy Sentinel connector for Azure AD\n   - Import PIM solution from content hub\n   - Configure workbook 'Privileged Identity Management'\n   - Create custom KQL queries for admin activity\n   \n   Option C - Third-party SIEM:\n   - Configure Azure AD logs export to SIEM\n   - Create dashboards for admin sign-ins, role changes, PIM activations\n\n2. Monitor metrics:\n   - Admin account sign-in frequency and locations\n   - Failed admin sign-in attempts\n   - PIM role activations by user and role\n   - Changes to privileged role assignments\n   - Admin account creation/deletion",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-privileged-accounts",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Continuous monitoring of privileged account activity enables detection of unauthorized usage and validates restriction to defined personnel",
+          "nistRequirement": "Requirements a & b - Monitor privileged account usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-026",
+      "settingName": "adminAccountFailedSignInAlerts",
+      "displayName": "Alerts for Failed Admin Account Sign-In Attempts",
+      "settingPath": "monitoring.alerts.failedSignIns",
+      "policyType": "AzureAD",
+      "policySubType": "Monitoring",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "enabled": true,
+        "threshold": 3,
+        "timeWindow": "15 minutes",
+        "severity": "High"
+      },
+      "validationOperator": "contains",
+      "description": "Generate high-severity alerts when admin accounts experience multiple failed sign-in attempts indicating potential compromise attempts",
+      "implementationGuide": "1. Option A - Azure Monitor Alert Rules:\n   - Navigate to Azure portal > Monitor > Alerts\n   - Create new alert rule\n   - Scope: Azure AD Sign-in logs\n   - Condition: Failed sign-ins for admin accounts\n   - Threshold: ≥3 failures within 15 minutes\n   - Action group: Email/SMS to security team\n   \n   Option B - Microsoft Sentinel:\n   - Use built-in analytics rule 'Failed logon attempts'\n   - Configure to filter for admin accounts\n   - Set severity to High\n   - Configure incident creation\n   \n   Option C - Defender for Cloud Apps:\n   - Create activity policy\n   - Activity type: Failed log on\n   - User: Admin accounts group\n   - Alert: Security team\n\n2. Alert recipients: Security Operations team, IT management\n3. Response procedures: Account lockout investigation, credential reset if compromised",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/howto-manage-inactive-user-accounts",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Failed sign-in alerts detect unauthorized access attempts to privileged accounts, supporting restriction to authorized personnel",
+          "nistRequirement": "Requirement a - Protect privileged accounts from unauthorized access"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-027",
+      "settingName": "pimAuditReportGeneration",
+      "displayName": "Monthly PIM Audit Report Generation",
+      "settingPath": "privilegedIdentityManagement.reporting",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Generate and review monthly PIM audit reports showing all privileged role activations, assignments, and changes",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Privileged Identity Management\n2. Select Audit history\n3. Export last 30 days of PIM activity:\n   - Role activations (who, when, duration, justification)\n   - Role assignments (additions, removals, changes)\n   - Role setting changes\n   - Approvals and denials\n4. Review report for:\n   - Unusual activation patterns\n   - Activations without proper justification\n   - Long-duration activations\n   - Activations at unusual times/locations\n   - Dormant eligible assignments\n5. Present findings to IT leadership monthly\n6. Document corrective actions taken\n7. Automate report generation using PowerShell or Graph API",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-use-audit-log",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Regular audit reports provide accountability for privileged account usage and validate restriction to authorized personnel and purposes",
+          "nistRequirement": "Requirements a & b - Audit privileged account usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PA-028",
+      "settingName": "identityProtectionRiskPoliciesAdmins",
+      "displayName": "Identity Protection Risk Policies for Admin Accounts",
+      "settingPath": "identityProtection.riskPolicies",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "userRiskPolicy": {
+          "enabled": true,
+          "userRiskLevels": ["high"],
+          "accessControlAction": "blockAccess"
+        },
+        "signInRiskPolicy": {
+          "enabled": true,
+          "signInRiskLevels": ["medium", "high"],
+          "accessControlAction": "requireMFA"
+        }
+      },
+      "validationOperator": "contains",
+      "description": "Enable Azure AD Identity Protection risk policies to automatically block or require additional authentication for risky admin account sign-ins",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center > Identity Protection\n2. Configure User risk policy:\n   - Users: Include admin accounts group\n   - User risk level: High\n   - Access: Block access\n   - Requires password change after admin review\n3. Configure Sign-in risk policy:\n   - Users: Include admin accounts group  \n   - Sign-in risk level: Medium and high\n   - Access: Require multi-factor authentication\n4. Enable policies\n5. Monitor risky sign-ins dashboard\n6. Requires Azure AD Premium P2 license",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Risk-based policies provide dynamic protection for privileged accounts against compromised credentials and suspicious sign-ins",
+          "nistRequirement": "Requirement a - Protect privileged accounts from unauthorized access"
+        }
+      ]
+    }
+  ],
+  "implementationNotes": {
+    "criticalRequirements": [
+      "Azure AD Premium P2 required for PIM and Access Reviews - core capability for this control",
+      "Separate dedicated admin accounts are fundamental - users must have 2 accounts (standard + admin)",
+      "Cloud-only admin accounts strongly recommended for hybrid environments to prevent lateral movement",
+      "Emergency access (break-glass) accounts are exempt from many restrictions to prevent lockout"
+    ],
+    "licensingRequirements": {
+      "azureADPremiumP2": "Required for PIM, Access Reviews, Identity Protection",
+      "microsoftE5": "Includes Azure AD Premium P2",
+      "defenderForOffice365Plan2": "Required for Priority Account Protection"
+    },
+    "commonChallenges": [
+      "User resistance to maintaining separate admin and standard accounts",
+      "Initial PIM setup requires transitioning from permanent to eligible assignments",
+      "Conditional Access policies must exclude emergency access accounts to prevent lockout",
+      "Admin accounts without mailboxes miss important notifications - consider alternative email routing"
+    ],
+    "bestPractices": [
+      "Start with PIM for Global Administrator role, then expand to other privileged roles",
+      "Use report-only mode for Conditional Access policies before enforcement",
+      "Test emergency access accounts quarterly to ensure functionality",
+      "Document all privileged accounts and maintain inventory with quarterly reviews",
+      "Prefer FIDO2 or Windows Hello for Business over SMS/phone call MFA for admin accounts",
+      "Monitor PIM audit logs daily or weekly to detect anomalies early"
+    ],
+    "apiLimitations": [
+      "PIM configuration available through Graph API beta endpoints",
+      "Conditional Access policies fully supported through Graph API",
+      "Audit log retention policies require PowerShell (Security & Compliance Center)",
+      "Emergency access account management best done manually through portal"
+    ],
+    "metricsForSuccess": [
+      {
+        "metric": "Global Administrator count",
+        "target": "≤ 5",
+        "measurement": "Count of users with Global Administrator role"
+      },
+      {
+        "metric": "PIM coverage",
+        "target": "100%",
+        "measurement": "Percentage of privileged roles managed through PIM (eligible vs permanent)"
+      },
+      {
+        "metric": "Admin account separation",
+        "target": "100%",
+        "measurement": "Percentage of admins using dedicated admin accounts (not standard account with admin roles)"
+      },
+      {
+        "metric": "Cloud-only admin accounts",
+        "target": "100%",
+        "measurement": "Percentage of admin accounts that are cloud-only (not synced from on-premises)"
+      },
+      {
+        "metric": "Access review completion",
+        "target": "100%",
+        "measurement": "Quarterly access reviews completed on time with documented decisions"
+      },
+      {
+        "metric": "Admin accounts without mailboxes",
+        "target": "100%",
+        "measurement": "Percentage of admin accounts without Exchange Online license/mailbox"
+      }
+    ]
+  },
+  "settingCategories": {
+    "azureADRoleManagement": {
+      "count": 5,
+      "settings": ["AZ-PA-001", "AZ-PA-002", "AZ-PA-003", "AZ-PA-019", "AZ-PA-021", "AZ-PA-022"]
+    },
+    "privilegedIdentityManagement": {
+      "count": 7,
+      "settings": ["AZ-PA-005", "AZ-PA-006", "AZ-PA-007", "AZ-PA-008", "AZ-PA-009", "AZ-PA-010", "AZ-PA-017", "AZ-PA-027"]
+    },
+    "conditionalAccess": {
+      "count": 7,
+      "settings": ["AZ-PA-011", "AZ-PA-012", "AZ-PA-013", "AZ-PA-014", "AZ-PA-023", "AZ-PA-024"]
+    },
+    "auditingAndMonitoring": {
+      "count": 6,
+      "settings": ["AZ-PA-015", "AZ-PA-016", "AZ-PA-025", "AZ-PA-026"]
+    },
+    "accessGovernance": {
+      "count": 3,
+      "settings": ["AZ-PA-004", "AZ-PA-018", "AZ-PA-020", "AZ-PA-028"]
+    }
+  },
+  "researchSources": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-planning",
+    "https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-global-administrator-accounts",
+    "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-privileged-accounts",
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",
+    "https://learn.microsoft.com/en-us/purview/audit-log-enable-disable",
+    "https://practical365.com/why-separate-microsoft-365-administrator-accounts-are-critical-to-security-posture/",
+    "https://blog.admindroid.com/how-to-safeguard-microsoft-365-admin-accounts/",
+    "https://blog.admindroid.com/how-to-secure-admin-accounts-in-hybrid-environment/"
+  ]
+}

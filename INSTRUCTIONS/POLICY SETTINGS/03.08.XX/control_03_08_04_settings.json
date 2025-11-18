@@ -1,0 +1,134 @@
+{
+  "controlId": "03.08.04",
+  "controlFamily": "MP",
+  "controlTitle": "Media Marking",
+  "nistRequirement": "Mark system media that contain CUI to indicate distribution limitations, handling caveats, and applicable CUI markings.",
+  "researchDate": "2025-11-17",
+  "totalSettings": 5,
+  "settings": [
+    {
+      "id": "PV-MP-001",
+      "settingName": "SensitivityLabelPolicyEnabled",
+      "displayName": "Enable Sensitivity Label Policy",
+      "settingPath": "Microsoft.Purview.InformationProtection.SensitivityLabelPolicy.Enabled",
+      "policyType": "Purview",
+      "policySubType": "InformationProtection",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables sensitivity label policies for the organization to mark CUI with distribution limitations and handling caveats. This is the foundational setting that allows sensitivity labels to be applied to documents and emails containing CUI.",
+      "implementationGuide": "1. Sign in to Microsoft Purview compliance portal (https://compliance.microsoft.com)\n2. Navigate to Solutions > Information Protection > Label policies\n3. Create a new label policy or verify existing policy is published\n4. Ensure the policy is published to All users or specific groups handling CUI\n5. Configure mandatory labeling if required by organizational policy\n6. Verify labels appear in Microsoft 365 applications (Word, Excel, Outlook)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/create-sensitivity-labels",
+      "controlMappings": [
+        {
+          "controlId": "03.08.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Sensitivity labels are the Microsoft 365 native mechanism for marking digital media with distribution limitations and handling caveats. This directly satisfies the requirement to mark system media containing CUI. Microsoft's MIP (Microsoft Information Protection) sensitivity labels provide human-readable markings that persist throughout the document lifecycle.",
+          "nistRequirement": "Mark system media that contain CUI to indicate distribution limitations, handling caveats, and applicable CUI markings"
+        }
+      ]
+    },
+    {
+      "id": "PV-MP-002",
+      "settingName": "SensitivityLabelsWithContentMarking",
+      "displayName": "Configure Sensitivity Labels with Content Marking",
+      "settingPath": "Microsoft.Purview.SensitivityLabel.ProtectionSettings.ContentMarking",
+      "policyType": "Purview",
+      "policySubType": "InformationProtection",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "headerEnabled": true,
+        "footerEnabled": true,
+        "watermarkEnabled": true
+      },
+      "validationOperator": "contains",
+      "description": "Configures sensitivity labels to apply visual markings (headers, footers, watermarks) to documents and emails containing CUI. These markings display distribution limitations and handling caveats directly on the content.",
+      "implementationGuide": "1. In Microsoft Purview compliance portal, go to Solutions > Information Protection > Labels\n2. Create or edit sensitivity labels for different CUI classifications (e.g., CUI Basic, CUI Specified)\n3. Under Protection settings, select 'Apply content marking'\n4. Configure Header: Add text like 'CUI//DISTRIBUTION: [RESTRICTIONS]'\n5. Configure Footer: Add text with handling instructions\n6. Configure Watermark: Add 'CONTROLLED UNCLASSIFIED INFORMATION' text\n7. Customize font size, color, and alignment as needed\n8. Save and publish the label\n9. Test by applying label to a document and verifying markings appear",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/sensitivity-labels-office-apps#content-marking",
+      "controlMappings": [
+        {
+          "controlId": "03.08.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Content marking (headers, footers, watermarks) provides the visual indication of distribution limitations and handling caveats required by NIST 800-171. This setting ensures that when media is marked with a sensitivity label, the appropriate visual markings are automatically applied to clearly indicate CUI status and handling requirements.",
+          "nistRequirement": "Mark system media indicating the distribution limitations, handling caveats, and applicable security markings"
+        }
+      ]
+    },
+    {
+      "id": "PV-MP-003",
+      "settingName": "AutoLabelingPolicyForCUI",
+      "displayName": "Automatic Labeling Policy for CUI",
+      "settingPath": "Microsoft.Purview.AutoLabelingPolicy.Enabled",
+      "policyType": "Purview",
+      "policySubType": "InformationProtection",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables automatic labeling policies that detect CUI based on sensitive information types and trainable classifiers, ensuring all CUI is consistently marked. This prevents unintentional failure to mark media containing CUI.",
+      "implementationGuide": "1. Navigate to Microsoft Purview compliance portal > Information Protection > Auto-labeling\n2. Click 'Create auto-labeling policy'\n3. Name the policy (e.g., 'CUI Auto-Labeling')\n4. Choose locations: Exchange, SharePoint, OneDrive\n5. Define conditions using Sensitive Info Types relevant to CUI (e.g., SSN, ITAR data, export-controlled information)\n6. Select the appropriate sensitivity label to apply automatically\n7. Choose simulation mode first to test policy effectiveness\n8. Review simulation results (wait 48 hours for initial scan)\n9. Turn on policy for enforcement after validation\n10. Monitor via Activity Explorer for effectiveness",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/apply-sensitivity-label-automatically",
+      "controlMappings": [
+        {
+          "controlId": "03.08.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automatic labeling ensures comprehensive and consistent marking of media containing CUI, reducing human error and ensuring compliance with marking requirements. This is critical for NIST compliance as it prevents CUI from remaining unmarked due to user oversight or lack of awareness.",
+          "nistRequirement": "Mark system media that contain CUI to indicate distribution limitations, handling caveats, and applicable CUI markings"
+        }
+      ]
+    },
+    {
+      "id": "PV-MP-004",
+      "settingName": "MandatoryLabelingEnabled",
+      "displayName": "Require Labels on Documents and Emails",
+      "settingPath": "Microsoft.Purview.LabelPolicy.MandatoryLabeling",
+      "policyType": "Purview",
+      "policySubType": "InformationProtection",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces mandatory labeling requirement for all documents and emails, ensuring users cannot save or send content without applying a sensitivity label. This prevents unmarked CUI from being created or shared.",
+      "implementationGuide": "1. Go to Microsoft Purview compliance portal > Information Protection > Label policies\n2. Select or create a label policy\n3. Under Policy settings, enable 'Require users to apply a label to their email and documents'\n4. Enable 'Require users to apply a label to their Power BI content'\n5. Optionally enable 'Provide users with a link to a custom help page' for labeling guidance\n6. Configure default label for email and documents (e.g., 'General' or lowest sensitivity)\n7. Save and publish the policy\n8. Communicate change to users with training materials\n9. Test enforcement in Outlook and Office applications\n10. Monitor compliance via Activity Explorer",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/sensitivity-labels-office-apps#require-users-to-apply-a-label-to-their-email-and-documents",
+      "controlMappings": [
+        {
+          "controlId": "03.08.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Mandatory labeling ensures that all system media (documents and emails) are marked before they can be saved or sent, directly enforcing the requirement that media containing CUI must be marked. This prevents the creation or distribution of unmarked CUI-containing media.",
+          "nistRequirement": "Mark system media that contain CUI to indicate distribution limitations, handling caveats, and applicable CUI markings"
+        }
+      ]
+    },
+    {
+      "id": "PV-MP-005",
+      "settingName": "LabelPersistenceEnabled",
+      "displayName": "Enable Label Persistence Across Platforms",
+      "settingPath": "Microsoft.Purview.SensitivityLabel.Persistence",
+      "policyType": "Purview",
+      "policySubType": "InformationProtection",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Ensures sensitivity labels and their associated markings persist when documents are downloaded, copied, or moved across platforms. The label metadata travels with the file, maintaining marking integrity throughout the document lifecycle.",
+      "implementationGuide": "1. Verify built-in labeling is enabled in Microsoft 365 Apps for Enterprise (version 1910 or later)\n2. Navigate to Microsoft Purview compliance portal > Information Protection\n3. Verify 'Enable Office file support for labels' is enabled\n4. For legacy support, enable 'Turn on sensitivity labels for Office files in SharePoint and OneDrive'\n5. Test by: (a) Applying a label to a document, (b) Downloading the file, (c) Opening in different applications, (d) Verifying label persists\n6. For PDF support, ensure 'Apply a sensitivity label to PDF documents' is configured\n7. Monitor label activity via Content Explorer\n8. Configure DLP policies to prevent label removal",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/sensitivity-labels-sharepoint-onedrive-files",
+      "controlMappings": [
+        {
+          "controlId": "03.08.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Label persistence ensures that markings indicating distribution limitations and handling caveats remain with the media throughout its entire lifecycle, regardless of where it is stored or processed. This satisfies the requirement that marked media retains its markings even when moved between systems.",
+          "nistRequirement": "Mark system media indicating the distribution limitations, handling caveats, and applicable security markings"
+        }
+      ]
+    }
+  ]
+}

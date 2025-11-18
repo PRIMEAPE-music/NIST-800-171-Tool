@@ -1,0 +1,181 @@
+{
+  "controlId": "03.16.03",
+  "controlTitle": "External System Services",
+  "family": "SA",
+  "priority": "Medium",
+  "requirementText": "a. Require that providers of external system services comply with organizational security and privacy requirements and employ the following controls: [Assignment: organization-defined security requirements]. b. Define and document organizational oversight and user roles and responsibilities with regard to external system services. c. Implement processes, methods, and techniques to monitor security requirement compliance by external service providers on an ongoing basis.",
+  "settings": [
+    {
+      "id": "DF-SA-013",
+      "settingName": "appGovernanceEnabled",
+      "displayName": "Enable App Governance for OAuth Apps",
+      "settingPath": "appGovernance.enabled",
+      "policyType": "Defender",
+      "policySubType": "CloudAppSecurity",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables App Governance in Defender for Cloud Apps to monitor and control OAuth-enabled external applications accessing Microsoft 365 data, ensuring external services comply with security requirements.",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal > Settings > Cloud Apps > App governance\n2. Select 'Turn on app governance'\n3. Wait up to 10 hours for data collection to complete\n4. Verify prerequisite: Defender for Cloud Apps license\n5. Connect Microsoft 365 connector if not already connected\n6. Review discovered OAuth apps in App governance > Overview\n7. Configure policies for high-privilege apps\n8. Monitor alerts for risky external application behavior",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-cloud-apps/app-governance-get-started",
+      "controlMappings": [
+        {
+          "controlId": "03.16.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "App Governance provides visibility and control over external OAuth applications accessing organizational data, enabling monitoring of external service provider compliance with security requirements including permissions, data access, and user authorization.",
+          "nistRequirement": "Monitor security requirement compliance by external service providers on ongoing basis"
+        }
+      ]
+    },
+    {
+      "id": "DF-SA-014",
+      "settingName": "oAuthAppPermissionPolicies",
+      "displayName": "Create OAuth App Permission Policies",
+      "settingPath": "cloudApps.oAuthPolicy.permissions",
+      "policyType": "Defender",
+      "policySubType": "CloudAppSecurity",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["HighPermissionMonitoring", "UncommonAppAlerts", "ExternalPublisherReview"],
+      "validationOperator": "contains",
+      "description": "Implements OAuth app policies to alert on external applications with high-severity permissions, uncommon usage, or from external publishers, ensuring external services meet security requirements.",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal > Cloud Apps > Policies > Policy management\n2. Create OAuth app policy:\n   a. High Permission Apps:\n      - App permissions: Permission level = High severity\n      - Community use = Uncommon\n      - Actions: Generate alert and notify admin\n   b. External Publisher Apps:\n      - App permissions: Publisher = External\n      - Permission level = High or Medium\n      - Actions: Generate alert for review\n   c. Rarely Used Apps:\n      - Last authorized: Not in last 90 days\n      - Actions: Generate alert and mark for review\n3. Configure alert recipients\n4. Enable policies\n5. Review alerts weekly",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-cloud-apps/app-permission-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.16.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "OAuth app permission policies enforce security requirements on external service providers by alerting when applications request high-privilege access, are published by external entities, or exhibit uncommon usage patterns that may indicate non-compliance.",
+          "nistRequirement": "Require external service providers to comply with organizational security requirements regarding permissions and data access"
+        }
+      ]
+    },
+    {
+      "id": "DF-SA-015",
+      "settingName": "cloudAppDiscovery",
+      "displayName": "Enable Cloud App Discovery and Shadow IT Detection",
+      "settingPath": "cloudApps.discovery.enabled",
+      "policyType": "Defender",
+      "policySubType": "CloudAppSecurity",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Cloud Discovery to identify unsanctioned external cloud services (Shadow IT) accessing organizational data, ensuring all external services are documented and monitored per security requirements.",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal > Cloud Apps > Cloud Discovery\n2. Configure data sources:\n   - Option A: Deploy Defender for Endpoint for automatic log collection\n   - Option B: Configure log upload from firewalls/proxies\n3. Enable continuous reports\n4. Review discovered cloud apps dashboard\n5. Categorize apps as Sanctioned, Unsanctioned, or Under Review\n6. Create policies to:\n   - Alert on new high-risk cloud apps\n   - Block unsanctioned cloud storage\n   - Monitor data uploaded to external services\n7. Review Cloud Discovery score weekly",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-cloud-apps/set-up-cloud-discovery",
+      "controlMappings": [
+        {
+          "controlId": "03.16.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Cloud Discovery provides visibility into all external cloud services being used by organization, enabling documentation and oversight of external system services as required for compliance monitoring.",
+          "nistRequirement": "Define and document organizational oversight of external system services; monitor external services usage"
+        }
+      ]
+    },
+    {
+      "id": "DF-SA-016",
+      "settingName": "appGovernanceCompliancePolicies",
+      "displayName": "Enforce App Compliance Policies",
+      "settingPath": "appGovernance.compliancePolicies",
+      "policyType": "Defender",
+      "policySubType": "CloudAppSecurity",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["HighPrivilegeAppReview", "OverprivilegedAppDetection", "DataExfiltrationMonitoring"],
+      "validationOperator": "contains",
+      "description": "Creates app governance compliance policies to continuously monitor external applications for overprivileged permissions, unusual data access patterns, and potential data exfiltration to external services.",
+      "implementationGuide": "1. Navigate to App governance > Overview > Policies\n2. Create compliance policies:\n   a. Overprivileged Apps:\n      - Condition: Apps with unused high-privilege permissions\n      - Action: Alert and require justification\n   b. High Data Transfer:\n      - Condition: Apps transferring >1GB data in 24 hours\n      - Action: Alert security team\n   c. New High Privilege Apps:\n      - Condition: Newly authorized apps with Mail.ReadWrite or Files.ReadWrite.All\n      - Action: Automatic approval workflow required\n3. Configure automated actions:\n   - Disable app if policy violated\n   - Notify app owner and security team\n4. Review policy violations daily",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-cloud-apps/app-governance-manage-app-governance",
+      "controlMappings": [
+        {
+          "controlId": "03.16.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "App governance compliance policies implement continuous monitoring of external service providers, ensuring they comply with security requirements regarding privileged access, data handling, and appropriate permission usage.",
+          "nistRequirement": "Implement methods and techniques to monitor security requirement compliance by external service providers on ongoing basis"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SA-017",
+      "settingName": "adminConsentWorkflow",
+      "displayName": "Enable Admin Consent Workflow for Apps",
+      "settingPath": "entraID.adminConsentWorkflow.enabled",
+      "policyType": "AzureAD",
+      "policySubType": "EnterpriseApps",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Requires administrator review and approval for external applications requesting organizational data access, ensuring external services are vetted before accessing systems.",
+      "implementationGuide": "1. Navigate to Azure AD > Enterprise applications > Consent and permissions > Admin consent settings\n2. Configure:\n   - Users can request admin consent to apps they are unable to consent to: Yes\n   - Select users to review admin consent requests: Specify security team\n   - Selected users will receive email notifications for requests: Yes\n   - Consent request expires after: 30 days\n3. Consider blocking user consent for all apps (requires admin consent for all)\n4. Configure consent policy:\n   - Block consent for apps from unverified publishers\n   - Require admin consent for high-risk permissions\n5. Review consent requests in Admin consent requests blade\n6. Document approval criteria for external applications",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-admin-consent-workflow",
+      "controlMappings": [
+        {
+          "controlId": "03.16.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Admin consent workflow ensures external service providers must receive organizational approval before accessing data, implementing oversight requirement and enabling documentation of approved external services.",
+          "nistRequirement": "Define and document organizational oversight with regard to external system services; require compliance with security requirements"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SA-018",
+      "settingName": "riskBasedConsentPolicy",
+      "displayName": "Configure Risk-Based Consent Policies",
+      "settingPath": "entraID.appConsent.riskBasedPolicy",
+      "policyType": "AzureAD",
+      "policySubType": "EnterpriseApps",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "blockUnverifiedPublishers": true,
+        "blockHighRiskPermissions": true,
+        "requireGroupOwnerConsent": false
+      },
+      "validationOperator": "==",
+      "description": "Implements risk-based app consent policies to block external applications from unverified publishers or requesting high-risk permissions without admin review.",
+      "implementationGuide": "1. Navigate to Azure AD > Enterprise applications > Consent and permissions > User consent settings\n2. Configure permission classification:\n   - Do not allow user consent: Recommended (requires admin approval)\n   - OR Allow user consent for apps from verified publishers, for selected permissions (low risk only)\n3. Configure risk-based restrictions:\n   - Block consent from unverified publishers: Enable\n   - Block high-risk permissions (Mail.ReadWrite, Files.ReadWrite.All, etc.)\n4. Define low-risk permissions users can consent to:\n   - User.Read\n   - openid, profile, email\n5. All other permissions require admin consent\n6. Monitor consent activity via Sign-in logs",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-user-consent",
+      "controlMappings": [
+        {
+          "controlId": "03.16.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Risk-based consent policies enforce security requirements on external service providers by preventing high-risk or unverified external applications from accessing organizational data without proper oversight and approval.",
+          "nistRequirement": "Require external service providers comply with organizational security requirements; implement oversight controls"
+        }
+      ]
+    },
+    {
+      "id": "DF-SA-019",
+      "settingName": "sensitiveInfoTypeProtection",
+      "displayName": "Monitor External Service Data Sharing",
+      "settingPath": "cloudApps.dlp.externalSharing",
+      "policyType": "Defender",
+      "policySubType": "CloudAppSecurity",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["BlockCUIToExternalApps", "AlertOnSensitiveDataSharing"],
+      "validationOperator": "contains",
+      "description": "Creates DLP policies in Defender for Cloud Apps to monitor and control sharing of CUI/sensitive data with external cloud applications, ensuring external services comply with data protection requirements.",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal > Cloud Apps > Policies > Policy management\n2. Create File policy for external sharing:\n   - Policy name: Block CUI sharing to external apps\n   - Filter: Files shared with external domains\n   - Content inspection: Sensitive information types (SSN, Credit Card, CUI labels)\n   - Actions: Block download, Alert admin, Quarantine file\n3. Create Activity policy:\n   - Policy name: Alert on sensitive data access by OAuth apps\n   - Filter: OAuth apps accessing files with sensitivity labels\n   - Actions: Alert security team\n4. Configure governance actions:\n   - Revoke app permissions if policy violated\n   - Notify file owner\n5. Review policy matches daily",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-cloud-apps/data-protection-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.16.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "DLP policies for external cloud apps ensure external service providers comply with organizational requirements for CUI protection and data handling by monitoring and controlling sensitive data sharing with external services.",
+          "nistRequirement": "Require external service providers employ controls to protect CUI; monitor compliance with data protection requirements"
+        }
+      ]
+    }
+  ]
+}

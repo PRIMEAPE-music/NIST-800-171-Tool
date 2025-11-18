@@ -1,0 +1,211 @@
+════════════════════════════════════════════════════════════════════════════════
+M365 SETTINGS NORMALIZATION SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+
+Generated: 11/17/2025, 1:20:27 PM
+Source: ./INSTRUCTIONS/POLICY SETTINGS
+
+📊 PROCESSING STATISTICS
+--------------------------------------------------------------------------------
+JSON Files Processed:       79
+Total Settings Processed:   667
+Unique Settings Found:      636
+Duplicates Detected:        31
+Deduplication Rate:         4.65%
+Control Mappings Created:   681
+
+📁 CONTROL FAMILIES PROCESSED
+--------------------------------------------------------------------------------
+Total Families: 0
+
+🔧 SETTINGS BY POLICY TYPE
+--------------------------------------------------------------------------------
+AzureAD              248 settings
+Intune               230 settings
+SharePoint           7 settings
+Purview              80 settings
+Exchange             4 settings
+Teams                3 settings
+Defender             62 settings
+Microsoft365         2 settings
+
+📱 SETTINGS BY PLATFORM
+--------------------------------------------------------------------------------
+All                  426 settings
+Windows              173 settings
+iOS                  12 settings
+Android              9 settings
+iOS,Android          13 settings
+Windows,iOS,Android  1 settings
+iOS, Android         1 settings
+Windows, macOS       1 settings
+
+⚠️  WARNINGS & ERRORS
+--------------------------------------------------------------------------------
+Total Issues: 31
+
+1. inconsistency
+   File: User Account Enabled Status
+   - displayName: "User Account Enabled Status" vs "User Account Control - Account Enabled"
+   - expectedValue: "true" vs "false"
+
+2. inconsistency
+   File: Conditional Access - Require MFA
+   - displayName: "Conditional Access - Require MFA" vs "Conditional Access - Require Compliant Device"
+   - expectedValue: "["mfa"]" vs "compliantDevice"
+
+3. inconsistency
+   File: Conditional Access - Require Approved Client App
+   - displayName: "Conditional Access - Require Approved Client App" vs "Conditional Access - Require App Protection Policy"
+   - expectedValue: "["approvedApplication"]" vs "compliantApplication"
+
+4. inconsistency
+   File: Security Reader Role Assignment (Audit Functions)
+   - displayName: "Security Reader Role Assignment (Audit Functions)" vs "Security Administrator Role Assignment (Security Management)"
+   - expectedValue: "5d6b6bb7-de71-4623-b4af-96380a352509" vs "194ae4cb-b126-40b2-bd5b-6091b380977d"
+
+5. inconsistency
+   File: Security Reader Role Assignment (Audit Functions)
+   - displayName: "Security Reader Role Assignment (Audit Functions)" vs "Global Reader Role Assignment"
+   - expectedValue: "5d6b6bb7-de71-4623-b4af-96380a352509" vs "f2ef992c-3afb-46b9-b7cf-a126ee74c451"
+
+6. inconsistency
+   File: Require MFA for Role Activation
+   - displayName: "Require MFA for Role Activation" vs "Require Justification for Role Activation"
+   - expectedValue: "["MultiFactorAuthentication"]" vs "Justification"
+
+7. inconsistency
+   File: Security Reader Role Assignment (Audit Functions)
+   - displayName: "Security Reader Role Assignment (Audit Functions)" vs "Compliance Administrator Role (Separate from Security Admin)"
+   - expectedValue: "5d6b6bb7-de71-4623-b4af-96380a352509" vs "17315797-102d-40b4-93e0-432062caca18"
+
+8. inconsistency
+   File: Conditional Access - Require MFA for Admin Accounts
+   - displayName: "Conditional Access - Require MFA for Admin Accounts" vs "Conditional Access - Block Legacy Authentication for Admins"
+   - expectedValue: "{"state":"enabled","conditions":{"users":{"include":{"groups":["All_Admin_Accounts"]}},"applications":{"include":["All"]}},"grantControls":{"operator":"AND","builtInControls":["mfa"]}}" vs "[object Object]"
+
+9. inconsistency
+   File: Conditional Access - Require MFA for Admin Accounts
+   - displayName: "Conditional Access - Require MFA for Admin Accounts" vs "Conditional Access - Separate Policies for Admin vs User Accounts"
+   - dataType: "object" vs "boolean"
+   - expectedValue: "{"state":"enabled","conditions":{"users":{"include":{"groups":["All_Admin_Accounts"]}},"applications":{"include":["All"]}},"grantControls":{"operator":"AND","builtInControls":["mfa"]}}" vs "true"
+   - validationOperator: "contains" vs "=="
+
+10. inconsistency
+   File: Conditional Access - Require MFA for Admin Accounts
+   - displayName: "Conditional Access - Require MFA for Admin Accounts" vs "Conditional Access - Phishing-Resistant MFA for Admins"
+   - expectedValue: "{"state":"enabled","conditions":{"users":{"include":{"groups":["All_Admin_Accounts"]}},"applications":{"include":["All"]}},"grantControls":{"operator":"AND","builtInControls":["mfa"]}}" vs "[object Object]"
+
+11. inconsistency
+   File: Conditional Access - Require MFA for Admin Accounts
+   - displayName: "Conditional Access - Require MFA for Admin Accounts" vs "Conditional Access - Block Exchange/Teams Access for Admin Accounts"
+   - expectedValue: "{"state":"enabled","conditions":{"users":{"include":{"groups":["All_Admin_Accounts"]}},"applications":{"include":["All"]}},"grantControls":{"operator":"AND","builtInControls":["mfa"]}}" vs "[object Object]"
+
+12. inconsistency
+   File: Audit Logging Enabled for Privileged Account Activities
+   - displayName: "Audit Logging Enabled for Privileged Account Activities" vs "Microsoft 365 Unified Audit Log - Enabled"
+
+13. inconsistency
+   File: Extended Audit Log Retention for Privileged Accounts
+   - displayName: "Extended Audit Log Retention for Privileged Accounts" vs "Audit Log Retention Policy - 1 Year"
+   - dataType: "integer" vs "object"
+   - expectedValue: "365" vs "[object Object]"
+
+14. inconsistency
+   File: Sign-in Frequency (Session Control)
+   - displayName: "Sign-in Frequency (Session Control)" vs "Sign-in Frequency - Every Time"
+   - expectedValue: "{"isEnabled":true,"type":"hours","value":8}" vs "[object Object]"
+
+15. inconsistency
+   File: Conditional Access - Locations Included
+   - displayName: "Conditional Access - Locations Included" vs "Conditional Access - Include Locations"
+   - expectedValue: "["All"]" vs "<named-location-ids>,AllTrusted"
+   - validationOperator: "contains" vs "in"
+
+16. inconsistency
+   File: Conditional Access Grant Controls
+   - displayName: "Conditional Access Grant Controls" vs "Conditional Access Grant Controls for Remote Access"
+   - expectedValue: "["mfa","compliantDevice","domainJoinedDevice"]" vs "mfa,compliantDevice,domainJoinedDevice"
+
+17. inconsistency
+   File: Conditional Access Grant Controls
+   - displayName: "Conditional Access Grant Controls" vs "Block Access from Untrusted Locations"
+   - expectedValue: "["mfa","compliantDevice","domainJoinedDevice"]" vs "block"
+   - validationOperator: "contains" vs "=="
+
+18. inconsistency
+   File: Conditional Access Grant Controls
+   - displayName: "Conditional Access Grant Controls" vs "Require Compliant Device for Access"
+   - expectedValue: "["mfa","compliantDevice","domainJoinedDevice"]" vs "compliantDevice"
+
+19. inconsistency
+   File: Azure AD Sign-In Logs Diagnostic Settings
+   - displayName: "Azure AD Sign-In Logs Diagnostic Settings" vs "Azure AD Sign-In Log Content Configuration"
+
+20. inconsistency
+   File: Azure AD Audit Logs Diagnostic Settings
+   - displayName: "Azure AD Audit Logs Diagnostic Settings" vs "Azure AD Audit Log Content Configuration"
+
+21. inconsistency
+   File: Microsoft 365 Unified Audit Log
+   - displayName: "Microsoft 365 Unified Audit Log" vs "Unified Audit Log Record Generation"
+
+22. inconsistency
+   File: Automated Remediation Actions Configuration
+   - displayName: "Automated Remediation Actions Configuration" vs "Incident Assignment and Notification Rules"
+   - dataType: "array" vs "boolean"
+   - expectedValue: "["QuarantineFile","RemoveFile","StopProcess","IsolateDevice","BlockUrl","DisableUser"]" vs "true"
+   - validationOperator: "contains" vs "=="
+
+23. inconsistency
+   File: Microsoft Defender XDR Incident Correlation
+   - displayName: "Microsoft Defender XDR Incident Correlation" vs "Security Dashboards and Incident Reports"
+
+24. inconsistency
+   File: Require Compliant or Hybrid Joined Device for Mobile Access
+   - displayName: "Require Compliant or Hybrid Joined Device for Mobile Access" vs "Conditional Access - Require Compliant Device for Resource Access"
+   - expectedValue: "["compliantDevice","domainJoinedDevice"]" vs "compliantDevice"
+
+25. inconsistency
+   File: Conditional Access - Require MFA
+   - displayName: "Conditional Access - Require MFA" vs "User Risk Policy - Password Change Required"
+   - expectedValue: "["mfa"]" vs "passwordChange"
+
+26. inconsistency
+   File: Conditional Access - Require MFA
+   - displayName: "Conditional Access - Require MFA" vs "Sign-in Risk Policy - MFA Required"
+   - expectedValue: "["mfa"]" vs "mfa"
+
+27. inconsistency
+   File: Conditional Access Policy State
+   - displayName: "Conditional Access Policy State" vs "MFA Registration Required Before Access"
+
+28. inconsistency
+   File: Access Reviews for Privileged Roles
+   - displayName: "Access Reviews for Privileged Roles" vs "Access Reviews for Role Transfers"
+
+29. inconsistency
+   File: Conditional Access - Require MFA
+   - displayName: "Conditional Access - Require MFA" vs "Block Access for Disabled Accounts"
+   - expectedValue: "["mfa"]" vs "compliantDevice"
+
+30. inconsistency
+   File: Conditional Access - Require Access from Trusted Locations
+   - displayName: "Conditional Access - Require Access from Trusted Locations" vs "Conditional Access - Require Compliant or Hybrid Joined Devices"
+   - expectedValue: "{"state":"enabled","conditions":{"locations":{"includeLocations":["All"],"excludeLocations":["AllTrusted"]}},"grantControls":{"operator":"OR","builtInControls":["mfa","compliantDevice"]}}" vs "[object Object]"
+
+31. inconsistency
+   File: Conditional Access - Require MFA for Admin Accounts
+   - displayName: "Conditional Access - Require MFA for Admin Accounts" vs "Enforce Zero Trust Access Controls"
+   - dataType: "object" vs "array"
+   - expectedValue: "{"state":"enabled","conditions":{"users":{"include":{"groups":["All_Admin_Accounts"]}},"applications":{"include":["All"]}},"grantControls":{"operator":"AND","builtInControls":["mfa"]}}" vs "RequireCompliantDevice,RequireMFA,BlockLegacyAuth"
+
+════════════════════════════════════════════════════════════════════════════════
+✅ NEXT STEPS
+════════════════════════════════════════════════════════════════════════════════
+1. Review normalization_stats.json for any inconsistencies
+2. Verify master_settings_catalog.json contains all expected settings
+3. Check that all control families were processed
+4. Use these files with your import script to populate the database
+
+Output Location: ./normalized-output

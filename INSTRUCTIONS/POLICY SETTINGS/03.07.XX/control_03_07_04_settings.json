@@ -1,0 +1,129 @@
+{
+  "controlId": "03.07.04",
+  "controlTitle": "Maintenance Tools",
+  "family": "MA",
+  "familyName": "Maintenance",
+  "totalSettings": 5,
+  "settings": [
+    {
+      "id": "IN-MA-001",
+      "settingName": "RequireDeviceCompliance",
+      "displayName": "Require Antivirus and Antispyware Software",
+      "settingPath": "deviceCompliancePolicy.systemSecurity.antivirusRequired",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces that maintenance devices must have active and up-to-date antivirus software registered with Windows Security Center before being used for system maintenance. This prevents malicious code on maintenance tools from entering the environment.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center (intune.microsoft.com)\n2. Navigate to Devices > Compliance > Policies > Create Policy\n3. Select Platform: Windows 10 and later\n4. Under System Security settings, set:\n   - Require Antivirus = Require\n   - Require Antispyware = Require\n   - Real-time Protection = Require\n5. Assign to device groups used for maintenance activities\n6. Configure Conditional Access to block non-compliant devices",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.07.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly enforces requirement 'b. Check media with diagnostic and test programs for malicious code before it is used in the system' by ensuring all maintenance devices have active malware protection.",
+          "nistRequirement": "Check media with diagnostic and test programs for malicious code before it is used in the system"
+        }
+      ]
+    },
+    {
+      "id": "IN-MA-002",
+      "settingName": "DefenderRealTimeProtection",
+      "displayName": "Microsoft Defender Real-Time Protection",
+      "settingPath": "windowsSecurityBaseline.microsoftDefenderAntivirus.realTimeProtection",
+      "policyType": "Intune",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Enabled",
+      "validationOperator": "==",
+      "description": "Enables real-time scanning and monitoring for malware on devices used for maintenance tasks. Real-time protection automatically scans files and processes as they are accessed, preventing malicious maintenance tools from executing.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint Security > Security Baselines\n3. Select 'Security Baseline for Windows 10 and later'\n4. Create profile and configure:\n   - Microsoft Defender Antivirus > Real-time Protection: Enable\n   - Turn on real-time protection: Yes\n   - Monitor file and program activity: Yes\n5. Assign to all device groups\n6. Monitor deployment status",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/protect/security-baselines",
+      "controlMappings": [
+        {
+          "controlId": "03.07.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Implements continuous malware scanning required for maintenance tools and media, automatically detecting threats in diagnostic programs before they can compromise the system.",
+          "nistRequirement": "Check media with diagnostic and test programs for malicious code"
+        }
+      ]
+    },
+    {
+      "id": "IN-MA-003",
+      "settingName": "DefenderSignatureUpdate",
+      "displayName": "Require Up-to-Date Security Intelligence",
+      "settingPath": "deviceCompliancePolicy.defenderForEndpoint.signatureOutOfDate",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces that Microsoft Defender security intelligence definitions must be current on maintenance devices. Outdated signatures cannot detect the latest malware that may be present on maintenance tools or media.",
+      "implementationGuide": "1. In Microsoft Intune admin center, go to Devices > Compliance > Policies\n2. Create or edit Windows 10/11 compliance policy\n3. Under Microsoft Defender for Endpoint section:\n   - Require security intelligence to be up to date: Require\n4. Set Actions for noncompliance:\n   - Mark device non-compliant: Immediately\n5. Assign to maintenance device groups\n6. Configure Conditional Access to require compliant devices",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/protect/compliance-policy-create-windows#microsoft-defender-for-endpoint",
+      "controlMappings": [
+        {
+          "controlId": "03.07.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Ensures malware detection capabilities are current before maintenance tools are used, directly supporting the requirement to check diagnostic programs for malicious code with the latest threat intelligence.",
+          "nistRequirement": "Check media with diagnostic and test programs for malicious code before it is used in the system"
+        }
+      ]
+    },
+    {
+      "id": "AZ-MA-004",
+      "settingName": "AuditMaintenanceAccess",
+      "displayName": "Audit Privileged Maintenance Activity",
+      "settingPath": "auditLogs.directoryAudits.privilegedRoleAssignment",
+      "policyType": "AzureAD",
+      "policySubType": "AuditLogging",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables comprehensive audit logging for privileged role assignments and maintenance activities. Tracks who approved maintenance tools, when they were used, and which administrative accounts performed maintenance tasks.",
+      "implementationGuide": "1. Sign in to Azure portal (portal.azure.com)\n2. Navigate to Microsoft Entra ID > Audit logs\n3. Verify that audit logging is enabled (default)\n4. Configure audit log retention:\n   - Go to Microsoft Entra ID > Diagnostic settings\n   - Add diagnostic setting\n   - Select 'AuditLogs' and 'SignInLogs'\n   - Send to Log Analytics workspace for retention > 90 days\n5. Create alerts for privileged maintenance activities\n6. Configure Microsoft Sentinel for advanced monitoring (optional)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-audit-logs",
+      "controlMappings": [
+        {
+          "controlId": "03.07.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Implements monitoring and control aspects of the requirement by tracking approval, control, and monitoring of system maintenance tool usage through comprehensive audit trails.",
+          "nistRequirement": "Approve, control, and monitor the use of system maintenance tools"
+        }
+      ]
+    },
+    {
+      "id": "DF-MA-005",
+      "settingName": "CloudDeliveredProtection",
+      "displayName": "Microsoft Defender Cloud-Delivered Protection",
+      "settingPath": "windowsSecurityBaseline.microsoftDefenderAntivirus.cloudDeliveredProtection",
+      "policyType": "Defender",
+      "policySubType": "AntivirusPolicy",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Enabled",
+      "validationOperator": "==",
+      "description": "Enables cloud-delivered protection for Microsoft Defender, providing near-instantaneous threat detection for new malware on maintenance tools. Uses machine learning and cloud intelligence to identify emerging threats that may not yet be in local signature databases.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint Security > Antivirus\n3. Create new policy for Windows 10 and later\n4. Configure Cloud Protection settings:\n   - Cloud-delivered protection level: High\n   - Cloud Extended Timeout: 50 seconds\n   - Submit samples consent: Send safe samples automatically\n5. Assign to all Windows device groups\n6. Monitor threat detections in Microsoft Defender portal",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/cloud-protection-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.07.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enhances malware detection capabilities for maintenance tools by leveraging cloud-based machine learning and threat intelligence, providing protection against zero-day threats in diagnostic programs.",
+          "nistRequirement": "Check media with diagnostic and test programs for malicious code before it is used in the system"
+        }
+      ]
+    }
+  ]
+}

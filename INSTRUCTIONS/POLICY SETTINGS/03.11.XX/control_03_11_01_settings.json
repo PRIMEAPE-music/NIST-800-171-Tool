@@ -1,0 +1,135 @@
+{
+  "controlId": "03.11.01",
+  "family": "RA",
+  "familyName": "Risk Assessment",
+  "title": "Risk Assessment",
+  "requirementText": "a. Assess the risk (including supply chain risk) of unauthorized disclosure resulting from the processing, storage, or transmission of CUI.\nb. Update risk assessments [Assignment: organization-defined frequency].",
+  "settings": [
+    {
+      "id": "DF-RA-001",
+      "settingName": "secureScore.enabled",
+      "displayName": "Microsoft Secure Score Monitoring Enabled",
+      "settingPath": "Microsoft365Defender.SecureScore",
+      "policyType": "Defender",
+      "policySubType": "SecureScore",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Microsoft Secure Score to provide continuous risk assessment and security posture measurement across M365 environment. Secure Score aggregates security findings and provides actionable recommendations to identify and mitigate risks.",
+      "implementationGuide": "1. Navigate to Microsoft 365 Defender portal (https://security.microsoft.com)\n2. Go to Secure Score dashboard\n3. Review initial score and recommendations\n4. Enable monitoring for all recommended actions\n5. Configure automatic score calculation (runs every 8 hours)\n6. Set up alerts for score changes and new recommendations\n7. Review score regularly as part of risk assessment process",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender/microsoft-secure-score",
+      "controlMappings": [
+        {
+          "controlId": "03.11.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Microsoft Secure Score provides automated, continuous risk assessment of the organization's security posture across identity, apps, and devices. It identifies vulnerabilities and misconfigurations that could lead to unauthorized CUI disclosure, directly supporting the requirement to assess risk.",
+          "nistRequirement": "Assess the risk of unauthorized disclosure resulting from the processing, storage, or transmission of CUI"
+        }
+      ]
+    },
+    {
+      "id": "DF-RA-002",
+      "settingName": "vulnerabilityManagement.baselineAssessment.enabled",
+      "displayName": "Defender Vulnerability Management Baseline Assessment",
+      "settingPath": "DefenderForEndpoint.VulnerabilityManagement.BaselineAssessment",
+      "policyType": "Defender",
+      "policySubType": "VulnerabilityManagement",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables continuous security baseline assessment against CIS benchmarks and STIG standards. Provides real-time compliance monitoring and identifies security misconfigurations that increase risk of CUI exposure.",
+      "implementationGuide": "1. Navigate to Microsoft 365 Defender portal\n2. Go to Vulnerability management > Baselines assessment\n3. Click 'Create profile' button\n4. Select appropriate OS (Windows 10, 11, or Server)\n5. Choose CIS Benchmark (Level 1 recommended for most organizations)\n6. Select configurations to include in profile\n7. Choose device groups to assess\n8. Submit and monitor compliance results\n9. Review baseline assessment results as part of regular risk assessments",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender-vulnerability-management/tvm-security-baselines",
+      "controlMappings": [
+        {
+          "controlId": "03.11.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Security baseline assessments provide continuous evaluation of system configurations against industry standards (CIS, STIG), identifying misconfigurations that create risk. This directly supports risk assessment requirements by quantifying security posture and compliance gaps.",
+          "nistRequirement": "Assess the risk and determine likelihood and magnitude of harm from unauthorized access, use, disclosure, disruption, modification, or destruction of the system"
+        }
+      ]
+    },
+    {
+      "id": "AZ-RA-001",
+      "settingName": "identityProtection.riskPolicy.enabled",
+      "displayName": "Azure AD Identity Protection Risk Policies Enabled",
+      "settingPath": "AzureAD.IdentityProtection.RiskPolicy",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Azure AD Identity Protection to detect and assess identity-based risks including compromised credentials, impossible travel, malicious IP addresses, and anomalous sign-in behavior. Provides continuous risk scoring for users and sign-ins to identify potential unauthorized access to CUI.",
+      "implementationGuide": "1. Navigate to Azure AD admin center (https://aad.portal.azure.com)\n2. Go to Security > Identity Protection\n3. Enable 'User risk policy'\n4. Configure user risk level threshold (Medium or High)\n5. Enable 'Sign-in risk policy'\n6. Configure sign-in risk level threshold (Medium or High)\n7. Set remediation action (Require MFA and/or password change)\n8. Enable 'MFA registration policy' for all users\n9. Review risk detections regularly (daily recommended)\n10. Export risk data to SIEM or logging solution for audit trail",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks",
+      "controlMappings": [
+        {
+          "controlId": "03.11.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Identity Protection continuously assesses risks to user identities and sign-ins, detecting compromised credentials and anomalous behavior that could lead to unauthorized CUI access. Risk scores and detections directly support requirement to assess likelihood and magnitude of harm from unauthorized access.",
+          "nistRequirement": "Assess the risk including identifying threats to and vulnerabilities in the system and determining the likelihood and magnitude of harm from unauthorized access"
+        }
+      ]
+    },
+    {
+      "id": "PV-RA-001",
+      "settingName": "complianceManager.assessments.enabled",
+      "displayName": "Microsoft Purview Compliance Manager Assessments",
+      "settingPath": "Purview.ComplianceManager.Assessments",
+      "policyType": "Purview",
+      "policySubType": "ComplianceManager",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Purview Compliance Manager to conduct continuous compliance assessments against regulatory frameworks (NIST 800-171, ISO 27001, etc.). Provides risk scoring based on control implementation status and identifies compliance gaps that create risk of CUI exposure.",
+      "implementationGuide": "1. Navigate to Microsoft Purview compliance portal (https://compliance.microsoft.com)\n2. Go to Compliance Manager\n3. Review initial compliance score based on M365 data protection baseline\n4. Create assessment for NIST 800-171 Rev 3\n5. Assign improvement actions to responsible personnel\n6. Configure assessment frequency (quarterly minimum recommended)\n7. Enable continuous monitoring for all controls\n8. Review compliance score trends as part of risk assessment process\n9. Export assessment reports for audit evidence\n10. Update assessments when significant changes occur",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/compliance/compliance-manager",
+      "controlMappings": [
+        {
+          "controlId": "03.11.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Compliance Manager provides structured risk assessment framework aligned to NIST 800-171 and other regulatory standards. It assesses control implementation status and provides risk scoring that identifies gaps in CUI protection, directly supporting requirement to assess risk and determine compliance posture.",
+          "nistRequirement": "Assess the risk and update risk assessments at organization-defined frequency or when significant changes occur"
+        }
+      ]
+    },
+    {
+      "id": "DF-RA-003",
+      "settingName": "vulnerabilityManagement.exposureScore.monitoring",
+      "displayName": "Microsoft Defender Exposure Score Monitoring",
+      "settingPath": "DefenderForEndpoint.VulnerabilityManagement.ExposureScore",
+      "policyType": "Defender",
+      "policySubType": "VulnerabilityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Exposure Score monitoring which provides real-time risk assessment of organization's vulnerability exposure. Aggregates vulnerability data, threat intelligence, and breach likelihood to quantify risk of system compromise and CUI exposure.",
+      "implementationGuide": "1. Navigate to Microsoft 365 Defender portal\n2. Go to Vulnerability management > Dashboard\n3. Review Exposure Score (0-1000 scale)\n4. Analyze exposure distribution by severity\n5. Enable automatic score calculation (continuous)\n6. Configure alerts for significant score changes (>10% increase)\n7. Review top security recommendations to reduce exposure\n8. Monitor exposure trends over time (weekly/monthly)\n9. Export exposure data for risk assessment documentation\n10. Integrate score into regular risk assessment reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender-vulnerability-management/tvm-exposure-score",
+      "controlMappings": [
+        {
+          "controlId": "03.11.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Exposure Score provides quantitative risk assessment of vulnerability exposure across the organization. It incorporates threat intelligence and breach likelihood predictions to assess risk of unauthorized system access and CUI disclosure, directly supporting requirement to determine likelihood and magnitude of harm.",
+          "nistRequirement": "Assess the risk including determining the likelihood and magnitude of harm from unauthorized access, use, disclosure, disruption, modification, or destruction of the system"
+        }
+      ]
+    }
+  ],
+  "totalSettings": 5,
+  "implementationNotes": "These settings provide continuous, automated risk assessment across identity, endpoints, compliance, and vulnerability management. Organizations should establish regular risk assessment cycles (quarterly minimum) that incorporate data from all these sources. Microsoft Secure Score and Compliance Manager provide executive-level risk dashboards, while Vulnerability Management and Identity Protection provide technical risk details. All tools support export of risk data for audit evidence and POAM generation.",
+  "complianceEvidence": "Export reports from Secure Score, Compliance Manager, Identity Protection risk detections, and Vulnerability Management exposure scores to demonstrate ongoing risk assessment activities. Maintain documentation of risk assessment frequency and significant updates.",
+  "microsoftBaselineReference": "Microsoft Security Baseline for Microsoft 365",
+  "cisReference": "CIS Microsoft 365 Foundations Benchmark v3.0 - Section on Risk Management and Continuous Monitoring",
+  "priority": "High"
+}

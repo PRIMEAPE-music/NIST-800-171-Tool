@@ -1,0 +1,153 @@
+{
+  "controlId": "03.13.01",
+  "controlTitle": "Boundary Protection",
+  "controlFamily": "SC",
+  "nistRequirement": "a. Monitor and control communications at external managed interfaces to the system and key internal managed interfaces within the system.\nb. Implement subnetworks for publicly accessible system components that are physically or logically separated from internal networks.\nc. Connect to external systems only through managed interfaces that consist of boundary protection devices arranged in accordance with an organizational security architecture.",
+  "settingsCount": 6,
+  "settings": [
+    {
+      "id": "IN-SC-001",
+      "settingName": "EnableDomainNetworkFirewall",
+      "displayName": "Enable Domain Network Firewall",
+      "settingPath": "FirewallPolicy.FirewallProfileDomain.EnableFirewall",
+      "policyType": "Intune",
+      "policySubType": "EndpointProtection",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces Windows Firewall for domain network profile to monitor and control communications at network boundaries. This is a foundational boundary protection control that filters network traffic.",
+      "implementationGuide": "1. Navigate to Intune > Endpoint security > Firewall > Create Policy\n2. Select Windows 10 and later > Microsoft Defender Firewall\n3. Configure Firewall Profile Domain settings\n4. Set 'Enable Firewall' to 'Yes'\n5. Set 'Default Inbound Action' to 'Block'\n6. Assign to device groups and deploy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Windows Firewall directly enforces boundary protection by monitoring and controlling communications at external managed interfaces (part a). This is a Microsoft security baseline recommendation and CIS Benchmark Level 1 control.",
+          "nistRequirement": "Monitor and control communications at external managed interfaces to the system"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-002",
+      "settingName": "EnablePrivateNetworkFirewall",
+      "displayName": "Enable Private Network Firewall",
+      "settingPath": "FirewallPolicy.FirewallProfilePrivate.EnableFirewall",
+      "policyType": "Intune",
+      "policySubType": "EndpointProtection",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces Windows Firewall for private network profile to protect devices when connected to internal networks. Ensures consistent boundary protection across network contexts.",
+      "implementationGuide": "1. Navigate to Intune > Endpoint security > Firewall > Create Policy\n2. Select Windows 10 and later > Microsoft Defender Firewall\n3. Configure Firewall Profile Private settings\n4. Set 'Enable Firewall' to 'Yes'\n5. Set 'Default Inbound Action' to 'Block'\n6. Assign to device groups and deploy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Private network firewall protects key internal managed interfaces within the system (part a). Required by Microsoft security baseline for Windows to maintain consistent boundary protection.",
+          "nistRequirement": "Monitor and control communications at key internal managed interfaces within the system"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-003",
+      "settingName": "EnablePublicNetworkFirewall",
+      "displayName": "Enable Public Network Firewall",
+      "settingPath": "FirewallPolicy.FirewallProfilePublic.EnableFirewall",
+      "policyType": "Intune",
+      "policySubType": "EndpointProtection",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces Windows Firewall for public network profile with most restrictive settings. Critical for protecting devices on untrusted networks and implementing network separation.",
+      "implementationGuide": "1. Navigate to Intune > Endpoint security > Firewall > Create Policy\n2. Select Windows 10 and later > Microsoft Defender Firewall\n3. Configure Firewall Profile Public settings\n4. Set 'Enable Firewall' to 'Yes'\n5. Set 'Default Inbound Action' to 'Block'\n6. Set 'Disable Inbound Notifications' to 'True'\n7. Assign to device groups and deploy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Public network firewall enforces strictest boundary protection when devices connect to external untrusted networks (part c). This is a CIS Benchmark Level 1 requirement and Microsoft security baseline control.",
+          "nistRequirement": "Connect to external systems only through managed interfaces that consist of boundary protection devices"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SC-001",
+      "settingName": "NamedLocations",
+      "displayName": "Named Locations (Trusted Network Boundaries)",
+      "settingPath": "ConditionalAccess.NamedLocations",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "configured",
+      "validationOperator": "exists",
+      "description": "Defines trusted IP ranges representing organizational network boundaries. Enables Conditional Access policies to enforce network-based access controls and identify connections from external systems.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access > Named locations\n2. Click '+ IP ranges location'\n3. Provide name for the location (e.g., 'Corporate Network')\n4. Add public IPv4/IPv6 address ranges for organizational networks\n5. Check 'Mark as trusted location' for internal networks\n6. Create and verify the configuration\n7. Use in Conditional Access policies to enforce network restrictions",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-assignment-network",
+      "controlMappings": [
+        {
+          "controlId": "03.13.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Named locations define trusted network boundaries and enable monitoring of communications at managed interfaces. This is foundational for implementing Conditional Access policies that enforce connection through managed interfaces (part c). CIS Benchmark Level 1 requirement.",
+          "nistRequirement": "Connect to external systems only through managed interfaces; implement subnetworks separated from internal networks"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SC-002",
+      "settingName": "RequireCompliantDevicePolicy",
+      "displayName": "Require Managed Devices for Cloud Access",
+      "settingPath": "ConditionalAccess.GrantControls.DeviceCompliance",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces that only Intune-managed and compliant devices can access cloud resources. Implements managed interface requirement by ensuring devices meet security standards before connecting to external systems.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access > Policies\n2. Click '+ New policy'\n3. Name: 'Require Compliant Device - All Users'\n4. Assignments > Users: Select 'All users' (exclude break-glass accounts)\n5. Cloud apps: Select 'All cloud apps'\n6. Conditions > Locations: Configure to apply from 'Any location'\n7. Grant: Select 'Require device to be marked as compliant'\n8. Enable policy and create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-compliant-device",
+      "controlMappings": [
+        {
+          "controlId": "03.13.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Requiring compliant devices enforces that connections to Microsoft 365 (external systems) occur only through managed interfaces with proper security configurations (part c). This is a CIS Benchmark Level 1 control and Microsoft Zero Trust principle.",
+          "nistRequirement": "Connect to external systems only through managed interfaces arranged in accordance with organizational security architecture"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SC-003",
+      "settingName": "BlockLegacyAuthenticationPolicy",
+      "displayName": "Block Legacy Authentication Protocols",
+      "settingPath": "ConditionalAccess.BlockLegacyAuth",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Blocks legacy authentication protocols (POP, IMAP, SMTP, etc.) that cannot enforce modern security controls. Prevents unmanaged connections to external systems through non-compliant interfaces.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access > Policies\n2. Click '+ New policy'\n3. Name: 'Block Legacy Authentication - All Users'\n4. Assignments > Users: Select 'All users' (exclude service accounts if necessary)\n5. Cloud apps: Select 'All cloud apps'\n6. Conditions > Client apps: Select 'Exchange ActiveSync clients' and 'Other clients'\n7. Grant: Select 'Block access'\n8. Enable policy and create\n9. Monitor for 30 days before enforcing to identify dependencies",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-block-legacy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Blocking legacy authentication ensures all connections use modern managed interfaces that support monitoring and control capabilities (part a and c). This is a CIS Microsoft 365 Benchmark Level 1 requirement and critical Microsoft security recommendation.",
+          "nistRequirement": "Monitor and control communications at external managed interfaces; connect to external systems only through managed interfaces"
+        }
+      ]
+    }
+  ]
+}

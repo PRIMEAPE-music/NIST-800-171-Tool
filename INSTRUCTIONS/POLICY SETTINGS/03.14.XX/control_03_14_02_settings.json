@@ -1,0 +1,197 @@
+{
+  "controlId": "03.14.02",
+  "family": "SI",
+  "familyName": "System and Information Integrity",
+  "title": "Malicious Code Protection",
+  "nistRequirement": "a. Implement malicious code protection mechanisms at system entry and exit points to detect and eradicate malicious code.\nb. Update malicious code protection mechanisms as new releases are available in accordance with configuration management policies and procedures.\nc. Configure malicious code protection mechanisms to:\n1. Perform scans of the system [Assignment: organization-defined frequency] and real-time scans of files from external sources at endpoints or system entry and exit points as the files are downloaded, opened, or executed; and\n2. Block malicious code, quarantine malicious code, or take other mitigation actions in response to malicious code detection.",
+  "settings": [
+    {
+      "id": "IN-SI-007",
+      "settingName": "Real-time protection",
+      "displayName": "Microsoft Defender Antivirus - Real-time Protection",
+      "settingPath": "Defender.AllowRealtimeMonitoring",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables real-time protection in Microsoft Defender Antivirus to continuously monitor files, downloads, and processes for malicious code. Real-time protection scans files as they are accessed, downloaded, or executed at system entry points, providing immediate detection and blocking of threats.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center (https://intune.microsoft.com)\n2. Navigate to Endpoint security > Antivirus > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus'\n5. Under Real-time Protection section:\n   - Set 'Turn on real-time protection' to 'Allowed' (Enabled)\n   - Set 'Monitoring for incoming and outgoing files' to 'Monitor all files'\n   - Set 'Turn on behavior monitoring' to 'Allowed' (Enabled)\n6. Assign to all Windows device groups\n7. Verify deployment using Device Status reports\n8. Validate on client using PowerShell: Get-MpComputerStatus | select RealTimeProtectionEnabled",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/configure-real-time-protection-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.14.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Real-time protection is the primary mechanism for detecting and blocking malicious code at system entry points (downloads, file opens, executions). This directly satisfies the NIST requirement to implement malicious code protection mechanisms at system entry and exit points with real-time scanning capabilities.",
+          "nistRequirement": "Perform real-time scans of files from external sources at endpoints or system entry and exit points as the files are downloaded, opened, or executed"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-008",
+      "settingName": "Cloud-delivered protection",
+      "displayName": "Microsoft Defender Antivirus - Cloud Protection Service",
+      "settingPath": "Defender.AllowCloudProtection",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables cloud-delivered protection which provides near-instant detection and blocking of new and emerging malware. When a suspicious file is encountered, Defender can query Microsoft's cloud intelligence for real-time threat analysis, providing protection against zero-day threats before traditional signature updates are available.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Antivirus > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus'\n5. Under Cloud Protection section:\n   - Set 'Turn on cloud-delivered protection' to 'Allowed' (Enabled)\n   - Set 'Cloud block level' to 'High' or 'High plus'\n   - Set 'Extended cloud check' to 50 seconds\n6. Ensure network connectivity to Defender cloud service endpoints\n7. Assign to all Windows device groups\n8. Monitor effectiveness through Defender security reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/cloud-protection-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.14.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Cloud-delivered protection enhances malicious code detection by leveraging Microsoft's global threat intelligence and machine learning. This provides real-time protection against new and emerging threats, including zero-day malware, significantly improving detection rates beyond traditional signature-based approaches.",
+          "nistRequirement": "Implement malicious code protection mechanisms at system entry and exit points to detect and eradicate malicious code"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-009",
+      "settingName": "Automatic sample submission",
+      "displayName": "Microsoft Defender Antivirus - Automatic Sample Submission",
+      "settingPath": "Defender.SubmitSamplesConsent",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 1,
+      "validationOperator": ">=",
+      "description": "Configures automatic submission of suspicious file samples to Microsoft for analysis. When Defender encounters potentially malicious files, it automatically submits them to Microsoft's cloud service for deep analysis, contributing to threat intelligence and receiving rapid classification results.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Antivirus > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus'\n5. Under Automatic Sample Submission section:\n   - Set 'Submit samples consent' to 'Send safe samples automatically' (value: 1) or 'Send all samples automatically' (value: 3)\n6. Review organizational data handling policies\n7. Assign to device groups\n8. Document submission policy in security procedures\n9. Monitor sample submissions in Microsoft Defender Security Center",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.14.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automatic sample submission enables rapid analysis and classification of suspected malicious code. Microsoft's cloud analysis provides near-instant threat verdicts, allowing Defender to block new threats within seconds. This enhances the effectiveness of malicious code protection mechanisms.",
+          "nistRequirement": "Implement malicious code protection mechanisms to detect and eradicate malicious code"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-010",
+      "settingName": "Scheduled quick scan",
+      "displayName": "Microsoft Defender Antivirus - Daily Quick Scan",
+      "settingPath": "Defender.ScheduleScanDay",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "scanType": "Quick",
+        "scanDay": "Daily",
+        "scanTime": "120"
+      },
+      "validationOperator": "==",
+      "description": "Configures daily scheduled quick scans to complement real-time protection. Quick scans check common locations where malware typically resides, providing an additional layer of detection for persistent threats that may have evaded real-time protection or were dormant during initial detection.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Antivirus > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus'\n5. Under Scheduled Scans section:\n   - Set 'Run a scheduled scan' to 'Yes'\n   - Set 'Scan type' to 'Quick scan'\n   - Set 'Day of week to run scan' to '0' (Every day)\n   - Set 'Time of day to run scan' to '120' (2:00 AM) or preferred time\n6. Enable 'Check for signature updates before running scan'\n7. Assign to all Windows device groups\n8. Monitor scan completion rates in compliance reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/schedule-antivirus-scans",
+      "controlMappings": [
+        {
+          "controlId": "03.14.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Scheduled scans ensure periodic comprehensive checks for malicious code, satisfying the NIST requirement to perform scans at organization-defined frequency (daily). Quick scans complement real-time protection by detecting dormant or persistent malware.",
+          "nistRequirement": "Perform scans of the system at organization-defined frequency"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-011",
+      "settingName": "Remediation actions",
+      "displayName": "Microsoft Defender Antivirus - Automatic Remediation",
+      "settingPath": "Defender.ThreatSeverityDefaultAction",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "severe": "Quarantine",
+        "high": "Quarantine",
+        "moderate": "Quarantine",
+        "low": "Quarantine"
+      },
+      "validationOperator": "==",
+      "description": "Configures automatic remediation actions when malicious code is detected. Defender automatically quarantines or removes detected threats based on severity level, preventing malware execution and spread without requiring user intervention. This ensures rapid response to malicious code detection.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Antivirus > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus'\n5. Under Remediation section:\n   - Set 'Action to take on potentially unwanted apps' to 'Block'\n   - Configure threat severity actions:\n     * Severe threats: 'Quarantine'\n     * High threats: 'Quarantine'\n     * Moderate threats: 'Quarantine'\n     * Low threats: 'Quarantine'\n   - Set 'Days to retain quarantined malware' to 30+ days\n6. Assign to all Windows device groups\n7. Configure alert policies for quarantined items requiring review",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/configure-remediation-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.14.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automatic remediation actions directly satisfy the NIST requirement to 'block malicious code, quarantine malicious code, or take other mitigation actions in response to malicious code detection.' Quarantining prevents malware execution while allowing security review if needed.",
+          "nistRequirement": "Block malicious code, quarantine malicious code, or take other mitigation actions in response to malicious code detection"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-012",
+      "settingName": "Behavior monitoring",
+      "displayName": "Microsoft Defender Antivirus - Behavior Monitoring",
+      "settingPath": "Defender.AllowBehaviorMonitoring",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables behavioral monitoring which uses heuristics and machine learning to detect suspicious activities and malicious behaviors even when specific malware signatures are not available. This provides protection against polymorphic malware, zero-day threats, and fileless attacks.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Antivirus > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus'\n5. Under Real-time Protection section:\n   - Set 'Turn on behavior monitoring' to 'Allowed' (Enabled)\n   - Ensure 'Turn on process scanning when real-time protection is enabled' is 'Allowed'\n6. Under Cloud Protection:\n   - Verify 'Cloud-delivered protection' is enabled (enhances behavioral detection)\n7. Assign to all Windows device groups\n8. Monitor behavioral detections in Defender threat analytics",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/configure-real-time-protection-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.14.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Behavior monitoring enhances malicious code detection by identifying suspicious activities and attack patterns rather than relying solely on signature-based detection. This addresses advanced threats including polymorphic malware and fileless attacks, providing comprehensive malicious code protection.",
+          "nistRequirement": "Implement malicious code protection mechanisms at system entry and exit points to detect and eradicate malicious code"
+        }
+      ]
+    },
+    {
+      "id": "DF-SI-001",
+      "settingName": "Attack surface reduction rules",
+      "displayName": "Microsoft Defender - Attack Surface Reduction Rules",
+      "settingPath": "Defender.AttackSurfaceReductionRules",
+      "policyType": "Defender",
+      "policySubType": "Attack Surface Reduction",
+      "platform": "Windows",
+      "dataType": "array",
+      "expectedValue": [
+        "Block executable content from email client and webmail",
+        "Block Office applications from creating executable content",
+        "Block Office applications from injecting code into other processes",
+        "Block JavaScript or VBScript from launching downloaded executable content"
+      ],
+      "validationOperator": "contains",
+      "description": "Configures Attack Surface Reduction (ASR) rules to block common malware delivery and execution vectors. ASR rules prevent malicious code from exploiting vulnerable applications and user behaviors, significantly reducing the attack surface for malware infections.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Attack surface reduction > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Attack surface reduction rules'\n5. Configure key rules to 'Block' mode:\n   - Block executable content from email client and webmail: GUID: BE9BA2D9-53EA-4CDC-84E5-9B1EEEE46550\n   - Block Office applications from creating executable content: GUID: 3B576869-A4EC-4529-8536-B80A7769E899\n   - Block Office applications from injecting code: GUID: 75668C1F-73B5-4CF0-BB93-3ECF5CB7CC84\n   - Block JavaScript/VBScript launching executables: GUID: D3E037E1-3EB8-44C8-A917-57927947596D\n6. Start in 'Audit' mode for testing, then switch to 'Block' mode\n7. Assign to device groups\n8. Monitor ASR events and adjust exclusions as needed",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference",
+      "controlMappings": [
+        {
+          "controlId": "03.14.02",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "ASR rules provide proactive malicious code protection by blocking common infection vectors at system entry points (email, web downloads, Office documents). These rules prevent malware execution before traditional antivirus detection, complementing signature and behavior-based detection methods.",
+          "nistRequirement": "Implement malicious code protection mechanisms at system entry and exit points to detect and eradicate malicious code"
+        }
+      ]
+    }
+  ],
+  "totalSettings": 7,
+  "highConfidenceSettings": 7,
+  "implementationNotes": "All settings are critical Microsoft Defender Antivirus configurations that directly enforce NIST control 03.14.02. Real-time protection, cloud-delivered protection, and behavior monitoring form the core malicious code protection mechanisms. Scheduled scans and ASR rules provide additional layers of defense. Deploy these settings together as a comprehensive antivirus policy.",
+  "microsoftBaselineAlignment": "All settings align with Microsoft Security Baselines for Windows 10/11 and Microsoft Defender for Endpoint baseline",
+  "cisLevel1Compliance": true,
+  "estimatedImplementationTime": "3-4 hours for initial deployment and configuration, 1-2 hours for testing and validation"
+}

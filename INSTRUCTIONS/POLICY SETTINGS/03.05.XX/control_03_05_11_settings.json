@@ -1,0 +1,105 @@
+{
+  "controlId": "03.05.11",
+  "controlTitle": "Authentication Feedback",
+  "family": "IA",
+  "nistRequirement": "Obscure feedback of authentication information during the authentication process.",
+  "settingsCount": 4,
+  "settings": [
+    {
+      "id": "AZ-IA-018",
+      "settingName": "passwordMaskingEnabled",
+      "displayName": "Password Field Masking",
+      "settingPath": "authentication.ui.passwordMasking",
+      "policyType": "AzureAD",
+      "policySubType": "UISettings",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Automatically obscures password characters with asterisks or dots during entry in all Azure AD authentication interfaces. Prevents shoulder surfing and visual capture of credentials on desktops, laptops, and mobile devices. This is enforced by default across all Microsoft authentication interfaces.",
+      "implementationGuide": "1. Password masking is enforced by default in Azure AD/Microsoft Entra\n2. No configuration required - automatically applied to:\n   a. Azure portal sign-in\n   b. Microsoft 365 portal sign-in\n   c. Microsoft Authenticator app\n   d. Windows sign-in (Azure AD joined devices)\n   e. All Microsoft identity platform applications\n3. Verification steps:\n   a. Open browser in incognito/private mode\n   b. Navigate to portal.azure.com or office.com\n   c. Enter username\n   d. Begin typing password - verify characters are masked with bullets (•••)\n   e. Optional: Some browsers allow brief display (200ms) of last character typed\n4. For custom applications using Microsoft Identity Platform:\n   a. Use MSAL libraries which enforce password masking\n   b. Never implement custom password fields without masking\n5. Mobile devices: Verify masking works on iOS and Android\n6. This protection cannot be disabled - it's a core security control",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/security-operations-privileged-accounts",
+      "controlMappings": [
+        {
+          "controlId": "03.05.11",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Password masking obscures authentication information during entry, preventing unauthorized individuals from capturing credentials through visual observation (shoulder surfing) or video surveillance. This satisfies NIST 800-171 requirement to obscure feedback of authentication information. This is enforced by default in all Microsoft authentication interfaces and cannot be disabled.",
+          "nistRequirement": "Obscure feedback of authentication information during the authentication process"
+        }
+      ]
+    },
+    {
+      "id": "AZ-IA-019",
+      "settingName": "mfaNumberMatching",
+      "displayName": "MFA Number Matching",
+      "settingPath": "authenticationMethods.microsoftAuthenticator.numberMatchingRequired",
+      "policyType": "AzureAD",
+      "policySubType": "AuthenticationMethods",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Requires users to enter a number displayed on their sign-in screen into the Microsoft Authenticator app instead of simply approving a push notification. This obscures the authentication process from observers and prevents MFA fatigue attacks where attackers spam approval requests hoping users will accidentally approve.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Authentication Policy Administrator\n2. Navigate to Protection > Authentication methods > Microsoft Authenticator\n3. Under 'Configure' tab:\n   a. Set Status: 'Enabled'\n   b. Target: 'All users' (or specific groups)\n4. Under Authentication mode:\n   a. Enable 'Require number matching for push notifications': Yes\n   b. Set to 'Enabled' (not 'Microsoft managed')\n5. Additional context (optional):\n   a. Enable 'Show application name in push and passwordless notifications'\n   b. Enable 'Show geographic location in push and passwordless notifications'\n6. Save configuration\n7. Test with a user:\n   a. Sign in to portal\n   b. Complete MFA prompt\n   c. Verify number matching is required\n8. Communicate change to users before enforcement\n9. Monitor adoption via Authentication methods usage report\n10. This setting became default for all tenants in May 2023",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-number-match",
+      "controlMappings": [
+        {
+          "controlId": "03.05.11",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Number matching obscures the authentication approval process by requiring users to actively enter a number rather than simply tapping 'Approve'. This prevents observers from seeing which button is pressed and makes MFA fatigue attacks ineffective. It satisfies NIST 800-171 requirements by obscuring authentication feedback. CIS Level 1 control (5.2.3.1) specifically requires this feature to protect against MFA fatigue attacks.",
+          "nistRequirement": "Obscure feedback of authentication information during the authentication process"
+        }
+      ]
+    },
+    {
+      "id": "AZ-IA-020",
+      "settingName": "limitedErrorMessages",
+      "displayName": "Limited Authentication Error Details",
+      "settingPath": "authentication.errorHandling.detailLevel",
+      "policyType": "AzureAD",
+      "policySubType": "SecurityDefaults",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "Limited",
+      "validationOperator": "==",
+      "description": "Provides generic error messages for authentication failures that do not reveal whether a username exists or if the password was incorrect. Prevents attackers from enumerating valid usernames or determining which part of the authentication failed. Error codes are logged internally but not exposed to users.",
+      "implementationGuide": "1. Azure AD enforces limited error messaging by default\n2. Failed authentication returns generic errors:\n   a. 'Your account or password is incorrect' (doesn't specify which)\n   b. Never reveals: 'This username does not exist'\n   c. Never reveals: 'Your password is incorrect'\n3. Verification:\n   a. Attempt sign-in with invalid username\n   b. Attempt sign-in with valid username, wrong password\n   c. Verify both show same generic message\n4. Error codes (AADSTS#####) are logged in sign-in logs but not displayed to end users\n5. Administrators can view detailed errors:\n   a. Sign in to Microsoft Entra admin center\n   b. Navigate to Identity > Monitoring > Sign-in logs\n   c. Select failed sign-in attempt\n   d. View detailed error code and description\n6. For custom applications:\n   a. Use MSAL libraries which handle errors appropriately\n   b. Never expose detailed Azure AD error messages to users\n   c. Log errors server-side for troubleshooting\n7. This behavior cannot be modified - it's a security control\n8. Document error handling in application security standards",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/develop/reference-error-codes",
+      "controlMappings": [
+        {
+          "controlId": "03.05.11",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Limited error messaging obscures authentication feedback by not revealing whether a username exists, whether the password was wrong, or other authentication details. This prevents username enumeration attacks and obscures information that could be used to compromise accounts. Satisfies NIST 800-171 requirement to obscure authentication information feedback. This is enforced by default and follows security best practices.",
+          "nistRequirement": "Obscure feedback of authentication information during the authentication process"
+        }
+      ]
+    },
+    {
+      "id": "AZ-IA-021",
+      "settingName": "authenticationContextDisplay",
+      "displayName": "Contextual Information Display in MFA",
+      "settingPath": "authenticationMethods.microsoftAuthenticator.showContextualInformation",
+      "policyType": "AzureAD",
+      "policySubType": "AuthenticationMethods",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {"showApplicationName": true, "showLocation": true},
+      "validationOperator": "==",
+      "description": "Displays application name and geographic location in Microsoft Authenticator push notifications to help users verify the authentication request is legitimate. While this provides some context, the actual approval still requires number matching which obscures the authentication from observers. The displayed information helps prevent social engineering but doesn't expose sensitive authentication secrets.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Authentication Policy Administrator\n2. Navigate to Protection > Authentication methods > Microsoft Authenticator\n3. Under 'Configure' tab, ensure Microsoft Authenticator is enabled\n4. Under 'Show additional context in notifications':\n   a. Enable 'Show application name in push and passwordless notifications'\n   b. Enable 'Show geographic location in push and passwordless notifications'\n5. These settings provide context WITHOUT exposing sensitive auth data:\n   - Application name: Shows which app is requesting auth\n   - Location: Shows approximate location of sign-in attempt\n   - Does NOT show: passwords, secrets, or authentication tokens\n6. Combined with number matching, provides both security and usability\n7. Save configuration\n8. Test with users:\n   a. Sign in from different location\n   b. Verify MFA prompt shows app name and location\n   c. User enters number from screen (number matching)\n9. Educate users: If location/app looks suspicious, deny the request\n10. These settings are recommended but optional enhancements",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-additional-context",
+      "controlMappings": [
+        {
+          "controlId": "03.05.11",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Displaying contextual information (app name, location) does not expose sensitive authentication information (passwords, tokens) and is combined with number matching which obscures the actual authentication process. This enhances security by helping users identify illegitimate authentication attempts while maintaining obscurity of the actual authentication mechanism. Aligns with NIST principles of security usability balance.",
+          "nistRequirement": "Obscure feedback of authentication information during the authentication process"
+        }
+      ]
+    }
+  ]
+}

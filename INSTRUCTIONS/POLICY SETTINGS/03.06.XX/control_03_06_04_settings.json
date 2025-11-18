@@ -1,0 +1,167 @@
+{
+  "controlId": "03.06.04",
+  "controlFamily": "IR",
+  "controlTitle": "Incident Response Training",
+  "nistRequirement": "a. Provide incident response training to system users consistent with assigned roles and responsibilities: 1. Within [Assignment: organization-defined time period] of assuming an incident response role or responsibility or acquiring system access, 2. When required by system changes, and 3. [Assignment: organization-defined frequency] thereafter. b. Review and update incident response training content [Assignment: organization-defined frequency] and following [Assignment: organization-defined events].",
+  "settings": [
+    {
+      "id": "DF-IR-001",
+      "settingName": "attackSimulationTrainingEnabled",
+      "displayName": "Enable Attack Simulation Training",
+      "settingPath": "microsoft.defender.office365.attackSimulation.enabled",
+      "policyType": "Defender",
+      "policySubType": "AttackSimulationTraining",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Attack Simulation Training in Microsoft Defender for Office 365 to provide automated phishing simulations and security awareness training to users, supporting incident response training requirements",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal at https://security.microsoft.com\n2. Go to Email & collaboration > Attack simulation training\n3. Verify Attack simulation training is enabled for your organization\n4. Ensure users have Microsoft Defender for Office 365 Plan 2 licenses\n5. Configure training modules and simulation campaigns",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-get-started",
+      "controlMappings": [
+        {
+          "controlId": "03.06.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Attack Simulation Training provides automated, role-based security training that includes phishing simulations and training modules covering incident recognition and reporting. This directly fulfills the requirement to provide incident response training to users on recognizing and reporting security incidents.",
+          "nistRequirement": "Provide incident response training to system users consistent with assigned roles and responsibilities"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-002",
+      "settingName": "trainingCampaignScheduled",
+      "displayName": "Configure Periodic Training Campaigns",
+      "settingPath": "microsoft.defender.office365.attackSimulation.trainingCampaigns",
+      "policyType": "Defender",
+      "policySubType": "AttackSimulationTraining",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "active",
+      "validationOperator": "contains",
+      "description": "Ensures training campaigns are scheduled and actively running to provide regular incident response training to all users at defined intervals",
+      "implementationGuide": "1. In Microsoft Defender portal, go to Email & collaboration > Attack simulation training > Training tab\n2. Click 'Create new' to start new training campaign wizard\n3. Name the campaign and select target users or groups\n4. Select training modules covering incident recognition, reporting, and response\n5. Set training frequency (e.g., quarterly, semi-annually)\n6. Enable training completion tracking and reminders\n7. Save and launch the training campaign",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-training-campaigns",
+      "controlMappings": [
+        {
+          "controlId": "03.06.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Training campaigns provide direct assignment of security training modules to users, enabling organizations to meet the requirement for periodic training at organization-defined frequencies. The platform tracks completion and sends reminders, ensuring training requirements are met.",
+          "nistRequirement": "Provide incident response training [Assignment: organization-defined frequency]"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-003",
+      "settingName": "simulationAutomationEnabled",
+      "displayName": "Enable Simulation Automation",
+      "settingPath": "microsoft.defender.office365.attackSimulation.automation",
+      "policyType": "Defender",
+      "policySubType": "SimulationAutomation",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables automated phishing simulations that provide hands-on incident response training by simulating real-world attacks and automatically assigning training based on user behavior",
+      "implementationGuide": "1. Navigate to Email & collaboration > Attack simulation training > Simulation automations tab\n2. Click 'Create automation' to start wizard\n3. Name the automation and select simulation frequency\n4. Choose social engineering techniques (phishing, credential harvest, etc.)\n5. Select payloads and target user groups\n6. Configure automatic training assignment for users who fall for simulations\n7. Set randomized delivery schedules\n8. Review and enable the automation",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-simulation-automations",
+      "controlMappings": [
+        {
+          "controlId": "03.06.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Simulation automations provide continuous, automated incident response training through realistic attack scenarios. Users receive immediate training when they fail simulations, reinforcing incident recognition skills. This supports both initial and recurring training requirements.",
+          "nistRequirement": "Provide incident response training when required by system changes and [organization-defined frequency] thereafter"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-004",
+      "settingName": "trainingModulesAssigned",
+      "displayName": "Assign Role-Based Training Modules",
+      "settingPath": "microsoft.defender.office365.attackSimulation.trainingModules.assignments",
+      "policyType": "Defender",
+      "policySubType": "TrainingModules",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "assigned",
+      "validationOperator": "contains",
+      "description": "Ensures appropriate training modules are assigned based on user roles (standard users, administrators, incident responders) with content covering incident recognition, reporting procedures, and response actions",
+      "implementationGuide": "1. In Attack simulation training, go to Content library tab > Training modules\n2. Review available training modules for incident response topics\n3. Create training campaigns with role-specific modules:\n   - All Users: How to recognize and report incidents\n   - IT Staff: Incident handling and data collection\n   - Security Team: Forensics, reporting, recovery procedures\n4. Assign modules to appropriate user groups or roles\n5. Set completion deadlines and enable notifications\n6. Monitor training completion rates in reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-training-modules",
+      "controlMappings": [
+        {
+          "controlId": "03.06.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Role-based training module assignments ensure users receive training appropriate to their incident response responsibilities. Standard users learn to recognize and report incidents, while administrators and responders receive advanced training on handling, investigation, and recovery procedures.",
+          "nistRequirement": "Incident response training is associated with the assigned roles and responsibilities of organizational personnel"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-005",
+      "settingName": "trainingCompletionTracking",
+      "displayName": "Enable Training Completion Tracking and Reporting",
+      "settingPath": "microsoft.defender.office365.attackSimulation.reporting.enabled",
+      "policyType": "Defender",
+      "policySubType": "TrainingReporting",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables comprehensive tracking and reporting of training completion rates, user performance metrics, and training effectiveness to verify compliance with training requirements",
+      "implementationGuide": "1. Navigate to Attack simulation training > Reports tab\n2. Review training completion metrics for all campaigns\n3. Configure automated reports for:\n   - Training completion rates by user/group\n   - Simulation performance metrics\n   - Repeat offenders requiring additional training\n4. Set up notifications for incomplete training\n5. Export reports for compliance documentation\n6. Review training efficacy metrics to measure behavioral changes",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-insights",
+      "controlMappings": [
+        {
+          "controlId": "03.06.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Training completion tracking provides evidence that incident response training requirements are being met. Reports show which users have completed training, identify gaps, and demonstrate compliance with organization-defined training frequencies and content updates.",
+          "nistRequirement": "Review and update incident response training content [organization-defined frequency]"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-006",
+      "settingName": "newUserTrainingAutomation",
+      "displayName": "Automate Training for New Users and Role Changes",
+      "settingPath": "microsoft.defender.office365.attackSimulation.newUserTraining",
+      "policyType": "Defender",
+      "policySubType": "AutomatedTrainingAssignment",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Automatically assigns incident response training to new users within defined timeframe of account creation or role assignment, ensuring timely training delivery",
+      "implementationGuide": "1. In Attack simulation training, configure simulation automations to target new users\n2. Set up automation rules to:\n   - Include users added to specific groups (e.g., 'All Employees')\n   - Trigger training campaigns for new hires within 30 days\n   - Assign role-specific training when users join IR teams\n3. Coordinate with Azure AD group policies for dynamic membership\n4. Configure training reminders and escalations\n5. Monitor completion rates for new user training\n6. Document training timelines for compliance",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-office-365/attack-simulation-training-get-started",
+      "controlMappings": [
+        {
+          "controlId": "03.06.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automated training assignment for new users and role changes ensures that incident response training is provided within organization-defined time periods when users assume new responsibilities or gain system access, directly satisfying the temporal training requirement.",
+          "nistRequirement": "Within [organization-defined time period] of assuming an incident response role or responsibility or acquiring system access"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "totalSettings": 6,
+    "highConfidence": 6,
+    "mediumConfidence": 0,
+    "lowConfidence": 0,
+    "settingsByPolicyType": {
+      "Defender": 6
+    },
+    "settingsByPlatform": {
+      "All": 6
+    },
+    "dateCreated": "2025-11-17",
+    "version": "1.0",
+    "notes": "Attack Simulation Training in Microsoft Defender for Office 365 Plan 2 is the primary mechanism for delivering and tracking incident response training in M365. These settings provide automated, role-based training with comprehensive tracking and reporting capabilities. Organizations should supplement with custom training content for organization-specific incident response procedures."
+  }
+}

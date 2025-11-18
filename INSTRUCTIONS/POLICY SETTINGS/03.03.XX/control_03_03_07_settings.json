@@ -1,0 +1,127 @@
+{
+  "controlId": "03.03.07",
+  "controlTitle": "Time Stamps",
+  "controlFamily": "AU",
+  "settings": [
+    {
+      "id": "IN-AU-010",
+      "settingName": "WindowsTimeServiceConfiguration",
+      "displayName": "Windows Time Service (W32Time) NTP Configuration",
+      "settingPath": "Intune.DeviceConfiguration.WindowsTimeService",
+      "policyType": "Intune",
+      "policySubType": "DeviceConfiguration",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {"Type": "NTP", "NtpServer": "time.windows.com,0x9", "enabled": true},
+      "validationOperator": "==",
+      "description": "Configures Windows Time Service on domain-joined and Azure AD-joined devices to synchronize with reliable external NTP sources using Coordinated Universal Time (UTC). This ensures consistent, accurate time stamps across all systems for audit record correlation and compliance with Kerberos authentication requirements.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center (https://intune.microsoft.com)\n2. Navigate to Devices > Configuration profiles > Create profile\n3. Select Platform: Windows 10 and later\n4. Select Profile type: Templates > Administrative Templates\n5. Create profile named 'Windows Time Service Configuration'\n6. Configure settings under Computer Configuration > System > Windows Time Service:\n   a) 'Global Configuration Settings' = Enabled, AnnounceFlags = 5\n   b) 'Configure Windows NTP Client' = Enabled:\n      - NtpServer: time.windows.com,0x9 (or organization's NTP server)\n      - Type: NTP\n      - CrossSiteSyncFlags: 2\n      - ResolvePeerBackoffMinutes: 15\n      - SpecialPollInterval: 64\n   c) 'Enable Windows NTP Client' = Enabled\n7. Assign to appropriate device groups (All Windows devices)\n8. Monitor compliance and verify time sync: w32tm /query /status",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-tools-and-settings",
+      "controlMappings": [
+        {
+          "controlId": "03.03.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Configuring NTP time synchronization ensures all Windows devices generate audit records with accurate UTC-based time stamps synchronized to an authoritative time source. This is essential for event correlation, forensic analysis, and meeting the requirement to use internal system clocks synchronized to UTC.",
+          "nistRequirement": "Use internal system clocks to generate time stamps for audit records that use Coordinated Universal Time (UTC)"
+        }
+      ]
+    },
+    {
+      "id": "IN-AU-011",
+      "settingName": "AzureADTimeSync",
+      "displayName": "Azure AD Joined Device Time Synchronization",
+      "settingPath": "Intune.DeviceCompliance.TimeSync",
+      "policyType": "Intune",
+      "policySubType": "CompliancePolicy",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {"timeSyncRequired": true, "maxTimeOffset": 300},
+      "validationOperator": "<=",
+      "description": "Enforces time synchronization compliance for Azure AD joined and hybrid joined devices. Devices must maintain time accuracy within 5 minutes (300 seconds) of UTC time to remain compliant. Azure AD-joined devices automatically sync with Azure time infrastructure which uses UTC.",
+      "implementationGuide": "1. Navigate to Microsoft Intune admin center > Devices > Compliance policies\n2. Create new compliance policy for each platform (Windows, iOS, Android, macOS)\n3. Configure 'System Security' settings:\n   - Windows: 'Require BitLocker' includes time sync validation\n   - iOS/Android: Time sync is inherent to OS functionality\n   - macOS: Enable 'Require encryption of data storage on device'\n4. Set compliance timeframe for remediation (e.g., 3 days)\n5. Configure actions for noncompliance:\n   - Send email to end user immediately\n   - Mark device noncompliant after 1 day\n   - Retire noncompliant device after 7 days (optional based on org policy)\n6. Assign policy to All Devices or specific groups\n7. Monitor compliance reports: Devices > Monitor > Noncompliant devices\n8. Azure AD automatically handles time sync for cloud-joined devices",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.03.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Compliance policies ensure devices maintain accurate time synchronization as a prerequisite for accessing corporate resources. This supports audit record time stamp accuracy and meets the granularity requirement by ensuring device clocks don't drift beyond acceptable thresholds.",
+          "nistRequirement": "Record time stamps for audit records that meet organization-defined granularity of time measurement and that use Coordinated Universal Time (UTC)"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AU-012",
+      "settingName": "AzureADSignInLogTimeStamps",
+      "displayName": "Azure AD Sign-in Log Time Stamps (UTC)",
+      "settingPath": "AzureAD.SignInLogs.TimeGenerated",
+      "policyType": "AzureAD",
+      "policySubType": "Logging",
+      "platform": "All",
+      "dataType": "datetime",
+      "expectedValue": "UTC",
+      "validationOperator": "==",
+      "description": "Azure AD automatically records all sign-in events with UTC time stamps in ISO 8601 format. The 'TimeGenerated' and 'CreatedDateTime' fields in Azure AD sign-in logs use UTC time with millisecond granularity, ensuring precise time correlation across global deployments.",
+      "implementationGuide": "1. This is a built-in Azure AD capability that requires no configuration\n2. All Azure AD sign-in logs automatically use UTC time stamps\n3. Verify time stamp format by querying logs:\n   - Navigate to Entra admin center > Sign-in logs\n   - View any sign-in event\n   - Confirm 'Date (UTC)' column shows time in UTC format\n4. When exporting logs via API or PowerShell, verify time format:\n   Get-MgAuditLogSignIn -Top 1 | Select-Object CreatedDateTime\n5. When integrating with SIEM, configure time zone handling:\n   - Log Analytics/Sentinel automatically preserves UTC\n   - Third-party SIEMs may need UTC configuration\n6. Document that all Azure AD audit events use UTC time stamps\n7. Train analysts on UTC time interpretation for investigations",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins",
+      "controlMappings": [
+        {
+          "controlId": "03.03.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Azure AD's built-in UTC time stamping for all authentication and audit events ensures consistent, globally-synchronized time stamps across the identity infrastructure. Millisecond-level granularity supports precise event correlation and forensic analysis.",
+          "nistRequirement": "Use internal system clocks to generate time stamps for audit records that use Coordinated Universal Time (UTC) with organization-defined granularity of time measurement"
+        }
+      ]
+    },
+    {
+      "id": "PV-AU-013",
+      "settingName": "UnifiedAuditLogTimeStamps",
+      "displayName": "Microsoft 365 Unified Audit Log Time Stamps (UTC)",
+      "settingPath": "UnifiedAuditLog.CreationTime",
+      "policyType": "Purview",
+      "policySubType": "AuditLogging",
+      "platform": "All",
+      "dataType": "datetime",
+      "expectedValue": "UTC",
+      "validationOperator": "==",
+      "description": "Microsoft 365 unified audit log automatically timestamps all audit records in UTC format with second-level granularity. The 'CreationTime' field records when the event occurred using UTC, ensuring consistent time references across Exchange Online, SharePoint, Teams, OneDrive, and other M365 services.",
+      "implementationGuide": "1. This is a built-in Microsoft 365 capability requiring no configuration\n2. All unified audit log entries automatically use UTC time stamps\n3. Verify time stamp format:\n   - Navigate to Purview compliance portal > Audit > Search\n   - Run any audit log search\n   - Review 'Date' column showing UTC time\n4. When using PowerShell to search audit logs:\n   Search-UnifiedAuditLog -StartDate (Get-Date).AddDays(-1) -EndDate (Get-Date)\n   - StartDate and EndDate are automatically converted to UTC\n   - Results show CreationDate in UTC\n5. When exporting audit logs:\n   - CSV exports include UTC time stamps\n   - API queries return ISO 8601 UTC format\n6. Configure SIEM or analysis tools to interpret UTC correctly\n7. Document UTC usage in audit procedures and investigation guides",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-log-activities",
+      "controlMappings": [
+        {
+          "controlId": "03.03.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Unified audit log's consistent UTC time stamping across all Microsoft 365 services enables accurate event correlation and timeline reconstruction during security investigations. Second-level granularity provides sufficient precision for most security and compliance requirements.",
+          "nistRequirement": "Record time stamps for audit records that use Coordinated Universal Time (UTC) and meet organization-defined granularity of time measurement"
+        }
+      ]
+    },
+    {
+      "id": "IN-AU-014",
+      "settingName": "TimeServiceMonitoring",
+      "displayName": "Windows Time Service Health Monitoring",
+      "settingPath": "Intune.DeviceCompliance.TimeServiceStatus",
+      "policyType": "Intune",
+      "policySubType": "ComplianceMonitoring",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Running",
+      "validationOperator": "==",
+      "description": "Monitors the Windows Time Service (W32Time) status on managed Windows devices to ensure continuous time synchronization. Devices with stopped or disabled time services are flagged as noncompliant to prevent audit time stamp inaccuracies.",
+      "implementationGuide": "1. Navigate to Intune admin center > Devices > Scripts\n2. Create PowerShell script for time service validation:\n   $w32time = Get-Service W32Time\n   $timeSource = w32tm /query /source\n   if ($w32time.Status -ne 'Running' -or $timeSource -eq 'Local CMOS Clock') {\n       exit 1  # Non-compliant\n   }\n   exit 0  # Compliant\n3. Configure script settings:\n   - Run script using logged-on credentials: No\n   - Enforce script signature check: No\n   - Run script in 64-bit PowerShell: Yes\n4. Assign to All Windows devices\n5. Schedule to run daily\n6. Create remediation script if needed:\n   net start w32time\n   w32tm /resync /nowait\n7. Monitor compliance: Devices > Monitor > Device compliance\n8. Configure alert policy for noncompliant devices\n9. Review time sync status in device inventory reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/apps/intune-management-extension",
+      "controlMappings": [
+        {
+          "controlId": "03.03.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Continuous monitoring of time service health ensures that system clocks remain synchronized and accurate, preventing audit log time stamp drift or inaccuracies. Automated detection and remediation of time sync issues maintains audit record integrity.",
+          "nistRequirement": "Use internal system clocks to generate time stamps for audit records"
+        }
+      ]
+    }
+  ]
+}

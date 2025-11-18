@@ -4,8 +4,11 @@ import { purviewService } from './purview.service';
 import { azureADService } from './azureAD.service';
 // REMOVED: settingsMapper import - no longer mapping policies to controls
 import { PolicyType, SyncResult } from '../types/m365.types';
-import fs from 'fs';
-import path from 'path';
+import {
+  checkComplianceAfterSync,
+  updateSyncLogWithCompliance,
+  PolicyComplianceContext,
+} from './policySyncCompliance.service';
 
 const prisma = new PrismaClient();
 
@@ -85,6 +88,8 @@ class PolicySyncService {
     const startTime = Date.now();
     let policiesUpdated = 0;
     const errors: string[] = [];
+    const addedPolicyIds: number[] = [];
+    const updatedPolicyIds: number[] = [];
 
     console.log('🔄 Starting M365 policy sync...');
 
@@ -107,19 +112,19 @@ class PolicySyncService {
 
       // Sync Intune policies
       if (intuneData) {
-        const intuneCount = await this.syncIntunePolicies(intuneData);
+        const intuneCount = await this.syncIntunePolicies(intuneData, addedPolicyIds, updatedPolicyIds);
         policiesUpdated += intuneCount;
       }
 
       // Sync Purview policies
       if (purviewData) {
-        const purviewCount = await this.syncPurviewPolicies(purviewData);
+        const purviewCount = await this.syncPurviewPolicies(purviewData, addedPolicyIds, updatedPolicyIds);
         policiesUpdated += purviewCount;
       }
 
       // Sync Azure AD policies
       if (azureADData) {
-        const azureADCount = await this.syncAzureADPolicies(azureADData);
+        const azureADCount = await this.syncAzureADPolicies(azureADData, addedPolicyIds, updatedPolicyIds);
         policiesUpdated += azureADCount;
       }
 
@@ -141,7 +146,7 @@ class PolicySyncService {
 
       // Log sync result
       const duration = Date.now() - startTime;
-      await prisma.m365SyncLog.create({
+      const syncLog = await prisma.m365SyncLog.create({
         data: {
           syncType: forceRefresh ? 'Manual' : 'Automatic',
           policiesUpdated,
@@ -154,11 +159,45 @@ class PolicySyncService {
 
       console.log(`✅ Sync complete: ${policiesUpdated} policies synced`);
 
+      // Trigger compliance checking for changed policies
+      console.log('\n🔍 Starting automatic compliance check...');
+      try {
+        const complianceContext: PolicyComplianceContext = {
+          changedPolicyIds: addedPolicyIds.concat(updatedPolicyIds),
+          syncLogId: syncLog.id,
+        };
+
+        if (complianceContext.changedPolicyIds.length > 0) {
+          const complianceResult = await checkComplianceAfterSync(complianceContext);
+          await updateSyncLogWithCompliance(syncLog.id, complianceResult);
+
+          console.log('✅ Compliance check completed');
+          console.log(`   • ${complianceResult.controlsAffected} controls checked`);
+          console.log(`   • ${complianceResult.complianceImproved} improved`);
+          console.log(`   • ${complianceResult.complianceDeclined} declined`);
+        } else {
+          console.log('ℹ️  No policy changes detected, skipping compliance check');
+        }
+      } catch (error) {
+        console.error('⚠️  Compliance check failed (sync still successful):', error);
+        // Don't fail the entire sync if compliance check fails
+        await prisma.m365SyncLog.update({
+          where: { id: syncLog.id },
+          data: {
+            complianceErrors: JSON.stringify([
+              error instanceof Error ? error.message : 'Compliance check failed',
+            ]),
+          },
+        });
+      }
+
       return {
         success: errors.length === 0,
         policiesUpdated,
         duration,
         errors: errors.length > 0 ? errors : undefined,
+        addedPolicyIds,
+        updatedPolicyIds,
       };
     } catch (error) {
       const duration = Date.now() - startTime;
@@ -182,12 +221,20 @@ class PolicySyncService {
   /**
    * Sync Intune policies to database
    */
-  private async syncIntunePolicies(data: any): Promise<number> {
+  private async syncIntunePolicies(
+    data: any,
+    addedPolicyIds: number[],
+    updatedPolicyIds: number[]
+  ): Promise<number> {
     let count = 0;
 
     // Sync compliance policies
     for (const policy of data.compliancePolicies || []) {
-      await prisma.m365Policy.upsert({
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: policy.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName,
@@ -204,12 +251,22 @@ class PolicySyncService {
           policyData: JSON.stringify(policy),
         },
       });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
       count++;
     }
 
     // Sync legacy configuration policies
     for (const policy of data.configurationPolicies || []) {
-      await prisma.m365Policy.upsert({
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: policy.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName,
@@ -226,12 +283,22 @@ class PolicySyncService {
           policyData: JSON.stringify(policy),
         },
       });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
       count++;
     }
 
     // Sync Settings Catalog policies
     for (const policy of data.settingsCatalogPolicies || []) {
-      await prisma.m365Policy.upsert({
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: policy.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.name || policy.displayName,
@@ -248,12 +315,22 @@ class PolicySyncService {
           policyData: JSON.stringify(policy),
         },
       });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
       count++;
     }
 
     // Sync Endpoint Security policies
     for (const policy of data.endpointSecurityPolicies || []) {
-      await prisma.m365Policy.upsert({
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: policy.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName || policy.name,
@@ -270,12 +347,22 @@ class PolicySyncService {
           policyData: JSON.stringify(policy),
         },
       });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
       count++;
     }
 
     // Sync App Protection policies
     for (const policy of data.appProtectionPolicies || []) {
-      await prisma.m365Policy.upsert({
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: policy.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName || policy.name,
@@ -292,6 +379,12 @@ class PolicySyncService {
           policyData: JSON.stringify(policy),
         },
       });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
       count++;
     }
 
@@ -301,11 +394,19 @@ class PolicySyncService {
   /**
    * Sync Purview policies to database
    */
-  private async syncPurviewPolicies(data: any): Promise<number> {
+  private async syncPurviewPolicies(
+    data: any,
+    addedPolicyIds: number[],
+    updatedPolicyIds: number[]
+  ): Promise<number> {
     let count = 0;
 
     for (const label of data.labels) {
-      await prisma.m365Policy.upsert({
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: label.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
         where: { policyId: label.id },
         update: {
           policyName: label.name,
@@ -322,6 +423,12 @@ class PolicySyncService {
           policyData: JSON.stringify(label),
         },
       });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
       count++;
     }
 
@@ -331,11 +438,19 @@ class PolicySyncService {
   /**
    * Sync Azure AD policies to database
    */
-  private async syncAzureADPolicies(data: any): Promise<number> {
+  private async syncAzureADPolicies(
+    data: any,
+    addedPolicyIds: number[],
+    updatedPolicyIds: number[]
+  ): Promise<number> {
     let count = 0;
 
     for (const policy of data.conditionalAccessPolicies) {
-      await prisma.m365Policy.upsert({
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: policy.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName,
@@ -352,6 +467,12 @@ class PolicySyncService {
           policyData: JSON.stringify(policy),
         },
       });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
       count++;
     }
 
@@ -477,14 +598,27 @@ class PolicySyncService {
     totalPolicies: number;
     activePolicies: number;
     policyBreakdown: Record<PolicyType, number>;
+    mappedControls: number;
+    totalControls: number;
   }> {
-    const [totalPolicies, activePolicies, policyBreakdown] = await Promise.all([
+    // Count controls that have M365 settings mapped
+    const controlsWithSettings = await prisma.control.findMany({
+      where: {
+        settingMappings: {
+          some: {}
+        }
+      },
+      select: { id: true }
+    });
+
+    const [totalPolicies, activePolicies, policyBreakdown, totalControls] = await Promise.all([
       prisma.m365Policy.count(),
       prisma.m365Policy.count({ where: { isActive: true } }),
       prisma.m365Policy.groupBy({
         by: ['policyType'],
         _count: true,
       }),
+      prisma.control.count(),
     ]);
 
     const breakdown: Record<string, number> = {
@@ -501,6 +635,8 @@ class PolicySyncService {
       totalPolicies,
       activePolicies,
       policyBreakdown: breakdown as Record<PolicyType, number>,
+      mappedControls: controlsWithSettings.length,
+      totalControls,
     };
   }
 }

@@ -1,0 +1,577 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-11-16",
+  "controlId": "03.01.07",
+  "controlTitle": "Least Privilege – Privileged Functions",
+  "controlFamily": "AC",
+  "nistRevision": "3",
+  "totalSettings": 42,
+  "description": "M365 settings catalog for preventing non-privileged execution of privileged functions and logging privileged operations",
+  "settings": [
+    {
+      "id": "IN-UAC-001",
+      "settingName": "UserAccountControl_BehaviorOfTheElevationPromptForAdministrators",
+      "displayName": "UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode",
+      "settingPath": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_BehaviorOfTheElevationPromptForAdministrators",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Local Policies Security Options",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 2,
+      "validationOperator": "==",
+      "description": "Controls UAC elevation prompt behavior for administrators. Value 2 = Prompt for consent on the secure desktop. Prevents silent elevation and ensures admin must explicitly approve privileged operations.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center (https://endpoint.microsoft.com)\n2. Navigate to Devices > Windows > Configuration profiles\n3. Click Create profile\n4. Platform: Windows 10 and later, Profile type: Settings catalog\n5. Click Add settings\n6. Search for 'Local Policies Security Options'\n7. Expand Local Policies Security Options\n8. Select 'User Account Control Behavior Of The Elevation Prompt For Administrators'\n9. Set value to 'Prompt for consent on the secure desktop' (value: 2)\n10. Assign to device groups\n11. Monitor deployment status",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly prevents administrators from silently executing privileged functions by requiring explicit consent on secure desktop, satisfying requirement (a)",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-UAC-002",
+      "settingName": "UserAccountControl_BehaviorOfTheElevationPromptForStandardUsers",
+      "displayName": "UAC: Behavior of the elevation prompt for standard users",
+      "settingPath": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_BehaviorOfTheElevationPromptForStandardUsers",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Local Policies Security Options",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 0,
+      "validationOperator": "==",
+      "description": "Controls UAC elevation prompt behavior for standard users. Value 0 = Automatically deny elevation requests. Prevents non-privileged users from executing privileged functions.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Devices > Windows > Configuration profiles\n3. Create profile: Settings catalog\n4. Add settings > Local Policies Security Options\n5. Select 'User Account Control Behavior Of The Elevation Prompt For Standard Users'\n6. Set to 'Automatically deny elevation requests' (value: 0)\n7. Alternative: Value 1 = 'Prompt for credentials on the secure desktop' (requires admin credentials)\n8. Assign to All Devices group\n9. Monitor compliance",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly enforces requirement (a) by preventing standard users from elevating to execute privileged functions",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-UAC-003",
+      "settingName": "UserAccountControl_UseAdminApprovalMode",
+      "displayName": "UAC: Admin Approval Mode for the Built-in Administrator account",
+      "settingPath": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_UseAdminApprovalMode",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Local Policies Security Options",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 1,
+      "validationOperator": "==",
+      "description": "Enables Admin Approval Mode for built-in Administrator account. Value 1 = Enabled. Forces even the built-in admin to request elevation for privileged operations.",
+      "implementationGuide": "1. Intune admin center > Devices > Configuration profiles\n2. Create Settings catalog profile\n3. Add settings: Local Policies Security Options\n4. Select 'User Account Control Use Admin Approval Mode'\n5. Toggle to Enabled (value: 1)\n6. Assign to devices with local admin accounts\n7. Note: Built-in admin must meet password complexity requirements",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Ensures even privileged accounts must explicitly elevate, preventing automatic privileged function execution",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-UAC-004",
+      "settingName": "UserAccountControl_SwitchToTheSecureDesktopWhenPromptingForElevation",
+      "displayName": "UAC: Switch to the secure desktop when prompting for elevation",
+      "settingPath": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_SwitchToTheSecureDesktopWhenPromptingForElevation",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Local Policies Security Options",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 1,
+      "validationOperator": "==",
+      "description": "Switches to secure desktop for elevation prompts. Value 1 = Enabled. Prevents UI spoofing attacks against UAC prompts.",
+      "implementationGuide": "1. Intune admin center > Devices > Configuration profiles\n2. Settings catalog profile > Add settings\n3. Local Policies Security Options\n4. Select 'User Account Control Switch To The Secure Desktop When Prompting For Elevation'\n5. Toggle to Enabled (value: 1)\n6. Assign to All Devices\n7. Verify: UAC prompts should dim entire screen",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "Medium",
+          "isRequired": true,
+          "mappingRationale": "Enhances UAC prompt security, preventing malware from spoofing elevation requests to trick users into granting privileged access",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-UAC-005",
+      "settingName": "UserAccountControl_DetectApplicationInstallationsAndPromptForElevation",
+      "displayName": "UAC: Detect application installations and prompt for elevation",
+      "settingPath": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_DetectApplicationInstallationsAndPromptForElevation",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Local Policies Security Options",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 1,
+      "validationOperator": "==",
+      "description": "Detects installer packages requiring elevation. Value 1 = Enabled. Prompts for admin credentials when installation packages need elevated privileges.",
+      "implementationGuide": "1. Intune admin center > Settings catalog\n2. Add Local Policies Security Options settings\n3. Select 'User Account Control Detect Application Installations And Prompt For Elevation'\n4. Toggle to Enabled (value: 1)\n5. Note: Can be Disabled if using delegated installation tech like Intune\n6. For standard deployment: Keep Enabled\n7. Assign to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Prevents non-privileged users from installing software (privileged function) without explicit admin approval",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-UAC-006",
+      "settingName": "UserAccountControl_OnlyElevateExecutableFilesThatAreSignedAndValidated",
+      "displayName": "UAC: Only elevate executables that are signed and validated",
+      "settingPath": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_OnlyElevateExecutableFilesThatAreSignedAndValidated",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Local Policies Security Options",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 1,
+      "validationOperator": "==",
+      "description": "Enforces PKI certificate path validation before elevation. Value 1 = Enabled. Only signed executables can be elevated, preventing malicious code elevation.",
+      "implementationGuide": "1. Intune admin center > Settings catalog\n2. Add Local Policies Security Options\n3. Select 'User Account Control Only Elevate Executable Files That Are Signed And Validated'\n4. Toggle to Enabled (value: 1)\n5. Ensure trusted publisher certificates deployed\n6. Test with internal unsigned tools before wide deployment\n7. May require code signing infrastructure\n8. Assign to high-security devices first",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Strengthens requirement (a) by ensuring only validated code can execute with privileges, blocking unsigned malicious executables",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-UAC-007",
+      "settingName": "UserAccountControl_VirtualizeFileAndRegistryWriteFailuresToPerUserLocations",
+      "displayName": "UAC: Virtualize file and registry write failures to per-user locations",
+      "settingPath": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_VirtualizeFileAndRegistryWriteFailuresToPerUserLocations",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Local Policies Security Options",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 1,
+      "validationOperator": "==",
+      "description": "Redirects write failures to protected locations into user-specific locations. Value 1 = Enabled. Prevents legacy apps from failing while still protecting system files.",
+      "implementationGuide": "1. Intune admin center > Settings catalog\n2. Add Local Policies Security Options\n3. Select 'User Account Control Virtualize File And Registry Write Failures To Per User Locations'\n4. Toggle to Enabled (value: 1)\n5. Recommended: Keep enabled for legacy app compatibility\n6. Assign to All Devices",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/settings-and-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Supports requirement (a) by allowing legacy apps to function without elevation while protecting system resources",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-PS-001",
+      "settingName": "EnableScriptBlockLogging",
+      "displayName": "PowerShell: Turn on PowerShell Script Block Logging",
+      "settingPath": "Computer Configuration\\Administrative Templates\\Windows Components\\Windows PowerShell\\Turn on PowerShell Script Block Logging",
+      "policyType": "Intune",
+      "policySubType": "Administrative Templates",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables PowerShell script block logging. Logs all PowerShell code blocks as they execute, including deobfuscated code. Critical for logging privileged script execution.",
+      "implementationGuide": "1. Intune admin center > Devices > Configuration profiles\n2. Create profile: Administrative Templates\n3. Navigate to: Computer Configuration > Windows Components > Windows PowerShell\n4. Enable 'Turn on PowerShell Script Block Logging'\n5. Optional: Enable 'Log script block invocation start/stop events' for detailed tracking\n6. Assign to All Devices\n7. Verify: Check Event Log Microsoft-Windows-PowerShell/Operational (Event ID 4104)\n8. Configure log retention/forwarding to SIEM",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly satisfies requirement (b) by logging execution of PowerShell scripts, which are commonly used for privileged operations",
+          "nistRequirement": "Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-PS-002",
+      "settingName": "EnableTranscripting",
+      "displayName": "PowerShell: Turn on PowerShell Transcription",
+      "settingPath": "Computer Configuration\\Administrative Templates\\Windows Components\\Windows PowerShell\\Turn on PowerShell Transcription",
+      "policyType": "Intune",
+      "policySubType": "Administrative Templates",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables PowerShell transcription logging. Records PowerShell commands and output to text files. Complements script block logging.",
+      "implementationGuide": "1. Intune admin center > Configuration profiles > Administrative Templates\n2. Navigate to: Computer Configuration > Windows Components > Windows PowerShell\n3. Enable 'Turn on PowerShell Transcription'\n4. Configure Output Directory (e.g., \\\\server\\share\\PSTranscripts)\n5. Enable 'Include invocation headers' for timestamps\n6. Assign to All Devices or Admin workstations\n7. Ensure output directory has proper ACLs (users can write, admins can read)\n8. Configure log rotation/archival\n9. Consider storage requirements",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Enhances requirement (b) by providing additional detail on PowerShell command execution and output",
+          "nistRequirement": "Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-PS-003",
+      "settingName": "EnableModuleLogging",
+      "displayName": "PowerShell: Turn on Module Logging",
+      "settingPath": "Computer Configuration\\Administrative Templates\\Windows Components\\Windows PowerShell\\Turn on Module Logging",
+      "policyType": "Intune",
+      "policySubType": "Administrative Templates",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables PowerShell module logging. Logs pipeline execution events for specified modules. Use * to log all modules.",
+      "implementationGuide": "1. Intune admin center > Administrative Templates profile\n2. Navigate to: Computer Configuration > Windows Components > Windows PowerShell\n3. Enable 'Turn on Module Logging'\n4. Click Show for Module Names\n5. Enter * to log all modules OR specific modules (e.g., ActiveDirectory, Microsoft.PowerShell.Security)\n6. Assign to device groups\n7. Check Event Log: Microsoft-Windows-PowerShell/Operational\n8. Note: Can generate high volume if logging all modules",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Supplements requirement (b) by logging module usage, useful for security modules like ActiveDirectory",
+          "nistRequirement": "Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-WDAC-001",
+      "settingName": "ApplicationControlCodeIntegrityPolicy",
+      "displayName": "App Control for Business: Code Integrity Policy",
+      "settingPath": "Endpoint Security > App Control for Business > Base Policy XML",
+      "policyType": "Intune",
+      "policySubType": "Endpoint Security - App Control for Business",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "<PolicyXML>Base policy allowing Microsoft-signed + Managed Installer</PolicyXML>",
+      "validationOperator": "exists",
+      "description": "Deploys Windows Defender Application Control (WDAC) policy. Prevents execution of unapproved code. Enforces allow-list of applications that can execute.",
+      "implementationGuide": "1. Create WDAC policy XML using PowerShell:\n   New-CIPolicy -FilePath BasePolicy.xml -Level Publisher -UserPEs\n2. Add Managed Installer rule to trust Intune:\n   Add-CIPolicyRule -FilePath BasePolicy.xml -ManagedInstaller\n3. Enable Intelligent Security Graph:\n   Set-RuleOption -FilePath BasePolicy.xml -Option 14 -Enabled\n4. Convert to binary: ConvertFrom-CIPolicy -XmlFilePath BasePolicy.xml -BinaryFilePath BasePolicy.bin\n5. Intune admin center > Endpoint security > App Control for Business\n6. Create policy > Upload BasePolicy.bin\n7. Start in Audit mode initially\n8. Assign to pilot group\n9. Monitor CodeIntegrity/Operational logs for 30 days\n10. Create supplemental policies for approved unsigned apps\n11. Switch to Enforcement mode\n12. Expand to all devices",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/endpoint-security-app-control-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Strongly enforces requirement (a) by preventing execution of unapproved privileged tools and scripts at kernel level",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-WDAC-002",
+      "settingName": "ManagedInstallerEnabled",
+      "displayName": "App Control: Enable Managed Installer (Intune)",
+      "settingPath": "Endpoint Security > App Control for Business > Managed Installer",
+      "policyType": "Intune",
+      "policySubType": "Endpoint Security - App Control for Business",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Configures Intune Management Extension as managed installer. Auto-trusts applications deployed via Intune, reducing WDAC exceptions needed.",
+      "implementationGuide": "1. Intune admin center > Endpoint security\n2. Navigate to App Control for Business\n3. Select Managed Installer tab\n4. Click Add\n5. Confirm addition of Intune Management Extension as managed installer\n6. Wait for policy sync (can take minutes)\n7. Verify: All Intune-deployed apps will be automatically trusted\n8. Note: Does NOT retroactively trust already-installed apps\n9. Recommend: Enable before deploying WDAC enforcement",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/endpoint-security-app-control-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Enhances WDAC usability while maintaining requirement (a) enforcement by auto-trusting organization-approved Intune deployments",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-EPM-001",
+      "settingName": "EPMElevationSettingsPolicy",
+      "displayName": "Endpoint Privilege Management: Elevation Settings Policy",
+      "settingPath": "Endpoint Security > Endpoint Privilege Management > Elevation Settings",
+      "policyType": "Intune",
+      "policySubType": "Endpoint Security - EPM Elevation Settings",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {
+        "defaultElevationBehavior": "DenyAllRequests",
+        "sendElevationDataForReporting": true,
+        "reportingScope": "DiagnosticDataAndAllEndpointElevations"
+      },
+      "validationOperator": "==",
+      "description": "Enables EPM on devices and sets default elevation behavior. Controls whether unmanaged files can be elevated and what data is reported to Intune.",
+      "implementationGuide": "1. Intune admin center > Endpoint security > Endpoint Privilege Management\n2. Select Policies tab > Create Policy\n3. Platform: Windows, Profile: Windows elevation settings policy\n4. Configure settings:\n   - Default elevation response: Start with 'Require user confirmation', move to 'Deny all requests' after rules created\n   - Validation type: Business justification + Windows authentication (recommended)\n   - Send elevation data for reporting: Yes\n   - Reporting scope: 'Diagnostic data and all endpoint elevations' (initially for visibility)\n5. Assign to Windows devices or users\n6. Monitor EPM reports for 2-4 weeks before creating elevation rules\n7. After rules deployed, change default to 'Deny all requests'",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/epm-elevation-settings",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces requirement (a) by denying privilege elevation by default and (b) by enabling comprehensive reporting of all elevation attempts",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "IN-EPM-002",
+      "settingName": "EPMElevationRulesPolicy",
+      "displayName": "Endpoint Privilege Management: Elevation Rules Policy",
+      "settingPath": "Endpoint Security > Endpoint Privilege Management > Elevation Rules",
+      "policyType": "Intune",
+      "policySubType": "Endpoint Security - EPM Elevation Rules",
+      "platform": "Windows",
+      "dataType": "array",
+      "expectedValue": "Array of rule objects defining which files can be elevated and under what conditions",
+      "validationOperator": "exists",
+      "description": "Defines specific executables, MSI packages, or PowerShell scripts that can be elevated. Each rule specifies detection criteria (publisher, hash, path) and elevation type (automatic, user-confirmed, support-approved).",
+      "implementationGuide": "1. Analyze EPM unmanaged elevation reports to identify common elevation needs\n2. Intune admin center > Endpoint security > EPM > Policies > Create Policy\n3. Platform: Windows, Profile: Windows elevation rules policy\n4. Add rules for each approved application:\n   - File name (e.g., setup.exe, install.msi, configure.ps1)\n   - Detection method: Publisher certificate (recommended) OR file hash OR file path\n   - Elevation type:\n     * Automatic: Well-known apps from trusted publishers\n     * User confirmed: Requires business justification\n     * Support approved: IT must approve each request\n   - Optional: Specify required file arguments\n   - Child process behavior: Require elevation (default) or Allow without elevation\n5. Assign to user/device groups\n6. Monitor elevation reports\n7. Refine rules based on usage patterns",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/epm-elevation-rules",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Precisely controls requirement (a) by allowing only specific approved applications to execute with privileges, and (b) by logging all elevation attempts",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "PV-AUDIT-001",
+      "settingName": "UnifiedAuditLogIngestionEnabled",
+      "displayName": "Microsoft 365: Enable Unified Audit Logging",
+      "settingPath": "Exchange Online PowerShell: Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled",
+      "policyType": "Purview",
+      "policySubType": "Audit Configuration",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables unified audit logging across Microsoft 365 services. Logs all admin and user activities including privileged operations in Exchange, SharePoint, Teams, Azure AD, etc. Required for NIST compliance.",
+      "implementationGuide": "1. Connect to Exchange Online PowerShell:\n   Connect-ExchangeOnline\n2. Verify current status:\n   Get-AdminAuditLogConfig | FL UnifiedAuditLogIngestionEnabled\n3. If False, enable:\n   Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true\n4. Wait 24 hours for full activation\n5. Verify in Purview portal:\n   - Navigate to https://compliance.microsoft.com\n   - Go to Audit\n   - Should see \"Start recording user and admin activity\" or audit log search available\n6. Configure alert policies for suspicious admin activities\n7. Set up audit retention policies (E5 required for >180 days)\n8. Consider exporting to Log Analytics for long-term retention",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-log-enable-disable",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly satisfies requirement (b) by logging all privileged operations performed in Microsoft 365 cloud services",
+          "nistRequirement": "Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "PV-AUDIT-002",
+      "settingName": "AuditLogRetentionPolicy",
+      "displayName": "Microsoft 365: Audit Log Retention Policy",
+      "settingPath": "Security & Compliance PowerShell: New-UnifiedAuditRetentionPolicy",
+      "policyType": "Purview",
+      "policySubType": "Audit Retention Policy",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "retentionDuration": "OneYear",
+        "recordTypes": "AzureActiveDirectory,ExchangeAdmin,SharePointAdmin",
+        "priority": 1
+      },
+      "validationOperator": "exists",
+      "description": "Creates custom audit log retention policy. Default is 180 days; E5 allows up to 1 year (or 10 years with add-on). Required to meet compliance retention requirements.",
+      "implementationGuide": "1. Connect to Security & Compliance PowerShell:\n   Connect-IPPSSession\n2. Verify licensing: Requires Microsoft 365 E5 or Purview Audit (Premium)\n3. Create retention policy:\n   New-UnifiedAuditRetentionPolicy -Name \"Admin Activities 1 Year\" -Description \"Retain admin audit logs for 1 year\" -RecordTypes AzureActiveDirectory,ExchangeAdmin,SharePointAdmin,SecurityComplianceCenter -RetentionDuration OneYear -Priority 1\n4. For 10-year retention (requires add-on):\n   -RetentionDuration TenYears\n5. Verify policy:\n   Get-UnifiedAuditRetentionPolicy\n6. Max 50 policies per organization\n7. Priority 1 = highest (lower number = higher priority)\n8. Consider separate policies for different admin types",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-log-retention-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Ensures requirement (b) audit logs are retained sufficiently for compliance and forensic analysis",
+          "nistRequirement": "Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PIM-001",
+      "settingName": "PIMRoleEligibleAssignment",
+      "displayName": "Azure AD PIM: Eligible Role Assignment",
+      "settingPath": "Azure AD > PIM > Microsoft Entra roles > Assign eligibility",
+      "policyType": "AzureAD",
+      "policySubType": "Privileged Identity Management",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "assignmentType": "Eligible",
+        "requireMFAOnActivation": true,
+        "requireJustification": true,
+        "maxActivationDuration": 8
+      },
+      "validationOperator": "==",
+      "description": "Configures eligible (just-in-time) role assignments in PIM. Users must activate roles when needed, automatically logging all activations. Preferred over permanent active assignments.",
+      "implementationGuide": "1. Azure Portal > Microsoft Entra ID > Identity Governance > Privileged Identity Management\n2. Select Microsoft Entra roles\n3. Select Roles > Choose privileged role (e.g., Global Administrator)\n4. Click Assignments > Add assignments\n5. Select members (users/groups)\n6. Assignment type: Eligible (NOT Active)\n7. Assignment starts: Now, Assignment ends: Permanent or time-bound\n8. Click Next\n9. Configure Role settings (if not already configured):\n   - Activation maximum duration: 8 hours (recommended)\n   - Require MFA on activation: Yes\n   - Require justification on activation: Yes\n   - Require approval: Yes (for high-privilege roles like Global Admin)\n10. Assign\n11. User activation process: PIM > My roles > Activate > Provide justification > MFA > Approved\n12. All activations logged in Azure AD audit logs",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-add-role-to-user",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces just-in-time privileged access (requirement a) and automatically logs all role activations (requirement b)",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PIM-002",
+      "settingName": "PIMAuditLog",
+      "displayName": "Azure AD PIM: Audit Log Monitoring",
+      "settingPath": "Azure AD > PIM > Microsoft Entra roles > Resource audit",
+      "policyType": "AzureAD",
+      "policySubType": "Privileged Identity Management Audit",
+      "platform": "All",
+      "dataType": "log",
+      "expectedValue": "Audit logs enabled and exported to Log Analytics",
+      "validationOperator": "exists",
+      "description": "PIM automatically logs all role activations, assignments, and approvals to Azure AD audit logs. Logs should be exported to Log Analytics for retention beyond 30 days.",
+      "implementationGuide": "1. PIM audit logs automatically enabled (no configuration needed)\n2. View audit logs:\n   - Azure Portal > PIM > Microsoft Entra roles > Resource audit\n   - OR Azure AD > Audit logs > Filter Service: \"PIM\"\n3. Audit data available for 30 days by default\n4. For longer retention, export to Log Analytics:\n   - Azure AD > Diagnostic settings\n   - Add diagnostic setting\n   - Select AuditLogs\n   - Send to Log Analytics workspace\n   - Choose retention period\n5. Query PIM activities in Log Analytics:\n   AuditLogs\n   | where ServicePrincipalName == \"PIM\"\n   | where OperationName contains \"Activate\" or OperationName contains \"Assign\"\n6. Create alerts for suspicious PIM activities\n7. Export for SIEM integration if needed",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-use-audit-log",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Satisfies requirement (b) by comprehensively logging all privileged role activations in Azure AD",
+          "nistRequirement": "Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "PV-PAM-001",
+      "settingName": "PrivilegedAccessManagementEnabled",
+      "displayName": "Microsoft 365 PAM: Enable Privileged Access Management",
+      "settingPath": "Microsoft 365 Admin Center > Settings > Org Settings > Security & Privacy > Privileged access",
+      "policyType": "Purview",
+      "policySubType": "Privileged Access Management",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Privileged Access Management for Exchange Online and M365. Requires approval for executing privileged tasks like mailbox moves, role assignments, etc.",
+      "implementationGuide": "1. Prerequisites:\n   - Microsoft 365 E5 or Office 365 E5 subscription\n   - Create mail-enabled security group for approvers\n2. Microsoft 365 Admin Center (https://admin.microsoft.com)\n3. Settings > Org Settings > Security & Privacy\n4. Find Privileged access section > Edit\n5. Toggle 'Require approvals for privileged tasks' to ON\n6. Select Default approver group (must be mail-enabled security group)\n7. Save\n8. Alternatively via PowerShell:\n   Connect-ExchangeOnline\n   Enable-ElevatedAccessControl -AdminAccount admin@domain.com -DelegatedApprovers approvers@domain.com\n9. Create approval policies for specific tasks:\n   New-ElevatedAccessApprovalPolicy -Task 'Exchange\\New-MoveRequest' -ApprovalType Manual -ApproverGroup 'approvers@domain.com'\n10. Test: Request privilege access to execute approved task",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/privileged-access-management-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Enhances requirement (a) with just-in-time approval for Exchange/M365 admin tasks and (b) by logging all requests and approvals",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "PV-PAM-002",
+      "settingName": "PAMApprovalPolicy",
+      "displayName": "Microsoft 365 PAM: Approval Policy for High-Risk Tasks",
+      "settingPath": "Exchange Online PowerShell: New-ElevatedAccessApprovalPolicy",
+      "policyType": "Purview",
+      "policySubType": "PAM Approval Policy",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "task": "Exchange\\New-MoveRequest",
+        "approvalType": "Manual",
+        "approverGroup": "mailbox-admins@contoso.com"
+      },
+      "validationOperator": "exists",
+      "description": "Creates approval policy for specific privileged Exchange/M365 tasks. Requires manual approval before admin can execute the task. Max 30 policies per organization.",
+      "implementationGuide": "1. Connect to Exchange Online PowerShell:\n   Connect-ExchangeOnline\n2. Create approval policy:\n   New-ElevatedAccessApprovalPolicy -Task 'Exchange\\<CmdletName>' -ApprovalType Manual -ApproverGroup 'approvers@domain.com'\n3. Examples of high-risk tasks to protect:\n   - New-MoveRequest (mailbox moves)\n   - Remove-Mailbox (mailbox deletion)\n   - Add-RoleGroupMember (role assignments)\n   - Set-Mailbox (permission changes)\n   - New-InboxRule (inbox rules for execs)\n   - Search-Mailbox (mailbox searches)\n4. View policies:\n   Get-ElevatedAccessApprovalPolicy\n5. Users request access:\n   New-ElevatedAccessRequest -Task 'Exchange\\New-MoveRequest' -Reason 'Migrate CEO mailbox' -DurationHours 4\n6. Approvers receive email, can approve via:\n   - Microsoft 365 Admin Center\n   - PowerShell: Approve-ElevatedAccessRequest -RequestId <id>\n7. All requests/approvals logged in unified audit log",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/privileged-access-management-configuration",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Prevents unauthorized execution of high-risk Exchange/M365 privileged functions (requirement a) and logs all requests and outcomes (requirement b)",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-CA-001",
+      "settingName": "ConditionalAccessAdminMFA",
+      "displayName": "Azure AD Conditional Access: Require MFA for Admin Roles",
+      "settingPath": "Azure AD > Security > Conditional Access > New policy",
+      "policyType": "AzureAD",
+      "policySubType": "Conditional Access",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "state": "enabled",
+        "users": "Directory roles - All admin roles",
+        "grantControls": "Require multifactor authentication"
+      },
+      "validationOperator": "==",
+      "description": "Requires MFA for all administrative role sign-ins. Enhances security for privileged function execution by ensuring strong authentication. Recommended for NIST compliance.",
+      "implementationGuide": "1. Azure Portal > Microsoft Entra ID > Security > Conditional Access\n2. Create new policy > Name: 'Require MFA for Admin Roles'\n3. Assignments:\n   - Users: Select 'Directory roles'\n   - Select all admin roles (Global Admin, Security Admin, etc.)\n   - Exclude: Emergency access accounts (break-glass)\n4. Target resources: All cloud apps\n5. Conditions (optional but recommended):\n   - Sign-in risk: Medium and high\n   - Device platforms: All\n6. Grant: Require multifactor authentication\n7. Session: Sign-in frequency: 4 hours (vs 90 days for users)\n8. Enable policy: Report-only (test) > On (enforce)\n9. Verify: Admin sign-ins should require MFA\n10. Monitor: Sign-in logs for policy enforcement\n11. All MFA prompts logged in Azure AD sign-in logs",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-admin-mfa",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Supports requirement (a) by ensuring strong authentication before privileged access granted, and (b) by logging authentication events",
+          "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+        }
+      ]
+    },
+    {
+      "id": "WIN-AUDIT-001",
+      "settingName": "AuditPrivilegeUse",
+      "displayName": "Windows Audit: Audit Sensitive Privilege Use",
+      "settingPath": "Advanced Audit Policy Configuration\\System Audit Policies\\Privilege Use",
+      "policyType": "Intune",
+      "policySubType": "Settings Catalog - Windows Audit Policy",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Success and Failure",
+      "validationOperator": "==",
+      "description": "Audits use of sensitive privileges. Logs Event ID 4673 (Sensitive privilege use) and 4674 (Operation attempted on privileged object). Critical for logging privileged operations.",
+      "implementationGuide": "1. Intune admin center > Settings catalog profile\n2. Add settings > Search 'Audit Policy'\n3. Navigate to: System Audit Policies - Local Group Policy Object > Privilege Use\n4. Enable 'Audit Sensitive Privilege Use'\n5. Set to: Success and Failure\n6. Assign to All Devices\n7. Verify on device:\n   auditpol /get /subcategory:\"Sensitive Privilege Use\"\n   Should show: Success and Failure\n8. Check Event Viewer: Security log\n   - Event ID 4672: Special privileges assigned to new logon\n   - Event ID 4673: Sensitive privilege use\n   - Event ID 4674: Operation attempted on privileged object\n9. Forward to SIEM or Log Analytics\n10. Create alerts for suspicious privilege use patterns",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-sensitive-privilege-use",
+      "controlMappings": [
+        {
+          "controlId": "03.01.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly satisfies requirement (b) by logging Windows privilege usage at OS level",
+          "nistRequirement": "Log the execution of privileged functions"
+        }
+      ]
+    }
+  ],
+  "implementationNotes": {
+    "phasedApproach": "Implement in phases: 1) Enable audit logging (all platforms), 2) Deploy UAC hardening, 3) Implement Application Control (audit mode), 4) Deploy EPM (audit mode), 5) Move to enforcement mode gradually",
+    "testingRecommendation": "Always test in pilot groups before organization-wide deployment. Start with audit/report-only modes to identify issues.",
+    "licensingRequirements": {
+      "minimum": "Microsoft 365 E3 + Azure AD Premium P2",
+      "recommended": "Microsoft 365 E5 (includes PIM, PAM, extended audit)",
+      "epm": "Requires Intune Suite add-on or standalone EPM license"
+    },
+    "criticalDependencies": [
+      "Azure AD Premium P2 for PIM",
+      "Microsoft 365 E5 for PAM and extended audit retention",
+      "Intune Suite or EPM add-on for Endpoint Privilege Management",
+      "Windows 10 20H2+ or Windows 11 for EPM support",
+      "UEFI firmware for WDAC enforcement"
+    ]
+  }
+}

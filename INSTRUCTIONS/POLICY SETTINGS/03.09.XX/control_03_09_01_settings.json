@@ -1,0 +1,117 @@
+{
+  "controlId": "03.09.01",
+  "controlTitle": "Personnel Screening",
+  "controlFamily": "PS",
+  "settings": [
+    {
+      "id": "AZ-PS-001",
+      "settingName": "userRiskPolicy",
+      "displayName": "User Risk Policy - Password Change Required",
+      "settingPath": "properties.grantControls.builtInControls",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["passwordChange"],
+      "validationOperator": "contains",
+      "description": "Requires users flagged as high-risk to perform secure password change, ensuring compromised accounts are remediated before access is granted. Supports ongoing identity verification and risk-based screening.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create new policy: 'User Risk - Require Password Change'\n4. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n5. Under Assignments > Cloud apps: Select 'All cloud apps'\n6. Under Conditions > User risk: Set 'Configure' to 'Yes', select 'High'\n7. Under Access controls > Grant: Select 'Grant access' and 'Require password change'\n8. Set 'Enable policy' to 'On' and click Create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.09.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "User risk policies detect and automatically remediate potentially compromised accounts by requiring password changes for high-risk users. This enforces identity verification before granting access, supporting the control's requirement to assess individual trustworthiness and respond to conditions requiring rescreening (compromised credentials).",
+          "nistRequirement": "Rescreen individuals in accordance with organization-defined conditions requiring rescreening"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PS-002",
+      "settingName": "signInRiskPolicy",
+      "displayName": "Sign-in Risk Policy - MFA Required",
+      "settingPath": "properties.grantControls.builtInControls",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["mfa"],
+      "validationOperator": "contains",
+      "description": "Requires MFA for medium and high-risk sign-ins, providing additional identity verification when anomalous behavior is detected. Detects impossible travel, anonymous IPs, unfamiliar locations, and other indicators that identity verification is needed.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create new policy: 'Sign-in Risk - Require MFA'\n4. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n5. Under Assignments > Cloud apps: Select 'All cloud apps'\n6. Under Conditions > Sign-in risk: Set 'Configure' to 'Yes', select 'High' and 'Medium'\n7. Under Access controls > Grant: Select 'Grant access' and 'Require multi-factor authentication'\n8. Set 'Enable policy' to 'On' and click Create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-risk-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.09.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Sign-in risk policies analyze real-time signals to detect anomalous authentication attempts that may indicate account compromise or unauthorized access. By requiring MFA for risky sign-ins, this setting enforces additional identity verification, supporting the control's requirement to assess individual trustworthiness before authorizing system access.",
+          "nistRequirement": "Screen individuals prior to authorizing access to the system"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PS-003",
+      "settingName": "accessReviews",
+      "displayName": "Access Reviews for Privileged Roles",
+      "settingPath": "properties.settings.recurrence",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityGovernance",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "quarterly",
+      "validationOperator": "==",
+      "description": "Configures recurring access reviews for privileged Azure AD roles to ensure only authorized individuals retain elevated access. Supports periodic rescreening by requiring regular review and confirmation of role assignments.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Privileged Role Administrator\n2. Navigate to Identity Governance > Privileged Identity Management\n3. Select 'Azure AD Roles' under Manage\n4. Select 'Access reviews' and click 'New'\n5. Configure review:\n   - Select privileged roles (Global Admin, Privileged Role Admin, etc.)\n   - Set recurrence to 'Quarterly'\n   - Select reviewers (managers or designated approvers)\n   - Enable 'Auto apply results to resource'\n   - Set 'If reviewers don't respond' to 'Remove access'\n6. Click 'Start' to create recurring review",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-create-roles-and-resource-roles-review",
+      "controlMappings": [
+        {
+          "controlId": "03.09.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Access reviews provide periodic rescreening of privileged role assignments, ensuring that individuals with elevated access continue to meet trustworthiness requirements. This directly supports the control's requirement to 'rescreen individuals in accordance with organization-defined conditions' by establishing a regular review process that validates ongoing access appropriateness.",
+          "nistRequirement": "Rescreen individuals in accordance with organization-defined conditions requiring rescreening"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PS-004",
+      "settingName": "mfaRegistrationPolicy",
+      "displayName": "MFA Registration Required Before Access",
+      "settingPath": "properties.state",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "enabled",
+      "validationOperator": "==",
+      "description": "Requires all users to complete MFA registration before accessing resources, ensuring identity verification is established prior to granting system access. Prevents access until identity verification methods are configured.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create new policy: 'MFA Registration Required'\n4. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n5. Under Assignments > User actions: Select 'Register security information'\n6. Under Access controls > Grant: Select 'Grant access' and 'Require multi-factor authentication'\n7. Alternatively, enable the legacy 'MFA registration policy' in Identity Protection\n8. Set 'Enable policy' to 'On' and click Create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/authentication/tutorial-enable-azure-mfa",
+      "controlMappings": [
+        {
+          "controlId": "03.09.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Requiring MFA registration before granting access ensures that identity verification mechanisms are established prior to system authorization. This supports the control's requirement to 'screen individuals prior to authorizing access' by enforcing identity verification setup as a prerequisite for access, establishing baseline identity assurance.",
+          "nistRequirement": "Screen individuals prior to authorizing access to the system"
+        }
+      ]
+    }
+  ],
+  "controlNote": "While personnel screening is primarily a procedural control (background checks, reference verification), these technical settings enforce identity verification and risk-based authentication that support screening objectives. They detect compromised accounts, require additional verification for risky activities, and enable periodic rescreening of privileged access.",
+  "totalSettings": 4,
+  "settingsByPolicyType": {
+    "AzureAD": 4
+  },
+  "settingsByPlatform": {
+    "All": 4
+  },
+  "researchDate": "2025-11-17",
+  "cisReferences": [
+    "CIS Microsoft 365 Foundations Benchmark v2.0.0 - 1.1.8 (L2) Enable Azure AD Identity Protection sign-in risk policies",
+    "CIS Microsoft 365 Foundations Benchmark v2.0.0 - 1.1.9 (L2) Enable Azure AD Identity Protection user risk policies", 
+    "CIS Microsoft 365 Foundations Benchmark v2.0.0 - 5.1.2 (L1) Ensure 'Access reviews' for high privileged Azure AD roles are configured"
+  ]
+}

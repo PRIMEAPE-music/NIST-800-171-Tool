@@ -15,6 +15,7 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  CircularProgress,
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
@@ -26,6 +27,38 @@ import {
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 import { PolicyDetail, MappedControl } from '../../types/policyViewer.types';
+import { usePolicyControlBadges, ComplianceStatus } from '../../hooks/usePolicyControlBadges';
+
+// Helper function to get chip color based on compliance status
+const getComplianceChipColor = (status: ComplianceStatus): 'success' | 'error' | 'warning' | 'default' => {
+  switch (status) {
+    case 'COMPLIANT':
+      return 'success';
+    case 'NON_COMPLIANT':
+      return 'error';
+    case 'NOT_CONFIGURED':
+      return 'warning';
+    case 'NOT_CHECKED':
+    default:
+      return 'default';
+  }
+};
+
+// Helper function to get tooltip text for compliance status
+const getComplianceTooltip = (controlTitle: string, family: string, status: ComplianceStatus): string => {
+  const baseInfo = `${family} - ${controlTitle}`;
+  switch (status) {
+    case 'COMPLIANT':
+      return `${baseInfo}\n✓ All settings compliant`;
+    case 'NON_COMPLIANT':
+      return `${baseInfo}\n✗ Has non-compliant settings`;
+    case 'NOT_CONFIGURED':
+      return `${baseInfo}\n? Settings not configured`;
+    case 'NOT_CHECKED':
+    default:
+      return `${baseInfo}\n○ Not yet checked`;
+  }
+};
 
 interface BasePolicyCardProps {
   policy: PolicyDetail;
@@ -41,6 +74,9 @@ const BasePolicyCard: React.FC<BasePolicyCardProps> = ({
   children,
 }) => {
   const [settingsExpanded, setSettingsExpanded] = React.useState(false);
+
+  // Fetch control badges for this policy
+  const { data: controlBadges, isLoading: badgesLoading } = usePolicyControlBadges(policy.id);
 
   return (
     <Card
@@ -97,35 +133,50 @@ const BasePolicyCard: React.FC<BasePolicyCardProps> = ({
         </Box>
 
         {/* Mapped Controls */}
-        {policy.mappedControls.length > 0 && (
+        {badgesLoading ? (
+          <Box mb={2} display="flex" alignItems="center" gap={1}>
+            <CircularProgress size={16} />
+            <Typography variant="caption" color="text.secondary">
+              Loading controls...
+            </Typography>
+          </Box>
+        ) : controlBadges && controlBadges.length > 0 ? (
           <Box mb={2}>
             <Typography variant="caption" color="text.secondary" display="block" mb={0.5}>
-              Mapped NIST Controls:
+              Mapped NIST Controls ({controlBadges.length}):
             </Typography>
             <Box display="flex" gap={0.5} flexWrap="wrap">
-              {policy.mappedControls.map((control) => (
+              {controlBadges.slice(0, 10).map((control) => (
                 <Tooltip
                   key={control.controlId}
-                  title={`${control.controlTitle} (${control.mappingConfidence} confidence)`}
+                  title={
+                    <span style={{ whiteSpace: 'pre-line' }}>
+                      {getComplianceTooltip(control.controlTitle, control.family, control.complianceStatus)}
+                    </span>
+                  }
                 >
                   <Chip
                     label={control.controlId}
                     size="small"
-                    variant="outlined"
-                    color={
-                      control.mappingConfidence === 'High'
-                        ? 'success'
-                        : control.mappingConfidence === 'Medium'
-                        ? 'warning'
-                        : 'default'
-                    }
+                    variant="filled"
+                    color={getComplianceChipColor(control.complianceStatus)}
                   />
                 </Tooltip>
               ))}
+              {controlBadges.length > 10 && (
+                <Chip
+                  label={`+${controlBadges.length - 10} more`}
+                  size="small"
+                  variant="outlined"
+                />
+              )}
             </Box>
+          </Box>
+        ) : null}
 
-            {/* Mapped Settings Details - Collapsible */}
-            {policy.mappedControls.some((c) => c.mappedSettings && c.mappedSettings.length > 0) && (
+            {/* Mapped Settings Details - Removed (old system) */}
+            {/* This section relied on the old policy mapping system and has been replaced by the Control Mappings tab in the detail modal */}
+            {false && policy.mappedControls.some((c) => c.mappedSettings && c.mappedSettings.length > 0) && (
               <Box sx={{ mt: 2 }}>
                 <Box
                   display="flex"
@@ -192,8 +243,9 @@ const BasePolicyCard: React.FC<BasePolicyCardProps> = ({
                 </Collapse>
               </Box>
             )}
-          </Box>
-        )}
+
+        {/* Custom content from specific policy cards */}
+        {children}
       </CardContent>
 
       <CardActions sx={{ justifyContent: 'flex-end', px: 2, pb: 2 }}>

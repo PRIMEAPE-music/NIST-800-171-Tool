@@ -9,7 +9,7 @@ export interface PolicyDetail {
   lastSynced: Date;
   isActive: boolean;
   parsedData: ParsedPolicyData;
-  mappedControls: MappedControl[];
+  mappedControls: MappedControl[]; // Empty array - control mappings removed in refactor
 }
 
 export interface ParsedPolicyData {

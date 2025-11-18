@@ -5,7 +5,6 @@ import {
   PolicyViewerStats,
   ParsedPolicyData,
   MappedControl,
-  MappedSetting,
 } from '../types/policyViewer.types';
 
 const prisma = new PrismaClient();
@@ -63,22 +62,10 @@ class PolicyViewerService {
       orderBy.policyType = sortOrder;
     }
 
-    // Fetch policies with related data
+    // Fetch policies (without control mappings - removed in refactor)
     const policies = await prisma.m365Policy.findMany({
       where,
       orderBy,
-      include: {
-        controlMappings: {
-          include: {
-            control: {
-              select: {
-                controlId: true,
-                title: true,
-              },
-            },
-          },
-        },
-      },
     });
 
     // Transform to PolicyDetail format
@@ -91,18 +78,6 @@ class PolicyViewerService {
   async getPolicyById(id: number): Promise<PolicyDetail | null> {
     const policy = await prisma.m365Policy.findUnique({
       where: { id },
-      include: {
-        controlMappings: {
-          include: {
-            control: {
-              select: {
-                controlId: true,
-                title: true,
-              },
-            },
-          },
-        },
-      },
     });
 
     if (!policy) {
@@ -116,7 +91,24 @@ class PolicyViewerService {
    * Get policy viewer statistics
    */
   async getStats(): Promise<PolicyViewerStats> {
-    const [total, active, byType, lastSync, withMappings] = await Promise.all([
+    // Count policies that have validated settings mapped to controls
+    // A policy is "mapped" if it has compliance checks for settings that are mapped to controls
+    const policiesWithValidatedSettings = await prisma.m365Policy.findMany({
+      where: {
+        complianceChecks: {
+          some: {
+            setting: {
+              controlMappings: {
+                some: {}
+              }
+            }
+          }
+        }
+      },
+      select: { id: true }
+    });
+
+    const [total, active, byType, lastSync] = await Promise.all([
       prisma.m365Policy.count(),
       prisma.m365Policy.count({ where: { isActive: true } }),
       prisma.m365Policy.groupBy({
@@ -126,13 +118,6 @@ class PolicyViewerService {
       prisma.m365Policy.findFirst({
         orderBy: { lastSynced: 'desc' },
         select: { lastSynced: true },
-      }),
-      prisma.m365Policy.count({
-        where: {
-          controlMappings: {
-            some: {},
-          },
-        },
       }),
     ]);
 
@@ -152,7 +137,7 @@ class PolicyViewerService {
       inactivePolicies: total - active,
       byType: byTypeMap,
       lastSyncDate: lastSync?.lastSynced || null,
-      policiesWithMappings: withMappings,
+      policiesWithMappings: policiesWithValidatedSettings.length,
     };
   }
 
@@ -173,28 +158,9 @@ class PolicyViewerService {
       };
     }
 
-    // Transform mapped controls
-    const mappedControls: MappedControl[] =
-      policy.controlMappings?.map((mapping: any) => {
-        // Parse mapped settings JSON if present
-        let mappedSettings: MappedSetting[] | undefined;
-        if (mapping.mappedSettings) {
-          try {
-            mappedSettings = JSON.parse(mapping.mappedSettings);
-          } catch (error) {
-            console.error(`Failed to parse mappedSettings for mapping ${mapping.id}:`, error);
-            mappedSettings = undefined;
-          }
-        }
-
-        return {
-          controlId: mapping.control.controlId,
-          controlTitle: mapping.control.title,
-          mappingConfidence: mapping.mappingConfidence,
-          mappingNotes: mapping.mappingNotes,
-          mappedSettings,
-        };
-      }) || [];
+    // Control mappings removed - new system uses M365Settings linked to controls
+    // To see which controls a policy affects, query SettingComplianceCheck
+    const mappedControls: MappedControl[] = [];
 
     return {
       id: policy.id,

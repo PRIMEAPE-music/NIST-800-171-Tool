@@ -1,0 +1,127 @@
+{
+  "controlId": "03.03.04",
+  "controlTitle": "Response to Audit Logging Process Failures",
+  "controlFamily": "AU",
+  "settings": [
+    {
+      "id": "PV-AU-008",
+      "settingName": "AuditLogFailureAlertPolicy",
+      "displayName": "Alert Policy for Audit Logging Failures",
+      "settingPath": "AlertPolicyEnabled",
+      "policyType": "Purview",
+      "policySubType": "AlertPolicy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Creates and enables alert policy to notify administrators when audit logging process failures occur, including when audit log ingestion is disabled, audit capacity issues arise, or audit log service disruptions occur. CIS Benchmark recommendation for audit monitoring.",
+      "implementationGuide": "1. Navigate to Microsoft Purview compliance portal > Policies > Alert policies\n2. Click '+ New alert policy'\n3. Configure policy:\n   - Name: 'Audit Logging Failure Alert'\n   - Description: 'Alert when audit logging is disabled or fails'\n   - Severity: High\n   - Category: Threat management\n   - Activity: 'Disabled audit log search' or 'Set-AdminAuditLogConfig'\n   - Trigger: Every time an activity matches the rule\n4. Configure notifications:\n   - Email: Add security team/admin email addresses\n   - Daily notification limit: 20 (adjust as needed)\n5. Turn on policy immediately\n6. Create additional alert for audit log operations:\n   New-ActivityAlert -Name \"Audit Config Changes\" -Operation \"Set-AdminAuditLogConfig\" -NotifyUser \"admin@domain.com\" -EmailCulture en-US\n7. Test alert: Temporarily disable and re-enable audit log (in test environment)\n8. Verify alert received within 30 minutes",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/compliance/alert-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.03.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Alert policies enable automated notification to organizational personnel when audit logging is disabled or modified. This directly satisfies the requirement to 'Alert organizational personnel or roles within [time period] in the event of an audit logging process failure.' Alerts are typically delivered within 30 minutes.",
+          "nistRequirement": "Alert organizational personnel or roles within [organization-defined time period] in the event of an audit logging process failure"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AU-007",
+      "settingName": "DiagnosticSettingsHealthMonitoring",
+      "displayName": "Azure AD Diagnostic Settings Health Monitoring",
+      "settingPath": "properties.logs[].enabled",
+      "policyType": "AzureAD",
+      "policySubType": "DiagnosticSettings",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Monitors health of Azure AD diagnostic settings to detect when log streaming to Log Analytics or Storage Account fails. When diagnostic settings are disabled or experience ingestion failures, Azure generates service health notifications and metrics alerts can be configured.",
+      "implementationGuide": "1. Verify diagnostic settings are configured and active:\n   - Azure Portal > Azure AD > Diagnostic settings\n   - Verify status shows 'Enabled' for AuditLogs and SignInLogs\n2. Configure Azure Monitor alert for diagnostic setting failures:\n   - Azure Portal > Monitor > Alerts > + New alert rule\n   - Scope: Select Log Analytics workspace receiving Azure AD logs\n   - Condition: Custom log search\n   - Query: Heartbeat | where TimeGenerated > ago(1h) | summarize count() by Computer\n   - Alert logic: Less than 1 result (indicates no logs received)\n   - Evaluation frequency: 15 minutes\n3. Configure action group:\n   - Name: 'Azure-AD-Log-Failure-Notification'\n   - Add email/SMS notifications to security team\n4. Alternative - Service Health alerts:\n   - Azure Portal > Service Health > Health alerts\n   - Create alert rule for Azure Active Directory service\n   - Enable notifications for Service issues and Security advisories\n5. Test alert: Temporarily disable diagnostic setting (test environment only)\n6. Verify workspace ingestion: Log Analytics > Logs > Run query: AuditLogs | summarize count() by TimeGenerated",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-new-alert-rule",
+      "controlMappings": [
+        {
+          "controlId": "03.03.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Azure Monitor alerts detect when Azure AD log streaming fails or diagnostic settings are disabled, triggering automated notifications to administrators. This satisfies the requirement to alert personnel of audit logging process failures with configurable time periods (typically 15-30 minutes).",
+          "nistRequirement": "Implement automated monitoring and alerting for Azure AD audit logging process failures including ingestion errors and configuration changes"
+        }
+      ]
+    },
+    {
+      "id": "PV-AU-009",
+      "settingName": "AuditLogCapacityMonitoring",
+      "displayName": "Audit Log Storage Capacity Monitoring",
+      "settingPath": "AuditLogStorageQuota",
+      "policyType": "Purview",
+      "policySubType": "AuditConfiguration",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "Monitored",
+      "validationOperator": "==",
+      "description": "Monitors unified audit log storage capacity to detect when approaching limits and prevent audit record loss. While M365 unified audit log storage is effectively unlimited, monitoring ensures log Analytics workspace or storage account destinations don't reach capacity limits.",
+      "implementationGuide": "1. Monitor unified audit log health:\n   - Microsoft Purview compliance portal > Audit\n   - Check for any warning banners about audit capacity\n   - Microsoft automatically manages unified audit log storage\n2. Monitor Log Analytics workspace capacity (if used):\n   - Azure Portal > Log Analytics workspace > Usage and estimated costs\n   - Review daily ingestion volume and trends\n   - Set up alert for daily cap approach (if cap is set)\n   - Configure alert: Workspace > Monitoring > Alerts > + New alert rule\n   - Condition: 'Data collection volume approaching daily cap'\n3. Monitor Storage Account capacity (if archiving):\n   - Storage account > Monitoring > Metrics\n   - Monitor 'Used capacity' metric\n   - Create alert when reaching 80% of subscription quota\n4. Create custom alert for audit record generation rate:\n   - Use PowerShell to query record count trends\n   - Alert if sudden drop indicates logging failure\n5. Document response procedures:\n   - Who receives alerts\n   - Escalation procedures\n   - Actions to take (increase capacity, archive old logs, etc.)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-search",
+      "controlMappings": [
+        {
+          "controlId": "03.03.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Capacity monitoring satisfies the requirement to detect 'audit logging process failures' related to storage capacity issues. While M365 audit log has no hard limit, monitoring destination storage (Log Analytics, Storage Accounts) prevents audit record loss when 'reaching or exceeding audit log storage capacity.'",
+          "nistRequirement": "Monitor for audit logging process failures including reaching or exceeding audit log storage capacity and take additional actions as defined"
+        }
+      ]
+    },
+    {
+      "id": "PV-AU-010",
+      "settingName": "AlertNotificationConfiguration",
+      "displayName": "Audit Alert Notification Recipients",
+      "settingPath": "AlertPolicy.NotifyUser",
+      "policyType": "Purview",
+      "policySubType": "AlertPolicy",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["configured"],
+      "validationOperator": "contains",
+      "description": "Configures email notification recipients for audit logging failure alerts to ensure organizational personnel are notified promptly. Recipients should include security operations team, compliance officers, and system administrators with authority to respond to audit failures.",
+      "implementationGuide": "1. Define organizational roles/personnel for audit alerts:\n   - Security Operations Center (SOC) team email\n   - Compliance Officer(s)\n   - IT System Administrators\n   - IT Security Manager\n2. Configure notification recipients in alert policies:\n   - Purview portal > Policies > Alert policies\n   - Edit existing audit alert policies\n   - Update 'Send this alert to' field with email addresses\n   - Add distribution list for broader coverage\n3. Configure alert aggregation settings:\n   - Daily notification limit: Set based on expected alert volume\n   - Email notifications: Enabled\n   - Alert dashboard: Enable for centralized monitoring\n4. Test notification delivery:\n   - Trigger test alert (in test environment)\n   - Verify all recipients receive notification\n   - Confirm notification arrives within defined time period\n5. Document notification procedures:\n   - Response time requirements (e.g., 1 hour for critical alerts)\n   - Escalation matrix\n   - After-hours contact procedures\n6. Review and update recipient list quarterly",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/compliance/alert-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.03.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Proper configuration of alert notification recipients ensures the 'organizational personnel or roles' specified in NIST requirement receive timely notification of audit failures. Distribution lists provide redundancy and ensure 24/7 coverage for critical audit alerts.",
+          "nistRequirement": "Ensure organizational personnel or roles receive alerts within defined time period when audit logging process failures occur"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AU-008",
+      "settingName": "ServiceHealthAlertConfiguration",
+      "displayName": "Azure Service Health Alerts for Audit Services",
+      "settingPath": "ServiceHealthAlertEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "ServiceHealth",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Configures Azure Service Health alerts to notify administrators of service incidents, planned maintenance, or health advisories affecting Azure AD, Microsoft 365, or audit logging services. Provides early warning of platform-level audit logging disruptions.",
+      "implementationGuide": "1. Navigate to Azure Portal > Service Health > Health alerts\n2. Click '+ Create service health alert'\n3. Configure alert rule:\n   - Scope: Select subscription(s)\n   - Condition:\n     * Services: Select 'Azure Active Directory', 'Microsoft 365 suite'\n     * Regions: All regions (global services)\n     * Event types: Service issues, Planned maintenance, Health advisories, Security advisories\n4. Configure actions:\n   - Action group name: 'Service-Health-Audit-Notifications'\n   - Notification type: Email/SMS/Push/Voice\n   - Add recipients: Security team, IT admins, Compliance officers\n5. Configure alert rule details:\n   - Name: 'Azure AD and M365 Service Health Alerts'\n   - Description: 'Alerts for service disruptions affecting audit logging'\n   - Severity: Sev 1 (Critical)\n   - Enable alert rule: Yes\n6. Create alert rule\n7. Test: Azure occasionally runs service health test notifications\n8. Review Service Health dashboard regularly: Azure Portal > Service Health > Service issues",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/service-health/alerts-activity-log-service-notifications-portal",
+      "controlMappings": [
+        {
+          "controlId": "03.03.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Service Health alerts provide proactive notification of platform-level audit logging process failures including Azure AD service disruptions, M365 audit log service issues, and planned maintenance that may impact audit record generation. This satisfies the requirement to alert personnel of audit failures with additional organizational context.",
+          "nistRequirement": "Alert personnel of audit logging process failures including service-level disruptions and take additional actions such as notifying service provider or implementing backup logging"
+        }
+      ]
+    }
+  ]
+}

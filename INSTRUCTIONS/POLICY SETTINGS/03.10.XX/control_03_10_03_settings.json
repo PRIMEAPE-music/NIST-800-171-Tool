@@ -1,0 +1,12 @@
+{
+  "controlId": "03.10.03",
+  "controlTitle": "WITHDRAWN",
+  "controlFamily": "PE",
+  "status": "WITHDRAWN",
+  "withdrawnInRevision": "NIST 800-171 Revision 3",
+  "incorporatedInto": "03.10.07",
+  "incorporatedControlTitle": "Physical Access Control",
+  "reason": "Control 03.10.03 has been withdrawn in NIST 800-171 Revision 3 and its requirements have been incorporated into control 03.10.07 (Physical Access Control).",
+  "settings": [],
+  "note": "No settings are documented for this control as it has been withdrawn. Organizations should refer to control 03.10.07 for physical access control requirements."
+}

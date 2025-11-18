@@ -52,6 +52,8 @@ export interface SyncResult {
   policiesUpdated: number;
   duration: number;
   errors?: string[];
+  addedPolicyIds?: number[];
+  updatedPolicyIds?: number[];
 }
 
 // Intune Policy Data Structures
@@ -129,3 +131,60 @@ export interface AzureADMFAStatus {
 }
 
 // REMOVED: ControlPolicyMappingTemplate interface - no longer mapping policies to controls
+
+// ============================================
+// VALIDATION ENGINE TYPES (Phase 3)
+// ============================================
+
+/**
+ * Supported validation operators for comparing policy values
+ */
+export type ValidationOperator = '==' | '>=' | '<=' | 'contains' | 'in' | 'matches';
+
+/**
+ * Supported data types for validation
+ */
+export type ValidationType = 'boolean' | 'integer' | 'string' | 'array' | 'object';
+
+/**
+ * Result of a single validation operation
+ */
+export interface ValidationResult {
+  isValid: boolean;
+  actualValue: any;
+  expectedValue: any;
+  operator: ValidationOperator;
+  errorMessage?: string;
+}
+
+/**
+ * Complete validation check result with metadata
+ */
+export interface SettingValidationResult {
+  settingId: string;
+  settingName: string;
+  policyType: string;
+  isCompliant: boolean;
+  validationResult: ValidationResult;
+  timestamp: Date;
+}
+
+/**
+ * Batch validation results for multiple settings
+ */
+export interface BatchValidationResult {
+  totalSettings: number;
+  compliantSettings: number;
+  nonCompliantSettings: number;
+  notConfiguredSettings: number;
+  results: SettingValidationResult[];
+}
+
+/**
+ * JSON Path extraction result
+ */
+export interface PathExtractionResult {
+  success: boolean;
+  value?: any;
+  error?: string;
+}

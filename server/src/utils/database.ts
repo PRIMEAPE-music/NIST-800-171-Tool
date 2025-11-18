@@ -53,7 +53,7 @@ export async function clearDatabase(): Promise<void> {
   logger.warn('Clearing all data from database...');
 
   await prisma.changeHistory.deleteMany();
-  await prisma.controlPolicyMapping.deleteMany();
+  // controlPolicyMapping table removed - old system deprecated
   await prisma.poamMilestone.deleteMany();
   await prisma.poam.deleteMany();
   await prisma.evidence.deleteMany();

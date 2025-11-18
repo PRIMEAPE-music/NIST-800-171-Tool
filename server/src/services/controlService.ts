@@ -452,7 +452,13 @@ export class ControlService {
         throw new Error(`Control ${controlId} not found`);
       }
 
-      // Fetch all policy mappings for this control
+      // Legacy policy mapping system has been replaced with M365Setting system
+      // This method will be updated in Phase 5 to use the new ControlSettingMapping table
+      // For now, return empty array to maintain API compatibility
+      logger.info(`getPoliciesForControl called for ${controlId} - returning empty (old system removed)`);
+      return [];
+
+      /* OLD CODE - will be replaced in Phase 5:
       const mappings = await prisma.controlPolicyMapping.findMany({
         where: {
           controlId: control.id,
@@ -494,6 +500,7 @@ export class ControlService {
 
       logger.info(`Found ${policiesWithSettings.length} policies for control ${controlId}`);
       return policiesWithSettings;
+      */
     } catch (error) {
       logger.error(`Error fetching policies for control ${controlId}:`, error);
       throw error;

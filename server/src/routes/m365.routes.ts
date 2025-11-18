@@ -10,6 +10,7 @@ import policyViewerService from '../services/policyViewer.service';
 import { PolicySearchParams } from '../types/policyViewer.types';
 import secureScoreRoutes from './secureScore.routes';
 import complianceManagerRoutes from './complianceManager.routes';
+import m365SettingsRoutes from './m365Settings.routes';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -19,6 +20,9 @@ router.use('/secure-score', secureScoreRoutes);
 
 // Mount Compliance Manager routes
 router.use('/compliance-manager', complianceManagerRoutes);
+
+// Mount M365 Settings routes (new in Phase 5)
+router.use('/', m365SettingsRoutes);
 
 /**
  * GET /api/m365/intune/compliance-policies
@@ -256,6 +260,48 @@ router.get('/sync/status', async (req, res) => {
 });
 
 /**
+ * GET /api/m365/sync-logs
+ * Get detailed sync logs with compliance information
+ */
+router.get('/sync-logs', async (req, res) => {
+  try {
+    const logs = await prisma.m365SyncLog.findMany({
+      orderBy: { syncDate: 'desc' },
+      take: 50,
+    });
+
+    // Enhance logs with compliance information
+    const enhancedLogs = logs.map(log => ({
+      ...log,
+      complianceChecked: log.complianceChecked,
+      complianceSummary: log.complianceChecked
+        ? {
+            settingsValidated: log.settingsValidated,
+            controlsAffected: log.controlsAffected,
+            improved: log.complianceImproved,
+            declined: log.complianceDeclined,
+            hasErrors: !!log.complianceErrors,
+            errorCount: log.complianceErrors
+              ? JSON.parse(log.complianceErrors).length
+              : 0,
+          }
+        : null,
+    }));
+
+    res.json({
+      success: true,
+      data: enhancedLogs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch sync logs',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
  * GET /api/m365/stats
  * Get M365 integration statistics
  */
@@ -400,6 +446,122 @@ router.get('/policies/viewer/:id', async (req, res) => {
       policy,
     });
   } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/policies/viewer/:id/control-mappings
+ * Get control mappings for a specific policy
+ * Shows which settings from this policy are validated and which controls they map to
+ */
+router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
+  try {
+    const policyId = parseInt(req.params.id);
+
+    // Get policy to verify it exists
+    const policy = await prisma.m365Policy.findUnique({
+      where: { id: policyId },
+      select: { id: true, policyName: true, policyType: true },
+    });
+
+    if (!policy) {
+      return res.status(404).json({
+        success: false,
+        error: 'Policy not found',
+      });
+    }
+
+    // Get all compliance checks for this policy's settings
+    // Only include settings that have an actual value (i.e., are configured in this policy)
+    const complianceChecks = await prisma.settingComplianceCheck.findMany({
+      where: {
+        policyId,
+        // Filter out settings that aren't configured (actualValue is null or 'null')
+        NOT: {
+          OR: [
+            { actualValue: null },
+            { actualValue: 'null' }
+          ]
+        }
+      },
+      include: {
+        setting: {
+          include: {
+            controlMappings: {
+              include: {
+                control: {
+                  select: {
+                    id: true,
+                    controlId: true,
+                    title: true,
+                    family: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Group by control
+    const controlMap = new Map<number, any>();
+
+    for (const check of complianceChecks) {
+      for (const mapping of check.setting.controlMappings) {
+        const controlId = mapping.control.id;
+
+        if (!controlMap.has(controlId)) {
+          controlMap.set(controlId, {
+            controlId: mapping.control.controlId,
+            controlTitle: mapping.control.title,
+            family: mapping.control.family,
+            settings: [],
+          });
+        }
+
+        controlMap.get(controlId)!.settings.push({
+          settingId: check.setting.id,
+          settingName: check.setting.displayName,
+          expectedValue: check.setting.expectedValue,
+          actualValue: check.actualValue,
+          isCompliant: check.isCompliant,
+          confidence: mapping.confidence,
+          validationOperator: check.setting.validationOperator,
+          policyType: check.setting.policyType,
+          platform: check.setting.platform,
+          lastChecked: check.lastChecked,
+        });
+      }
+    }
+
+    // Convert map to array and calculate summary stats
+    const controls = Array.from(controlMap.values());
+    const totalSettings = complianceChecks.length;
+    const compliantSettings = complianceChecks.filter(c => c.isCompliant).length;
+    const nonCompliantSettings = totalSettings - compliantSettings;
+
+    res.json({
+      success: true,
+      data: {
+        policyId: policy.id,
+        policyName: policy.policyName,
+        policyType: policy.policyType,
+        summary: {
+          totalSettings,
+          compliantSettings,
+          nonCompliantSettings,
+          controlsAffected: controls.length,
+        },
+        controls,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching policy control mappings:', error);
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

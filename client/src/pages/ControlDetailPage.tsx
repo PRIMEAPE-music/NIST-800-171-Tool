@@ -22,6 +22,7 @@ import { HistoryTab } from '@/components/controls/HistoryTab';
 import { RelatedTab } from '@/components/controls/RelatedTab';
 // REMOVED: M365 mapping tab imports - no longer mapping policies to controls
 import { GapAnalysisTab } from '@/components/controls/GapAnalysisTab';
+import M365SettingsTab from '@/components/M365Settings/M365SettingsTab';
 import { StatusUpdateDialog } from '@/components/controls/StatusUpdateDialog';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
 
@@ -33,8 +34,8 @@ interface TabPanelProps {
 
 const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
   return (
-    <div hidden={value !== index} role="tabpanel">
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+    <div hidden={value !== index} role="tabpanel" style={{ width: '100%' }}>
+      {value === index && <Box sx={{ py: 3, width: '100%' }}>{children}</Box>}
     </div>
   );
 };
@@ -152,6 +153,7 @@ export const ControlDetailPage: React.FC = () => {
           <Tab label={`Evidence (${control.evidence?.length || 0})`} />
           <Tab label="History" />
           <Tab label="Related" />
+          <Tab label="M365 Settings" />
         </Tabs>
 
         <Box>
@@ -208,6 +210,10 @@ export const ControlDetailPage: React.FC = () => {
 
         <TabPanel value={activeTab} index={4}>
           <RelatedTab control={control} />
+        </TabPanel>
+
+        <TabPanel value={activeTab} index={5}>
+          <M365SettingsTab controlId={control.controlId} />
         </TabPanel>
       </Paper>
 

@@ -1,0 +1,129 @@
+{
+  "controlId": "03.05.04",
+  "controlTitle": "Replay-Resistant Authentication",
+  "family": "IA",
+  "nistRequirement": "Implement replay-resistant authentication mechanisms for access to privileged and non-privileged accounts.",
+  "settingsCount": 5,
+  "settings": [
+    {
+      "id": "AZ-IA-001",
+      "settingName": "blockLegacyAuthentication",
+      "displayName": "Block Legacy Authentication",
+      "settingPath": "conditionalAccess.policy.conditions.clientAppTypes",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["exchangeActiveSync", "other"],
+      "validationOperator": "contains",
+      "description": "Blocks legacy authentication protocols that do not support modern authentication methods including MFA. Legacy protocols like Basic Authentication, POP3, IMAP, and older Office clients are vulnerable to replay attacks and credential theft because they cannot enforce MFA or other replay-resistant mechanisms.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create new policy: 'Block Legacy Authentication'\n4. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n5. Under Assignments > Cloud apps: Select 'All cloud apps'\n6. Under Conditions > Client apps: Select 'Exchange ActiveSync clients' and 'Other clients'\n7. Under Access controls > Grant: Select 'Block access'\n8. Enable policy and save\n9. Monitor sign-in logs to identify affected users before full enforcement\n10. Communicate with users to update to modern authentication clients",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/block-legacy-authentication",
+      "controlMappings": [
+        {
+          "controlId": "03.05.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Legacy authentication protocols are inherently vulnerable to replay attacks because they do not support modern cryptographic protections or MFA. Blocking these protocols forces the use of modern authentication which implements replay-resistant mechanisms through token-based authentication, nonce values, and time-synchronized challenges. This is a CIS Level 1 control (5.2.2.3) and Microsoft security baseline recommendation.",
+          "nistRequirement": "Implement replay-resistant authentication mechanisms for access to privileged and non-privileged accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-IA-002",
+      "settingName": "requireMfaAllUsers",
+      "displayName": "Require MFA for All Users",
+      "settingPath": "conditionalAccess.policy.grantControls.builtInControls",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["mfa"],
+      "validationOperator": "contains",
+      "description": "Requires multi-factor authentication for all user accounts accessing cloud applications. MFA provides replay-resistant authentication through time-based one-time passwords (TOTP), push notifications with number matching, or cryptographic challenges that cannot be replayed by attackers intercepting authentication traffic.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create new policy: 'Require MFA for All Users'\n4. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n5. Under Assignments > Cloud apps: Select 'All cloud apps'\n6. Under Access controls > Grant: Select 'Require multifactor authentication'\n7. Set 'Require all the selected controls'\n8. Enable policy in report-only mode initially\n9. Review sign-in logs for 2-4 weeks to assess impact\n10. Change policy to 'On' after validation\n11. Ensure users are registered for MFA before enforcement",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-all-users-mfa",
+      "controlMappings": [
+        {
+          "controlId": "03.05.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Multi-factor authentication implements replay-resistant mechanisms through time-synchronized tokens, challenge-response protocols, or cryptographic methods that prevent replay attacks. Microsoft research shows MFA blocks over 99.9% of account compromise attacks. This satisfies NIST 800-171 requirements for replay-resistant authentication and is a CIS Level 1 control (5.2.2.2).",
+          "nistRequirement": "Implement replay-resistant authentication mechanisms for access to privileged and non-privileged accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-IA-003",
+      "settingName": "phishingResistantMfaAdmins",
+      "displayName": "Phishing-Resistant MFA for Administrators",
+      "settingPath": "conditionalAccess.policy.grantControls.authenticationStrength",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "Phishing-resistant MFA",
+      "validationOperator": "==",
+      "description": "Requires phishing-resistant MFA methods (FIDO2 security keys, Windows Hello for Business, Certificate-based Authentication) for administrator accounts. These methods use cryptographic protocols and hardware-backed security that are highly resistant to replay attacks and phishing.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create new policy: 'Require Phishing-Resistant MFA for Admins'\n4. Under Assignments > Users: Select 'Directory roles' and choose administrative roles (Global Admin, Security Admin, etc.)\n5. Under Assignments > Cloud apps: Select 'All cloud apps'\n6. Under Access controls > Grant: Select 'Require authentication strength'\n7. Choose 'Phishing-resistant MFA' strength (includes FIDO2, Windows Hello, Certificate-based auth)\n8. Exclude break-glass accounts configured with phishing-resistant methods\n9. Enable policy after ensuring admins have registered phishing-resistant methods\n10. Monitor for users unable to sign in and provide alternative phishing-resistant options",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-authentication-strengths",
+      "controlMappings": [
+        {
+          "controlId": "03.05.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Phishing-resistant MFA methods (FIDO2, Windows Hello, Certificate-based auth) provide the strongest replay resistance through cryptographic challenge-response protocols and hardware-backed security. These methods eliminate the risk of credential phishing and replay attacks that can affect SMS, voice calls, and even push notifications. CIS Level 2 control (5.2.2.5) specifically recommends this for administrator accounts due to their high-value target status.",
+          "nistRequirement": "Implement replay-resistant authentication mechanisms for access to privileged accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-IA-004",
+      "settingName": "signInFrequencyAdmins",
+      "displayName": "Sign-in Frequency for Administrators",
+      "settingPath": "conditionalAccess.policy.sessionControls.signInFrequency",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {"value": 1, "type": "hours", "isEnabled": true},
+      "validationOperator": "==",
+      "description": "Requires administrators to re-authenticate every hour, limiting the window for session replay attacks. Frequent re-authentication with MFA ensures tokens cannot be replayed for extended periods and reduces the risk of session hijacking.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create or modify admin MFA policy\n4. Under Assignments > Users: Select 'Directory roles' and choose administrative roles\n5. Under Assignments > Cloud apps: Select 'All cloud apps'\n6. Under Session controls: Enable 'Sign-in frequency'\n7. Set frequency to '1 Hours' or '4 Hours' based on risk tolerance\n8. Ensure 'Require sign-in every time' is selected\n9. Save and enable policy\n10. Communicate change to administrators about increased authentication frequency",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime",
+      "controlMappings": [
+        {
+          "controlId": "03.05.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Regular re-authentication limits the window of opportunity for session token replay attacks. By requiring administrators to re-authenticate frequently, stolen or intercepted session tokens become useless after a short time period. This is a CIS Level 1 control (5.2.2.4) that specifically targets high-privilege accounts where session hijacking poses the greatest risk.",
+          "nistRequirement": "Implement replay-resistant authentication mechanisms for access to privileged accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-IA-005",
+      "settingName": "persistentBrowserSession",
+      "displayName": "Disable Persistent Browser Sessions for Administrators",
+      "settingPath": "conditionalAccess.policy.sessionControls.persistentBrowser",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "never",
+      "validationOperator": "==",
+      "description": "Disables persistent browser sessions for administrators, requiring fresh authentication when browser is closed. Prevents long-lived session cookies that could be stolen and replayed by attackers to gain unauthorized access without re-authentication.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as Conditional Access Administrator\n2. Navigate to Protection > Conditional Access > Policies\n3. Create or modify admin session policy\n4. Under Assignments > Users: Select 'Directory roles' and choose administrative roles\n5. Under Assignments > Cloud apps: Select 'All cloud apps'\n6. Under Session controls: Enable 'Persistent browser session'\n7. Select 'Never persistent' option\n8. Save and enable policy\n9. Test by closing browser and verifying re-authentication is required\n10. Communicate to administrators that 'Keep me signed in' option will be disabled",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime",
+      "controlMappings": [
+        {
+          "controlId": "03.05.04",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Disabling persistent sessions ensures that authentication tokens are not stored long-term in browser storage where they could be extracted and replayed by malware or attackers with physical access. This complements other replay-resistant mechanisms by ensuring session tokens have limited lifetime. CIS Level 1 control (5.2.2.4) recommends this for administrative users.",
+          "nistRequirement": "Implement replay-resistant authentication mechanisms for access to privileged accounts"
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -15,6 +15,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -23,6 +25,7 @@ import {
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 import { PolicyDetail } from '../../types/policyViewer.types';
+import ControlMappingsTab from './ControlMappingsTab';
 
 interface PolicyDetailModalProps {
   policy: PolicyDetail | null;
@@ -30,12 +33,40 @@ interface PolicyDetailModalProps {
   onClose: () => void;
 }
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`policy-tabpanel-${index}`}
+      aria-labelledby={`policy-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
 const PolicyDetailModal: React.FC<PolicyDetailModalProps> = ({
   policy,
   open,
   onClose,
 }) => {
+  const [tabValue, setTabValue] = useState(0);
+
   if (!policy) return null;
+
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
 
   const renderJsonSection = (title: string, data: any) => {
     if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
@@ -100,119 +131,72 @@ const PolicyDetailModal: React.FC<PolicyDetailModalProps> = ({
       <Divider />
 
       <DialogContent>
-        {/* Description */}
-        {policy.policyDescription && (
-          <Box mb={3}>
-            <Typography variant="body1">{policy.policyDescription}</Typography>
-          </Box>
-        )}
-
-        {/* Metadata */}
-        <Box mb={3}>
-          <Typography variant="h6" gutterBottom>
-            Metadata
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Policy ID: {policy.policyId}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Last Synced: {formatDistanceToNow(new Date(policy.lastSynced), { addSuffix: true })}
-          </Typography>
-          {policy.parsedData.createdDateTime && (
-            <Typography variant="body2" color="text.secondary">
-              Created: {new Date(policy.parsedData.createdDateTime).toLocaleString()}
-            </Typography>
-          )}
-          {policy.parsedData.modifiedDateTime && (
-            <Typography variant="body2" color="text.secondary">
-              Modified: {new Date(policy.parsedData.modifiedDateTime).toLocaleString()}
-            </Typography>
-          )}
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tabValue} onChange={handleTabChange} aria-label="policy detail tabs">
+            <Tab label="Overview" id="policy-tab-0" aria-controls="policy-tabpanel-0" />
+            <Tab label="Raw Data" id="policy-tab-1" aria-controls="policy-tabpanel-1" />
+            <Tab label="Control Mappings" id="policy-tab-2" aria-controls="policy-tabpanel-2" />
+          </Tabs>
         </Box>
 
-        <Divider sx={{ my: 2 }} />
+        {/* Overview Tab */}
+        <TabPanel value={tabValue} index={0}>
+          {/* Description */}
+          {policy.policyDescription && (
+            <Box mb={3}>
+              <Typography variant="body1">{policy.policyDescription}</Typography>
+            </Box>
+          )}
 
-        {/* Mapped Controls */}
-        {policy.mappedControls.length > 0 && (
+          {/* Metadata */}
           <Box mb={3}>
             <Typography variant="h6" gutterBottom>
-              Mapped NIST Controls ({policy.mappedControls.length})
+              Metadata
             </Typography>
-            <Box display="flex" flexDirection="column" gap={1}>
-              {policy.mappedControls.map((control) => (
-                <Paper key={control.controlId} sx={{ p: 2 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="start" mb={2}>
-                    <Box>
-                      <Typography variant="subtitle2">{control.controlId}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {control.controlTitle}
-                      </Typography>
-                      {control.mappingNotes && (
-                        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-                          Note: {control.mappingNotes}
-                        </Typography>
-                      )}
-                    </Box>
-                    <Chip
-                      label={`${control.mappingConfidence} Confidence`}
-                      size="small"
-                      color={
-                        control.mappingConfidence === 'High'
-                          ? 'success'
-                          : control.mappingConfidence === 'Medium'
-                          ? 'warning'
-                          : 'default'
-                      }
-                    />
-                  </Box>
-
-                  {/* Mapped Settings Details */}
-                  {control.mappedSettings && control.mappedSettings.length > 0 && (
-                    <Box sx={{ mt: 2, bgcolor: 'rgba(0, 0, 0, 0.2)', p: 2, borderRadius: 1, border: '1px solid #4A4A4A' }}>
-                      <Typography variant="subtitle2" gutterBottom sx={{ color: '#E0E0E0' }}>
-                        Mapped Settings:
-                      </Typography>
-                      <List dense disablePadding>
-                        {control.mappedSettings.map((setting, idx) => (
-                          <ListItem key={idx} sx={{ py: 0.5, px: 0 }}>
-                            <ListItemIcon sx={{ minWidth: 32 }}>
-                              {setting.meetsRequirement ? (
-                                <CompliantIcon color="success" fontSize="small" />
-                              ) : (
-                                <NonCompliantIcon color="error" fontSize="small" />
-                              )}
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={
-                                <Typography variant="body2" sx={{ color: '#E0E0E0' }}>
-                                  <strong>{setting.settingName}:</strong> {String(setting.settingValue)}
-                                </Typography>
-                              }
-                              secondary={
-                                <Typography variant="caption" sx={{ color: '#B0B0B0' }}>
-                                  {setting.validationMessage ||
-                                    (setting.meetsRequirement ? 'Meets requirement' : 'Does not meet requirement')}
-                                </Typography>
-                              }
-                            />
-                          </ListItem>
-                        ))}
-                      </List>
-                    </Box>
-                  )}
-                </Paper>
-              ))}
-            </Box>
+            <Typography variant="body2" color="text.secondary">
+              Policy ID: {policy.policyId}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Last Synced: {formatDistanceToNow(new Date(policy.lastSynced), { addSuffix: true })}
+            </Typography>
+            {policy.parsedData.createdDateTime && (
+              <Typography variant="body2" color="text.secondary">
+                Created: {new Date(policy.parsedData.createdDateTime).toLocaleString()}
+              </Typography>
+            )}
+            {policy.parsedData.modifiedDateTime && (
+              <Typography variant="body2" color="text.secondary">
+                Modified: {new Date(policy.parsedData.modifiedDateTime).toLocaleString()}
+              </Typography>
+            )}
           </Box>
-        )}
 
-        <Divider sx={{ my: 2 }} />
+          {/* Settings Summary */}
+          {policy.parsedData.settings && Object.keys(policy.parsedData.settings).length > 0 && (
+            <Box mb={3}>
+              <Typography variant="h6" gutterBottom>
+                Settings Summary
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {Object.keys(policy.parsedData.settings).length} settings configured
+              </Typography>
+            </Box>
+          )}
+        </TabPanel>
 
-        {/* Settings */}
-        {renderJsonSection('Policy Settings', policy.parsedData.settings)}
+        {/* Raw Data Tab */}
+        <TabPanel value={tabValue} index={1}>
+          {/* Settings */}
+          {renderJsonSection('Policy Settings', policy.parsedData.settings)}
 
-        {/* Full Policy Data */}
-        {renderJsonSection('Complete Policy Data', policy.parsedData)}
+          {/* Full Policy Data */}
+          {renderJsonSection('Complete Policy Data', policy.parsedData)}
+        </TabPanel>
+
+        {/* Control Mappings Tab */}
+        <TabPanel value={tabValue} index={2}>
+          <ControlMappingsTab policyId={policy.id} />
+        </TabPanel>
       </DialogContent>
 
       <DialogActions>

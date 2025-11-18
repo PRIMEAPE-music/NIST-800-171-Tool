@@ -1,0 +1,103 @@
+{
+  "controlId": "03.03.06",
+  "controlTitle": "Audit Record Reduction and Report Generation",
+  "controlFamily": "AU",
+  "settings": [
+    {
+      "id": "DF-AU-006",
+      "settingName": "LogAnalyticsWorkspace",
+      "displayName": "Log Analytics Workspace for Audit Analysis",
+      "settingPath": "LogAnalytics.Workspace",
+      "policyType": "Defender",
+      "policySubType": "LogAnalytics",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {"enabled": true, "retentionDays": 90},
+      "validationOperator": "==",
+      "description": "Deploys Azure Log Analytics workspace as the centralized repository for audit record storage, analysis, and reporting. Log Analytics provides powerful KQL (Kusto Query Language) capabilities for audit record reduction, filtering, and custom report generation without altering original audit data.",
+      "implementationGuide": "1. Navigate to Azure Portal > Log Analytics workspaces\n2. Click '+ Create' to create new workspace or use existing\n3. Select subscription, resource group, and region\n4. Name the workspace (e.g., 'M365-Audit-Workspace')\n5. Choose pricing tier (Pay-as-you-go recommended for flexibility)\n6. Set data retention to minimum 90 days (up to 730 days available)\n7. Review and create the workspace\n8. Once created, note the Workspace ID and Primary Key\n9. Configure Microsoft 365 and Azure AD to send audit logs to this workspace via Diagnostic Settings\n10. Enable Microsoft Sentinel on this workspace for advanced analytics",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview",
+      "controlMappings": [
+        {
+          "controlId": "03.03.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Log Analytics workspace provides the core audit record reduction and report generation capability through KQL queries. It preserves original audit records (time ordering and content) while enabling summarization, filtering, and custom reporting for security investigations and compliance requirements.",
+          "nistRequirement": "Implement an audit record reduction and report generation capability that supports audit record review, analysis, reporting requirements, and after-the-fact investigations of incidents"
+        }
+      ]
+    },
+    {
+      "id": "DF-AU-007",
+      "settingName": "SentinelWorkbooks",
+      "displayName": "Microsoft Sentinel Workbooks for Audit Reporting",
+      "settingPath": "Sentinel.Workbooks",
+      "policyType": "Defender",
+      "policySubType": "SentinelReporting",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["AzureADSignIns", "AuditLogs", "SecurityOperations"],
+      "validationOperator": "contains",
+      "description": "Implements pre-built and custom workbooks in Microsoft Sentinel for visualizing and reporting on audit data. Workbooks provide interactive, summarized views of audit records for executive reporting, compliance demonstrations, and operational security monitoring without modifying source data.",
+      "implementationGuide": "1. Navigate to Microsoft Sentinel > Workbooks\n2. Select 'Templates' tab to view available workbook templates\n3. Deploy recommended audit-focused workbooks:\n   - 'Azure AD Audit, Activity and Sign-in logs'\n   - 'Azure Activity'\n   - 'Office 365'\n   - 'Identity & Access'\n4. Click on template and select 'Save' to create instance\n5. Customize workbooks by clicking 'Edit' to add organization-specific queries\n6. Create custom workbooks for specific reporting requirements:\n   - Privileged account activity summaries\n   - Failed authentication attempts by time period\n   - Configuration changes summary\n7. Schedule workbook exports using Azure Logic Apps if needed\n8. Share workbooks with appropriate stakeholders",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/sentinel/monitor-your-data",
+      "controlMappings": [
+        {
+          "controlId": "03.03.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Sentinel workbooks provide structured report generation capabilities that summarize large volumes of audit data into meaningful visualizations and summaries for security analysis, compliance reporting, and incident investigation without altering the original audit records.",
+          "nistRequirement": "Provide an audit record reduction and report generation capability that supports on-demand audit record review, analysis, and reporting requirements and after-the-fact investigations of incidents"
+        }
+      ]
+    },
+    {
+      "id": "PV-AU-008",
+      "settingName": "AuditLogSearch",
+      "displayName": "Microsoft Purview Audit Log Search",
+      "settingPath": "Purview.AuditSearch",
+      "policyType": "Purview",
+      "policySubType": "AuditSearch",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {"enabled": true, "exportCapability": true},
+      "validationOperator": "==",
+      "description": "Leverages Microsoft Purview unified audit log search functionality to query, filter, and export audit records across Microsoft 365 services. Provides on-demand search and export capabilities for detailed audit record analysis and report generation while preserving original record integrity.",
+      "implementationGuide": "1. Navigate to Microsoft Purview compliance portal (https://compliance.microsoft.com)\n2. Select 'Audit' from Solutions menu\n3. Click 'Search' tab to access audit log search interface\n4. Configure search parameters:\n   - Date range (up to 90 days for standard search, 10 years for advanced)\n   - Activities (select specific events or use 'Show results for all activities')\n   - Users (specific users or all users)\n   - File/folder/site filters as needed\n5. Run search and review results\n6. Export results to CSV for further analysis or reporting:\n   - Click 'Export' button\n   - Choose 'Download all results' or 'Download loaded results'\n7. Use PowerShell for advanced searches: Search-UnifiedAuditLog cmdlet\n8. Document standard search queries for regular reporting needs",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-search",
+      "controlMappings": [
+        {
+          "controlId": "03.03.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Purview audit log search provides immediate, on-demand capability to search, filter, and export audit records for incident investigation and compliance reporting. Export functionality maintains original audit record content and time ordering as required by NIST control.",
+          "nistRequirement": "Provide audit record reduction and report generation capability that does not alter the original content or time ordering of audit records"
+        }
+      ]
+    },
+    {
+      "id": "DF-AU-009",
+      "settingName": "KQLQueries",
+      "displayName": "KQL Queries for Audit Record Analysis",
+      "settingPath": "LogAnalytics.SavedQueries",
+      "policyType": "Defender",
+      "policySubType": "LogAnalyticsQueries",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["FailedSignIns", "AdminChanges", "PrivilegedAccess"],
+      "validationOperator": "contains",
+      "description": "Creates and maintains library of standardized KQL queries for common audit analysis scenarios including failed authentication attempts, privileged account activity, configuration changes, and data access patterns. Queries perform audit record reduction by summarizing and filtering large datasets while preserving original audit data.",
+      "implementationGuide": "1. Navigate to Azure Portal > Log Analytics workspace > Logs\n2. Create essential audit analysis queries:\n   a) Failed Sign-ins Summary:\n      SigninLogs | where ResultType != 0 | summarize Count=count() by UserPrincipalName, ResultType, bin(TimeGenerated, 1h)\n   b) Admin Role Changes:\n      AuditLogs | where Category == 'RoleManagement' | project TimeGenerated, OperationName, InitiatedBy, TargetResources\n   c) Privileged Account Activity:\n      AuditLogs | where InitiatedBy.user.userPrincipalName in ('admin1@domain.com', 'admin2@domain.com') | summarize Operations=count() by OperationName, bin(TimeGenerated, 1d)\n3. Save queries with descriptive names and categories\n4. Create query packs for team sharing\n5. Document query purpose and expected outputs\n6. Test queries regularly to ensure accuracy\n7. Create scheduled query rules for automated reporting",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/queries",
+      "controlMappings": [
+        {
+          "controlId": "03.03.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "KQL queries provide powerful audit record reduction capabilities by filtering, aggregating, and summarizing massive audit datasets into meaningful reports without modifying source data. Supports both ad-hoc investigation and scheduled reporting requirements.",
+          "nistRequirement": "Implement audit record reduction capability that manipulates collected audit information and organizes it in a summary format that is more meaningful to analysts"
+        }
+      ]
+    }
+  ]
+}

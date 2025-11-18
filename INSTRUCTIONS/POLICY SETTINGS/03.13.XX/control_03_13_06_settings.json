@@ -1,0 +1,154 @@
+{
+  "controlId": "03.13.06",
+  "controlFamily": "SC",
+  "controlTitle": "Network Communications – Deny by Default – Allow by Exception",
+  "controlRequirement": "Deny network communications traffic by default, and allow network communications traffic by exception.",
+  "totalSettings": 6,
+  "lastUpdated": "2025-11-17",
+  "settings": [
+    {
+      "id": "IN-SC-001",
+      "settingName": "EnableDomainFirewall",
+      "displayName": "Enable Windows Defender Firewall for Domain Profile",
+      "settingPath": "FirewallRules.DomainProfile.EnableFirewall",
+      "policyType": "Intune",
+      "policySubType": "EndpointSecurity-Firewall",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Windows Defender Firewall for domain networks, enforcing deny-by-default network traffic filtering to prevent unauthorized inbound connections.",
+      "implementationGuide": "1. Navigate to Microsoft Intune admin center > Endpoint security > Firewall\n2. Create new Windows Firewall policy or use Security Baseline\n3. Configure Domain Profile > Enable Firewall = True\n4. Assign policy to appropriate device groups\n5. Verify deployment status in device compliance reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enabling Windows Defender Firewall with default deny creates the foundational network traffic control required by NIST. Domain profile firewall enforces deny-by-default for domain-joined devices accessing corporate networks.",
+          "nistRequirement": "Deny network communications traffic by default at the system boundary"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-002",
+      "settingName": "EnablePrivateFirewall",
+      "displayName": "Enable Windows Defender Firewall for Private Profile",
+      "settingPath": "FirewallRules.PrivateProfile.EnableFirewall",
+      "policyType": "Intune",
+      "policySubType": "EndpointSecurity-Firewall",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Windows Defender Firewall for private networks, ensuring deny-by-default traffic filtering on home and private network connections.",
+      "implementationGuide": "1. Navigate to Microsoft Intune admin center > Endpoint security > Firewall\n2. Create new Windows Firewall policy or use Security Baseline\n3. Configure Private Profile > Enable Firewall = True\n4. Assign policy to appropriate device groups\n5. Monitor compliance through Intune reporting dashboard",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Private profile firewall protection ensures deny-by-default traffic control when devices connect to private networks (home networks, trusted locations), maintaining security posture across all network contexts.",
+          "nistRequirement": "Deny network communications traffic by default at identified points within the system"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-003",
+      "settingName": "EnablePublicFirewall",
+      "displayName": "Enable Windows Defender Firewall for Public Profile",
+      "settingPath": "FirewallRules.PublicProfile.EnableFirewall",
+      "policyType": "Intune",
+      "policySubType": "EndpointSecurity-Firewall",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Windows Defender Firewall for public networks with strictest deny-by-default settings, providing maximum protection on untrusted public networks.",
+      "implementationGuide": "1. Navigate to Microsoft Intune admin center > Endpoint security > Firewall\n2. Create new Windows Firewall policy or use Security Baseline\n3. Configure Public Profile > Enable Firewall = True\n4. Assign policy to all managed Windows devices\n5. Validate firewall status using Intune device compliance reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Public profile firewall is critical for deny-by-default on untrusted networks (coffee shops, airports, public WiFi). This provides the most restrictive protection when devices access high-risk network environments.",
+          "nistRequirement": "Deny network communications traffic by default and allow by exception"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-004",
+      "settingName": "DefaultInboundActionDomain",
+      "displayName": "Default Inbound Action for Domain Profile - Block",
+      "settingPath": "FirewallRules.DomainProfile.DefaultInboundAction",
+      "policyType": "Intune",
+      "policySubType": "EndpointSecurity-Firewall",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Block",
+      "validationOperator": "==",
+      "description": "Configures default inbound action to Block for domain networks, implementing deny-by-default policy. Only explicitly allowed connections through firewall rules will be permitted.",
+      "implementationGuide": "1. Navigate to Microsoft Intune admin center > Endpoint security > Firewall\n2. Open Windows Firewall policy or Security Baseline\n3. Configure Domain Profile > Default Inbound Action = Block\n4. Create explicit allow rules for required business applications\n5. Test connectivity and adjust allow rules as needed\n6. Monitor blocked connections in Windows Event Viewer",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Setting default inbound action to Block directly implements the deny-by-default requirement. All inbound traffic is blocked unless explicitly allowed through configured firewall rules, creating an allow-by-exception model.",
+          "nistRequirement": "Deny network communications traffic by default, and allow network communications traffic by exception"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-005",
+      "settingName": "DefaultInboundActionPrivate",
+      "displayName": "Default Inbound Action for Private Profile - Block",
+      "settingPath": "FirewallRules.PrivateProfile.DefaultInboundAction",
+      "policyType": "Intune",
+      "policySubType": "EndpointSecurity-Firewall",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Block",
+      "validationOperator": "==",
+      "description": "Configures default inbound action to Block for private networks, ensuring deny-by-default traffic control on home and trusted private connections.",
+      "implementationGuide": "1. Navigate to Microsoft Intune admin center > Endpoint security > Firewall\n2. Open Windows Firewall policy or Security Baseline\n3. Configure Private Profile > Default Inbound Action = Block\n4. Create allow rules for necessary applications and services\n5. Validate remote access and file sharing work as expected\n6. Review firewall logs for legitimate blocked traffic",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Private profile with Block default inbound action maintains deny-by-default stance on private networks. Organizations can create specific allow rules for file sharing, remote desktop, and other private network services while blocking all other traffic.",
+          "nistRequirement": "Deny network communications traffic by default at identified points within the system"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-006",
+      "settingName": "DefaultInboundActionPublic",
+      "displayName": "Default Inbound Action for Public Profile - Block",
+      "settingPath": "FirewallRules.PublicProfile.DefaultInboundAction",
+      "policyType": "Intune",
+      "policySubType": "EndpointSecurity-Firewall",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Block",
+      "validationOperator": "==",
+      "description": "Configures default inbound action to Block for public networks, providing maximum protection with strictest deny-by-default policy on untrusted networks.",
+      "implementationGuide": "1. Navigate to Microsoft Intune admin center > Endpoint security > Firewall\n2. Open Windows Firewall policy or Security Baseline\n3. Configure Public Profile > Default Inbound Action = Block\n4. Minimize allow rules for public profile (most restrictive)\n5. Ensure VPN and remote access apps have necessary rules\n6. Test device connectivity on public networks\n7. Document all public profile allow rules with business justification",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-firewall-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.13.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Public profile with Block default inbound action implements the strongest deny-by-default protection for high-risk networks. This is the most critical setting as it protects devices on untrusted public networks where threats are most prevalent.",
+          "nistRequirement": "Deny network communications traffic by default and allow network communications traffic by exception"
+        }
+      ]
+    }
+  ]
+}

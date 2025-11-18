@@ -20,9 +20,9 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   onViewM365Tab,
 }) => {
   return (
-    <Box sx={{ px: 3 }}>
+    <Box sx={{ px: 3, width: '100%', display: 'block' }}>
       {/* Requirement Text */}
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 4, width: '100%' }}>
         <Typography variant="h6" gutterBottom sx={{ color: '#E0E0E0' }}>
           Requirement
         </Typography>
@@ -32,9 +32,17 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             p: 2,
             bgcolor: '#1a1a1a',
             borderColor: '#4A4A4A',
+            width: '100%',
           }}
         >
-          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', color: '#E0E0E0' }}>
+          <Typography
+            variant="body1"
+            sx={{
+              whiteSpace: 'pre-line',
+              color: '#E0E0E0',
+              wordBreak: 'break-word',
+            }}
+          >
             {control.requirementText}
           </Typography>
         </Paper>
@@ -42,7 +50,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* Discussion/Guidance */}
       {control.discussionText && (
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 4, width: '100%', display: 'block' }}>
           <Typography variant="h6" gutterBottom sx={{ color: '#E0E0E0' }}>
             Discussion
           </Typography>
@@ -52,13 +60,28 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               p: 2,
               bgcolor: '#1a1a1a',
               borderColor: '#4A4A4A',
+              width: '100%',
+              display: 'block',
             }}
           >
             <Typography
               variant="body2"
-              sx={{ whiteSpace: 'pre-wrap', color: '#B0B0B0' }}
+              component="div"
+              sx={{
+                whiteSpace: 'pre-line',
+                color: '#B0B0B0',
+                width: '100%',
+                wordBreak: 'break-word',
+                maxWidth: 'none',
+              }}
             >
-              {control.discussionText}
+              {/* Process text: preserve paragraph breaks (double newlines) but merge single newlines */}
+              {control.discussionText
+                .replace(/\n\n/g, '<<<PARA>>>')  // Preserve paragraph breaks
+                .replace(/\n/g, ' ')              // Convert single newlines to spaces
+                .replace(/<<<PARA>>>/g, '\n\n')   // Restore paragraph breaks
+                .replace(/  +/g, ' ')             // Collapse multiple spaces
+              }
             </Typography>
           </Paper>
         </Box>

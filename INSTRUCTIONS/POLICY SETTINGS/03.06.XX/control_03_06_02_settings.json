@@ -1,0 +1,168 @@
+{
+  "controlId": "03.06.02",
+  "controlFamily": "IR",
+  "controlTitle": "Incident Monitoring, Reporting, and Response Assistance",
+  "controlRequirement": "a. Track and document system security incidents.\nb. Report suspected incidents to the organizational incident response capability within [Assignment: organization-defined time period].\nc. Report incident information to [Assignment: organization-defined authorities].\nd. Provide an incident response support resource that offers advice and assistance to system users on handling and reporting incidents.",
+  "controlPriority": "High",
+  "settingsCount": 6,
+  "settings": [
+    {
+      "id": "PV-IR-006",
+      "settingName": "UnifiedAuditLogIngestionEnabled",
+      "displayName": "Microsoft 365 Unified Audit Log",
+      "settingPath": "Get-AdminAuditLogConfig | UnifiedAuditLogIngestionEnabled",
+      "policyType": "Purview",
+      "policySubType": "AuditLog",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables the Microsoft 365 Unified Audit Log to capture, record, and retain thousands of user and admin operations performed across all Microsoft 365 services. This is the foundational requirement for tracking and documenting security incidents, providing comprehensive audit trails of activities across Exchange Online, SharePoint, OneDrive, Teams, Azure AD, Defender, and other services. Audit logs include timestamp, user, action, object, IP address, and result information essential for incident investigation and forensics.",
+      "implementationGuide": "1. Connect to Exchange Online PowerShell:\n   Connect-ExchangeOnline\n2. Verify audit logging status:\n   Get-AdminAuditLogConfig | Format-List UnifiedAuditLogIngestionEnabled\n3. If False, enable unified audit logging:\n   Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true\n4. Verify in Microsoft Purview portal (https://compliance.microsoft.com)\n5. Go to Solutions > Audit\n6. Confirm banner shows 'Start recording user and admin activity' is NOT displayed\n7. Wait up to 60 minutes for audit logging to fully activate\n8. Test by searching audit logs for recent activity\n9. Configure audit log retention policies under Audit > Retention policies for long-term retention (E5 license required for >90 days)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-solutions-overview",
+      "controlMappings": [
+        {
+          "controlId": "03.06.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "The Unified Audit Log is the foundational mechanism for tracking and documenting system security incidents in Microsoft 365. It captures detailed records of all security-relevant events including: login attempts (successful/failed), file access and modifications, permission changes, mailbox access, email activity, policy changes, admin actions, and threat detection events. These audit records provide the evidence trail necessary to document incident details, status, timeline, affected resources, and actions taken - all required for incident tracking and documentation per NIST 03.06.02(a). CIS Microsoft 365 Benchmark control 3.1.1/5.1 (Level 1) requires this setting.",
+          "nistRequirement": "Track and document system security incidents"
+        }
+      ]
+    },
+    {
+      "id": "PV-IR-007",
+      "settingName": "AlertPolicies",
+      "displayName": "Security Alert Policies for Incident Detection",
+      "settingPath": "compliance.microsoft.com/alertpolicies",
+      "policyType": "Purview",
+      "policySubType": "AlertPolicy",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": [
+        "SuspiciousMailForwarding",
+        "ElevatedAccountActivity",
+        "MalwareDetected",
+        "UnusualExternalSharing",
+        "RansomwareActivity"
+      ],
+      "validationOperator": "contains",
+      "description": "Configures alert policies in Microsoft Purview to automatically detect and notify security teams about suspicious activities and potential security incidents. Critical alert policies monitor for suspicious mail forwarding rules, unusual admin activity, malware detection, excessive external sharing, potential ransomware activity, and other indicators of compromise. Alerts enable timely detection and reporting of incidents to the incident response team within defined timeframes.",
+      "implementationGuide": "1. Navigate to Microsoft Purview portal (https://compliance.microsoft.com)\n2. Go to Solutions > Alerts > Alert policies\n3. Review and enable recommended default alert policies:\n   - Suspicious email forwarding activity\n   - Elevation of Exchange admin privilege\n   - Malware campaign detected after delivery\n   - Unusual volume of external file sharing\n   - Ransomware activity detected\n   - User restricted from sending email\n   - Forms phishing detected\n4. Configure each alert policy:\n   - Set severity level (High, Medium, Low)\n   - Define email notification recipients\n   - Set alert aggregation settings\n   - Configure threshold if applicable\n5. Create custom alert policies for organization-specific threats\n6. Test alerts by simulating conditions to verify notifications work\n7. Document notification procedures and escalation paths\n8. Review Alerts dashboard regularly to tune policy sensitivity",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/alert-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.06.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Alert policies directly implement the requirement to report suspected incidents to the incident response capability within defined timeframes. By automatically detecting suspicious activities and immediately notifying designated security personnel via email, alerts ensure incidents are promptly reported to those responsible for incident response. Alert policies also support incident tracking by creating alert records with timestamps, severity, affected users/resources, and activity details. This automated detection and notification system ensures consistent, timely incident reporting as required by NIST 03.06.02(b). CIS Microsoft 365 Benchmark emphasizes monitoring and alerting on suspicious activities.",
+          "nistRequirement": "Report suspected incidents to the organizational incident response capability within organization-defined time period"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-008",
+      "settingName": "IncidentAssignment",
+      "displayName": "Incident Assignment and Notification Rules",
+      "settingPath": "security.microsoft.com/preferences2/integration",
+      "policyType": "Defender",
+      "policySubType": "IncidentManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Configures automatic incident assignment rules and notification workflows in Microsoft Defender XDR to ensure security incidents are immediately assigned to the appropriate response teams and stakeholders are notified according to severity and type. Assignment rules can route incidents based on alert source, severity, affected users/devices, or threat type. Email notifications ensure rapid awareness of critical incidents requiring immediate attention, supporting timely incident reporting and response.",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal (https://security.microsoft.com)\n2. Go to Settings > Microsoft Defender XDR > Notification rules\n3. Create notification rules for critical incidents:\n   - Click 'Add notification rule'\n   - Name: 'High Severity Incident Notification'\n   - Filter by Severity: High\n   - Recipients: Add security team email addresses or distribution list\n   - Notification content: Include incident details, affected entities\n4. Configure assignment rules under Incidents & alerts > Incident assignment\n5. Set up automatic assignment based on:\n   - Alert source (Defender for Endpoint, Office 365, Identity, Cloud Apps)\n   - Affected department or location\n   - Threat category (malware, phishing, data exfiltration)\n6. Create escalation rules for unacknowledged incidents\n7. Integrate with ITSM tools like ServiceNow if available\n8. Test notification delivery to all recipients\n9. Document on-call rotation and escalation procedures",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender/incidents-overview",
+      "controlMappings": [
+        {
+          "controlId": "03.06.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Incident assignment and notification rules directly support both incident tracking/documentation and timely incident reporting. By automatically assigning incidents to responsible teams and sending immediate notifications to security personnel and stakeholders, these rules ensure that incidents are tracked through their lifecycle (assignment, investigation, resolution) and that the incident response capability is notified within required timeframes. Notification rules can also be configured to report high-severity incidents to external authorities or management as required by NIST 03.06.02(b) and (c). The audit trail of assignments and notifications provides documentation of incident handling.",
+          "nistRequirement": "Track and document incidents; Report suspected incidents to organizational incident response capability and authorities"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-009",
+      "settingName": "IncidentReportingDashboards",
+      "displayName": "Security Dashboards and Incident Reports",
+      "settingPath": "security.microsoft.com/incidents",
+      "policyType": "Defender",
+      "policySubType": "IncidentReporting",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Provides centralized security dashboards and incident reporting capabilities in Microsoft Defender XDR that aggregate and visualize incident data from all Microsoft 365 workloads. Dashboards display active incidents, incident trends, severity distribution, resolution status, mean time to detect/respond, and affected assets. Built-in reports enable documentation of incident patterns and export of incident details for compliance reporting, leadership briefings, and submission to external authorities as required.",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal (https://security.microsoft.com)\n2. Access Security operations > Incidents page for main incident tracking dashboard\n3. Configure incident view preferences:\n   - Customize columns: Status, Severity, Assigned to, Category, First activity, Last activity\n   - Create custom filters for incident types\n   - Set default sort order\n4. Utilize Report tab within Incidents page for trend analysis\n5. Create custom reports:\n   - Go to Reports > General > Security report\n   - Select incident metrics to track\n   - Schedule automated report generation and distribution\n6. Export incident data:\n   - Select incidents to export\n   - Click Export to download CSV with full incident details\n7. Configure executive summary dashboards:\n   - Pin key metrics to home page\n   - Share dashboards with leadership\n8. Document reporting procedures for different audiences (technical, executive, regulatory)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender/incidents-overview",
+      "controlMappings": [
+        {
+          "controlId": "03.06.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Security dashboards and incident reporting capabilities directly support the requirement to track and document security incidents and report incident information to authorities. The centralized incident queue provides real-time visibility into all active incidents with their status, severity, affected entities, and timeline - enabling effective incident tracking and documentation. The export and reporting features allow organizations to generate incident reports for submission to external authorities (law enforcement, regulators, industry ISACs) as required by NIST 03.06.02(c). Historical incident data supports trend analysis, metrics reporting, and continuous improvement of the incident response program.",
+          "nistRequirement": "Track and document incidents; Report incident information to defined authorities"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-010",
+      "settingName": "UserReportedMessages",
+      "displayName": "User Submission of Suspicious Messages",
+      "settingPath": "security.microsoft.com/securitysettings/userSubmission",
+      "policyType": "Defender",
+      "policySubType": "UserReporting",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Microsoft Report Message and Report Phishing add-ins that allow end users to easily report suspicious emails, phishing attempts, and potential security incidents directly to the security team. User submissions are aggregated in the User reported messages page and can trigger automated investigations. This capability provides an incident response support resource that makes it easy for users to report potential incidents and receive feedback, fulfilling the requirement to offer incident reporting assistance to system users.",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal (https://security.microsoft.com)\n2. Go to Email & collaboration > Policies & rules > Threat policies\n3. Select 'User reported message settings'\n4. Enable 'Microsoft Report Message and Report Phishing add-in':\n   - Select 'Use the built-in Report button'\n   - Choose where to send reported messages:\n     * Send to Microsoft for analysis\n     * Send to designated reporting mailbox\n     * Send to both\n5. Configure reporting mailbox:\n   - Specify email address (e.g., security@contoso.com)\n   - Ensure mailbox is monitored by security team\n6. Deploy Report Message add-in to users:\n   - Microsoft 365 Admin Center > Settings > Integrated apps\n   - Deploy 'Microsoft Report Message' add-in\n7. Configure user confirmation messages:\n   - Customize 'Thank you' message shown after submission\n   - Include information about what happens next\n8. Monitor User reported messages under Email & collaboration > Submissions\n9. Provide feedback to users on their submissions\n10. Create training materials showing users how to use Report Message button",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/user-submission",
+      "controlMappings": [
+        {
+          "controlId": "03.06.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "User submission capabilities directly fulfill the requirement to provide an incident response support resource that offers advice and assistance to users for handling and reporting incidents per NIST 03.06.02(d). The Report Message add-in provides users with a simple, accessible method to report suspicious emails and potential security incidents to the security team without needing to know security contact information or procedures. User submissions are tracked and documented in the system, supporting incident tracking requirements. Automated response messages provide immediate feedback to users, reinforcing positive security behaviors. The centralized submission queue enables the security team to review, analyze, and respond to user-reported potential incidents.",
+          "nistRequirement": "Provide an incident response support resource that offers advice and assistance to system users on handling and reporting incidents"
+        }
+      ]
+    },
+    {
+      "id": "PV-IR-011",
+      "settingName": "AuditLogRetention",
+      "displayName": "Audit Log Retention Policies",
+      "settingPath": "compliance.microsoft.com/auditlogsearch",
+      "policyType": "Purview",
+      "policySubType": "AuditRetention",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 365,
+      "validationOperator": ">=",
+      "description": "Configures retention period for audit logs in Microsoft Purview to ensure incident data is retained for sufficient duration to support investigations, forensics, compliance reporting, and trend analysis. Standard retention is 90 days (E3) or 365 days (E5). Custom audit log retention policies can extend retention up to 10 years for critical event types. Adequate retention ensures incident information remains available for documentation, reporting to authorities, and analysis of attack patterns over time.",
+      "implementationGuide": "1. Navigate to Microsoft Purview portal (https://compliance.microsoft.com)\n2. Go to Solutions > Audit > Retention policies\n3. Review default retention periods:\n   - E3/Business: 90 days default\n   - E5: 365 days for Exchange, SharePoint, OneDrive, Azure AD\n4. Create custom audit log retention policy (E5 required):\n   - Click 'Create audit log retention policy'\n   - Name: 'Security Incident Audit Retention'\n   - Set retention duration: 365 days or longer\n   - Define record types to retain:\n     * AzureActiveDirectory (all)\n     * ExchangeAdmin\n     * ExchangeItem\n     * SharePoint\n     * OneDrive\n     * MicrosoftTeams\n     * Defender activities\n   - Add specific activities if needed (e.g., 'UserLoggedIn', 'FileMalwareDetected')\n   - Set priority to ensure policy applies\n5. For critical security events, create 10-year retention policy (requires add-on license)\n6. Verify policies are active and audit data is being retained\n7. Document retention policy for compliance and legal requirements\n8. Schedule regular exports of audit data to external SIEM or storage for backup",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-log-retention-policies",
+      "controlMappings": [
+        {
+          "controlId": "03.06.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Audit log retention policies directly support the requirement to track and document security incidents and maintain incident information for reporting to authorities. Adequate retention ensures that incident evidence, investigation details, and forensic data remain available long after an incident for compliance audits, legal proceedings, trend analysis, and lessons learned reviews. The ability to review historical incident data is essential for identifying repeat incidents, attack patterns, and emerging threats. Many regulatory frameworks require audit logs be retained for 1 year or longer. Extended retention enables organizations to demonstrate to authorities that incidents were properly tracked, documented, and reported when required.",
+          "nistRequirement": "Track and document system security incidents for reporting and analysis"
+        }
+      ]
+    }
+  ],
+  "implementationNotes": "These settings represent the core incident monitoring, reporting, and response assistance capabilities in Microsoft 365 that directly map to NIST 800-171 Rev 3 control 03.06.02. The Unified Audit Log (CIS 3.1.1/5.1 Level 1) is the foundational requirement and must be enabled first. Alert policies should be configured based on organizational risk tolerance and incident response procedures. User submission capabilities empower end users to participate in incident detection and reporting. All settings align with Microsoft security baselines and CIS Microsoft 365 Foundations Benchmark. Organizations should define specific timeframes for incident reporting in their incident response plans and configure alert policies to support those requirements. Regular review of audit logs, alert effectiveness, and user submissions is essential for continuous improvement.",
+  "complianceReferences": [
+    "CIS Microsoft 365 Foundations Benchmark v3.0 - 3.1.1 (L1) Ensure Microsoft 365 audit log search is Enabled",
+    "CIS Microsoft 365 Foundations Benchmark v1.5 - 5.1 (L1) Ensure Microsoft 365 audit log search is Enabled",
+    "Microsoft Security Baseline - Audit Logging and Monitoring",
+    "NIST SP 800-61 Rev 2 - Incident Reporting and Tracking",
+    "NIST SP 800-171 Rev 3 - Control 03.06.02"
+  ]
+}

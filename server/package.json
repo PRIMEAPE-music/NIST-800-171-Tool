@@ -17,8 +17,13 @@
     "test:auth": "ts-node -r tsconfig-paths/register src/scripts/test-auth.ts",
     "test:m365": "ts-node -r tsconfig-paths/register src/scripts/test-m365-services.ts",
     "test:sync": "ts-node -r tsconfig-paths/register src/scripts/test-sync.ts",
+    "test:compliance": "ts-node -r tsconfig-paths/register src/scripts/test-compliance-calculation.ts",
     "cleanup:reports": "ts-node src/scripts/cleanupOldReports.ts",
-    "backup:rev3": "ts-node src/scripts/create-migration-backup.ts"
+    "backup:rev3": "ts-node src/scripts/create-migration-backup.ts",
+    "verify:m365-schema": "ts-node -r tsconfig-paths/register src/scripts/verify-m365-schema.ts",
+    "import:m365-settings": "ts-node -r tsconfig-paths/register src/scripts/import-m365-settings.ts",
+    "validate:m365-data": "ts-node -r tsconfig-paths/register src/scripts/validate-m365-data.ts",
+    "report:m365-import": "ts-node -r tsconfig-paths/register src/scripts/generate-import-report.ts"
   },
   "keywords": [
     "nist-800-171",

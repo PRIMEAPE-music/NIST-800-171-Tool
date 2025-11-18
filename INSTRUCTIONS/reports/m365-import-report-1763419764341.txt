@@ -1,0 +1,151 @@
+================================================================================
+M365 SETTINGS IMPORT REPORT
+================================================================================
+
+Generated: 2025-11-17T22:49:24.268Z
+
+================================================================================
+DATABASE SUMMARY
+================================================================================
+
+Total Settings:              636
+Total Mappings:              664
+Total Controls:              97
+Controls with Settings:      80
+Average Settings per Control: 8.30
+
+================================================================================
+POLICY TYPE DISTRIBUTION
+================================================================================
+
+AzureAD          248 (39.0%)
+Intune           230 (36.2%)
+Purview           80 (12.6%)
+Defender          62 (9.7%)
+SharePoint         7 (1.1%)
+Exchange           4 (0.6%)
+Teams              3 (0.5%)
+Microsoft365       2 (0.3%)
+
+================================================================================
+PLATFORM DISTRIBUTION
+================================================================================
+
+All                   426 (67.0%)
+Windows               173 (27.2%)
+iOS,Android            13 (2.0%)
+iOS                    12 (1.9%)
+Android                 9 (1.4%)
+Windows, macOS          1 (0.2%)
+Windows,iOS,Android     1 (0.2%)
+iOS, Android            1 (0.2%)
+
+================================================================================
+CONFIDENCE LEVEL DISTRIBUTION
+================================================================================
+
+High             600 (90.4%)
+Medium            61 (9.2%)
+Low                3 (0.5%)
+
+================================================================================
+CONTROL FAMILY COVERAGE
+================================================================================
+
+AC     301 mappings
+AT       0 mappings
+AU      40 mappings
+CA       0 mappings
+CM      58 mappings
+CP      28 mappings
+IA      33 mappings
+MA      17 mappings
+MP      33 mappings
+PE      14 mappings
+PL      20 mappings
+PS       9 mappings
+RA      11 mappings
+SA      19 mappings
+SC      56 mappings
+SI      25 mappings
+SR       0 mappings
+
+================================================================================
+TOP 10 CONTROLS BY SETTINGS COUNT
+================================================================================
+
+ 1. 03.01.05 (34 settings)
+    Least Privilege
+
+ 2. 03.01.02 (32 settings)
+    Access Enforcement
+
+ 3. 03.01.03 (32 settings)
+    Information Flow Enforcement
+
+ 4. 03.01.08 (28 settings)
+    Unsuccessful Logon Attempts
+
+ 5. 03.01.01 (25 settings)
+    Account Management
+
+ 6. 03.01.06 (25 settings)
+    Least Privilege – Privileged Accounts
+
+ 7. 03.01.07 (22 settings)
+    Least Privilege – Privileged Functions
+
+ 8. 03.01.12 (20 settings)
+    Remote Access
+
+ 9. 03.01.04 (15 settings)
+    Separation of Duties
+
+10. 03.01.11 (15 settings)
+    Session Termination
+
+================================================================================
+DATA TYPE DISTRIBUTION
+================================================================================
+
+boolean          243 (38.2%)
+string           137 (21.5%)
+object            97 (15.3%)
+array             81 (12.7%)
+integer           70 (11.0%)
+datetime           3 (0.5%)
+cmdlet             2 (0.3%)
+api                1 (0.2%)
+duration           1 (0.2%)
+log                1 (0.2%)
+
+================================================================================
+VALIDATION OPERATOR DISTRIBUTION
+================================================================================
+
+==               416 (65.4%)
+contains          78 (12.3%)
+<=                46 (7.2%)
+>=                28 (4.4%)
+exists            18 (2.8%)
+in                17 (2.7%)
+!=                15 (2.4%)
+matches            9 (1.4%)
+!=null             3 (0.5%)
+policy             3 (0.5%)
+configured         1 (0.2%)
+custom_role_exists    1 (0.2%)
+periodic_review    1 (0.2%)
+
+================================================================================
+IMPORT COMPLETE
+================================================================================
+
+✅ All data imported successfully
+✅ Data validation passed
+✅ Ready for Phase 3: Compliance Engine Development
+
+Next Steps:
+1. Review this report
+2. Commit changes to version control
+3. Proceed to Phase 3

@@ -1,0 +1,236 @@
+{
+  "controlId": "03.10.02",
+  "controlTitle": "Monitoring Physical Access",
+  "controlFamily": "PE",
+  "settings": [
+    {
+      "id": "AZ-PE-004",
+      "settingName": "signInLogsEnabled",
+      "displayName": "Azure AD Sign-in Logs - Enabled and Retained",
+      "settingPath": "reports.signIns",
+      "policyType": "AzureAD",
+      "policySubType": "Logging",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables comprehensive logging of all user sign-in attempts to M365 services, including location (IP address), device information, application accessed, and success/failure status. These logs serve as the digital equivalent of physical access logs, providing audit trails for investigating suspicious access patterns and security incidents. Sign-in logs support the requirement to review access logs for anomalous activities such as access from unusual locations, repeated failed attempts, or access outside normal hours.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as at least a Reports Reader\n2. Browse to Identity > Monitoring & health > Sign-in logs\n3. Verify logs are being collected (enabled by default in Azure AD Premium)\n4. Configure log retention:\n   - Navigate to Azure Active Directory > Diagnostic settings\n   - Click 'Add diagnostic setting'\n   - Select 'SignInLogs'\n   - Send to Log Analytics workspace for long-term retention (30-90 days minimum)\n5. Configure alerts for suspicious activities:\n   - Create Azure Monitor alerts for failed sign-ins\n   - Set up alerts for sign-ins from unfamiliar locations\n   - Configure alerts for impossible travel scenarios\n6. Document log review procedures and frequency\n7. Assign appropriate roles (Security Reader, Reports Reader) for log access",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Azure AD sign-in logs provide comprehensive monitoring and audit trails for user access to M365 systems, analogous to physical access logs in facilities. These logs capture location (IP address), time, user identity, device, and access outcome, enabling detection of suspicious activities such as access from unusual locations, repeated access attempts, or access outside normal business hours. While the NIST control focuses on physical access logs from security systems, sign-in logs serve the equivalent function for cloud resources by recording all access attempts and enabling investigation of security incidents.",
+          "nistRequirement": "Monitor physical access to the facility where the system resides to detect and respond to physical security incidents; Review physical access logs [organization-defined frequency]"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-005",
+      "settingName": "auditLogsEnabled",
+      "displayName": "Azure AD Audit Logs - Enabled with Long-term Retention",
+      "settingPath": "reports.auditLogs",
+      "policyType": "AzureAD",
+      "policySubType": "Logging",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables audit logging of all administrative and security-related activities in Azure AD, including user/group changes, policy modifications, role assignments, and access reviews. Audit logs complement sign-in logs by capturing configuration changes and administrative actions that could affect access controls. Supports investigation of security incidents by providing a complete audit trail of changes to access authorizations and security configurations.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as at least a Reports Reader\n2. Browse to Identity > Monitoring & health > Audit logs\n3. Verify logs are being collected (enabled by default in Azure AD Premium)\n4. Configure extended retention:\n   - Navigate to Azure Active Directory > Diagnostic settings\n   - Click 'Add diagnostic setting'\n   - Select 'AuditLogs'\n   - Send to Log Analytics workspace for long-term retention (minimum 90 days, recommend 1 year)\n5. Configure key audit activities to monitor:\n   - User account changes (creation, modification, deletion)\n   - Role assignments and privilege escalations\n   - Conditional Access policy changes\n   - Named location modifications\n   - Device registration/deregistration events\n6. Set up automated alerts for critical audit events\n7. Document audit log review schedule",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-audit-logs",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Audit logs provide monitoring of changes to access authorization systems and security configurations, which is essential for detecting unauthorized modifications to access controls. In physical security, monitoring includes oversight of access control system changes and credential management; audit logs serve this function in cloud environments by tracking modifications to user accounts, access policies, and security settings. This enables detection of suspicious activities such as unauthorized elevation of privileges or modification of location-based access controls.",
+          "nistRequirement": "Monitor physical access to detect and respond to physical security incidents; Review physical access logs [organization-defined frequency] and upon occurrence of [organization-defined events]"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-006",
+      "settingName": "identityProtectionEnabled",
+      "displayName": "Azure AD Identity Protection - Risk Detection Enabled",
+      "settingPath": "security.identityProtection",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Azure AD Identity Protection to automatically detect and respond to identity-based risks including impossible travel, atypical travel, anonymous IP address usage, malicious IP addresses, and unfamiliar sign-in properties. Identity Protection analyzes trillions of signals to identify suspicious access patterns that may indicate compromised credentials or unauthorized access attempts. This provides automated monitoring analogous to video surveillance and intrusion detection systems in physical facilities.",
+      "implementationGuide": "1. Verify Azure AD Premium P2 licensing (required for Identity Protection)\n2. Sign in to Microsoft Entra admin center as at least a Security Administrator\n3. Browse to Protection > Identity Protection\n4. Review the Identity Protection dashboard:\n   - Risky users\n   - Risky sign-ins\n   - Risk detections\n5. Enable risk detection (enabled by default with P2 licensing)\n6. Configure risk-based policies:\n   - User risk policy (recommend: High risk requires password change)\n   - Sign-in risk policy (recommend: Medium and above requires MFA)\n7. Configure notifications:\n   - Navigate to Identity Protection > Settings > Alerts\n   - Enable 'Users at risk detected alerts'\n   - Add recipients (security team email addresses)\n   - Enable 'Weekly digest'\n8. Review risky sign-ins daily\n9. Document incident response procedures for risk detections",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Azure AD Identity Protection provides automated, continuous monitoring for suspicious access patterns analogous to physical security monitoring systems (cameras, sensors, intrusion detection). It detects anomalous activities such as impossible travel (access from geographically distant locations in short timeframes), unfamiliar sign-in properties, and access from suspicious IP addresses - all indicators of potential security incidents similar to suspicious physical access activities (access outside normal hours, unusual entry patterns, repeated access attempts). This automated monitoring enables rapid detection and response to security incidents.",
+          "nistRequirement": "Monitor physical access to the facility to detect and respond to physical security incidents; Examples of physical access monitoring include guards, video surveillance equipment, and sensor devices"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-007",
+      "settingName": "impossibleTravelDetection",
+      "displayName": "Identity Protection - Impossible Travel Risk Detection",
+      "settingPath": "security.identityProtection.riskDetections.impossibleTravel",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "enabled",
+      "validationOperator": "==",
+      "description": "Detects sign-ins from geographically distant locations within an impossible timeframe, indicating potential credential theft or unauthorized access. Impossible travel detection identifies when a user signs in from Location A, then signs in from Location B within a time period shorter than physically possible to travel between locations. This is a critical indicator of compromised credentials or concurrent unauthorized access, similar to detecting presence at multiple physical facilities simultaneously.",
+      "implementationGuide": "1. Ensure Azure AD Identity Protection is enabled (requires Premium P2)\n2. Sign in to Microsoft Entra admin center\n3. Browse to Protection > Identity Protection > Risk detections\n4. Impossible Travel detection is enabled by default\n5. Configure sign-in risk policy to respond:\n   - Browse to Identity Protection > Sign-in risk policy\n   - Set risk level: High and Medium\n   - Require multifactor authentication\n6. Review impossible travel detections:\n   - Navigate to Identity Protection > Risky sign-ins\n   - Filter by Risk detection type: 'Impossible travel'\n7. Investigate flagged incidents:\n   - Review user's sign-in history\n   - Verify legitimate business travel vs. compromise\n   - Confirm with user if necessary\n   - Dismiss false positives or confirm compromise\n8. Document response procedures for impossible travel alerts",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Impossible travel detection identifies a critical security anomaly equivalent to detecting simultaneous presence at multiple physical locations - an impossible physical scenario that indicates credential compromise or unauthorized access. This directly supports the requirement to identify 'suspicious physical access activities' by detecting the digital equivalent: access from locations the user could not physically reach in the given timeframe. This is one of the highest-confidence indicators of compromised credentials or unauthorized concurrent access.",
+          "nistRequirement": "Monitor physical access to detect and respond to physical security incidents; Incidents include security violations or suspicious physical access activities such as access outside of normal work hours, repeated access to areas not normally accessed"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-008",
+      "settingName": "atypicalTravelDetection",
+      "displayName": "Identity Protection - Atypical Travel Risk Detection",
+      "settingPath": "security.identityProtection.riskDetections.atypicalTravel",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "enabled",
+      "validationOperator": "==",
+      "description": "Identifies sign-ins from locations that are atypical for the user based on historical behavior patterns. Atypical travel detection learns each user's normal sign-in locations over time and flags access from unusual locations as potentially suspicious. This is analogous to physical security monitoring that identifies when individuals access areas they don't normally access or appear at facilities outside their regular patterns, supporting detection of unauthorized access attempts.",
+      "implementationGuide": "1. Ensure Azure AD Identity Protection is enabled with Premium P2 licensing\n2. Allow 14-day learning period for new users (system learns normal behavior)\n3. Atypical travel detection is automatically enabled\n4. Configure response policy:\n   - Browse to Identity Protection > Sign-in risk policy\n   - Include Medium risk level\n   - Require MFA for atypical locations\n5. Review atypical travel detections:\n   - Navigate to Identity Protection > Risky sign-ins\n   - Filter by Risk detection type: 'Atypical travel'\n6. Investigate flagged sign-ins:\n   - Compare to user's normal sign-in patterns\n   - Consider business justifications (travel, remote work)\n   - Contact user to verify legitimate access\n   - Dismiss or confirm based on investigation\n7. Adjust Named Locations to reduce false positives:\n   - Add remote work locations to named locations\n   - Mark VPN exit points as known locations",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Atypical travel detection monitors for access from unusual locations based on individual user patterns, directly supporting the NIST requirement to identify 'suspicious physical access activities, such as repeated access to areas not normally accessed.' In digital terms, this detects access from geographic locations or network ranges the user doesn't typically access from, indicating potential unauthorized access or compromised credentials. The machine learning approach mirrors physical security's behavioral analysis of access patterns.",
+          "nistRequirement": "Reviewing physical access logs can help to identify suspicious activities, anomalous events, or potential threats; Incidents include suspicious physical access activities, such as repeated access to areas not normally accessed"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-009",
+      "settingName": "anonymousIPDetection",
+      "displayName": "Identity Protection - Anonymous IP Address Detection",
+      "settingPath": "security.identityProtection.riskDetections.anonymousIP",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "enabled",
+      "validationOperator": "==",
+      "description": "Detects sign-ins from anonymous IP addresses including Tor browsers, anonymizer VPNs, and proxy services. Anonymous IP usage indicates attempts to hide identity and location, which is inherently suspicious for users accessing organizational resources. This is equivalent to detecting individuals attempting to obscure their identity or bypass physical security controls when accessing facilities, warranting additional scrutiny and authentication requirements.",
+      "implementationGuide": "1. Ensure Azure AD Identity Protection is enabled\n2. Anonymous IP detection operates in real-time (no configuration needed)\n3. Configure response policy:\n   - Browse to Identity Protection > Sign-in risk policy\n   - Set to trigger on Medium risk and above\n   - Require MFA when anonymous IP detected\n4. Review anonymous IP sign-ins:\n   - Navigate to Identity Protection > Risky sign-ins\n   - Filter by 'Anonymous IP address'\n5. Investigate all anonymous IP access:\n   - Determine if legitimate (rare for business use)\n   - Most anonymous IP access indicates malicious intent\n   - Contact user immediately to verify\n   - Consider blocking if confirmed unauthorized\n6. Consider blocking anonymous IP access entirely:\n   - Create Conditional Access policy\n   - Condition: Locations > Any location\n   - Exclude: All trusted locations\n   - Include: Anonymous proxy detection\n   - Action: Block access",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Anonymous IP address detection identifies attempts to obscure identity and location when accessing systems, which is a high-confidence indicator of malicious intent. This is analogous to physical security scenarios where individuals attempt to bypass identification systems or access facilities without proper credentials. The use of anonymization tools (Tor, anonymous VPNs) is inherently suspicious for accessing CUI and warrants immediate investigation as a potential security incident.",
+          "nistRequirement": "Monitor physical access to detect and respond to physical security incidents; Reviewing physical access logs can help to identify suspicious activities, anomalous events, or potential threats"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-010",
+      "settingName": "maliciousIPDetection",
+      "displayName": "Identity Protection - Malicious IP Address Detection",
+      "settingPath": "security.identityProtection.riskDetections.maliciousIP",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "enabled",
+      "validationOperator": "==",
+      "description": "Identifies sign-ins from IP addresses known to be associated with malicious activities, including high rates of authentication failures, botnet command-and-control servers, or IP addresses flagged by threat intelligence feeds. Access from malicious IPs indicates active attack attempts or compromised credentials being used from hostile infrastructure. This is equivalent to detecting unauthorized individuals or known threats attempting to breach physical facility security.",
+      "implementationGuide": "1. Ensure Azure AD Identity Protection is enabled\n2. Malicious IP detection operates automatically using Microsoft threat intelligence\n3. Configure immediate response:\n   - Browse to Identity Protection > Sign-in risk policy\n   - Set to trigger on High risk\n   - Action: Block access (recommended) or require MFA\n4. Review malicious IP detections:\n   - Navigate to Identity Protection > Risky sign-ins\n   - Filter by 'Malicious IP address'\n5. Respond to malicious IP access:\n   - Treat all malicious IP detections as confirmed incidents\n   - Immediately reset user password\n   - Review user's recent activity for indicators of compromise\n   - Revoke all active sessions\n   - Contact user to verify account status\n   - Document incident for security review\n6. Consider IP blocking:\n   - Use Conditional Access to block known malicious IP ranges\n   - Integrate with SIEM for broader threat response",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Malicious IP address detection provides high-confidence identification of active security incidents, equivalent to detecting known hostile actors attempting to breach physical facility security. Sign-ins from malicious IPs represent confirmed threats that require immediate incident response. This directly supports the requirement to 'detect and respond to physical security incidents' by identifying digital access attempts from hostile infrastructure, warranting immediate investigation and response as security violations.",
+          "nistRequirement": "Monitor physical access to the facility to detect and respond to physical security incidents; Incidents include security violations or suspicious physical access activities"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-011",
+      "settingName": "unfamiliarSignInProperties",
+      "displayName": "Identity Protection - Unfamiliar Sign-in Properties Detection",
+      "settingPath": "security.identityProtection.riskDetections.unfamiliarProperties",
+      "policyType": "AzureAD",
+      "policySubType": "IdentityProtection",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "enabled",
+      "validationOperator": "==",
+      "description": "Detects sign-ins with properties that differ significantly from the user's normal sign-in patterns, including new devices, browsers, operating systems, IP addresses, or authentication methods. Unfamiliar properties indicate potential account compromise or unauthorized access from devices/locations not previously associated with the user. Similar to physical security monitoring that identifies unfamiliar individuals or unusual access patterns, this detection flags anomalous digital access characteristics.",
+      "implementationGuide": "1. Ensure Azure AD Identity Protection is enabled with Premium P2\n2. Allow 14-day learning period for baseline establishment\n3. Unfamiliar sign-in properties detection is automatically enabled\n4. Configure response:\n   - Browse to Identity Protection > Sign-in risk policy\n   - Include Low, Medium, and High risk\n   - Require MFA for unfamiliar properties\n5. Review detections:\n   - Navigate to Identity Protection > Risky sign-ins\n   - Filter by 'Unfamiliar sign-in properties'\n6. Investigate unfamiliar sign-in properties:\n   - Check if user registered new device\n   - Verify if legitimate travel or location change\n   - Confirm if user switched browsers/devices\n   - Contact user to verify if uncertain\n7. Reduce false positives:\n   - Ensure device registration is encouraged\n   - Register corporate VPN exit IPs as named locations\n   - Educate users on device registration importance\n8. Document investigation outcomes",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Unfamiliar sign-in properties detection identifies anomalous access characteristics that deviate from normal user behavior patterns, supporting the requirement to identify 'anomalous events' and 'suspicious activities' through access log review. This behavioral analysis approach is analogous to physical security personnel identifying individuals whose appearance, behavior, or access patterns differ from normal, triggering additional verification. The detection of unfamiliar properties warrants investigation as potential unauthorized access attempts.",
+          "nistRequirement": "Reviewing physical access logs can help to identify suspicious activities, anomalous events, or potential threats"
+        }
+      ]
+    },
+    {
+      "id": "DF-PE-001",
+      "settingName": "cloudAppSecurityImpossibleTravel",
+      "displayName": "Defender for Cloud Apps - Impossible Travel Activity Policy",
+      "settingPath": "cloudAppSecurity.policies.impossibleTravel",
+      "policyType": "Defender",
+      "policySubType": "CloudAppSecurity",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "enabled": true,
+        "severity": "medium",
+        "alertSent": true
+      },
+      "validationOperator": "==",
+      "description": "Detects activities performed by a user from multiple locations within a timeframe shorter than the time it would take to travel between those locations. Defender for Cloud Apps provides enhanced impossible travel detection across all cloud applications, not just Azure AD sign-ins. This provides comprehensive monitoring for suspicious access patterns across the entire M365 ecosystem including SharePoint, OneDrive, Teams, and Exchange Online.",
+      "implementationGuide": "1. Ensure Defender for Cloud Apps licensing (included in E5)\n2. Sign in to Microsoft 365 Defender portal\n3. Navigate to Cloud Apps > Policies > Policy management\n4. The 'Impossible travel activity' policy is enabled by default\n5. Review and customize policy:\n   - Click on 'Impossible travel activity' policy\n   - Verify 'Status: Enabled'\n   - Set Severity to 'Medium' or 'High'\n   - Ensure 'Send alert as email' is checked\n   - Add recipients for alerts\n6. Configure sensitivity:\n   - Adjust 'Minimum risk score' if needed\n   - Consider user context (frequent travelers may need adjustments)\n7. Review alerts:\n   - Navigate to Cloud Apps > Alerts\n   - Filter for 'Impossible travel' alerts\n8. Investigate flagged activities:\n   - Review user's cloud app activities across all services\n   - Check for data exfiltration or suspicious file access\n   - Correlate with Azure AD sign-in logs\n9. Document response procedures",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.10.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Defender for Cloud Apps impossible travel detection extends monitoring beyond authentication events to include all user activities across M365 services. This provides comprehensive surveillance analogous to monitoring multiple facility locations and access points simultaneously. By detecting impossible travel patterns in document access, file sharing, email activities, and collaboration tools, this setting identifies suspicious activities that may indicate compromised credentials being used across different geographic locations to access or exfiltrate CUI.",
+          "nistRequirement": "Monitor physical access to the facility to detect and respond to physical security incidents; Incidents include suspicious physical access activities, such as access for unusual lengths of time, and out-of-sequence access"
+        }
+      ]
+    }
+  ],
+  "implementationNotes": "IMPORTANT: These M365 settings provide COMPLEMENTARY monitoring and detection capabilities for PE-06 (Monitoring Physical Access) in cloud/hybrid environments. They do NOT replace the requirement for physical security monitoring such as:\n- Video surveillance systems (CCTV cameras)\n- Intrusion detection systems (motion sensors, door contacts)\n- Security guard patrols and monitoring\n- Physical access log review (badge reader logs, visitor logs)\n- Physical access control system monitoring\n\nThese M365 settings support the control by:\n1. Providing comprehensive logging of digital access attempts and patterns\n2. Automated detection of anomalous access activities using AI/ML\n3. Real-time alerting for suspicious access patterns\n4. Audit trails for investigating security incidents\n5. Behavioral analysis to identify deviations from normal access patterns\n\nFull NIST 800-171 compliance for 03.10.02 requires separate physical security monitoring systems for organizational facilities in addition to these technical monitoring controls.",
+  "complianceGaps": [
+    "Physical surveillance systems (cameras, sensors) must be implemented separately",
+    "Security guard patrols and physical monitoring cannot be replaced by digital monitoring",
+    "Physical access logs from badge readers require separate systems and review processes",
+    "Visitor management and tracking requires separate physical systems",
+    "Physical intrusion detection systems (alarms, motion sensors) must be maintained independently"
+  ],
+  "reviewFrequency": "Sign-in logs should be reviewed daily for high-risk organizations or at minimum weekly. Risky sign-ins and Identity Protection alerts should be reviewed immediately upon detection. Audit logs should be reviewed weekly with monthly comprehensive reviews. All suspicious activities should trigger immediate investigation per incident response procedures."
+}

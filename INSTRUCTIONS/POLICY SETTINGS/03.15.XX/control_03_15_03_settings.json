@@ -1,0 +1,168 @@
+{
+  "controlId": "03.15.03",
+  "controlFamily": "PL",
+  "controlTitle": "Rules of Behavior",
+  "nistRequirement": "a. Establish rules that describe the responsibilities and expected behavior for system usage and protecting CUI. b. Provide rules to individuals who require access to the system. c. Receive a documented acknowledgement from individuals indicating that they have read, understand, and agree to abide by the rules of behavior before authorizing access to CUI and the system. d. Review and update the rules of behavior [Assignment: organization-defined frequency].",
+  "settings": [
+    {
+      "id": "AZ-PL-004",
+      "settingName": "azureADTermsOfUse",
+      "displayName": "Azure AD Terms of Use Policy",
+      "settingPath": "azureAD.conditionalAccess.termsOfUse",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Azure AD Terms of Use provides a mechanism to present rules of behavior to users and require documented acceptance before granting access to M365 services and CUI. The acceptance is logged and auditable, satisfying the acknowledgment requirement.",
+      "implementationGuide": "1. Create Rules of Behavior PDF document including:\n   - Acceptable use policy for M365 and CUI systems\n   - Responsibilities for protecting CUI\n   - Prohibited activities (data sharing, unauthorized access)\n   - Mobile device usage requirements\n   - Password and authentication requirements\n   - Incident reporting procedures\n   - Consequences for violations\n2. Sign in to Azure Portal as Conditional Access Administrator\n3. Navigate to Azure AD > Security > Conditional Access > Terms of use\n4. Click 'New terms'\n5. Configure Terms of Use:\n   - Display name: 'M365 Rules of Behavior - CUI Systems'\n   - Upload PDF document (max 10MB, recommended 24pt font)\n   - Language: Select appropriate language\n   - Require users to expand terms: Yes\n   - Require users to consent on every device: Yes (if multi-device access)\n   - Expire consents: Yes (annually)\n   - Duration before re-acceptance required: 365 days\n6. Save Terms of Use\n7. Create Conditional Access policy:\n   - Name: 'Require Terms of Use Acceptance'\n   - Users: All users (or specific groups)\n   - Cloud apps: All cloud apps (or specific M365 apps)\n   - Grant control: Require terms of use\n8. Enable policy after testing\n9. Monitor acceptance in Azure AD audit logs\n10. Review and update ToU document annually",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/terms-of-use",
+      "controlMappings": [
+        {
+          "controlId": "03.15.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Azure AD Terms of Use directly implements all requirements of this control: establishes rules, presents them to users, requires documented acknowledgment before access, and supports periodic review cycles. CIS Benchmark Section 1.1 and CISA SCB Section 1.2 reference ToU policies.",
+          "nistRequirement": "Establish rules, provide to users, receive documented acknowledgement, review and update periodically"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PL-005",
+      "settingName": "conditionalAccessRequireToU",
+      "displayName": "Conditional Access Policy Requiring Terms of Use",
+      "settingPath": "azureAD.conditionalAccess.policies.requireToU",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Conditional Access policy enforces Terms of Use acceptance before granting access to CUI systems. This ensures no user can access CUI without first acknowledging the rules of behavior.",
+      "implementationGuide": "1. Sign in to Azure Portal as Conditional Access Administrator\n2. Navigate to Azure AD > Security > Conditional Access > Policies\n3. Click 'New policy'\n4. Configure policy:\n   - Name: 'Enforce Rules of Behavior for CUI Access'\n   - Description: 'Require ToU acceptance for all M365 services'\n5. Assignments:\n   - Users: Include 'All users'\n   - Exclude: Emergency access accounts only\n   - Cloud apps: Select 'All cloud apps' OR specific apps:\n     * Office 365\n     * Microsoft Teams\n     * SharePoint Online\n     * Exchange Online\n6. Access controls:\n   - Grant: Grant access\n   - Require terms of use: Select 'M365 Rules of Behavior - CUI Systems'\n7. Session: Leave default\n8. Enable policy: 'Report-only' (for testing)\n9. Test with pilot users:\n   - Verify ToU is presented at login\n   - Verify access blocked without acceptance\n   - Check acceptance is logged\n10. Change policy to 'On' after successful testing\n11. Monitor policy effectiveness in Conditional Access Insights\n12. Review policy annually when ToU is updated",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/overview",
+      "controlMappings": [
+        {
+          "controlId": "03.15.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Conditional Access policy provides the enforcement mechanism ensuring users must accept rules of behavior before system access. This creates a technical control preventing access without acknowledgment. Microsoft Security Baseline recommends CA policies for access controls.",
+          "nistRequirement": "Receive documented acknowledgement before authorizing access to CUI and the system"
+        }
+      ]
+    },
+    {
+      "id": "IN-PL-004",
+      "settingName": "intuneEnrollmentTermsAndConditions",
+      "displayName": "Intune Terms and Conditions for Device Enrollment",
+      "settingPath": "intune.enrollment.termsAndConditions",
+      "policyType": "Intune",
+      "policySubType": "EnrollmentRestrictions",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Intune Terms and Conditions require users to accept device usage policies before enrolling devices. This ensures device-based access to CUI requires acceptance of rules of behavior specific to mobile and endpoint devices.",
+      "implementationGuide": "1. Sign in to Microsoft Endpoint Manager admin center\n2. Navigate to Devices > Enrollment > Terms and Conditions\n3. Click 'Create'\n4. Configure terms:\n   - Name: 'Device Usage Policy - CUI Systems'\n   - Description: 'Rules of behavior for devices accessing CUI'\n   - Display name for end users: 'Device Usage Agreement'\n5. Enter terms and conditions text:\n   - Device security requirements\n   - Acceptable use for corporate and BYOD devices\n   - Remote wipe authorization\n   - Monitoring and logging disclosure\n   - Data protection responsibilities\n   - Lost/stolen device reporting\n6. Set title and summary\n7. Version: 1.0 (increment when updated)\n8. Require users to re-accept on updates: Yes\n9. Assign to groups:\n   - All users (or specific device user groups)\n10. Save and publish\n11. Users will see terms during device enrollment:\n    - In Company Portal app\n    - During Intune enrollment process\n12. Monitor acceptance status:\n    - Devices > Monitor > Terms and Conditions\n    - View accepted/declined/pending status\n13. Export acceptance reports for audit\n14. Review and update terms annually",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/enrollment/terms-and-conditions-create",
+      "controlMappings": [
+        {
+          "controlId": "03.15.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Intune Terms and Conditions specifically address device-based access and mobile workforce scenarios. This complements Azure AD ToU by covering device enrollment and usage, ensuring comprehensive coverage of access methods. CIS Benchmark Section 7.5 recommends enrollment restrictions.",
+          "nistRequirement": "Establish rules for device usage and receive acknowledgement before device access"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PL-006",
+      "settingName": "termsOfUseAuditLogs",
+      "displayName": "Terms of Use Acceptance Audit Logs",
+      "settingPath": "azureAD.auditLogs.termsOfUse",
+      "policyType": "AzureAD",
+      "policySubType": "AuditLogs",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Azure AD audit logs capture all Terms of Use acceptance events, providing documented evidence of user acknowledgment. These logs are essential for compliance verification and must be retained according to organizational policy.",
+      "implementationGuide": "1. Sign in to Azure Portal as Security Administrator\n2. Navigate to Azure AD > Monitoring > Audit logs\n3. Filter for Terms of Use activities:\n   - Activity: 'User agreed to Terms of Use'\n   - Activity: 'User declined Terms of Use'\n   - Date range: As required\n4. Review audit log entries containing:\n   - User principal name\n   - Date/time of acceptance\n   - Terms of Use name\n   - IP address\n   - Device information\n5. Export logs for compliance documentation:\n   - Click 'Download' for CSV or JSON format\n   - Store securely with minimum 1 year retention\n6. Configure log retention:\n   - Navigate to Azure AD > Diagnostic settings\n   - Send to Log Analytics workspace (recommended)\n   - Retention: Minimum 1 year, recommend 7 years for CUI\n7. Create Log Analytics query for ToU reporting:\n   - Query all acceptances in date range\n   - Identify users who haven't accepted\n   - Monitor declined acceptances\n8. Schedule monthly report for security team:\n   - ToU acceptance completion rate\n   - New users requiring acceptance\n   - Pending acceptances\n9. Include ToU acceptance metrics in compliance reporting\n10. Review logs quarterly for anomalies",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/concept-audit-logs",
+      "controlMappings": [
+        {
+          "controlId": "03.15.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Audit logs provide the documented evidence of acknowledgment required by the control. The logs create an auditable record proving each user accepted the rules of behavior before access was granted. Microsoft Security Baseline requires audit log retention.",
+          "nistRequirement": "Receive a documented acknowledgement from individuals"
+        }
+      ]
+    },
+    {
+      "id": "PV-PL-007",
+      "settingName": "rulesOfBehaviorDocumentManagement",
+      "displayName": "Rules of Behavior Document Version Control",
+      "settingPath": "sharepoint.documentLibrary.versionControl",
+      "policyType": "Purview",
+      "policySubType": "ContentManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "SharePoint version control and approval workflow manages the Rules of Behavior document, supporting the requirement to review and update the rules at defined frequencies. Version history provides audit trail of changes.",
+      "implementationGuide": "1. Create SharePoint library for policy documents:\n   - Navigate to Security team SharePoint site\n   - Create library: 'Security Policies'\n2. Enable versioning:\n   - Library Settings > Versioning settings\n   - Document Version History: Create major and minor versions\n   - Require Check Out: Yes\n   - Require content approval: Yes\n3. Upload Rules of Behavior document:\n   - Version 1.0 - Initial version\n   - Apply metadata:\n     * Document Type: Rules of Behavior\n     * Review Date: Annual\n     * Next Review: [Date]\n     * Owner: Security Manager\n4. Configure approval workflow:\n   - Library Settings > Workflow Settings\n   - Create approval workflow for document changes\n   - Approvers: Security Manager, Legal, Compliance\n5. Apply sensitivity label to document:\n   - Label: 'Internal Use Only' or 'Confidential'\n6. Set up alerts:\n   - Alert when document is modified\n   - Alert 30 days before review date\n7. Create review schedule:\n   - Annual review (minimum)\n   - Review after significant policy changes\n   - Review after security incidents\n8. Document review process:\n   - Update document as needed\n   - Update version number\n   - Submit for approval\n   - Re-export to PDF for ToU\n   - Update Azure AD ToU\n   - Force re-acceptance in Conditional Access\n9. Maintain version history (no deletion)\n10. Archive superseded versions for compliance",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/sharepoint/governance/versioning-content-approval-and-check-out-planning",
+      "controlMappings": [
+        {
+          "controlId": "03.15.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Version control and approval workflow support the requirement to review and update rules of behavior periodically. The version history provides audit trail demonstrating compliance with review requirements. Microsoft Security Baseline recommends version control for policy documents.",
+          "nistRequirement": "Review and update the rules of behavior [organization-defined frequency]"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PL-007",
+      "settingName": "touComplianceReporting",
+      "displayName": "Terms of Use Compliance Reporting",
+      "settingPath": "azureAD.reporting.termsOfUse",
+      "policyType": "AzureAD",
+      "policySubType": "Reporting",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Terms of Use reporting provides visibility into acceptance status across the organization. Regular reporting ensures all users with CUI access have acknowledged the rules of behavior and identifies any users requiring attention.",
+      "implementationGuide": "1. Sign in to Azure Portal as Security Reader (minimum)\n2. Navigate to Azure AD > Security > Conditional Access > Terms of use\n3. Select Terms of Use policy name\n4. Click 'View accepted terms'\n5. Export current acceptance status:\n   - Download CSV with all user acceptances\n   - Columns: User, Accepted Date, Accepted Version, IP Address\n6. Create PowerShell script for automated reporting:\n   ```powershell\n   Connect-AzureAD\n   $touId = '<ToU ID>'\n   $acceptances = Get-AzureADUserTOUAcceptance -Id $touId\n   $acceptances | Export-Csv 'ToU-Report.csv'\n   ```\n7. Schedule monthly compliance report:\n   - Total users requiring ToU\n   - Users who accepted (%)  \n   - Users pending acceptance\n   - Users who declined\n   - Expired acceptances requiring renewal\n8. Create action list:\n   - Follow up with pending users\n   - Investigate declined acceptances\n   - Process expired acceptances\n9. Include metrics in monthly security dashboard:\n   - ToU acceptance completion rate\n   - Trend over time\n   - Average time to acceptance for new users\n10. Report compliance to management quarterly\n11. Include ToU metrics in annual compliance report",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/terms-of-use",
+      "controlMappings": [
+        {
+          "controlId": "03.15.03",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Compliance reporting provides ongoing verification that all users have acknowledged rules of behavior and enables proactive identification of non-compliance. Regular reporting demonstrates organizational commitment to enforcing the control.",
+          "nistRequirement": "Ensure documented acknowledgement from all individuals before access"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "totalSettings": 6,
+    "confidence": "High",
+    "completionDate": "2025-11-17",
+    "primarySources": [
+      "Microsoft Security Baselines",
+      "CIS Microsoft 365 Foundations Benchmark v3.0",
+      "CISA M365 Secure Configuration Baseline v1.0 - Section 1.2",
+      "Azure AD Conditional Access Documentation"
+    ],
+    "implementationNotes": "Control 03.15.03 requires establishing rules of behavior and obtaining documented user acknowledgment. Azure AD Terms of Use with Conditional Access provides the primary technical implementation. Intune Terms and Conditions extends coverage to device enrollment. Organizations must create appropriate Rules of Behavior content covering their specific requirements and update the frequency parameter based on organizational needs (recommended: annually).",
+    "relatedControls": [
+      "03.01.09 - System Use Notification",
+      "03.02.01 - Awareness Training"
+    ]
+  }
+}

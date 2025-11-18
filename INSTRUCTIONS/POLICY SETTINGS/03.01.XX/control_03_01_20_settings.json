@@ -1,0 +1,160 @@
+{
+  "controlId": "03.01.20",
+  "controlTitle": "Use of External Systems",
+  "controlFamily": "AC",
+  "nistRequirement": "a. Establish terms and conditions for authorized individuals to access the system from external systems and process, store, or transmit CUI using external systems.\nb. Prohibit the use of organizationally controlled portable storage devices by authorized individuals on external systems.",
+  "totalSettings": 6,
+  "settings": [
+    {
+      "id": "AZ-AC-001",
+      "settingName": "requireCompliantDevice",
+      "displayName": "Require Compliant Device for Access",
+      "settingPath": "grantControls.builtInControls",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["compliantDevice"],
+      "validationOperator": "contains",
+      "description": "Enforces that only devices meeting organizational compliance requirements can access Microsoft 365 resources, ensuring external devices meet security standards before accessing CUI.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access\n2. Create new policy named 'Require Compliant Devices'\n3. Under Assignments: Select 'All users' (or specific groups)\n4. Under Cloud apps: Select 'All cloud apps' (or Microsoft 365 suite)\n5. Under Grant: Select 'Require device to be marked as compliant'\n6. Enable policy in Report-Only mode first, test, then enable\n7. Verify with Microsoft Intune that device compliance policies are configured",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-compliant-device",
+      "controlMappings": [
+        {
+          "controlId": "03.01.20",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "This setting directly enforces the requirement to establish terms and conditions for external device access by ensuring only compliant devices that meet organizational security standards can access systems containing CUI. Compliance policies define the security requirements (encryption, password, OS version, etc.) that external devices must meet.",
+          "nistRequirement": "Establish terms and conditions for authorized individuals to access the system from external systems"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-002",
+      "settingName": "requireHybridAzureADJoinedDevice",
+      "displayName": "Require Hybrid Azure AD Joined Device",
+      "settingPath": "grantControls.builtInControls",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "Windows",
+      "dataType": "array",
+      "expectedValue": ["domainJoinedDevice"],
+      "validationOperator": "contains",
+      "description": "Restricts access to organizational resources to devices that are hybrid Azure AD joined or Azure AD joined, preventing unmanaged external devices from accessing CUI.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access\n2. Create new policy named 'Require Domain Joined Devices'\n3. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n4. Under Cloud apps: Select 'Office 365' or 'All cloud apps'\n5. Under Conditions > Device platforms: Select 'Windows'\n6. Under Grant: Select 'Require Hybrid Azure AD joined device' or 'Require device to be marked as compliant'\n7. Set policy to Report-Only, validate for 7-14 days\n8. Enable policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-compliant-device",
+      "controlMappings": [
+        {
+          "controlId": "03.01.20",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces organizational control over which devices can access systems by requiring devices to be registered with and managed by the organization's Azure AD. This satisfies the requirement to establish terms and conditions for external system access by ensuring only authorized, managed devices can connect.",
+          "nistRequirement": "Establish terms and conditions for authorized individuals to access the system from external systems"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-003",
+      "settingName": "blockUnsupportedDevicePlatforms",
+      "displayName": "Block Unknown or Unsupported Device Platforms",
+      "settingPath": "conditions.platforms.excludePlatforms",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["all"],
+      "validationOperator": "==",
+      "description": "Blocks access from unknown or unsupported device platforms that are not explicitly allowed by the organization, preventing unauthorized external devices from accessing CUI.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access\n2. Create new policy named 'Block Unsupported Device Platforms'\n3. Under Assignments > Users: Select 'All users'\n4. Under Cloud apps: Select 'All cloud apps'\n5. Under Conditions > Device platforms: Configure > Include: 'Any device' > Exclude: Select only approved platforms (Windows, iOS, Android, macOS)\n6. Under Access controls > Grant: Select 'Block access'\n7. Enable report-only mode, test thoroughly\n8. Enable policy after validation",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-conditions#device-platforms",
+      "controlMappings": [
+        {
+          "controlId": "03.01.20",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Establishes explicit terms for which device platforms are authorized to access systems containing CUI. By blocking unsupported platforms, the organization enforces its terms and conditions for external system access, ensuring only approved device types can connect.",
+          "nistRequirement": "Establish terms and conditions for authorized individuals to access the system from external systems"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-004",
+      "settingName": "requireApprovedClientAppOrAppProtection",
+      "displayName": "Require Approved Client App or App Protection Policy",
+      "settingPath": "grantControls.builtInControls",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "iOS, Android",
+      "dataType": "array",
+      "expectedValue": ["approvedApplication", "compliantApplication"],
+      "validationOperator": "contains",
+      "description": "Requires mobile devices to use approved applications with app protection policies enforced, ensuring that CUI accessed from external mobile devices is protected through MAM policies.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access\n2. Create policy named 'Require Approved Apps for Mobile'\n3. Under Assignments > Users: Select 'All users'\n4. Under Cloud apps: Select 'Office 365'\n5. Under Conditions > Device platforms: Select 'iOS' and 'Android'\n6. Under Conditions > Client apps: Select 'Mobile apps and desktop clients'\n7. Under Grant: Select 'Require approved client app' OR 'Require app protection policy'\n8. Create corresponding Intune App Protection policies for iOS/Android\n9. Test in Report-Only mode\n10. Enable policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/conditional-access-intune-common-ways-use",
+      "controlMappings": [
+        {
+          "controlId": "03.01.20",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Establishes terms for mobile device access by requiring approved applications with app protection policies that control how CUI is accessed, stored, and shared on external mobile devices. This enforces organizational terms and conditions for external system access through mobile application management.",
+          "nistRequirement": "Establish terms and conditions for authorized individuals to access the system from external systems and process, store, or transmit CUI using external systems"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-001",
+      "settingName": "RemovableDiskDenyWriteAccess",
+      "displayName": "Block Removable Storage Devices",
+      "settingPath": "Storage.RemovableDiskDenyWriteAccess",
+      "policyType": "Intune",
+      "policySubType": "AttackSurfaceReduction",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Enabled",
+      "validationOperator": "==",
+      "description": "Prevents write access to removable storage devices (USB drives, external hard drives) on Windows devices, directly enforcing the prohibition of organizationally controlled portable storage on external systems.",
+      "implementationGuide": "1. Sign in to Microsoft Intune Admin Center\n2. Navigate to Endpoint security > Attack surface reduction\n3. Click Create Policy\n4. Platform: Windows 10 and later\n5. Profile: Device Control\n6. Name: 'Block Removable Storage Write Access'\n7. Configuration settings: Scroll to 'Removable Disk Deny Write Access'\n8. Select 'Enabled' from dropdown\n9. Assign to All Devices or specific groups\n10. Review and Create\n11. Monitor compliance through Intune reporting",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-asr-policy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.20",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly enforces the NIST requirement to prohibit the use of organizationally controlled portable storage devices. This setting blocks write access to USB drives and other removable media, preventing users from copying CUI to portable storage that could be used on external systems.",
+          "nistRequirement": "Prohibit the use of organizationally controlled portable storage devices by authorized individuals on external systems"
+        }
+      ]
+    },
+    {
+      "id": "DF-AC-001",
+      "settingName": "DeviceControlRemovableMediaPolicy",
+      "displayName": "Defender Device Control for Removable Media",
+      "settingPath": "Defender.DeviceControl.RemovableMediaAccess",
+      "policyType": "Defender",
+      "policySubType": "DeviceControl",
+      "platform": "Windows, macOS",
+      "dataType": "string",
+      "expectedValue": "Block",
+      "validationOperator": "==",
+      "description": "Advanced device control policy in Microsoft Defender for Endpoint that blocks or restricts removable media access with granular controls, supporting exceptions for approved devices.",
+      "implementationGuide": "1. Sign in to Microsoft Intune Admin Center\n2. Ensure devices are onboarded to Microsoft Defender for Endpoint\n3. Navigate to Endpoint security > Attack surface reduction\n4. Create Policy > Platform: Windows 10 and later > Profile: Device control\n5. Create reusable setting for 'Any Removable Media'\n6. Name: Primary ID: 'RemovableMediaDevices'\n7. Create Device Control Rule Entry\n8. Name: 'Block All Removable Media'\n9. Entry: Type: 'Deny', Options: Read/Write/Execute\n10. Set Included ID to 'Any Removable Media' reusable setting\n11. Optional: Create allowed list for specific approved USB devices by serial number\n12. Assign to device groups\n13. Test and monitor events in Defender portal",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/device-control-deploy-manage-intune",
+      "controlMappings": [
+        {
+          "controlId": "03.01.20",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Provides comprehensive control over removable storage devices with the ability to block, audit, or allow specific devices. This advanced capability enforces the prohibition of portable storage usage while supporting exceptions for specifically approved devices, meeting the NIST requirement with enhanced granularity.",
+          "nistRequirement": "Prohibit the use of organizationally controlled portable storage devices by authorized individuals on external systems"
+        }
+      ]
+    }
+  ],
+  "researchSummary": "Control 03.01.20 focuses on securing external system access and prohibiting portable storage usage. Critical M365 settings leverage Conditional Access to enforce device compliance and management requirements, while Intune and Defender for Endpoint policies restrict removable media. These six high-confidence settings provide comprehensive enforcement of the NIST requirements through a layered approach: device trust validation (Settings 1-3), mobile application management (Setting 4), and removable storage controls (Settings 5-6).",
+  "securityBaselines": [
+    "Microsoft 365 Security Baseline - Conditional Access for device compliance",
+    "CIS Microsoft 365 Foundations Benchmark - Section 1.1 (Conditional Access)",
+    "Microsoft Zero Trust Identity and Device Access Policies"
+  ],
+  "implementationNotes": "Start with Conditional Access policies in Report-Only mode to assess impact. Implement device compliance policies in Intune before enforcing compliant device requirements. For removable storage, begin with write-access restrictions before full blocking to minimize user disruption. Consider creating exceptions for specific approved USB devices using Defender Device Control for business-critical scenarios."
+}

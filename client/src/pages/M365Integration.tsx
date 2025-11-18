@@ -223,7 +223,7 @@ export const M365Integration: React.FC = () => {
                   </Typography>
                   <Typography variant="h4">{stats?.mappedControls || 0}</Typography>
                   <Typography variant="caption" color="text.secondary">
-                    out of 110
+                    out of {stats?.totalControls || 97}
                   </Typography>
                 </Box>
                 <SecurityIcon sx={{ fontSize: 48, color: 'info.main' }} />

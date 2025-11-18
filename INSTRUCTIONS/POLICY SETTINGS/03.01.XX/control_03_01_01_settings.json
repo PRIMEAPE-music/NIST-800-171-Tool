@@ -1,0 +1,934 @@
+{
+  "version": "1.0.0",
+  "batchNumber": 1,
+  "batchName": "Access Control & Identity (AC, IA)",
+  "lastUpdated": "2024-11-16",
+  "nistRevision": "3",
+  "controlFamilies": ["AC", "IA"],
+  "totalControls": 33,
+  "controlsCompleted": 1,
+  "totalSettings": 35,
+  "description": "Comprehensive M365 settings catalog for NIST 800-171 Rev 3 compliance - Batch 1: Access Control and Identification & Authentication families",
+  "settings": [
+    {
+      "id": "AZ-AC-001",
+      "settingName": "state",
+      "displayName": "Conditional Access Policy State",
+      "settingPath": "state",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "enabled",
+      "validationOperator": "==",
+      "description": "Controls whether Conditional Access policies are active and enforcing account management controls. Enabled policies enforce access authorization requirements for user accounts.",
+      "implementationGuide": "1. Sign in to Azure AD portal (https://portal.azure.com)\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit Conditional Access policy\n4. Set 'Enable policy' to 'On'\n5. Configure policy conditions (users, apps, locations, etc.)\n6. Save the policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Conditional Access policies enforce approved authorizations for account access by defining conditions under which users can access systems and resources",
+          "nistRequirement": "03.01.01.d - Authorize access to the system based on a valid access authorization and intended system usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-002",
+      "settingName": "grantControls.builtInControls",
+      "displayName": "Conditional Access Grant Controls",
+      "settingPath": "grantControls.builtInControls",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["mfa", "compliantDevice", "domainJoinedDevice"],
+      "validationOperator": "contains",
+      "description": "Specifies the access controls that must be satisfied before granting access. Controls like MFA and device compliance enforce authentication requirements for account access.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit policy\n4. Under 'Grant', select required controls:\n   - Require multifactor authentication\n   - Require device to be marked as compliant\n   - Require Hybrid Azure AD joined device\n5. Set 'Require one of the selected controls' or 'Require all the selected controls'\n6. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Grant controls enforce authentication and authorization requirements before allowing account access to systems",
+          "nistRequirement": "03.01.01.d - Authorize access to the system based on valid access authorization"
+        },
+        {
+          "controlId": "03.05.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "MFA grant control directly enforces multi-factor authentication for account access",
+          "nistRequirement": "03.05.02 - Enforce MFA for account access"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-003",
+      "settingName": "conditions.users.includeUsers",
+      "displayName": "Conditional Access - Users Included",
+      "settingPath": "conditions.users.includeUsers",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["All"],
+      "validationOperator": "contains",
+      "description": "Defines which users or user groups are subject to the Conditional Access policy. Setting to 'All' ensures all user accounts are managed under access control policies.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit policy\n4. Under Assignments > Users, select:\n   - Include: All users\n   - Exclude: Emergency access accounts (break-glass accounts)\n5. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Ensures all system accounts are subject to defined access control policies and authorization requirements",
+          "nistRequirement": "03.01.01.c.1 - Specify authorized users of the system"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-004",
+      "settingName": "conditions.users.excludeUsers",
+      "displayName": "Conditional Access - Users Excluded",
+      "settingPath": "conditions.users.excludeUsers",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": [],
+      "validationOperator": "==",
+      "description": "Defines user accounts excluded from Conditional Access policy. Should be limited to emergency access (break-glass) accounts only.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Edit policy\n4. Under Assignments > Users > Exclude\n5. Select only emergency access accounts\n6. Document excluded accounts and rationale\n7. Regularly review exclusions",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Exclusions should be minimized and documented to ensure proper account management and monitoring of all accounts",
+          "nistRequirement": "03.01.01.a - Define the types of system accounts allowed and prohibited"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-005",
+      "settingName": "conditions.users.includeGroups",
+      "displayName": "Conditional Access - Groups Included",
+      "settingPath": "conditions.users.includeGroups",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": null,
+      "validationOperator": "!=",
+      "description": "Specifies Azure AD groups whose members are subject to the policy. Used for role-based access control and group membership management.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit policy\n4. Under Assignments > Users > Include > Select groups\n5. Choose security groups representing specific roles or access levels\n6. Configure appropriate grant controls for each group\n7. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Group-based policies enforce role membership and access authorizations based on group assignments",
+          "nistRequirement": "03.01.01.c.2 - Specify group and role membership for each account"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-006",
+      "settingName": "conditions.users.includeRoles",
+      "displayName": "Conditional Access - Roles Included",
+      "settingPath": "conditions.users.includeRoles",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": null,
+      "validationOperator": "!=",
+      "description": "Specifies Azure AD directory roles subject to the policy. Critical for enforcing stricter controls on privileged accounts.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create policy targeting admin roles\n4. Under Assignments > Users > Include > Select directory roles\n5. Choose admin roles (Global Administrator, Security Administrator, etc.)\n6. Require stronger controls (MFA, compliant device)\n7. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/conditionalaccesspolicy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Role-based policies ensure privileged accounts receive enhanced scrutiny and access controls as required",
+          "nistRequirement": "03.01.01 Discussion - Users requiring administrative privileges receive additional scrutiny"
+        },
+        {
+          "controlId": "03.01.06",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces stricter access controls for privileged roles that have access to CUI",
+          "nistRequirement": "03.01.06 - Authorize access to CUI for privileged accounts only when compelling operational needs require such access"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-007",
+      "settingName": "guestUserRoleId",
+      "displayName": "Guest User Access Restrictions",
+      "settingPath": "guestUserRoleId",
+      "policyType": "AzureAD",
+      "policySubType": "AuthorizationPolicy",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "2af84b1e-32c8-42b7-82bc-daa82404023b",
+      "validationOperator": "==",
+      "description": "Controls the level of access guest users have in the directory. The most restrictive setting (2af84b1e-32c8-42b7-82bc-daa82404023b) limits guests to only their own profile information.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > External Identities > External collaboration settings\n3. Under 'Guest user access', select:\n   'Guest user access is restricted to properties and memberships of their own directory objects (most restrictive)'\n4. Save changes\n5. Or use Microsoft Graph API:\n   PATCH https://graph.microsoft.com/v1.0/policies/authorizationPolicy/authorizationPolicy\n   {\"guestUserRoleId\": \"2af84b1e-32c8-42b7-82bc-daa82404023b\"}",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/users-restrict-guest-permissions",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Restricts guest account types and defines their prohibited access levels, ensuring external accounts have minimal directory access",
+          "nistRequirement": "03.01.01.a - Define the types of system accounts allowed and prohibited. Guest accounts are identified as higher risk."
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-008",
+      "settingName": "allowInvitesFrom",
+      "displayName": "Guest Invite Restrictions",
+      "settingPath": "allowInvitesFrom",
+      "policyType": "AzureAD",
+      "policySubType": "AuthorizationPolicy",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "adminsAndGuestInviters",
+      "validationOperator": "==",
+      "description": "Controls who can invite guest users to the organization. Setting to 'adminsAndGuestInviters' restricts guest invitations to administrators only.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > External Identities > External collaboration settings\n3. Under 'Guest invite settings', select:\n   'Only users assigned to specific admin roles can invite guest users'\n4. Save changes\n5. Valid values:\n   - 'none' (no one can invite)\n   - 'adminsAndGuestInviters' (only admins and Guest Inviter role)\n   - 'adminsGuestInvitersAndAllMembers' (admins, Guest Inviters, and all members)\n   - 'everyone' (all users including guests)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/external-id/external-collaboration-settings-configure",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Restricts account creation to authorized personnel, ensuring only approved administrators can create guest accounts",
+          "nistRequirement": "03.01.01.b - Create, enable, modify, disable, and remove system accounts in accordance with policy, procedures, prerequisites, and criteria"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-009",
+      "settingName": "accountEnabled",
+      "displayName": "User Account Enabled Status",
+      "settingPath": "accountEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "UserAccount",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Controls whether a user account is enabled or disabled. Disabled accounts cannot authenticate to Azure AD or access resources.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Users\n3. Select user account\n4. Under Profile, view/edit 'Account enabled' setting\n5. To disable: Uncheck 'Account enabled' and save\n6. Via PowerShell:\n   Update-MgUser -UserId <userId> -AccountEnabled $false\n7. Via Graph API:\n   PATCH https://graph.microsoft.com/v1.0/users/{id}\n   {\"accountEnabled\": false}",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/user",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly controls account enable/disable status, fulfilling requirement to disable accounts under specified conditions",
+          "nistRequirement": "03.01.01.f - Disable system accounts when accounts have expired, been inactive, no longer associated with user, in violation of policy, or significant risks discovered"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-010",
+      "settingName": "signInActivity.lastSignInDateTime",
+      "displayName": "Last Sign-in Date/Time",
+      "settingPath": "signInActivity.lastSignInDateTime",
+      "policyType": "AzureAD",
+      "policySubType": "UserAccount",
+      "platform": "All",
+      "dataType": "datetime",
+      "expectedValue": null,
+      "validationOperator": "<=",
+      "description": "Timestamp of user's last successful sign-in. Used to identify inactive accounts that should be disabled per organization-defined inactivity period.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Users > Sign-in logs\n3. Review lastSignInDateTime for each user\n4. Create automated process to:\n   - Query lastSignInDateTime via Graph API\n   - Compare against organization-defined inactivity period (e.g., 90 days)\n   - Disable accounts exceeding inactivity threshold\n5. Via Graph API:\n   GET https://graph.microsoft.com/v1.0/users?$select=displayName,signInActivity\n6. Implement Access Reviews or Lifecycle Workflows to automate",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/signinactivity",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Provides data needed to identify and disable inactive accounts based on organization-defined time periods",
+          "nistRequirement": "03.01.01.f.2 - Disable system accounts when accounts have been inactive for organization-defined time period"
+        },
+        {
+          "controlId": "03.01.01",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Enables monitoring of account usage to detect anomalies or unauthorized access attempts",
+          "nistRequirement": "03.01.01.e - Monitor the use of system accounts"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-011",
+      "settingName": "sessionControls.signInFrequency.value",
+      "displayName": "Conditional Access - Sign-in Frequency Value",
+      "settingPath": "sessionControls.signInFrequency.value",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 8,
+      "validationOperator": "<=",
+      "description": "Defines how often users must reauthenticate. Enforces periodic access validation and session termination based on organization-defined time periods.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit policy\n4. Under Access controls > Session\n5. Check 'Sign-in frequency'\n6. Set frequency value (e.g., 8 hours)\n7. Select time period (Hours or Days)\n8. Save policy\n9. Note: This requires Azure AD Premium P1",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces automatic session termination after organization-defined time period of inactivity or circumstances",
+          "nistRequirement": "03.01.01.h - Require that users log out of the system after organization-defined time period of expected inactivity"
+        },
+        {
+          "controlId": "03.01.11",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automatically terminates user sessions after specified conditions are met",
+          "nistRequirement": "03.01.11 - Automatically terminate a user session after organization-defined conditions or trigger events"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-012",
+      "settingName": "sessionControls.signInFrequency.type",
+      "displayName": "Conditional Access - Sign-in Frequency Type",
+      "settingPath": "sessionControls.signInFrequency.type",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "hours",
+      "validationOperator": "in",
+      "description": "Specifies whether sign-in frequency is measured in hours or days. Typically set to 'hours' for tighter session control.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit policy\n4. Under Access controls > Session > Sign-in frequency\n5. Select type: 'Hours' or 'Days'\n6. Valid values: 'hours', 'days'\n7. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Defines the unit of time for session timeout enforcement",
+          "nistRequirement": "03.01.01.h - Require logout after organization-defined time period"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-013",
+      "settingName": "sessionControls.signInFrequency.isEnabled",
+      "displayName": "Conditional Access - Sign-in Frequency Enabled",
+      "settingPath": "sessionControls.signInFrequency.isEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Controls whether sign-in frequency requirements are enforced. Must be enabled to enforce session timeout requirements.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit policy\n4. Under Access controls > Session\n5. Enable 'Sign-in frequency' checkbox\n6. Configure frequency value and type\n7. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Activates enforcement of periodic reauthentication to ensure account usage monitoring",
+          "nistRequirement": "03.01.01.e - Monitor the use of system accounts"
+        },
+        {
+          "controlId": "03.01.11",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enables automatic session termination capability",
+          "nistRequirement": "03.01.11 - Automatically terminate user sessions"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-001",
+      "settingName": "passwordRequired",
+      "displayName": "Intune - Password Required (Windows)",
+      "settingPath": "passwordRequired",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Requires users to enter a password before accessing Windows devices. Enforces authentication requirement for device access.",
+      "implementationGuide": "1. Sign in to Intune admin center (https://endpoint.microsoft.com)\n2. Navigate to Devices > Compliance policies > Policies\n3. Create policy > Platform: Windows 10 and later\n4. Under System Security settings\n5. Set 'Require a password to unlock mobile devices' to 'Require'\n6. Assign to device groups\n7. Note: Applies to local accounts on Windows devices",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces password authentication requirement for device access, supporting account authorization controls",
+          "nistRequirement": "03.01.01.d - Authorize access to the system based on valid access authorization"
+        },
+        {
+          "controlId": "03.05.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Requires identification and authentication via password before granting device access",
+          "nistRequirement": "03.05.01 - Identify and authenticate users"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-002",
+      "settingName": "minPasswordLength",
+      "displayName": "Intune - Minimum Password Length (Windows)",
+      "settingPath": "minPasswordLength",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 8,
+      "validationOperator": ">=",
+      "description": "Specifies the minimum number of characters required for device passwords. Recommended minimum is 8-14 characters for compliance with security standards.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Create or edit Windows 10+ compliance policy\n4. Under System Security > Minimum password length\n5. Set value to 8 or greater (14 recommended for NIST)\n6. Assign to device groups\n7. Note: Applies only to local accounts on Windows",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces minimum password length requirement as part of password management controls",
+          "nistRequirement": "03.05.07 - Enforce minimum password complexity including length requirements"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-003",
+      "settingName": "passwordComplexity",
+      "displayName": "Intune - Password Complexity (Windows)",
+      "settingPath": "passwordComplexity",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 3,
+      "validationOperator": ">=",
+      "description": "Defines password complexity requirements. Values: 0=None, 1=Digits, 2=Digits+lowercase, 3=Digits+lowercase+uppercase, 4=Digits+lowercase+uppercase+special.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Create or edit Windows 10+ compliance policy\n4. Under System Security > Password complexity\n5. Set to 3 or 4 (recommended: 4 for full complexity)\n6. Complexity values:\n   0 = No complexity\n   1 = Digits required\n   2 = Digits and lowercase letters\n   3 = Digits, lowercase, and uppercase\n   4 = Digits, lowercase, uppercase, and special characters\n7. Assign to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces password complexity requirements including character diversity",
+          "nistRequirement": "03.05.07 - Enforce password complexity requirements"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-004",
+      "settingName": "passwordExpiration",
+      "displayName": "Intune - Password Expiration (Windows)",
+      "settingPath": "passwordExpiration",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 90,
+      "validationOperator": "<=",
+      "description": "Number of days before password expires. Enforces regular password changes to reduce risk of compromised credentials.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Create or edit Windows 10+ compliance policy\n4. Under System Security > Password expiration (days)\n5. Set value (recommended: 60-90 days)\n6. Assign to device groups\n7. Note: Modern guidance suggests longer expiration or no expiration with MFA",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Enforces periodic password changes as part of password management policy",
+          "nistRequirement": "03.05.07 - Manage password lifecycle including expiration"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-005",
+      "settingName": "passwordHistoryCount",
+      "displayName": "Intune - Password History Count (Windows)",
+      "settingPath": "passwordHistoryCount",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 24,
+      "validationOperator": ">=",
+      "description": "Number of previous passwords that cannot be reused. Prevents password cycling and enhances security.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Create or edit Windows 10+ compliance policy\n4. Under System Security > Number of previous passwords to prevent reuse\n5. Set value (recommended: 12-24)\n6. Assign to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Prevents password reuse by maintaining password history",
+          "nistRequirement": "03.05.07 - Prohibit password reuse"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-006",
+      "settingName": "storageRequireEncryption",
+      "displayName": "Intune - Require Data Storage Encryption (Windows)",
+      "settingPath": "storageRequireEncryption",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Requires encryption of data storage on Windows devices. Typically enforced via BitLocker on Windows.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Create or edit Windows 10+ compliance policy\n4. Under System Security > Encryption of data storage on device\n5. Set to 'Require'\n6. Assign to device groups\n7. Note: Devices must have BitLocker enabled to be compliant\n8. Consider also enabling 'Require BitLocker' for more robust check",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.13.11",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces cryptographic protection of CUI at rest on devices",
+          "nistRequirement": "03.13.11 - Employ cryptographic mechanisms to protect the confidentiality of CUI at rest"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-007",
+      "settingName": "maxInactivityBeforeLock",
+      "displayName": "Intune - Max Inactivity Before Lock (Windows)",
+      "settingPath": "maxInactivityBeforeLock",
+      "policyType": "Intune",
+      "policySubType": "DeviceConfiguration",
+      "platform": "Windows",
+      "dataType": "integer",
+      "expectedValue": 15,
+      "validationOperator": "<=",
+      "description": "Maximum minutes of inactivity before device screen locks. Implements device lock requirement for unattended systems.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Configuration profiles > Create profile\n3. Platform: Windows 10 and later\n4. Profile type: Device restrictions\n5. Under Settings > Locked screen experience\n6. Set 'Maximum minutes of inactivity until screen locks' to 15 or less\n7. Assign to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/configuration/device-restrictions-windows-10",
+      "controlMappings": [
+        {
+          "controlId": "03.01.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Initiates device lock after organization-defined period of inactivity",
+          "nistRequirement": "03.01.10.a - Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-014",
+      "settingName": "authorizationPolicy.allowedToSignUpEmailBasedSubscriptions",
+      "displayName": "Allow Email-Based Subscriptions",
+      "settingPath": "allowedToSignUpEmailBasedSubscriptions",
+      "policyType": "AzureAD",
+      "policySubType": "AuthorizationPolicy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": false,
+      "validationOperator": "==",
+      "description": "Controls whether users can sign up for email-based subscriptions. Should be disabled to prevent unauthorized account creation.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Properties\n3. Click 'Manage Security defaults'\n4. Set appropriate restrictions\n5. Or use Graph API:\n   PATCH https://graph.microsoft.com/v1.0/policies/authorizationPolicy/authorizationPolicy\n   {\"allowedToSignUpEmailBasedSubscriptions\": false}",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/authorizationpolicy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Restricts self-service account creation to prevent unauthorized accounts",
+          "nistRequirement": "03.01.01.b - Create system accounts in accordance with policy and procedures"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-015",
+      "settingName": "authorizationPolicy.allowedToUseSSPR",
+      "displayName": "Allow Self-Service Password Reset",
+      "settingPath": "allowedToUseSSPR",
+      "policyType": "AzureAD",
+      "policySubType": "AuthorizationPolicy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Controls whether users can use self-service password reset. Should be enabled to support password management requirements.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Password reset\n3. Under Properties, configure:\n   - Self service password reset enabled: Selected/All\n4. Configure authentication methods (require 2 methods)\n5. Registration: Require users to register at sign-in\n6. Save changes",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-sspr-howitworks",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Supports password management by allowing users to reset forgotten passwords securely",
+          "nistRequirement": "03.05.07 - Manage password reset processes"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-016",
+      "settingName": "authorizationPolicy.blockMsolPowerShell",
+      "displayName": "Block MSOL PowerShell",
+      "settingPath": "blockMsolPowerShell",
+      "policyType": "AzureAD",
+      "policySubType": "AuthorizationPolicy",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Blocks the legacy MSOL PowerShell module from accessing Azure AD. Enhances security by restricting to modern authentication methods.",
+      "implementationGuide": "1. Microsoft is deprecating MSOL PowerShell (deprecated as of March 2024)\n2. This setting blocks legacy authentication via MSOL module\n3. Configured via Graph API:\n   PATCH https://graph.microsoft.com/v1.0/policies/authorizationPolicy/authorizationPolicy\n   {\"blockMsolPowerShell\": true}\n4. Ensure users migrate to Microsoft Graph PowerShell",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/authorizationpolicy",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Restricts legacy authentication methods for account management, enforcing modern security protocols",
+          "nistRequirement": "03.01.01.b - Manage system accounts in accordance with security procedures"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-017",
+      "settingName": "userAccountControl.accountEnabled",
+      "displayName": "User Account Control - Account Enabled",
+      "settingPath": "accountEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "UserAccount",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": false,
+      "validationOperator": "==",
+      "description": "When set to false, disables the user account preventing all authentication. Used to disable accounts that meet criteria for suspension (inactive, terminated, high-risk, etc.).",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Users\n3. Select user to disable\n4. Under Profile, uncheck 'Account enabled'\n5. Save changes\n6. Via PowerShell:\n   Update-MgUser -UserId <userId> -AccountEnabled $false\n7. Implement automated process to disable accounts based on:\n   - Inactivity (lastSignInDateTime > threshold)\n   - Termination (employeeLeaveDate)\n   - High risk (via Identity Protection)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/user",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Direct control for disabling accounts under specified conditions",
+          "nistRequirement": "03.01.01.f - Disable system accounts when accounts have expired, been inactive, no longer associated with user, in violation of policy, or significant risks discovered"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-018",
+      "settingName": "conditions.locations.includeLocations",
+      "displayName": "Conditional Access - Locations Included",
+      "settingPath": "conditions.locations.includeLocations",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["All"],
+      "validationOperator": "contains",
+      "description": "Defines which locations (IP ranges) the policy applies to. Can be used to enforce location-based access restrictions for account management.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. First, configure Named Locations:\n   - Security > Named locations > New location\n   - Define trusted IP ranges (office locations)\n4. Create or edit Conditional Access policy\n5. Under Conditions > Locations\n6. Include: All locations or specific named locations\n7. Exclude: Trusted locations (optional)\n8. Configure appropriate grant controls\n9. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/location-condition",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Supports defining access authorizations based on point of origin as part of account attributes",
+          "nistRequirement": "03.01.01 Discussion - Define access privileges and attributes including restrictions on point of origin"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AC-019",
+      "settingName": "conditions.clientAppTypes",
+      "displayName": "Conditional Access - Client App Types",
+      "settingPath": "conditions.clientAppTypes",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["all"],
+      "validationOperator": "contains",
+      "description": "Specifies which client application types the policy applies to (browser, mobile apps, desktop clients, etc.). Setting to 'all' ensures comprehensive coverage.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure Active Directory > Security > Conditional Access\n3. Create or edit policy\n4. Under Conditions > Client apps\n5. Select app types to include:\n   - Browser\n   - Mobile apps and desktop clients\n   - Exchange ActiveSync clients\n   - Other clients\n6. Or select 'all' for comprehensive coverage\n7. Save policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-conditions",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Ensures access control policies apply across all client types used to access systems",
+          "nistRequirement": "03.01.01.d - Authorize access based on intended system usage"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AR-001",
+      "settingName": "accessReviews.inactiveDuration",
+      "displayName": "Access Reviews - Inactive User Duration",
+      "settingPath": "scope.inactiveDuration",
+      "policyType": "AzureAD",
+      "policySubType": "AccessReviews",
+      "platform": "All",
+      "dataType": "duration",
+      "expectedValue": "P90D",
+      "validationOperator": "<=",
+      "description": "Defines the inactivity period (in days) after which user accounts are flagged for review. ISO 8601 duration format (e.g., P90D = 90 days).",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure AD > Identity Governance > Access Reviews\n3. Create new access review\n4. Select 'Users' or 'Groups'\n5. Under 'Users scope', check 'Inactive users (on tenant level)'\n6. Specify 'Days inactive' (recommended: 30-90 days)\n7. Configure reviewers and settings\n8. Set actions for denied access (disable accounts)\n9. Schedule and activate review",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/create-access-review",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automatically identifies and facilitates review of inactive accounts for potential disabling",
+          "nistRequirement": "03.01.01.f.2 - Disable system accounts when accounts have been inactive for organization-defined time period"
+        }
+      ]
+    },
+    {
+      "id": "AZ-AR-002",
+      "settingName": "accessReviews.autoApplyDecisionsEnabled",
+      "displayName": "Access Reviews - Auto Apply Decisions",
+      "settingPath": "settings.autoApplyDecisionsEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "AccessReviews",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Automatically applies reviewer decisions when access review completes. Can automatically disable/remove accounts flagged for removal.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure AD > Identity Governance > Access Reviews\n3. Create or edit access review\n4. Under Settings tab\n5. Enable 'Auto apply results to resource'\n6. This automatically removes access for denied users\n7. Can be configured to disable accounts or remove from groups\n8. Save configuration",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/create-access-review",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automates enforcement of account management decisions including disabling inactive accounts",
+          "nistRequirement": "03.01.01.f - Disable system accounts under specified conditions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-LW-001",
+      "settingName": "lifecycleWorkflows.isEnabled",
+      "displayName": "Lifecycle Workflow - Enabled Status",
+      "settingPath": "isEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "LifecycleWorkflows",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Controls whether a lifecycle workflow is active. Workflows automate joiner/mover/leaver processes including account creation, modification, and termination.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure AD > Identity Governance > Lifecycle Workflows\n3. Create or edit workflow\n4. Set 'Enable workflow' to Yes\n5. Configure execution conditions (joiner/mover/leaver)\n6. Define tasks (add to groups, send welcome email, disable account, etc.)\n7. Requires Azure AD Premium P2 or Entra ID Governance license\n8. Save and activate",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecycleworkflows-overview",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automates account creation, modification, and removal in accordance with organizational policies and procedures",
+          "nistRequirement": "03.01.01.b - Create, enable, modify, disable, and remove system accounts in accordance with policy, procedures, prerequisites, and criteria"
+        }
+      ]
+    },
+    {
+      "id": "AZ-LW-002",
+      "settingName": "lifecycleWorkflows.tasks.disableUserAccount",
+      "displayName": "Lifecycle Workflow - Disable User Account Task",
+      "settingPath": "tasks.taskDefinitionId",
+      "policyType": "AzureAD",
+      "policySubType": "LifecycleWorkflows",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "1dfdfcc7-52fa-4c2e-bf3a-e3919cc12950",
+      "validationOperator": "==",
+      "description": "Built-in task that disables user accounts. taskDefinitionId: 1dfdfcc7-52fa-4c2e-bf3a-e3919cc12950. Used in leaver workflows to automatically disable accounts.",
+      "implementationGuide": "1. Sign in to Azure AD portal\n2. Navigate to Azure AD > Identity Governance > Lifecycle Workflows\n3. Create 'Leaver' workflow\n4. Add task: 'Disable user account'\n5. Set execution sequence (typically first task)\n6. Configure trigger: employeeLeaveDateTime\n7. Define scope: department, location, etc.\n8. Workflow runs on-demand or scheduled\n9. Automatically disables accounts on termination",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/lifecycle-workflow-tasks",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automatically disables accounts when users leave organization or no longer need access",
+          "nistRequirement": "03.01.01.f.3 - Disable system accounts when no longer associated with a user or individual"
+        }
+      ]
+    },
+    {
+      "id": "AZ-LW-003",
+      "settingName": "lifecycleWorkflows.executionConditions.trigger.timeBasedAttribute",
+      "displayName": "Lifecycle Workflow - Trigger Attribute",
+      "settingPath": "executionConditions.trigger.timeBasedAttribute",
+      "policyType": "AzureAD",
+      "policySubType": "LifecycleWorkflows",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "employeeLeaveDateTime",
+      "validationOperator": "==",
+      "description": "Specifies the user attribute used to trigger workflow execution. Values: employeeHireDate, employeeLeaveDateTime, createdDateTime. For leaver workflows, use employeeLeaveDateTime.",
+      "implementationGuide": "1. In Lifecycle Workflow configuration\n2. Under 'Trigger details'\n3. Select trigger type: Time-based attribute\n4. Choose attribute:\n   - employeeHireDate (for joiners)\n   - employeeLeaveDateTime (for leavers)\n   - createdDateTime (alternative for joiners)\n5. Set offset in days (-180 to +180)\n6. Workflow executes based on attribute value\n7. Requires attribute to be populated via HR system or manually",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/graph/api/resources/identitygovernance-lifecycleworkflows-overview",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Triggers automated account termination based on employment end date",
+          "nistRequirement": "03.01.01.g.2 - Notify when users are terminated or transferred"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-008",
+      "settingName": "passwordRequired",
+      "displayName": "Intune - Password Required (iOS)",
+      "settingPath": "passwordRequired",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "iOS",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Requires users to enter a passcode before accessing iOS/iPadOS devices. iOS devices with passcode are automatically encrypted.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies > Create policy\n3. Platform: iOS/iPadOS\n4. Under System Security\n5. Set 'Require a password to unlock mobile devices' to 'Require'\n6. Assign to user groups\n7. Note: Setting passcode on iOS automatically enables device encryption",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-ios",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces authentication requirement for iOS device access",
+          "nistRequirement": "03.01.01.d - Authorize access based on valid access authorization"
+        },
+        {
+          "controlId": "03.05.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Requires user identification and authentication via passcode",
+          "nistRequirement": "03.05.01 - Identify and authenticate users"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-009",
+      "settingName": "simplePasswords",
+      "displayName": "Intune - Block Simple Passwords (iOS)",
+      "settingPath": "simplePasswords",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "iOS",
+      "dataType": "string",
+      "expectedValue": "block",
+      "validationOperator": "==",
+      "description": "Blocks users from creating simple passwords like 1234 or 1111 on iOS devices. Enforces password complexity.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies\n3. Create or edit iOS/iPadOS compliance policy\n4. Under System Security > Simple passwords\n5. Set to 'Block'\n6. This prevents sequential or repeating characters\n7. Assign to user groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-ios",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces password complexity by blocking simple, easily guessable passwords",
+          "nistRequirement": "03.05.07 - Enforce password complexity requirements"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-010",
+      "settingName": "minPasswordLength",
+      "displayName": "Intune - Minimum Password Length (iOS)",
+      "settingPath": "minPasswordLength",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "iOS",
+      "dataType": "integer",
+      "expectedValue": 6,
+      "validationOperator": ">=",
+      "description": "Specifies minimum number of characters required for iOS device passcode. Recommended: 6-8 minimum.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies\n3. Create or edit iOS/iPadOS compliance policy\n4. Under System Security > Minimum password length\n5. Set value (4-16 characters, recommended: 6-8)\n6. Assign to user groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-ios",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces minimum password length requirement",
+          "nistRequirement": "03.05.07 - Enforce minimum password length"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-011",
+      "settingName": "passwordRequired",
+      "displayName": "Intune - Password Required (Android)",
+      "settingPath": "passwordRequired",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Android",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Requires users to enter a password before accessing Android devices. Essential for device-level security.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies > Create policy\n3. Platform: Android Enterprise\n4. Profile type: Fully managed, dedicated, corporate-owned work profile\n5. Under System Security\n6. Set 'Require a password to unlock mobile devices' to 'Require'\n7. Assign to user groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-android",
+      "controlMappings": [
+        {
+          "controlId": "03.01.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces authentication requirement for Android device access",
+          "nistRequirement": "03.01.01.d - Authorize access based on valid access authorization"
+        },
+        {
+          "controlId": "03.05.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Requires user identification and authentication via password",
+          "nistRequirement": "03.05.01 - Identify and authenticate users"
+        }
+      ]
+    },
+    {
+      "id": "IN-AC-012",
+      "settingName": "minPasswordLength",
+      "displayName": "Intune - Minimum Password Length (Android)",
+      "settingPath": "minPasswordLength",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Android",
+      "dataType": "integer",
+      "expectedValue": 6,
+      "validationOperator": ">=",
+      "description": "Specifies minimum number of characters required for Android device password. Recommended: 6-8 minimum.",
+      "implementationGuide": "1. Sign in to Intune admin center\n2. Navigate to Devices > Compliance policies\n3. Create or edit Android Enterprise compliance policy\n4. Under System Security > Minimum password length\n5. Set value (4-16 characters, recommended: 6-8)\n6. Assign to user groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-android",
+      "controlMappings": [
+        {
+          "controlId": "03.05.07",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforces minimum password length requirement for Android devices",
+          "nistRequirement": "03.05.07 - Enforce minimum password length"
+        }
+      ]
+    }
+  ]
+}

@@ -40,6 +40,8 @@ model Control {
   poamItems       POAMItem[]
   coverage        ControlCoverage?
   controlEvidence ControlEvidence[]
+  settingMappings ControlSettingMapping[]
+  m365Compliance  ControlM365Compliance?
 
   @@index([family])
   @@index([priority])
@@ -180,7 +182,7 @@ model PoamMilestone {
 
 model M365Policy {
   id                Int      @id @default(autoincrement())
-  policyType        String   @map("policy_type") // 'Intune' | 'Purview' | 'AzureAD'
+  policyType        String   @map("policy_type") // 'Intune' | 'Purview' | 'AzureAD' | 'Defender'
   policyId          String   @unique @map("policy_id") // External ID from M365
   policyName        String   @map("policy_name")
   policyDescription String?  @map("policy_description")
@@ -190,6 +192,23 @@ model M365Policy {
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
+  // === NEW FIELDS FOR HYBRID APPROACH ===
+  // Extracted from policyData["@odata.type"] for easy filtering
+  odataType              String?   @map("odata_type") // e.g., "#microsoft.graph.windowsUpdateForBusinessConfiguration"
+
+  // High-level grouping (derived from odataType)
+  templateFamily         String?   @map("template_family") // e.g., "Update", "Compliance", "AppProtection", "Configuration"
+
+  // Cache of all extractable properties (for quick lookups)
+  extractedProperties    String?   @map("extracted_properties") // JSON: {"automaticUpdateMode": "autoInstall", ...}
+  propertiesLastExtracted DateTime? @map("properties_last_extracted")
+
+  complianceChecks  SettingComplianceCheck[]
+
+  // === NEW INDEXES FOR PERFORMANCE ===
+  @@index([odataType])
+  @@index([templateFamily])
+  @@index([policyType, odataType])
   @@map("m365_policies")
 }
 
@@ -223,17 +242,187 @@ model M365Settings {
 // ============================================================================
 
 model M365SyncLog {
-  id              Int      @id @default(autoincrement())
-  syncDate        DateTime @default(now()) @map("sync_date")
-  syncType        String   @map("sync_type") // 'Manual' | 'Automatic'
-  policiesUpdated Int      @default(0) @map("policies_updated")
-  controlsUpdated Int      @default(0) @map("controls_updated")
-  status          String   @map("status") // 'Success' | 'Failed' | 'Partial'
-  errorMessage    String?  @map("error_message")
-  syncDuration    Int?     @map("sync_duration") // milliseconds
-  createdAt       DateTime @default(now()) @map("created_at")
+  id                    Int      @id @default(autoincrement())
+  syncDate              DateTime @default(now()) @map("sync_date")
+  syncType              String   @map("sync_type") // 'Manual' | 'Automatic'
+  policiesUpdated       Int      @default(0) @map("policies_updated")
+  controlsUpdated       Int      @default(0) @map("controls_updated")
+  status                String   @map("status") // 'Success' | 'Failed' | 'Partial'
+  errorMessage          String?  @map("error_message")
+  syncDuration          Int?     @map("sync_duration") // milliseconds
+
+  // Compliance tracking fields
+  complianceChecked     Boolean  @default(false) @map("compliance_checked")
+  settingsValidated     Int      @default(0) @map("settings_validated")
+  complianceImproved    Int      @default(0) @map("compliance_improved") // Controls that improved
+  complianceDeclined    Int      @default(0) @map("compliance_declined") // Controls that declined
+  controlsAffected      Int      @default(0) @map("controls_affected") // Total controls checked
+  complianceErrors      String?  @map("compliance_errors") // JSON array of errors
+
+  createdAt             DateTime @default(now()) @map("created_at")
 
   @@map("m365_sync_logs")
+}
+
+// ============================================================================
+// M365 Settings Catalog
+// ============================================================================
+
+model M365Setting {
+  id              Int       @id @default(autoincrement())
+
+  // Setting identification
+  settingName     String    @map("setting_name") // e.g., "passwordMinimumLength"
+  displayName     String    @map("display_name") // User-friendly name
+  settingPath     String    @map("setting_path") // JSON path in policy, e.g., "settings[0].passwordMinimumLength"
+
+  // Policy context
+  policyType      String    @map("policy_type") // 'Intune' | 'Purview' | 'AzureAD' | 'Defender'
+  policySubType   String?   @map("policy_sub_type") // 'DeviceConfiguration' | 'ConditionalAccess' | etc.
+  platform        String    // 'Windows' | 'iOS' | 'Android' | 'All'
+
+  // Validation
+  dataType        String    @map("data_type") // 'boolean' | 'integer' | 'string' | 'array' | 'object'
+  expectedValue   String    @map("expected_value") // JSON string of expected value
+  validationOperator String @map("validation_operator") // '==' | '>=' | '<=' | 'contains' | 'in' | 'matches'
+
+  // Documentation
+  description     String
+  implementationGuide String? @map("implementation_guide") // How to configure in M365 admin center
+  microsoftDocUrl String?     @map("microsoft_doc_url") // Link to Microsoft docs
+
+  // Status
+  isActive        Boolean   @default(true) @map("is_active")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // === NEW FIELDS FOR HYBRID APPROACH ===
+  // Policy template this setting applies to
+  policyTemplate         String?   @map("policy_template") // e.g., "microsoft.graph.windowsUpdateForBusinessConfiguration"
+  templateFamily         String?   @map("template_family") // e.g., "Update", "Compliance", "AppProtection"
+
+  // Alternate paths to try during extraction
+  pathVariants           String?   @map("path_variants") // JSON array: ["path1", "path2", "path3"]
+
+  // Extraction strategy hints for optimization
+  extractionHints        String?   @map("extraction_hints") // JSON: {"preferredStrategy": "strip-prefix", "notes": "..."}
+
+  // Learning metrics - track extraction success over time
+  successfulExtractions  Int       @default(0) @map("successful_extractions")
+  failedExtractions      Int       @default(0) @map("failed_extractions")
+  lastExtractedValue     String?   @map("last_extracted_value") // For debugging and verification
+  lastExtractedAt        DateTime? @map("last_extracted_at")
+  lastSuccessfulStrategy String?   @map("last_successful_strategy") // Which strategy worked last time
+
+  controlMappings ControlSettingMapping[]
+  complianceChecks SettingComplianceCheck[]
+
+  @@unique([settingPath, policyType, platform])
+  @@index([policyType])
+  @@index([platform])
+  @@index([isActive])
+  // === NEW INDEXES FOR PERFORMANCE ===
+  @@index([policyTemplate])
+  @@index([templateFamily])
+  @@index([policyType, policyTemplate])
+  @@map("m365_setting_catalog")
+}
+
+// ============================================================================
+// Control to M365 Setting Mappings (Many-to-Many)
+// ============================================================================
+
+model ControlSettingMapping {
+  id              Int       @id @default(autoincrement())
+  controlId       Int       @map("control_id") // FK to Control
+  settingId       Int       @map("setting_id") // FK to M365Setting
+
+  // Confidence & compliance
+  confidence      String    // 'High' | 'Medium' | 'Low'
+  isRequired      Boolean   @default(true) @map("is_required") // Required vs optional
+  complianceStatus String   @default("Not Configured") @map("compliance_status") // 'Compliant' | 'Non-Compliant' | 'Not Configured'
+
+  // Metadata
+  mappingRationale String?  @map("mapping_rationale") // Why this setting satisfies the control
+  nistRequirement  String?  @map("nist_requirement") // Specific NIST requirement text
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  control         Control   @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  setting         M365Setting @relation(fields: [settingId], references: [id], onDelete: Cascade)
+
+  @@unique([controlId, settingId])
+  @@index([controlId])
+  @@index([settingId])
+  @@index([confidence])
+  @@index([complianceStatus])
+  @@map("control_setting_mappings")
+}
+
+// ============================================================================
+// Setting Compliance Checks (Validation Results)
+// ============================================================================
+
+model SettingComplianceCheck {
+  id              Int       @id @default(autoincrement())
+
+  settingId       Int       @map("setting_id") // FK to M365Setting
+  policyId        Int       @map("policy_id") // FK to M365Policy
+
+  // Compliance result
+  actualValue     String?   @map("actual_value") // JSON string of actual value found
+  expectedValue   String    @map("expected_value") // JSON string of expected value
+  isCompliant     Boolean   @map("is_compliant")
+  complianceMessage String? @map("compliance_message") // Details about compliance status
+
+  // Metadata
+  lastChecked     DateTime  @default(now()) @map("last_checked")
+
+  setting         M365Setting @relation(fields: [settingId], references: [id], onDelete: Cascade)
+  policy          M365Policy  @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  @@unique([settingId, policyId])
+  @@index([settingId])
+  @@index([policyId])
+  @@index([isCompliant])
+  @@index([lastChecked])
+  @@map("setting_compliance_checks")
+}
+
+// ============================================================================
+// Control M365 Compliance Summary (Cached Calculations)
+// ============================================================================
+
+model ControlM365Compliance {
+  id                    Int       @id @default(autoincrement())
+  controlId             Int       @unique @map("control_id") // FK to Control
+
+  // Compliance metrics
+  totalRequiredSettings Int       @default(0) @map("total_required_settings")
+  compliantSettings     Int       @default(0) @map("compliant_settings")
+  nonCompliantSettings  Int       @default(0) @map("non_compliant_settings")
+  notConfiguredSettings Int       @default(0) @map("not_configured_settings")
+  compliancePercentage  Float     @default(0.0) @map("compliance_percentage") // 0-100
+
+  // Confidence breakdown
+  highConfidenceCount   Int       @default(0) @map("high_confidence_count")
+  mediumConfidenceCount Int       @default(0) @map("medium_confidence_count")
+  lowConfidenceCount    Int       @default(0) @map("low_confidence_count")
+
+  // Platform coverage
+  windowsCoverage       Float     @default(0.0) @map("windows_coverage")
+  iosCoverage          Float     @default(0.0) @map("ios_coverage")
+  androidCoverage      Float     @default(0.0) @map("android_coverage")
+
+  lastCalculated        DateTime  @default(now()) @map("last_calculated")
+
+  control               Control   @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  @@index([compliancePercentage])
+  @@index([lastCalculated])
+  @@map("control_m365_compliance")
 }
 
 // ============================================================================

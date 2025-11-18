@@ -1,0 +1,138 @@
+{
+  "controlId": "03.13.10",
+  "controlTitle": "Cryptographic Key Establishment and Management",
+  "controlFamily": "SC",
+  "familyName": "System and Communications Protection",
+  "nistRequirement": "Establish and manage cryptographic keys in the system in accordance with the following key management requirements: [Assignment: organization-defined requirements for key generation, distribution, storage, access, and destruction].",
+  "researchDate": "2025-11-17",
+  "settingsCount": 5,
+  "settings": [
+    {
+      "id": "IN-SC-001",
+      "settingName": "BitLockerRecoveryKeyBackup",
+      "displayName": "BitLocker - Backup Recovery Keys to Azure AD",
+      "settingPath": "Intune.EndpointSecurity.DiskEncryption.BitLocker.RecoveryOptions.BackupRecoveryPasswordToAAD",
+      "policyType": "Intune",
+      "policySubType": "DiskEncryption",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Automatically backs up BitLocker recovery keys to Azure AD/Entra ID when encryption is enabled. This ensures cryptographic keys are stored centrally in Microsoft's cloud, providing secure key storage and access management. Recovery keys are encrypted and can only be accessed by authorized administrators.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center (intune.microsoft.com)\n2. Navigate to Endpoint security > Disk encryption\n3. Create new policy or edit existing BitLocker policy\n4. Select Platform: Windows 10 and later\n5. Select Profile: BitLocker\n6. Under 'BitLocker - Operating System Drive Settings':\n   - Enable 'Operating system drive recovery'\n   - Set 'Recovery Key File Creation' to 'Blocked'\n   - Set 'BitLocker recovery information to store' to 'Backup recovery passwords and key packages'\n   - Enable 'Recovery information to store to Azure AD before enabling BitLocker' = 'Required'\n7. Assign to device groups\n8. Save policy\n\nVerification: Check device BitLocker keys in Entra ID > Devices > [Device] > Recovery keys",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/encrypt-devices",
+      "controlMappings": [
+        {
+          "controlId": "03.13.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "This setting establishes cryptographic key management by ensuring BitLocker recovery keys are automatically backed up to Azure AD during encryption. It fulfills key storage and access requirements by centralizing keys in a secure, auditable repository. Keys are encrypted at rest and access is logged for compliance.",
+          "nistRequirement": "Establish and manage cryptographic keys with organization-defined requirements for key storage and access"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-002",
+      "settingName": "BitLockerKeyRotation",
+      "displayName": "BitLocker - Automatic Recovery Key Rotation",
+      "settingPath": "Intune.EndpointSecurity.DiskEncryption.BitLocker.RecoveryOptions.RotateBitLockerKeys",
+      "policyType": "Intune",
+      "policySubType": "DiskEncryption",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Automatically rotates BitLocker recovery keys after each use. When a recovery key is used to unlock a device, the system generates a new recovery key and backs it up to Azure AD. This implements key lifecycle management and reduces the risk of compromised keys being reused.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Disk encryption\n3. Edit existing BitLocker policy\n4. Under 'BitLocker - Operating System Drive Settings':\n   - Enable 'Configure recovery password rotation' = 'Enable rotation on Azure AD-joined devices'\n5. Save policy\n6. To manually rotate keys:\n   - Go to Devices > All devices > [Device]\n   - Select 'Rotate BitLocker keys' from remote actions\n   - Confirm rotation\n\nNote: Automatic rotation requires Windows 10 version 1909 or later. Manual rotation available for Windows 10 1909+.",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/encrypt-devices",
+      "controlMappings": [
+        {
+          "controlId": "03.13.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Key rotation implements cryptographic key lifecycle management requirements. By automatically generating new keys after each recovery use, this setting addresses key generation and destruction requirements. It ensures compromised keys are replaced with new ones and old keys are properly deprecated.",
+          "nistRequirement": "Manage cryptographic keys in accordance with requirements for key generation and destruction"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SC-005",
+      "settingName": "AzureKeyVaultForRecoveryKeys",
+      "displayName": "Azure Key Vault - Backup BitLocker Keys",
+      "settingPath": "AzureKeyVault.Secrets.BitLockerRecoveryKeys",
+      "policyType": "AzureAD",
+      "policySubType": "KeyManagement",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Backs up BitLocker recovery keys from Entra ID to Azure Key Vault for additional redundancy and compliance requirements. This provides a secondary secure storage location for cryptographic keys with enhanced access controls, audit logging, and retention policies. Critical for organizations that need to retain keys even after device deletion from Entra ID.",
+      "implementationGuide": "1. Create Azure Key Vault:\n   - Navigate to Azure Portal\n   - Create new Key Vault resource\n   - Enable Azure role-based access control (RBAC)\n   - Enable soft delete and purge protection\n\n2. Configure permissions:\n   - Assign 'Key Vault Secrets Officer' role to automation account managed identity\n   - Assign 'Key Vault Secrets User' role to administrators who need recovery access\n\n3. Create Azure Automation Runbook:\n   - Create Automation Account with System-Assigned Managed Identity\n   - Grant Microsoft Graph permissions: DeviceManagementManagedDevices.Read.All, BitlockerKey.Read.All\n   - Import PowerShell script to backup keys from Entra ID to Key Vault\n   - Schedule runbook to run daily\n\n4. Verify backup:\n   - Check Key Vault secrets for BitLocker keys\n   - Keys stored as: BitLocker-{DeviceName}-{SerialNumber}\n   - Verify tags contain device metadata\n\nReference script: https://github.com/ugurkocde/IntunePolicyBackup",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/key-vault/general/overview",
+      "controlMappings": [
+        {
+          "controlId": "03.13.10",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Azure Key Vault provides enhanced cryptographic key storage with HSM-backed protection, comprehensive audit logging, and granular access controls. While Entra ID storage meets baseline requirements, Key Vault implements enterprise-grade key management with automated rotation policies, retention controls, and protection against accidental or malicious key deletion.",
+          "nistRequirement": "Manage cryptographic keys with organization-defined requirements for key storage, access, and destruction including backup and recovery procedures"
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-003",
+      "settingName": "BitLockerTPMValidation",
+      "displayName": "BitLocker - TPM Platform Validation",
+      "settingPath": "Intune.EndpointSecurity.DiskEncryption.BitLocker.SystemDriveSettings.TPMStartupPINRequired",
+      "policyType": "Intune",
+      "policySubType": "DiskEncryption",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "Require startup PIN with TPM",
+      "validationOperator": "==",
+      "description": "Requires TPM (Trusted Platform Module) validation with startup PIN before releasing BitLocker encryption keys. This implements secure key storage using hardware-based cryptographic key protection. The TPM stores the key in hardware and only releases it when platform integrity is verified.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Disk encryption\n3. Edit BitLocker policy\n4. Under 'BitLocker - Operating System Drive Settings':\n   - Set 'Startup authentication required' = 'Yes'\n   - Set 'Compatible TPM startup' = 'Required'\n   - Set 'Compatible TPM startup PIN' = 'Required'\n   - Set 'Compatible TPM startup key' = 'Blocked'\n   - Set 'Compatible TPM startup key and PIN' = 'Blocked'\n   - Set 'Minimum PIN length' = 6 or more\n5. Save and assign policy\n\nNote: Devices must have TPM 1.2 or 2.0. Check device compliance before deployment.",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings",
+      "controlMappings": [
+        {
+          "controlId": "03.13.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "TPM-based key storage implements secure cryptographic key management by storing keys in tamper-resistant hardware. The TPM ensures keys are only accessible when device integrity is verified, implementing key access controls. This prevents unauthorized key extraction and ensures keys are protected even if the drive is removed from the device.",
+          "nistRequirement": "Establish and manage cryptographic keys using hardware security modules or equivalent technology for key storage and protection"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SC-006",
+      "settingName": "CertificateLifecycleManagement",
+      "displayName": "Azure AD - Certificate-Based Authentication Lifecycle",
+      "settingPath": "AzureAD.Identity.AuthenticationMethods.Certificate",
+      "policyType": "AzureAD",
+      "policySubType": "AuthenticationMethods",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Manages the lifecycle of certificates used for authentication, including issuance, renewal, and revocation. Certificate-based authentication provides strong cryptographic key management for user and device authentication. Azure AD integrates with PKI infrastructure to enforce certificate policies and key management requirements.",
+      "implementationGuide": "1. Navigate to Microsoft Entra admin center\n2. Go to Protection > Authentication methods > Certificate-based authentication\n3. Enable certificate-based authentication\n4. Configure certificate authorities:\n   - Upload trusted root CA certificates\n   - Configure certificate validation rules\n   - Set username binding (Subject or Subject Alternative Name)\n5. Configure certificate lifecycle settings:\n   - Set certificate validity period requirements\n   - Configure automatic certificate renewal notifications\n   - Enable certificate revocation list (CRL) checking\n6. Create Conditional Access policy:\n   - Require certificate-based authentication for sensitive resource access\n   - Enforce for privileged accounts\n7. Save configuration\n\nNote: Requires Azure AD Premium P1 or P2",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-certificate-based-authentication",
+      "controlMappings": [
+        {
+          "controlId": "03.13.10",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Certificate lifecycle management establishes comprehensive cryptographic key management for authentication. It addresses key generation (certificate issuance), distribution (PKI infrastructure), storage (certificate stores), access (authentication policies), and destruction (revocation and expiration). CRL checking ensures revoked keys cannot be used.",
+          "nistRequirement": "Establish and manage cryptographic keys for authentication in accordance with requirements for key generation, distribution, storage, access, and destruction"
+        }
+      ]
+    }
+  ],
+  "implementationNotes": "BitLocker recovery key backup to Azure AD (IN-SC-001) is the foundational requirement. Organizations should implement automatic key rotation (IN-SC-002) to maintain key hygiene. TPM validation (IN-SC-003) provides hardware-based key protection recommended by Microsoft Security Baseline.\n\nAzure Key Vault backup (AZ-SC-005) is optional but recommended for enterprises with compliance requirements that mandate key retention beyond device lifecycle. This is critical because keys in Entra ID are deleted when devices are removed.\n\nCertificate-based authentication (AZ-SC-006) is recommended for privileged accounts and high-security scenarios where phishing-resistant authentication is required.\n\nAll settings implement NIST SP 800-57 key management principles and align with FIPS 140-2/3 cryptographic standards.",
+  "references": [
+    "Microsoft Security Baseline for Windows",
+    "NIST SP 800-57-1 - Key Management Recommendation",
+    "NIST SP 800-171 Rev 3 Control SC-12",
+    "FIPS 140-3 - Cryptographic Module Validation"
+  ]
+}

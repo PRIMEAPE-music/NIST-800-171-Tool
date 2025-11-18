@@ -1,0 +1,151 @@
+{
+  "controlId": "03.13.13",
+  "controlTitle": "Mobile Code",
+  "family": "SC",
+  "settings": [
+    {
+      "id": "DF-SC-001",
+      "settingName": "EnableSmartScreen",
+      "displayName": "Enable Microsoft Defender SmartScreen",
+      "settingPath": "SmartScreen.EnableSmartScreen",
+      "policyType": "Defender",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Microsoft Defender SmartScreen to monitor and control mobile code by checking websites, downloads, and applications against reputation lists. SmartScreen evaluates JavaScript, Java applets, and other mobile code technologies for malicious behavior before allowing execution.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Security Baseline for Windows 10 and later'\n4. Create profile or edit existing\n5. Under Microsoft Defender SmartScreen settings, set 'Turn on Windows Defender SmartScreen' to 'Enable'\n6. Configure 'Prevent bypassing prompts' to 'Yes'\n7. Assign to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/",
+      "controlMappings": [
+        {
+          "controlId": "03.13.13",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "SmartScreen directly authorizes, monitors, and controls mobile code by evaluating reputation of downloaded code and blocking execution of unrecognized or malicious mobile code technologies including JavaScript, Java applets, and HTML5 content.",
+          "nistRequirement": "Define acceptable mobile code and mobile code technologies. Authorize, monitor, and control the use of mobile code."
+        }
+      ]
+    },
+    {
+      "id": "DF-SC-002",
+      "settingName": "PreventSmartScreenPromptOverride",
+      "displayName": "Prevent Bypassing SmartScreen Prompts for Sites",
+      "settingPath": "SmartScreen.PreventSmartScreenPromptOverride",
+      "policyType": "Defender",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Prevents users from bypassing Microsoft Defender SmartScreen warnings about potentially malicious websites that may contain mobile code. This enforces organizational control over acceptable mobile code sources.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Microsoft Edge baseline' or Windows security baseline\n4. Under SmartScreen settings, enable 'Prevent bypassing prompts for sites'\n5. Set to 'Enabled' to block user overrides\n6. This forces users to comply with SmartScreen blocks\n7. Assign policy to user/device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-smartscreen",
+      "controlMappings": [
+        {
+          "controlId": "03.13.13",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "This setting enforces organizational authorization of mobile code by preventing users from bypassing SmartScreen blocks on sites and applications that may contain unacceptable mobile code technologies.",
+          "nistRequirement": "Authorize, monitor, and control the use of mobile code."
+        }
+      ]
+    },
+    {
+      "id": "DF-SC-003",
+      "settingName": "PreventSmartScreenPromptOverrideForFiles",
+      "displayName": "Prevent Bypassing SmartScreen Warnings for Downloads",
+      "settingPath": "SmartScreen.PreventSmartScreenPromptOverrideForFiles",
+      "policyType": "Defender",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Prevents users from bypassing Microsoft Defender SmartScreen warnings about downloading potentially malicious files that may contain mobile code. Enforces control over mobile code file downloads.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Microsoft Edge baseline' or Windows security baseline\n4. Under SmartScreen settings, enable 'Prevent bypassing prompts for downloads'\n5. Set to 'Enabled' to block file download overrides\n6. Users cannot bypass warnings on unverified executables or mobile code\n7. Assign policy to groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-security-smartscreen",
+      "controlMappings": [
+        {
+          "controlId": "03.13.13",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "This setting controls the download and execution of mobile code files by preventing users from bypassing SmartScreen warnings about potentially malicious downloads containing Java applets, JavaScript, or other mobile code.",
+          "nistRequirement": "Authorize, monitor, and control the use of mobile code."
+        }
+      ]
+    },
+    {
+      "id": "DF-SC-004",
+      "settingName": "SmartScreenPuaProtection",
+      "displayName": "Block Potentially Unwanted Applications",
+      "settingPath": "SmartScreen.SmartScreenPuaProtection",
+      "policyType": "Defender",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Configures Microsoft Defender SmartScreen to block potentially unwanted applications (PUAs) that may contain mobile code. PUAs include applications with bundled mobile code that exhibit unwanted behaviors.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Microsoft Edge baseline'\n4. Under SmartScreen settings, enable 'Configure SmartScreen to block potentially unwanted apps'\n5. Set to 'Enabled'\n6. Also enable in Windows Security via Endpoint Protection profile\n7. Assign to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/detect-block-potentially-unwanted-apps-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.13.13",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "This setting controls potentially unwanted mobile code by blocking applications that may contain JavaScript, browser extensions, or other mobile code technologies that exhibit unwanted behaviors or security risks.",
+          "nistRequirement": "Define acceptable mobile code and mobile code technologies. Authorize, monitor, and control the use of mobile code."
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-006",
+      "settingName": "AllowScriptedWindowsSecurityPromptBroadcasting",
+      "displayName": "Block Scripted Security Prompts",
+      "settingPath": "InternetExplorer.AllowScriptedWindowsSecurityPromptBroadcasting",
+      "policyType": "Intune",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": false,
+      "validationOperator": "==",
+      "description": "Prevents malicious mobile code (JavaScript, VBScript) from generating fake security prompts that could trick users into downloading malicious code or providing credentials.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Security Baseline for Windows 10 and later'\n4. Under Internet Explorer settings, find 'Allow scripted windows security prompts'\n5. Set to 'Disable' to prevent scripted prompts\n6. Apply to all security zones (Internet, Intranet, Trusted, Restricted)\n7. Assign policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/security-baseline-settings-mdm-all",
+      "controlMappings": [
+        {
+          "controlId": "03.13.13",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "This setting controls malicious mobile code (JavaScript, VBScript) from creating deceptive security prompts, preventing social engineering attacks that could lead to execution of unacceptable mobile code.",
+          "nistRequirement": "Authorize, monitor, and control the use of mobile code."
+        }
+      ]
+    },
+    {
+      "id": "IN-SC-007",
+      "settingName": "DisableActiveXControlsInProtectedMode",
+      "displayName": "Disable Unsafe ActiveX Controls",
+      "settingPath": "InternetExplorer.DisableActiveXControlsInProtectedMode",
+      "policyType": "Intune",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Disables unsafe ActiveX controls (a form of mobile code) in Internet Explorer Protected Mode, preventing execution of potentially malicious mobile code components.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Security Baseline for Windows 10 and later'\n4. Under Internet Explorer settings, configure ActiveX controls:\n   - Disable 'ActiveX controls marked safe for scripting' in Internet zone\n   - Enable 'Protected Mode' for all zones\n5. Set script Active X controls to 'Disable' for Internet and Restricted zones\n6. Assign policy to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/security-baseline-settings-mdm-all",
+      "controlMappings": [
+        {
+          "controlId": "03.13.13",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "ActiveX controls are a mobile code technology. This setting defines which ActiveX controls are acceptable (none in untrusted zones) and controls their execution, preventing malicious mobile code from running.",
+          "nistRequirement": "Define acceptable mobile code and mobile code technologies. Authorize, monitor, and control the use of mobile code."
+        }
+      ]
+    }
+  ]
+}

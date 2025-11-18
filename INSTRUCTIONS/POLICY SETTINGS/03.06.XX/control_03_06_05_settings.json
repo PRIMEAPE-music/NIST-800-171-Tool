@@ -1,0 +1,192 @@
+{
+  "controlId": "03.06.05",
+  "controlFamily": "IR",
+  "controlTitle": "Incident Response Plan",
+  "nistRequirement": "a. Develop an incident response plan that: 1. Provides the organization with a roadmap for implementing its incident response capability, 2. Describes the structure and organization of the incident response capability, 3. Provides a high-level approach for how the incident response capability fits into the overall organization, 4. Defines reportable incidents, 5. Addresses the sharing of incident information, and 6. Designates responsibilities to organizational entities, personnel, or roles. b. Distribute copies of the incident response plan to designated incident response personnel (identified by name and/or by role) and organizational elements. c. Update the incident response plan to address system and organizational changes or problems encountered during plan implementation, execution, or testing. d. Protect the incident response plan from unauthorized disclosure.",
+  "settings": [
+    {
+      "id": "DF-IR-007",
+      "settingName": "microsoftSentinelEnabled",
+      "displayName": "Enable Microsoft Sentinel Incident Management",
+      "settingPath": "microsoft.sentinel.workspace.enabled",
+      "policyType": "Defender",
+      "policySubType": "SentinelConfiguration",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Microsoft Sentinel SIEM/SOAR capabilities providing centralized incident management, automated response workflows (playbooks), and incident tracking that implements the technical components of an incident response plan",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal or Azure portal\n2. Access Microsoft Sentinel service\n3. Create or connect to Log Analytics workspace\n4. Enable Microsoft Sentinel on the workspace\n5. Configure data connectors for Microsoft 365, Azure AD, Defender services\n6. Set up analytics rules for incident detection\n7. Configure incident settings and assignment policies\n8. Document Sentinel as part of organizational IR plan",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/sentinel/quickstart-onboard",
+      "controlMappings": [
+        {
+          "controlId": "03.06.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Microsoft Sentinel provides the technical infrastructure for incident response capability including incident detection, tracking, investigation, and automated response. It implements the organizational roadmap for IR by centralizing security events, defining incident workflows, and enabling coordinated response actions.",
+          "nistRequirement": "Provides the organization with a roadmap for implementing its incident response capability"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-008",
+      "settingName": "incidentResponsePlaybooksConfigured",
+      "displayName": "Configure Incident Response Playbooks",
+      "settingPath": "microsoft.sentinel.playbooks.enabled",
+      "policyType": "Defender",
+      "policySubType": "SentinelPlaybooks",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "active",
+      "validationOperator": "contains",
+      "description": "Implements automated incident response playbooks (Logic Apps) that define and execute incident response procedures including containment, notification, investigation, and recovery actions according to the IR plan",
+      "implementationGuide": "1. In Microsoft Sentinel, navigate to Automation > Playbook templates\n2. Review and deploy relevant playbook templates:\n   - Block compromised user\n   - Isolate compromised device\n   - Notify security team\n   - Create incident ticket\n3. Customize playbooks to match organization's IR procedures\n4. Configure authentication for connectors (Azure AD, Teams, etc.)\n5. Grant Microsoft Sentinel Automation Contributor role\n6. Test playbooks in development environment\n7. Document playbook workflows in IR plan\n8. Associate playbooks with automation rules",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/sentinel/automation/create-playbooks",
+      "controlMappings": [
+        {
+          "controlId": "03.06.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Incident response playbooks codify the organization's IR procedures into automated workflows. They describe the structure and organization of incident response by defining specific response actions, notification chains, and remediation steps that execute consistently according to the documented IR plan.",
+          "nistRequirement": "Describes the structure and organization of the incident response capability"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-009",
+      "settingName": "automationRulesEnabled",
+      "displayName": "Enable Incident Automation Rules",
+      "settingPath": "microsoft.sentinel.automationRules.enabled",
+      "policyType": "Defender",
+      "policySubType": "SentinelAutomation",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "active",
+      "validationOperator": "contains",
+      "description": "Configures automation rules that automatically triage, assign, and orchestrate incident response based on incident characteristics, implementing the organization's defined incident classification and response procedures",
+      "implementationGuide": "1. Navigate to Microsoft Sentinel > Automation\n2. Click 'Create' > 'Automation rule'\n3. Configure trigger: 'When incident is created' or 'When incident is updated'\n4. Set conditions based on:\n   - Severity (Critical, High, Medium, Low)\n   - Tactics (Initial Access, Persistence, etc.)\n   - Alert product names\n   - Affected entities\n5. Define actions:\n   - Assign to specific owner/team\n   - Add tags for categorization\n   - Change status/severity\n   - Run playbooks\n6. Set rule priority and expiration\n7. Document automation rules in IR plan",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/sentinel/automation/create-automation-rule",
+      "controlMappings": [
+        {
+          "controlId": "03.06.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automation rules implement the incident response plan's high-level approach by automatically classifying incidents, assigning them to appropriate teams, and triggering response procedures. They define reportable incidents through severity and tactic filters, and designate responsibilities by routing incidents to specific owners or roles.",
+          "nistRequirement": "Provides a high-level approach for how the incident response capability fits into the overall organization and defines reportable incidents"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-010",
+      "settingName": "securityContactsConfigured",
+      "displayName": "Configure Security Contact Information",
+      "settingPath": "microsoft.defender.securityContacts",
+      "policyType": "Defender",
+      "policySubType": "SecurityContacts",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "configured",
+      "validationOperator": "contains",
+      "description": "Defines security contacts who receive incident notifications and alerts, ensuring incident information is shared with designated incident response personnel and organizational elements",
+      "implementationGuide": "1. Navigate to Microsoft Defender portal > Settings > Microsoft Defender for Cloud\n2. Select 'Email notifications' under Environment settings\n3. Configure primary security contact:\n   - Email address for primary contact\n   - Phone number (optional)\n   - Notification preferences\n4. Add additional security contacts for redundancy\n5. Set notification rules for severity levels:\n   - High severity: Immediate notification\n   - Medium severity: Daily digest\n   - Low severity: Weekly summary\n6. Enable notifications for:\n   - Alerts and incidents\n   - Compliance notifications\n   - Recommendations\n7. Document contacts in IR plan distribution list",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications",
+      "controlMappings": [
+        {
+          "controlId": "03.06.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Security contact configuration ensures the incident response plan is distributed to designated personnel by automatically notifying them of security incidents. This implements the requirement to share incident information with authorized personnel and organizational elements according to defined procedures.",
+          "nistRequirement": "Distribute copies of the incident response plan to designated incident response personnel and addresses the sharing of incident information"
+        }
+      ]
+    },
+    {
+      "id": "PV-IR-011",
+      "settingName": "unifiedAuditLogEnabled",
+      "displayName": "Enable Microsoft 365 Unified Audit Log",
+      "settingPath": "microsoft.purview.audit.unifiedAuditLog.enabled",
+      "policyType": "Purview",
+      "policySubType": "AuditConfiguration",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables comprehensive audit logging across Microsoft 365 services providing forensic evidence and incident tracking data that supports incident investigation, documentation, and plan updates based on actual incident data",
+      "implementationGuide": "1. Navigate to Microsoft Purview compliance portal (https://compliance.microsoft.com)\n2. Go to Solutions > Audit\n3. Click 'Start recording user and admin activity'\n4. Verify unified audit log is enabled\n5. Configure audit log retention:\n   - Standard retention: 180 days (E3)\n   - Extended retention: 1 year or 10 years (E5 with add-on)\n6. Set up audit log search access for IR team\n7. Create audit log alerts for critical activities\n8. Document audit logging in IR plan for evidence collection",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/audit-log-enable-disable",
+      "controlMappings": [
+        {
+          "controlId": "03.06.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Unified audit logging provides the forensic data necessary to document incidents, analyze response effectiveness, and identify improvements. This audit trail supports updating the incident response plan based on problems encountered during implementation and execution, and provides evidence for compliance and reporting.",
+          "nistRequirement": "Update the incident response plan to address system and organizational changes or problems encountered during plan implementation, execution, or testing"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-012",
+      "settingName": "incidentRbacConfigured",
+      "displayName": "Configure Incident Response Role-Based Access Control",
+      "settingPath": "microsoft.sentinel.rbac.roles",
+      "policyType": "Defender",
+      "policySubType": "SentinelRBAC",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "assigned",
+      "validationOperator": "contains",
+      "description": "Implements role-based access control for incident management that designates responsibilities to specific personnel roles and protects sensitive incident information from unauthorized disclosure",
+      "implementationGuide": "1. Navigate to Microsoft Sentinel workspace\n2. Select 'Access control (IAM)' from left menu\n3. Assign appropriate roles to IR team members:\n   - Microsoft Sentinel Reader: View incidents, analytics rules\n   - Microsoft Sentinel Responder: Manage incidents, run queries\n   - Microsoft Sentinel Contributor: Full management except settings\n   - Security Admin: Full Sentinel access\n4. Create custom roles if needed for specific responsibilities\n5. Assign roles to Azure AD groups for easy management\n6. Configure Conditional Access policies for IR personnel\n7. Enable MFA for all IR team members\n8. Document role assignments in IR plan\n9. Review access quarterly",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/sentinel/roles",
+      "controlMappings": [
+        {
+          "controlId": "03.06.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "RBAC configuration explicitly designates incident response responsibilities to specific roles and personnel. By controlling access to incident data based on roles, it protects the incident response plan and associated incident information from unauthorized disclosure while ensuring appropriate personnel can perform their assigned duties.",
+          "nistRequirement": "Designates responsibilities to organizational entities, personnel, or roles and protect the incident response plan from unauthorized disclosure"
+        }
+      ]
+    },
+    {
+      "id": "DF-IR-013",
+      "settingName": "incidentNotificationRules",
+      "displayName": "Configure Incident Notification and Communication Rules",
+      "settingPath": "microsoft.sentinel.notifications",
+      "policyType": "Defender",
+      "policySubType": "IncidentNotifications",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "configured",
+      "validationOperator": "contains",
+      "description": "Defines automated notification rules that alert designated personnel about incidents, implement communication chains, and ensure incident information sharing according to organizational policies and regulatory requirements",
+      "implementationGuide": "1. In Microsoft Sentinel, create automation rules with notification actions\n2. Configure playbooks for incident notifications:\n   - Email notifications to security team\n   - Microsoft Teams messages to SOC channel\n   - Ticket creation in ITSM system\n   - Escalation to management for high-severity incidents\n3. Set up incident notification templates including:\n   - Incident ID and severity\n   - Affected systems and users\n   - Initial assessment\n   - Recommended actions\n4. Configure notification thresholds:\n   - Immediate: Critical/High severity\n   - Hourly digest: Medium severity\n   - Daily summary: Low severity\n5. Test notification workflows\n6. Document communication procedures in IR plan",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/sentinel/automation/automate-responses-with-playbooks",
+      "controlMappings": [
+        {
+          "controlId": "03.06.05",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Incident notification rules implement the IR plan's communication and information sharing requirements. They ensure incident information is distributed to appropriate personnel and external parties according to defined procedures, supporting coordinated response and compliance with reporting obligations.",
+          "nistRequirement": "Addresses the sharing of incident information and distribute copies to designated incident response personnel"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "totalSettings": 7,
+    "highConfidence": 7,
+    "mediumConfidence": 0,
+    "lowConfidence": 0,
+    "settingsByPolicyType": {
+      "Defender": 6,
+      "Purview": 1
+    },
+    "settingsByPlatform": {
+      "All": 7
+    },
+    "dateCreated": "2025-11-17",
+    "version": "1.0",
+    "notes": "Microsoft Sentinel provides the primary technical infrastructure for implementing an incident response plan in M365 environments through SIEM/SOAR capabilities. These settings establish automated incident detection, classification, response workflows, and communication procedures. Organizations must supplement these technical controls with documented IR plan policies, procedures, and governance. Note: Microsoft Sentinel requires separate licensing (Microsoft 365 E5, Azure Security SKU, or standalone) and Azure subscription."
+  }
+}

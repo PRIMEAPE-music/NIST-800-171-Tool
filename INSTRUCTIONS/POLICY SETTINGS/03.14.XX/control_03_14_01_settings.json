@@ -1,0 +1,170 @@
+{
+  "controlId": "03.14.01",
+  "family": "SI",
+  "familyName": "System and Information Integrity",
+  "title": "Flaw Remediation",
+  "nistRequirement": "a. Identify, report, and correct system flaws.\nb. Install security-relevant software and firmware updates within [Assignment: organization-defined time period] of the release of the updates.",
+  "settings": [
+    {
+      "id": "IN-SI-001",
+      "settingName": "Update ring for Windows 10 and later",
+      "displayName": "Windows Update for Business - Automatic Quality Updates",
+      "settingPath": "Microsoft.Management.Services.IntuneWindowsAgent.UpdateRing",
+      "policyType": "Intune",
+      "policySubType": "Update Rings",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {
+        "automaticUpdateMode": "Auto install and restart at maintenance time",
+        "qualityUpdatesDeferralPeriodInDays": 0,
+        "featureUpdatesDeferralPeriodInDays": 0,
+        "automaticUpdateFrequency": "Daily"
+      },
+      "validationOperator": "==",
+      "description": "Enforces automatic installation of Windows quality and security updates with minimal deferral to ensure systems receive critical patches promptly. This setting ensures compliance with NIST requirement to install security-relevant updates within organization-defined timeframes.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center (https://intune.microsoft.com)\n2. Navigate to Devices > Windows > Update rings for Windows 10 and later\n3. Click 'Create profile' and provide a descriptive name\n4. Under Quality Updates, set 'Quality update deferral period' to 0 days\n5. Set 'Automatic update behavior' to 'Auto install and restart at maintenance time'\n6. Configure maintenance windows if needed to minimize business disruption\n7. Assign to appropriate device groups (production devices)\n8. Click 'Create' to deploy the policy",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/windows-update-for-business-configure",
+      "controlMappings": [
+        {
+          "controlId": "03.14.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Directly enforces automatic installation of security-relevant software and firmware updates. Windows Update for Business ensures devices receive quality updates (security patches) promptly, meeting the NIST requirement to install updates within defined timeframes.",
+          "nistRequirement": "Install security-relevant software and firmware updates within organization-defined time period"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-002",
+      "settingName": "Security baselines for Windows",
+      "displayName": "Security Baseline - MDM Security Baseline for Windows",
+      "settingPath": "Microsoft.Management.Services.IntuneWindowsAgent.SecurityBaseline",
+      "policyType": "Intune",
+      "policySubType": "Security Baselines",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {
+        "baselineVersion": "Latest",
+        "automaticUpdates": "Enabled"
+      },
+      "validationOperator": "==",
+      "description": "Deploys Microsoft security baseline configurations which include automatic update settings recommended by Microsoft security teams. Ensures devices maintain secure configurations aligned with industry best practices for vulnerability management.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Security Baseline for Windows 10 and later'\n4. Click 'Create profile'\n5. Accept default secure settings or customize as needed\n6. Ensure 'Configure Automatic Updates' is set to 'Auto download and schedule install'\n7. Assign to device groups\n8. Review baseline regularly and update to latest version when available\n9. Use 'Change Version' feature to upgrade existing profiles to latest baseline",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/protect/security-baselines",
+      "controlMappings": [
+        {
+          "controlId": "03.14.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Security baselines include Microsoft-recommended configurations for Windows Update settings, ensuring automatic installation of security updates. Baselines are updated regularly to address emerging threats and vulnerabilities.",
+          "nistRequirement": "Identify, report, and correct system flaws"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-003",
+      "settingName": "Microsoft Defender Antivirus signature update frequency",
+      "displayName": "Defender Antivirus - Automatic Definition Updates",
+      "settingPath": "Defender.SignatureUpdateInterval",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 8,
+      "validationOperator": "<=",
+      "description": "Configures automatic and frequent updates of Microsoft Defender Antivirus definitions (signatures) to protect against newly discovered malware. Updates occur multiple times daily, ensuring protection against the latest threats within hours of discovery.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Antivirus > Create Policy\n3. Select Platform: 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus'\n5. Under Security Intelligence Updates section:\n   - Set 'Signature Update Interval' to 8 hours or less\n   - Enable 'Allow real-time security intelligence updates'\n   - Set 'Security intelligence location' to 'Microsoft Update'\n6. Assign to all Windows devices\n7. Monitor deployment status in Device Status reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/manage-protection-updates-microsoft-defender-antivirus",
+      "controlMappings": [
+        {
+          "controlId": "03.14.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Antivirus definition updates are security-relevant software updates that must be applied promptly to protect against newly identified malware. Frequent automatic updates ensure protection is current within the organization-defined time period (typically 8-24 hours).",
+          "nistRequirement": "Install security-relevant software and firmware updates within organization-defined time period"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-004",
+      "settingName": "Windows Autopatch enrollment",
+      "displayName": "Windows Autopatch - Automated Update Management",
+      "settingPath": "Microsoft.Management.Services.WindowsAutopatch",
+      "policyType": "Intune",
+      "policySubType": "Windows Autopatch",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Windows Autopatch service which automates the deployment and monitoring of Windows quality updates, feature updates, and driver updates. Microsoft manages the update deployment schedule using deployment rings to ensure updates are tested and deployed safely.",
+      "implementationGuide": "1. Verify licensing: Requires Windows 10/11 Enterprise E3+ or Microsoft 365 E3+\n2. Sign in to Microsoft Intune admin center\n3. Navigate to Tenant administration > Windows Autopatch > Tenant enrollment\n4. Review prerequisites and resolve any 'Not ready' status items\n5. Click 'Enroll' to enable Windows Autopatch\n6. Configure deployment rings (Test, First, Fast, Broad) for staged rollout\n7. Monitor update deployment progress and health metrics in Autopatch dashboard\n8. Allow Microsoft to manage update schedules automatically",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/windows/deployment/windows-autopatch/overview/windows-autopatch-overview",
+      "controlMappings": [
+        {
+          "controlId": "03.14.01",
+          "confidence": "High",
+          "isRequired": false,
+          "mappingRationale": "Provides automated, managed update deployment with Microsoft oversight. Autopatch ensures timely installation of security updates using deployment rings and automated testing, reducing administrative burden while maintaining security posture. Recommended for organizations seeking streamlined patch management.",
+          "nistRequirement": "Install security-relevant software and firmware updates within organization-defined time period"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-005",
+      "settingName": "Defender platform and engine update channel",
+      "displayName": "Defender Updates - Platform and Engine Update Channels",
+      "settingPath": "Defender.PlatformUpdatesChannel",
+      "policyType": "Intune",
+      "policySubType": "Antivirus Policy",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "Current Channel (Broad)",
+      "validationOperator": "==",
+      "description": "Configures update channels for Microsoft Defender Antivirus platform and engine updates. Current Channel (Broad) provides tested and validated updates with minimal delay, ensuring devices receive critical security improvements promptly while maintaining stability.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Antivirus\n3. Create new policy: Platform 'Windows 10, Windows 11, and Windows Server'\n4. Select Profile: 'Microsoft Defender Antivirus' or 'Defender Update controls'\n5. Configure update channels:\n   - Platform Updates Channel: 'Current Channel (Broad)'\n   - Engine Updates Channel: 'Current Channel (Broad)'\n   - Security Intelligence Updates Channel: 'Current Channel (Broad)'\n6. Assign to device groups\n7. Monitor update version compliance using Device Status reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/defender-endpoint/manage-gradual-rollout",
+      "controlMappings": [
+        {
+          "controlId": "03.14.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Platform and engine updates contain critical security improvements and vulnerability fixes for the antivirus engine itself. Configuring appropriate update channels ensures these security-relevant updates are installed automatically and promptly.",
+          "nistRequirement": "Install security-relevant software and firmware updates within organization-defined time period"
+        }
+      ]
+    },
+    {
+      "id": "IN-SI-006",
+      "settingName": "Microsoft 365 Apps security baseline",
+      "displayName": "Security Baseline for Microsoft 365 Apps",
+      "settingPath": "Microsoft.Management.Services.IntuneOfficeApps.SecurityBaseline",
+      "policyType": "Intune",
+      "policySubType": "Security Baselines",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {
+        "baselineVersion": "Latest",
+        "automaticUpdates": "Enabled"
+      },
+      "validationOperator": "==",
+      "description": "Deploys security baseline for Microsoft 365 Apps (Office applications) which includes settings for automatic updates of Office applications. Ensures Office apps receive security patches and vulnerability fixes in alignment with Microsoft security recommendations.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Endpoint security > Security baselines\n3. Select 'Security Baseline for Microsoft 365 Apps for Enterprise'\n4. Click 'Create profile'\n5. Review and accept Microsoft-recommended settings\n6. Verify 'Update Channel' is set to 'Current Channel' or 'Monthly Enterprise Channel'\n7. Assign to user groups or device groups\n8. Monitor compliance and update to latest baseline version when available\n9. Use 'Change Version' to upgrade profiles as new baselines are released",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365-apps/security/security-baseline",
+      "controlMappings": [
+        {
+          "controlId": "03.14.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Microsoft 365 Apps security baseline ensures Office applications receive timely security updates through configured update channels. Office apps process CUI and require prompt patching of vulnerabilities to maintain security posture.",
+          "nistRequirement": "Install security-relevant software and firmware updates within organization-defined time period"
+        }
+      ]
+    }
+  ],
+  "totalSettings": 6,
+  "highConfidenceSettings": 6,
+  "implementationNotes": "All settings are high-confidence and directly enforce NIST 800-171 Rev 3 control 03.14.01. Deploy Windows Update for Business policies and security baselines first to establish automatic update infrastructure, then add Defender Antivirus update policies for comprehensive coverage. Windows Autopatch is recommended but optional depending on organizational resources.",
+  "microsoftBaselineAlignment": "All settings align with Microsoft Security Baselines for Windows 10/11, Microsoft Defender for Endpoint, and Microsoft 365 Apps",
+  "cisLevel1Compliance": true,
+  "estimatedImplementationTime": "4-6 hours for initial deployment, 2-3 hours for testing and validation"
+}

@@ -1,0 +1,537 @@
+{
+  "controlId": "03.01.04",
+  "controlTitle": "Separation of Duties",
+  "controlFamily": "AC",
+  "nistRequirements": {
+    "a": "Identify the duties of individuals requiring separation",
+    "b": "Define system access authorizations to support separation of duties"
+  },
+  "discussionSummary": "Separation of duties addresses the potential for abuse of authorized privileges and reduces the risk of malevolent activity without collusion. Includes dividing mission/support functions among different individuals/roles and ensuring personnel who administer access control functions do not also administer audit functions.",
+  "totalSettings": 18,
+  "researchDate": "2024-11-16",
+  "settings": [
+    {
+      "id": "AZ-SOD-001",
+      "settingName": "roleDefinitionId",
+      "displayName": "Security Reader Role Assignment (Audit Functions)",
+      "settingPath": "roleManagement.directory.roleAssignments.roleDefinitionId",
+      "policyType": "AzureAD",
+      "policySubType": "RoleAssignment",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "5d6b6bb7-de71-4623-b4af-96380a352509",
+      "validationOperator": "==",
+      "description": "Security Reader role provides read-only access to security information and audit logs across Microsoft 365 services, separating audit review from administrative functions. Users with this role can view security data but cannot make changes.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Roles & admins\n3. Search for 'Security Reader' role\n4. Click the role and select 'Add assignments'\n5. Select users who should have audit/review responsibilities (separate from those with Security Administrator role)\n6. Complete assignment\n\nNote: Ensure users assigned Security Reader are NOT also assigned Security Administrator to maintain separation",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#security-reader",
+      "graphApiEndpoint": "GET /roleManagement/directory/roleAssignments?$filter=roleDefinitionId eq '5d6b6bb7-de71-4623-b4af-96380a352509'",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Security Reader role provides audit and review capabilities without administrative privileges, directly enforcing separation between security administration and security auditing functions as required by NIST 800-171.",
+          "nistRequirement": "Ensuring that personnel who administer access control functions do not also administer audit functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-002",
+      "settingName": "roleDefinitionId",
+      "displayName": "Security Administrator Role Assignment (Security Management)",
+      "settingPath": "roleManagement.directory.roleAssignments.roleDefinitionId",
+      "policyType": "AzureAD",
+      "policySubType": "RoleAssignment",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "194ae4cb-b126-40b2-bd5b-6091b380977d",
+      "validationOperator": "==",
+      "description": "Security Administrator role manages security features across Microsoft 365 but should be assigned separately from audit-only roles like Security Reader to enforce separation of duties.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Roles & admins\n3. Search for 'Security Administrator' role\n4. Click the role and select 'Add assignments'\n5. Select users responsible for security configuration and management\n6. Verify these users are NOT also assigned Security Reader role\n7. Complete assignment\n\nValidation: Run compliance check to ensure no overlap between Security Administrator and Security Reader assignments",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#security-administrator",
+      "graphApiEndpoint": "GET /roleManagement/directory/roleAssignments?$filter=roleDefinitionId eq '194ae4cb-b126-40b2-bd5b-6091b380977d'",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Security Administrator role should be assigned separately from audit/review roles to prevent the same individual from both configuring security controls and reviewing their effectiveness.",
+          "nistRequirement": "Dividing mission functions and support functions among different individuals or roles"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-003",
+      "settingName": "roleDefinitionId",
+      "displayName": "Global Reader Role Assignment",
+      "settingPath": "roleManagement.directory.roleAssignments.roleDefinitionId",
+      "policyType": "AzureAD",
+      "policySubType": "RoleAssignment",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "f2ef992c-3afb-46b9-b7cf-a126ee74c451",
+      "validationOperator": "==",
+      "description": "Global Reader provides read-only access to all Microsoft 365 administrative information without the ability to make changes. This role is ideal for auditors, compliance teams, and oversight personnel.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Roles & admins\n3. Search for 'Global Reader' role\n4. Click the role and select 'Add assignments'\n5. Assign to personnel responsible for audits, investigations, or oversight\n6. Ensure these users do NOT have Global Administrator or other privileged roles\n7. Complete assignment",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#global-reader",
+      "graphApiEndpoint": "GET /roleManagement/directory/roleAssignments?$filter=roleDefinitionId eq 'f2ef992c-3afb-46b9-b7cf-a126ee74c451'",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Global Reader enforces separation by providing comprehensive read-only access for oversight and audit purposes while preventing any administrative actions.",
+          "nistRequirement": "Ensuring personnel who administer access control functions do not also administer audit functions"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-004",
+      "settingName": "maximumPrivilegedRoleAssignments",
+      "displayName": "Maximum Subscription Owners Limit",
+      "settingPath": "subscription.roleAssignments.ownerCount",
+      "policyType": "AzureAD",
+      "policySubType": "BestPractice",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 3,
+      "validationOperator": "<=",
+      "description": "Limit the number of subscription owners to a maximum of 3 to reduce the potential for breach by a compromised owner and enforce separation of administrative duties.",
+      "implementationGuide": "1. Sign in to Azure Portal\n2. Navigate to Subscriptions\n3. Select your subscription\n4. Click Access control (IAM)\n5. Review 'Owner' role assignments on Role assignments tab\n6. If more than 3 owners exist, remove unnecessary owner assignments\n7. Use more restrictive roles (Contributor, Reader, or custom roles) for other users\n\nMonitoring: Enable Microsoft Defender for Cloud to monitor this recommendation",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/role-based-access-control/best-practices#limit-privileged-administrator-role-assignments",
+      "graphApiEndpoint": "GET /subscriptions/{subscriptionId}/providers/Microsoft.Authorization/roleAssignments?$filter=roleDefinitionId eq '{ownerRoleId}'",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Limiting privileged role assignments reduces risk of excessive privilege accumulation and enforces the principle that not all administrators need the same level of access.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-005",
+      "settingName": "isEnabled",
+      "displayName": "Enable Privileged Identity Management (PIM)",
+      "settingPath": "identityGovernance.privilegedIdentityManagement.isEnabled",
+      "policyType": "AzureAD",
+      "policySubType": "PrivilegedIdentityManagement",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "PIM enables just-in-time privileged access, requiring users to activate roles when needed rather than having permanent privileged access. This supports separation of duties by ensuring privileged access is time-limited and auditable.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity Governance > Privileged Identity Management\n3. If not already enabled, click 'Consent to PIM' and provide admin consent\n4. Navigate to Microsoft Entra roles\n5. Configure role settings for privileged roles\n6. Convert permanent role assignments to eligible assignments\n\nRequirements: Azure AD Premium P2 or Microsoft Entra ID Governance licenses",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-getting-started",
+      "graphApiEndpoint": "GET /identityGovernance/privilegedAccess/aadroles/resources",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "PIM enforces separation of duties by requiring explicit activation of privileged roles, ensuring that administrative privileges are only used when necessary and all activations are logged for audit purposes.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-006",
+      "settingName": "requireMfaOnActivation",
+      "displayName": "Require MFA for Role Activation",
+      "settingPath": "policies.roleManagementPolicies.rules[?(@.ruleType=='RoleManagementPolicyEnablementRule')].enabledRules",
+      "policyType": "AzureAD",
+      "policySubType": "PIMRoleSettings",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["MultiFactorAuthentication"],
+      "validationOperator": "contains",
+      "description": "Require multi-factor authentication when users activate eligible privileged roles. This adds an additional layer of verification before granting privileged access.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity Governance > Privileged Identity Management > Microsoft Entra roles\n3. Click 'Roles' and select a privileged role (e.g., Global Administrator, Security Administrator)\n4. Click 'Role settings' > 'Edit'\n5. Under 'Activation', check 'Require multi-factor authentication on activation'\n6. Click 'Update'\n7. Repeat for all privileged roles\n\nAPI Method: Update unifiedRoleManagementPolicy rules",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+      "graphApiEndpoint": "PATCH /policies/roleManagementPolicies/{policyId}/rules/{ruleId}",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Requiring MFA for privileged role activation adds verification before granting elevated access, supporting separation by ensuring only authorized personnel can activate privileged functions.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-007",
+      "settingName": "requireJustificationOnActivation",
+      "displayName": "Require Justification for Role Activation",
+      "settingPath": "policies.roleManagementPolicies.rules[?(@.ruleType=='RoleManagementPolicyEnablementRule')].enabledRules",
+      "policyType": "AzureAD",
+      "policySubType": "PIMRoleSettings",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["Justification"],
+      "validationOperator": "contains",
+      "description": "Require users to provide a business justification when activating eligible privileged roles. This creates an audit trail of why privileged access was needed.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity Governance > Privileged Identity Management > Microsoft Entra roles\n3. Click 'Roles' and select a privileged role\n4. Click 'Role settings' > 'Edit'\n5. Under 'Activation', check 'Require justification on activation'\n6. Click 'Update'\n7. Repeat for all privileged roles requiring justification",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+      "graphApiEndpoint": "PATCH /policies/roleManagementPolicies/{policyId}/rules/{ruleId}",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Justification requirements create accountability and audit trails for privileged access, supporting separation of duties by documenting why and when elevated privileges are used.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-008",
+      "settingName": "maximumActivationDuration",
+      "displayName": "Maximum Role Activation Duration",
+      "settingPath": "policies.roleManagementPolicies.rules[?(@.ruleType=='RoleManagementPolicyExpirationRule')].maximumDuration",
+      "policyType": "AzureAD",
+      "policySubType": "PIMRoleSettings",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "PT8H",
+      "validationOperator": "<=",
+      "description": "Set maximum duration for role activation to 8 hours or less. This ensures privileged access is time-limited and users must reactivate roles for extended work.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity Governance > Privileged Identity Management > Microsoft Entra roles\n3. Click 'Roles' and select a privileged role\n4. Click 'Role settings' > 'Edit'\n5. Under 'Activation', set 'Activation maximum duration (hours)' to 8 or less\n6. Click 'Update'\n7. Repeat for all privileged roles\n\nFormat: ISO 8601 duration (PT8H = 8 hours)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+      "graphApiEndpoint": "PATCH /policies/roleManagementPolicies/{policyId}/rules/{ruleId}",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Time-limited role activations enforce separation by ensuring privileged access is temporary and purpose-specific, reducing the risk of privilege abuse.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-009",
+      "settingName": "requireApprovalToActivate",
+      "displayName": "Require Approval for Role Activation",
+      "settingPath": "policies.roleManagementPolicies.rules[?(@.ruleType=='RoleManagementPolicyApprovalRule')].setting.isApprovalRequired",
+      "policyType": "AzureAD",
+      "policySubType": "PIMRoleSettings",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Require approval from designated approvers before users can activate highly privileged roles. This enforces separation by ensuring privileged access requires oversight.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity Governance > Privileged Identity Management > Microsoft Entra roles\n3. Click 'Roles' and select a high-privilege role (e.g., Global Administrator)\n4. Click 'Role settings' > 'Edit'\n5. Under 'Activation', check 'Require approval to activate'\n6. Add approvers (should be separate individuals from potential activators)\n7. Click 'Update'\n\nBest Practice: Require approval for Global Administrator, Privileged Role Administrator, and Security Administrator roles",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-change-default-settings",
+      "graphApiEndpoint": "PATCH /policies/roleManagementPolicies/{policyId}/rules/{ruleId}",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Approval workflows enforce separation by requiring independent verification before granting privileged access, preventing unilateral privilege elevation.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-010",
+      "settingName": "displayName",
+      "displayName": "Administrative Units for Scoped Administration",
+      "settingPath": "directory.administrativeUnits.displayName",
+      "policyType": "AzureAD",
+      "policySubType": "AdministrativeUnit",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "configured",
+      "validationOperator": "exists",
+      "description": "Administrative Units (AUs) provide containers for users, groups, and devices that enable scoped administration. Admins assigned to an AU can only manage resources within that unit, enforcing separation between different organizational divisions.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Administrative units\n3. Click '+ Add' to create a new administrative unit\n4. Provide a name and description (e.g., 'Finance Department', 'Engineering Team')\n5. Add members (users, groups, or devices) to the AU\n6. Assign scoped administrative roles to specific users for this AU only\n7. Verify that AU admins cannot see or manage resources outside their assigned unit\n\nRequirement: Azure AD Premium P1 or P2 licenses for AU administrators",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/administrative-units",
+      "graphApiEndpoint": "POST /directory/administrativeUnits",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Administrative Units enforce separation by limiting administrative scope to specific organizational divisions, preventing admins from managing resources outside their area of responsibility.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-011",
+      "settingName": "scopedRoleAssignments",
+      "displayName": "Scoped Role Assignments to Administrative Units",
+      "settingPath": "directory.administrativeUnits.scopedRoleMembers",
+      "policyType": "AzureAD",
+      "policySubType": "AdministrativeUnit",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "configured",
+      "validationOperator": "exists",
+      "description": "Assign administrative roles scoped to specific Administrative Units. Scoped admins can only perform their assigned role functions within the AU, not tenant-wide.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Administrative units\n3. Select an administrative unit\n4. Click 'Roles and administrators'\n5. Select a role (e.g., User Administrator, Groups Administrator)\n6. Click '+ Add assignments'\n7. Select the user or group to assign the scoped role\n8. Complete assignment\n\nSupported Roles: User Administrator, Groups Administrator, Helpdesk Administrator, License Administrator, Password Administrator, and others",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/admin-units-assign-roles",
+      "graphApiEndpoint": "POST /directory/administrativeUnits/{id}/scopedRoleMembers",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Scoped role assignments restrict administrative authority to specific organizational boundaries, enforcing separation between different administrative domains.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-012",
+      "settingName": "maxCustomRoleAssignmentsAtNonTenantScope",
+      "displayName": "Maximum Custom Role Assignments at Non-Tenant Scope",
+      "settingPath": "organization.limits.maxCustomRoleAssignmentsPerPrincipalAtNonTenantScope",
+      "policyType": "AzureAD",
+      "policySubType": "ServiceLimit",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 100,
+      "validationOperator": "<=",
+      "description": "Azure AD enforces a limit of 100 custom role assignments per principal at non-tenant scopes (e.g., administrative units, resource groups). This limit supports separation of duties by preventing excessive privilege accumulation.",
+      "implementationGuide": "This is an enforced service limit, not a configurable setting.\n\nMonitoring:\n1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Roles & admins\n3. For each custom role, review assignments\n4. Use Azure Resource Graph to query role assignments per principal\n5. Ensure no single principal approaches the 100 assignment limit\n\nRemediation: If approaching limit, consolidate roles or use group-based assignments",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/users/directory-service-limits-restrictions",
+      "graphApiEndpoint": "GET /roleManagement/directory/roleAssignments?$filter=principalId eq '{principalId}'",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Service limits on role assignments prevent excessive privilege accumulation, supporting the principle that users should have only necessary access.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-013",
+      "settingName": "maxBuiltInRoleAssignmentsAtNonTenantScope",
+      "displayName": "Maximum Built-in Role Assignments at Non-Tenant Scope",
+      "settingPath": "organization.limits.maxBuiltInRoleAssignmentsPerPrincipalAtNonTenantScope",
+      "policyType": "AzureAD",
+      "policySubType": "ServiceLimit",
+      "platform": "All",
+      "dataType": "integer",
+      "expectedValue": 100,
+      "validationOperator": "<=",
+      "description": "Azure AD enforces a limit of 100 built-in role assignments per principal at non-tenant scopes (administrative units, Azure AD objects). This prevents privilege accumulation and supports separation of duties.",
+      "implementationGuide": "This is an enforced service limit, not a configurable setting.\n\nMonitoring:\n1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins\n3. Review role assignments per user\n4. Use Microsoft Graph to query assignments per principal\n5. Alert if any principal has >50 role assignments (50% of limit)\n\nBest Practice: Use group-based role assignments and custom roles with precise permissions instead of multiple built-in roles",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/users/directory-service-limits-restrictions",
+      "graphApiEndpoint": "GET /roleManagement/directory/roleAssignments?$filter=principalId eq '{principalId}'&$count=true",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "Medium",
+          "isRequired": false,
+          "mappingRationale": "Limiting role assignments per principal supports separation of duties by preventing any single individual from accumulating excessive privileges across multiple scopes.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-014",
+      "settingName": "isCustomRoleEnabled",
+      "displayName": "Custom Role Creation for Precise Duty Separation",
+      "settingPath": "roleManagement.directory.roleDefinitions",
+      "policyType": "AzureAD",
+      "policySubType": "CustomRole",
+      "platform": "All",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Create custom roles with specific permissions tailored to job functions. Custom roles enable precise separation of duties by granting only necessary permissions instead of broad built-in roles.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Roles & admins\n3. Click '+ New custom role'\n4. Provide a name and description (e.g., 'Access Control Auditor', 'Security Policy Manager')\n5. Select specific permissions aligned to job duties\n6. Avoid combining access control administration with audit permissions\n7. Click 'Create'\n8. Assign custom role to appropriate users or groups\n\nExample: Create separate custom roles for:\n- Security policy configuration (no audit access)\n- Security audit and review (no configuration access)\n- User access provisioning (no security policy access)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-create",
+      "graphApiEndpoint": "POST /roleManagement/directory/roleDefinitions",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Custom roles enable precise definition of duties and permissions, allowing organizations to implement separation of duties tailored to their specific organizational structure and compliance requirements.",
+          "nistRequirement": "Identify the duties of individuals requiring separation; Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SOD-015",
+      "settingName": "roleDefinitionId",
+      "displayName": "Compliance Administrator Role (Separate from Security Admin)",
+      "settingPath": "roleManagement.directory.roleAssignments.roleDefinitionId",
+      "policyType": "AzureAD",
+      "policySubType": "RoleAssignment",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "17315797-102d-40b4-93e0-432062caca18",
+      "validationOperator": "==",
+      "description": "Compliance Administrator role manages compliance features in Microsoft Purview compliance portal and Exchange admin center. This role should be assigned separately from Security Administrator to separate compliance oversight from security configuration.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center\n2. Go to Identity > Roles & admins > Roles & admins\n3. Search for 'Compliance Administrator' role\n4. Click the role and select 'Add assignments'\n5. Assign to personnel responsible for compliance management\n6. Verify these users are NOT assigned Security Administrator role\n7. Complete assignment\n\nSeparation Validation: Ensure Compliance Administrators focus on policy compliance and reporting, while Security Administrators handle security configuration",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#compliance-administrator",
+      "graphApiEndpoint": "GET /roleManagement/directory/roleAssignments?$filter=roleDefinitionId eq '17315797-102d-40b4-93e0-432062caca18'",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Separating compliance administration from security administration prevents conflicts of interest and ensures independent oversight of security controls.",
+          "nistRequirement": "Dividing mission functions and support functions among different individuals or roles"
+        }
+      ]
+    },
+    {
+      "id": "IN-SOD-001",
+      "settingName": "roleDefinitionName",
+      "displayName": "Intune RBAC - Separate Device Management Roles",
+      "settingPath": "deviceManagement.roleDefinitions.displayName",
+      "policyType": "Intune",
+      "policySubType": "RoleDefinition",
+      "platform": "All",
+      "dataType": "string",
+      "expectedValue": "configured",
+      "validationOperator": "exists",
+      "description": "Intune provides built-in and custom roles for device management. Use separate roles for different management functions (e.g., policy creation vs. device troubleshooting) to enforce separation of duties.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center (endpoint.microsoft.com)\n2. Go to Tenant administration > Roles > All roles\n3. Review built-in roles:\n   - Intune Administrator: Full device management\n   - Help Desk Operator: Read-only + device actions (no policy changes)\n   - Read Only Operator: View-only access\n   - Policy and Profile Manager: Manage policies/profiles only\n4. Create custom roles for specific functions if needed\n5. Assign roles to appropriate personnel based on job duties\n6. Use scopes to limit role assignments to specific device groups\n\nSeparation Example:\n- Assign Help Desk Operator for support staff (troubleshooting only)\n- Assign Policy Manager for security team (policy configuration only)\n- Assign Read Only Operator for auditors (reporting only)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/fundamentals/role-based-access-control",
+      "graphApiEndpoint": "GET /deviceManagement/roleDefinitions",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Intune RBAC enforces separation of device management duties by assigning specific functions (policy creation, device actions, reporting) to different roles.",
+          "nistRequirement": "Conducting system support functions with different individuals or roles"
+        }
+      ]
+    },
+    {
+      "id": "IN-SOD-002",
+      "settingName": "scopeAssignments",
+      "displayName": "Intune Role Scope Tags",
+      "settingPath": "deviceManagement.roleAssignments.scopeTags",
+      "policyType": "Intune",
+      "policySubType": "RoleAssignment",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "configured",
+      "validationOperator": "exists",
+      "description": "Scope tags in Intune limit the devices, apps, and policies that admins can see and manage. Use scope tags to enforce separation by organizational unit, geography, or function.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Go to Tenant administration > Roles > Scope tags\n3. Click '+ Create' to create scope tags (e.g., 'Finance', 'Engineering', 'HR')\n4. Apply scope tags to devices, apps, and policies\n5. When assigning roles, specify which scope tags the role assignment includes\n6. Verify that admins can only see/manage resources with their assigned scope tags\n\nExample:\n- Finance Admin: Scope tag 'Finance' - can only manage Finance department devices\n- Engineering Admin: Scope tag 'Engineering' - can only manage Engineering devices\n- Both admins cannot see or manage each other's resources",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/fundamentals/scope-tags",
+      "graphApiEndpoint": "GET /deviceManagement/roleScopeTags",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Scope tags enforce separation by restricting administrative visibility and control to specific organizational boundaries, preventing cross-functional administrative access.",
+          "nistRequirement": "Define system access authorizations to support separation of duties"
+        }
+      ]
+    },
+    {
+      "id": "PV-SOD-001",
+      "settingName": "roleGroupMembership",
+      "displayName": "Microsoft Purview Compliance Role Groups",
+      "settingPath": "purview.roleGroups.members",
+      "policyType": "Purview",
+      "policySubType": "ComplianceRoleGroup",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "configured",
+      "validationOperator": "exists",
+      "description": "Microsoft Purview uses role groups to assign permissions for compliance functions. Separate role groups exist for different compliance activities (DLP management, eDiscovery, audit review, etc.) to enforce separation of duties.",
+      "implementationGuide": "1. Sign in to Microsoft Purview compliance portal (compliance.microsoft.com)\n2. Go to Permissions > Microsoft Purview solutions > Roles\n3. Review built-in role groups:\n   - Compliance Administrator: Manage compliance settings\n   - Compliance Data Administrator: Manage compliance data\n   - eDiscovery Manager: Conduct eDiscovery searches\n   - Organization Management: Full compliance admin\n   - Security Administrator: Manage security features\n   - Security Reader: View security information\n4. Click a role group and add members based on their duties\n5. Ensure personnel are assigned only to role groups aligned with their responsibilities\n6. Avoid assigning users to both administrative and audit-only roles\n\nSeparation Example:\n- Assign DLP Policy Manager role for policy creation\n- Assign Compliance Data Administrator for data review\n- Assign Security Reader for audit and reporting\n- Do not assign the same user to multiple conflicting roles",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/purview/microsoft-365-compliance-center-permissions",
+      "graphApiEndpoint": "N/A - Managed via Exchange Online PowerShell: Get-RoleGroup",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Purview role groups enforce separation by dividing compliance functions (policy creation, data management, auditing, eDiscovery) into distinct roles that should be assigned to different personnel.",
+          "nistRequirement": "Dividing mission functions and support functions among different individuals or roles; Ensuring personnel who administer access control functions do not also administer audit functions"
+        }
+      ]
+    },
+    {
+      "id": "EXO-SOD-001",
+      "settingName": "roleGroupMembership",
+      "displayName": "Exchange Online RBAC Role Groups",
+      "settingPath": "exchangeOnline.roleGroups.members",
+      "policyType": "Exchange",
+      "policySubType": "RoleGroup",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "configured",
+      "validationOperator": "exists",
+      "description": "Exchange Online uses RBAC to separate administrative duties. Built-in role groups provide specific permissions for different Exchange management functions.",
+      "implementationGuide": "1. Connect to Exchange Online PowerShell:\n   Connect-ExchangeOnline\n2. Review role groups:\n   Get-RoleGroup | Select Name, Description\n3. Key role groups for separation:\n   - Organization Management: Full Exchange admin\n   - Recipient Management: Manage mailboxes, groups (no org-wide settings)\n   - View-Only Organization Management: Read-only audit access\n   - Help Desk: Limited support functions\n   - Security Administrator: Security features only\n   - Compliance Management: Compliance and audit functions\n4. Add members to appropriate role groups:\n   Add-RoleGroupMember -Identity \"Role Group Name\" -Member user@domain.com\n5. Verify separation between admin and audit functions\n\nBest Practice: Assign View-Only Organization Management for auditors separate from Organization Management for administrators",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/exchange/permissions-exo/permissions-exo",
+      "graphApiEndpoint": "N/A - Managed via Exchange Online PowerShell",
+      "controlMappings": [
+        {
+          "controlId": "03.01.04",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Exchange RBAC role groups enforce separation by dividing email system management duties (recipient management, compliance, security, help desk) into distinct roles.",
+          "nistRequirement": "Conducting system support functions with different individuals or roles"
+        }
+      ]
+    }
+  ],
+  "settingsByCategory": {
+    "AzureAD-RoleAssignments": 5,
+    "AzureAD-PIM": 5,
+    "AzureAD-AdministrativeUnits": 2,
+    "AzureAD-ServiceLimits": 2,
+    "AzureAD-CustomRoles": 1,
+    "Intune-RBAC": 2,
+    "Purview-RoleGroups": 1,
+    "Exchange-RBAC": 1
+  },
+  "settingsByPlatform": {
+    "All": 18
+  },
+  "settingsByConfidence": {
+    "High": 16,
+    "Medium": 2
+  },
+  "settingsByRequired": {
+    "Required": 16,
+    "Recommended": 2
+  },
+  "implementationNotes": [
+    "Separation of duties is primarily enforced through role-based access control (RBAC) rather than technical policy settings.",
+    "Key principle: Personnel who administer access control functions should NOT also administer audit functions.",
+    "Microsoft 365 provides multiple RBAC systems: Azure AD roles, Intune roles, Purview role groups, and Exchange role groups.",
+    "Administrative Units and PIM provide additional layers of separation through scoped administration and time-limited access.",
+    "Regularly audit role assignments to ensure separation is maintained and no privilege creep occurs.",
+    "Use custom roles for precise duty definitions when built-in roles are too broad.",
+    "Consider implementing PIM for all privileged roles to enforce just-in-time access and approval workflows.",
+    "Document role assignment decisions and separation of duties matrix for compliance audits."
+  ],
+  "complianceValidation": {
+    "auditQueries": [
+      "List all users with both Security Administrator and Security Reader roles",
+      "Identify users with Global Administrator role who also have audit-related roles",
+      "Find principals with >50 role assignments (approaching service limits)",
+      "List privileged roles without PIM enabled",
+      "Identify subscription owners exceeding count of 3",
+      "Find role assignments not scoped to Administrative Units where scoping is appropriate"
+    ],
+    "recommendedReporting": [
+      "Monthly privileged role assignment review",
+      "Quarterly separation of duties audit",
+      "PIM activation log analysis",
+      "Role assignment count per principal",
+      "Administrative Unit scope coverage report"
+    ]
+  }
+}

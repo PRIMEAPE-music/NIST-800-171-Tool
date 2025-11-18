@@ -1,0 +1,169 @@
+{
+  "controlId": "03.04.10",
+  "controlFamily": "CM",
+  "controlTitle": "System Component Inventory",
+  "controlRequirement": "a. Develop and document an inventory of system components.\nb. Review and update the system component inventory [Assignment: organization-defined frequency].\nc. Update the system component inventory as part of installations, removals, and system updates.",
+  "researchDate": "2025-11-17",
+  "totalSettings": 6,
+  "settings": [
+    {
+      "id": "IN-CM-018",
+      "settingName": "IntuneDeviceInventoryPropertiesCatalog",
+      "displayName": "Intune Device Inventory - Properties Catalog Collection",
+      "settingPath": "Intune.DeviceInventory.PropertiesCatalog",
+      "policyType": "Intune",
+      "policySubType": "PropertiesCatalog",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {
+        "enabled": true,
+        "categories": ["CPU", "Memory", "Storage", "Network", "BIOS", "Battery", "OS"]
+      },
+      "validationOperator": "contains",
+      "description": "Enables comprehensive hardware inventory collection via Intune Properties Catalog, installing Microsoft Device Inventory Agent to collect detailed component information updated every 24 hours for accurate system inventory",
+      "implementationGuide": "1. Navigate to Intune admin center > Devices > Windows > Configuration\n2. Create policy: Platform 'Windows 10 and later' > Profile type 'Properties Catalog'\n3. Name: 'Device Inventory - Hardware Properties Collection'\n4. Click 'Add properties' and select categories:\n   Required categories (select ALL properties in each):\n   - Processor (CPU): Manufacturer, Speed, Cores, Threads\n   - Memory: Total Physical Memory, Available Memory\n   - Storage: Disk Capacity, Free Space, Disk Type (SSD/HDD)\n   - Network Adapter: MAC Address, IP Configuration, Adapter Type\n   - BIOS: Manufacturer, Version, Release Date, Serial Number\n   - Operating System: Version, Build, Edition, Install Date\n   - Battery (for laptops): Designed Capacity, Current Capacity, Cycle Count\n   Optional categories:\n   - Display: Resolution, Manufacturer\n   - TPM: Version, Manufacturer\n   - Secure Boot: Enabled status\n5. Assign to: All Windows devices\n6. Agent deployment:\n   - Microsoft Device Inventory Agent auto-installs\n   - Location: C:\\Program Files\\Microsoft Device Inventory Agent\n   - Data syncs every 24 hours\n7. View inventory:\n   - Devices > All devices > Select device > Monitor > Resource Explorer\n8. Data populates within 24 hours of policy assignment",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/device-inventory",
+      "controlMappings": [
+        {
+          "controlId": "03.04.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Intune Device Inventory Properties Catalog provides automated, detailed hardware component tracking including CPU, memory, storage, network adapters, and BIOS information. This directly fulfills the requirement to develop and maintain an accurate inventory of system components with component accountability.",
+          "nistRequirement": "Develop and document an inventory of system components that accurately reflects the system"
+        }
+      ]
+    },
+    {
+      "id": "AZ-CM-019",
+      "settingName": "AzureADDeviceRegistration",
+      "displayName": "Azure AD Device Registration and Inventory",
+      "settingPath": "EntraID.Devices.Registration",
+      "policyType": "AzureAD",
+      "policySubType": "DeviceManagement",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "registrationRequired": true,
+        "inventoryTracking": "enabled"
+      },
+      "validationOperator": "==",
+      "description": "Requires all organizational devices to register in Azure AD/Entra ID, creating centralized device inventory with device type, OS version, compliance status, last sign-in, and ownership information",
+      "implementationGuide": "1. Configure device registration:\n   - Navigate to Entra admin center > Devices > Device settings\n   - Users may join devices to Azure AD: Yes (for corporate devices) or Selected groups\n   - Require Multi-Factor Authentication to register or join devices: Yes\n   - Maximum number of devices per user: 5 (adjust as needed)\n2. For Windows devices:\n   - Automatic enrollment in Intune during Azure AD join\n   - Settings > Accounts > Access work or school > Connect\n   - Join this device to Azure Active Directory\n3. For mobile devices:\n   - Users install Company Portal app\n   - Sign in with corporate credentials\n   - Device automatically registers\n4. View device inventory:\n   - Entra admin center > Devices > All devices\n   - Export device list: Select devices > Export\n5. Key inventory attributes captured:\n   - Device name, Device ID, Object ID\n   - OS and version\n   - Join type (Azure AD joined, Hybrid, Registered)\n   - Management type (Intune, Co-managed)\n   - Compliance state\n   - Last activity date\n   - Primary user\n   - Ownership (Corporate/Personal)\n6. Enable device activity reports:\n   - Monitoring > Sign-ins > Filter by device\n7. Configure stale device cleanup:\n   - Device settings > Delete devices:\n     * Delete devices with no activity in 90 days\n     * Maximum pending devices: 50",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/devices/overview",
+      "controlMappings": [
+        {
+          "controlId": "03.04.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Azure AD device registration provides centralized inventory of all organizational devices with key accountability information including device type, OS, ownership, user assignment, and activity tracking. This serves as the foundational device inventory system for cloud-managed environments.",
+          "nistRequirement": "Develop inventory including all components within the system with information for effective component accountability"
+        }
+      ]
+    },
+    {
+      "id": "IN-CM-020",
+      "settingName": "IntuneSoftwareInventory",
+      "displayName": "Intune - Managed and Discovered Applications Inventory",
+      "settingPath": "Intune.Apps.InventoryTracking",
+      "policyType": "Intune",
+      "policySubType": "ApplicationManagement",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "managedApps": "tracked",
+        "discoveredApps": "tracked",
+        "refreshInterval": "7 days"
+      },
+      "validationOperator": "==",
+      "description": "Automatically inventories all installed applications on managed devices, including both Intune-deployed apps and discovered applications, providing software component accountability with version tracking",
+      "implementationGuide": "1. Managed applications (Intune-deployed):\n   - Navigate to Apps > All apps\n   - Automatic tracking for all deployed applications\n   - View per-device: Apps > Select app > Device install status\n   - View per-app: Shows installation status, version, install date\n2. Discovered applications (all installed apps):\n   - Navigate to Apps > Monitor > Discovered apps\n   - Automatic collection every 7 days\n   - Shows: App name, Version, Publisher, Device count\n   - Export to CSV for reporting\n3. Per-device software inventory:\n   - Devices > All devices > Select device > Discovered apps\n   - Shows all software installed on that specific device\n4. Configure app inventory collection:\n   - Devices > Configuration > Create policy\n   - Platform: Windows 10 and later\n   - Settings Catalog > Device Management > 'Allow commercial data pipeline'\n   - Enable for inventory collection\n5. Software version tracking:\n   - Apps > Monitor > App install status\n   - Filter by version to identify out-of-date software\n6. Use Endpoint Analytics for advanced insights:\n   - Reports > Endpoint Analytics > Software inventory\n   - Identifies software usage, versions, and update requirements\n7. Export comprehensive software inventory:\n   - Apps > Discovered apps > Export\n   - Includes: Device name, App name, Version, Publisher, Install date\n8. Review frequency: Automated 7-day refresh cycle",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/apps/app-discovered-apps",
+      "controlMappings": [
+        {
+          "controlId": "03.04.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Intune's software inventory tracking provides comprehensive visibility into all applications installed across the device estate, including version numbers, publishers, and installation status. This fulfills the software component inventory requirement with automatic updates every 7 days.",
+          "nistRequirement": "Develop inventory of system components including software, software version numbers, and software license information"
+        }
+      ]
+    },
+    {
+      "id": "IN-CM-021",
+      "settingName": "EndpointAnalyticsEnrollment",
+      "displayName": "Endpoint Analytics - Device and Software Insights",
+      "settingPath": "Intune.EndpointAnalytics.Enrollment",
+      "policyType": "Intune",
+      "policySubType": "EndpointAnalytics",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Endpoint Analytics to provide enhanced device and software inventory with performance metrics, startup times, application reliability, and component health tracking for comprehensive system visibility",
+      "implementationGuide": "1. Enable Endpoint Analytics:\n   - Navigate to Reports > Endpoint analytics\n   - Overview > Start\n   - Accept Microsoft Data Collection\n2. Enroll Intune-managed devices:\n   - Endpoint analytics > Settings > General\n   - Intune data collection policy: Enable\n   - Automatically applies to Windows 10/11 devices\n3. Configure data collection:\n   - Client requires:\n     * Windows 10 1903+ or Windows 11\n     * Connected User Experiences and Telemetry service (DiagTrack) enabled\n   - Diagnostic data level: Enhanced (for full insights) or Required (minimum)\n4. Available inventory reports:\n   - Devices > Device performance: Startup times, restart frequency\n   - Apps > Application reliability: Crash rates, version tracking\n   - Hardware > Resource performance: Memory, CPU, disk usage\n   - Recommended software: Updates needed, EOL software\n5. Device hardware inventory includes:\n   - Model, manufacturer, BIOS version\n   - Memory (total, available)\n   - Storage (capacity, free space, disk type)\n   - Battery health (for laptops)\n   - Display information\n6. View device-specific inventory:\n   - Endpoint analytics > Device performance\n   - Select device > View details\n7. Export inventory data:\n   - Each report section has export capability\n   - CSV format for further analysis\n8. Data refresh: Every 24 hours\n9. Retention: 30 days for detailed telemetry",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/analytics/",
+      "controlMappings": [
+        {
+          "controlId": "03.04.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Endpoint Analytics provides comprehensive component inventory including hardware specifications, software inventory, performance metrics, and health status. The 24-hour refresh cycle and automated enrollment ensure continuous inventory accuracy and support informed IT decisions.",
+          "nistRequirement": "Develop and maintain system component inventory at level of granularity necessary for tracking and reporting"
+        }
+      ]
+    },
+    {
+      "id": "IN-CM-022",
+      "settingName": "IntuneDeviceQuery",
+      "displayName": "Intune Device Query - Real-Time Inventory",
+      "settingPath": "Intune.DeviceQuery.Enabled",
+      "policyType": "Intune",
+      "policySubType": "AdvancedEndpointAnalytics",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables real-time device querying using KQL to retrieve immediate hardware, software, registry, and network configuration data for on-demand component verification and inventory validation",
+      "implementationGuide": "1. License requirement:\n   - Intune Suite or Advanced Endpoint Analytics add-on\n   - Trial available: 90 days for 250 users\n   - Enable: Tenant administration > Intune add-ons > Advanced Endpoint Analytics\n2. Prerequisites:\n   - Devices enrolled in Intune\n   - Devices enrolled in Endpoint Analytics\n   - Admin permission: 'Managed Devices - Query' role\n3. Access device query:\n   - Devices > All devices > Select device\n   - Monitor > Device query\n4. Query examples for inventory:\n   \n   Hardware inventory:\n   ```\n   WMI('root\\cimv2', 'SELECT * FROM Win32_ComputerSystem')\n   | project Manufacturer, Model, TotalPhysicalMemory\n   ```\n   \n   Software inventory:\n   ```\n   RegistryInventory('HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall')\n   | project DisplayName, DisplayVersion, Publisher\n   ```\n   \n   Network configuration:\n   ```\n   WMI('root\\cimv2', 'SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled=True')\n   | project Description, IPAddress, MACAddress\n   ```\n   \n   Disk inventory:\n   ```\n   WMI('root\\cimv2', 'SELECT * FROM Win32_LogicalDisk WHERE DriveType=3')\n   | project DeviceID, VolumeName, Size, FreeSpace\n   ```\n5. Save common queries for reuse\n6. Export query results to CSV\n7. Use for inventory verification and ad-hoc reporting\n8. Query results return in seconds (near real-time)",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/device-query",
+      "controlMappings": [
+        {
+          "controlId": "03.04.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Device Query enables real-time, on-demand verification of system components using KQL queries. This provides immediate access to detailed hardware, software, and configuration inventory for validation, troubleshooting, and audit purposes, supporting continuous inventory accuracy.",
+          "nistRequirement": "Review and update system component inventory with accurate information for component accountability"
+        }
+      ]
+    },
+    {
+      "id": "IN-CM-023",
+      "settingName": "InventoryUpdateProcess",
+      "displayName": "Automated Inventory Update on Component Changes",
+      "settingPath": "Intune.Inventory.AutoUpdate",
+      "policyType": "Intune",
+      "policySubType": "ProcessControl",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "onInstallation": "automatic",
+        "onRemoval": "automatic",
+        "onUpdate": "automatic",
+        "syncInterval": "24 hours"
+      },
+      "validationOperator": "==",
+      "description": "Ensures inventory automatically updates when devices are enrolled, unenrolled, or modified, maintaining accurate component tracking during installations, removals, and system updates without manual intervention",
+      "implementationGuide": "1. Device enrollment auto-inventory:\n   - When device enrolls in Intune, inventory starts automatically\n   - Initial sync within 24 hours\n   - Azure AD device object created immediately\n2. Configure automatic inventory triggers:\n   a. New device installation:\n      - Autopilot enrollment or manual enrollment\n      - Device registers in Azure AD\n      - Intune MDM enrollment completes\n      - Hardware inventory collection begins\n      - Software inventory starts discovery\n   \n   b. Application installation/removal:\n      - Intune tracks all app deployments in real-time\n      - Discovered apps refresh every 7 days\n      - Use Proactive Remediations for immediate updates if needed\n   \n   c. Device retirement/wipe:\n      - Device > Retire or Wipe\n      - Inventory record marked as retired\n      - Azure AD device disabled or deleted per retention policy\n   \n   d. Hardware changes:\n      - Properties Catalog agent detects changes every 24 hours\n      - Memory upgrades, storage changes auto-update\n3. Monitor inventory accuracy:\n   - Devices > Monitor > Device actions\n   - Verify sync status and last check-in time\n4. Set up inventory validation reports:\n   - Reports > Device compliance > Custom report\n   - Include: Device name, Last sync, Enrollment date\n   - Schedule: Weekly\n5. Configure stale device cleanup:\n   - Devices not checking in for 90+ days\n   - Auto-cleanup or flag for manual review\n6. Document inventory change process:\n   - Change management integration\n   - Notify when devices added/removed\n   - Quarterly reconciliation with asset management\n7. Inventory data retention:\n   - Active devices: Real-time\n   - Retired devices: 30 days (configurable)\n   - Deleted devices: 90 days in recycle bin",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/intune/intune-service/remote-actions/devices-wipe",
+      "controlMappings": [
+        {
+          "controlId": "03.04.10",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automatic inventory updates upon device enrollment, app deployment, hardware changes, and device removal ensure the component inventory remains continuously accurate without manual tracking. This fulfills the requirement to update inventory as part of installations, removals, and system updates.",
+          "nistRequirement": "Update the system component inventory as part of installations, removals, and system updates"
+        }
+      ]
+    }
+  ]
+}

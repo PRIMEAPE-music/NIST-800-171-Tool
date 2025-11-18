@@ -1,0 +1,153 @@
+{
+  "controlId": "03.16.01",
+  "controlTitle": "Security Engineering Principles",
+  "family": "SA",
+  "priority": "Medium",
+  "requirementText": "Apply the following systems security engineering principles to the development or modification of the system and system components: [Assignment: organization-defined systems security engineering principles].",
+  "settings": [
+    {
+      "id": "IN-SA-001",
+      "settingName": "securityBaseline",
+      "displayName": "Deploy Windows Security Baseline",
+      "settingPath": "securityBaseline.assigned",
+      "policyType": "Intune",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Ensures Windows Security Baseline is deployed to enforce secure system configuration standards based on Microsoft security engineering principles, including secure boot, credential protection, and least functionality.",
+      "implementationGuide": "1. Navigate to Endpoint Security > Security baselines in Microsoft Intune admin center\n2. Select 'Security Baseline for Windows 10 and later'\n3. Create a new baseline profile with organizational security requirements\n4. Configure settings for: Secure Boot, BitLocker, Windows Defender, Account policies, Network security\n5. Assign to device groups\n6. Monitor compliance via Intune compliance dashboard",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/security-baselines",
+      "controlMappings": [
+        {
+          "controlId": "03.16.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Security baselines embody Microsoft's security engineering principles by providing pre-configured secure settings that enforce defense-in-depth, least functionality, and secure-by-design principles across Windows systems.",
+          "nistRequirement": "Apply systems security engineering principles to development or modification of system components"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-002",
+      "settingName": "requireSecureBoot",
+      "displayName": "Require Secure Boot Enabled",
+      "settingPath": "deviceHealthAttestation.secureBoot",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enforces Secure Boot requirement to ensure devices boot with trusted firmware, implementing security engineering principle of establishing a hardware root of trust.",
+      "implementationGuide": "1. Navigate to Devices > Compliance policies > Create policy in Intune\n2. Select Platform: Windows 10 and later\n3. Under Device Health, configure 'Require Secure Boot to be enabled on the device' = Require\n4. Set Actions for noncompliance (e.g., mark noncompliant immediately)\n5. Assign to device groups\n6. Devices without Secure Boot will be marked non-compliant",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.16.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Secure Boot implements the security engineering principle of establishing trust boundaries by ensuring only authenticated code runs during boot process, preventing rootkits and boot sector malware.",
+          "nistRequirement": "Apply security engineering principles including hardware-based security and trusted computing"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-003",
+      "settingName": "requireBitLocker",
+      "displayName": "Require BitLocker Drive Encryption",
+      "settingPath": "deviceHealthAttestation.bitLocker",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Requires BitLocker encryption on all system drives, implementing security engineering principle of data protection at rest using cryptographic mechanisms.",
+      "implementationGuide": "1. Navigate to Devices > Compliance policies > Create policy\n2. Select Platform: Windows 10 and later\n3. Under Device Health, configure 'Require BitLocker' = Require\n4. Optionally configure encryption method via Configuration profile\n5. Set Actions for noncompliance\n6. Assign to device groups\n7. Note: Device must reboot after encryption for compliance detection",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows#device-health",
+      "controlMappings": [
+        {
+          "controlId": "03.16.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "BitLocker implements security engineering principles of defense-in-depth and data protection by encrypting system volumes, preventing unauthorized data access even if physical device is compromised.",
+          "nistRequirement": "Apply security engineering principles including cryptographic protection and data confidentiality"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-004",
+      "settingName": "leastFunctionalityPorts",
+      "displayName": "Disable Unnecessary Ports and Services",
+      "settingPath": "configuration.portConfiguration",
+      "policyType": "Intune",
+      "policySubType": "DeviceConfiguration",
+      "platform": "Windows",
+      "dataType": "array",
+      "expectedValue": ["SMBv1Disabled", "UnsignedDriversBlocked", "UnnecessaryServicesDisabled"],
+      "validationOperator": "contains",
+      "description": "Implements least functionality principle by disabling unnecessary protocols (SMBv1), blocking unsigned drivers, and disabling non-essential services to reduce attack surface.",
+      "implementationGuide": "1. Deploy Windows Security Baseline which includes:\n   - Disable SMBv1 client and server\n   - Block unsigned drivers\n   - Disable unnecessary Windows services\n2. Navigate to Endpoint security > Security baselines\n3. Create baseline profile and configure:\n   - Configure SMB v1 client driver = Disable driver\n   - Configure SMB v1 server = Disabled\n4. Assign to device groups\n5. Monitor compliance",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/security-baseline-settings-mdm-all",
+      "controlMappings": [
+        {
+          "controlId": "03.16.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Disabling unnecessary functions, ports, and services implements the least functionality security engineering principle by reducing the system attack surface and eliminating potential exploitation vectors.",
+          "nistRequirement": "Apply security engineering principles including least functionality and attack surface reduction"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-005",
+      "settingName": "windowsDefenderATP",
+      "displayName": "Deploy Microsoft Defender for Endpoint Baseline",
+      "settingPath": "securityBaseline.defenderATP",
+      "policyType": "Intune",
+      "policySubType": "SecurityBaseline",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Deploys Microsoft Defender for Endpoint security baseline to enforce threat detection, attack surface reduction, and security monitoring principles across endpoints.",
+      "implementationGuide": "1. Navigate to Endpoint Security > Security baselines\n2. Select 'Security Baseline for Microsoft Defender for Endpoint'\n3. Create new profile with settings:\n   - Enable all Attack Surface Reduction rules\n   - Configure Network protection = Enable\n   - Enable Exploit protection\n   - Configure Controlled folder access\n4. Assign to device groups\n5. Monitor via Microsoft Defender portal",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/security-baseline-settings-defender",
+      "controlMappings": [
+        {
+          "controlId": "03.16.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Defender for Endpoint baseline implements multiple security engineering principles including defense-in-depth (layered protection), threat modeling (attack surface reduction), and continuous monitoring for security events.",
+          "nistRequirement": "Apply security engineering principles including continuous monitoring, threat modeling, and layered protections"
+        }
+      ]
+    },
+    {
+      "id": "AZ-SA-006",
+      "settingName": "conditionalAccessBaseline",
+      "displayName": "Enforce Zero Trust Access Controls",
+      "settingPath": "conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": ["RequireCompliantDevice", "RequireMFA", "BlockLegacyAuth"],
+      "validationOperator": "contains",
+      "description": "Implements Zero Trust security architecture principles by requiring device compliance, multi-factor authentication, and blocking legacy authentication protocols.",
+      "implementationGuide": "1. Navigate to Azure AD > Security > Conditional Access\n2. Create baseline policies:\n   a. Require compliant or hybrid joined device for all users\n   b. Require MFA for all users\n   c. Block legacy authentication\n3. Configure policies:\n   - Users: All users\n   - Cloud apps: All cloud apps\n   - Conditions: Any device state\n   - Grant: Require device to be marked compliant AND Require MFA\n4. Enable policies in Report-only mode first, then enforce\n5. Monitor via Azure AD Sign-in logs",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/overview",
+      "controlMappings": [
+        {
+          "controlId": "03.16.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Conditional Access policies enforce Zero Trust security architecture principles including never trust-always verify, verify explicitly, and use least privilege access - core security engineering principles for modern cloud systems.",
+          "nistRequirement": "Apply security engineering principles including Zero Trust architecture, least privilege, and assume breach mentality"
+        }
+      ]
+    }
+  ]
+}

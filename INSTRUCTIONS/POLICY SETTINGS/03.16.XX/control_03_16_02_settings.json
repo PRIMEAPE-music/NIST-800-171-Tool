@@ -1,0 +1,156 @@
+{
+  "controlId": "03.16.02",
+  "controlTitle": "Unsupported System Components",
+  "family": "SA",
+  "priority": "High",
+  "requirementText": "a. Replace system components when support for the components is no longer available from the developer, vendor, or manufacturer. b. Provide options for risk mitigation or alternative sources for continued support for unsupported components that cannot be replaced.",
+  "settings": [
+    {
+      "id": "IN-SA-007",
+      "settingName": "minimumOSVersion",
+      "displayName": "Require Supported Windows Version",
+      "settingPath": "deviceProperties.osMinimumVersion",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "10.0.22631.0",
+      "validationOperator": ">=",
+      "description": "Enforces minimum Windows 11 23H2 version to ensure devices run supported operating systems with active vendor support and security updates. Windows 10 reached end of support October 14, 2025.",
+      "implementationGuide": "1. Navigate to Devices > Compliance policies > Create policy\n2. Select Platform: Windows 10 and later\n3. Under Device Properties, configure:\n   - Minimum OS version: 10.0.22631.0 (Windows 11 23H2)\n   - This ensures only supported Windows versions are compliant\n4. Set Actions for noncompliance:\n   - Mark device noncompliant: Immediately\n   - Send email to end user: After 3 days\n   - Remotely lock device: After 7 days\n5. Assign to all device groups\n6. Monitor compliance via Intune dashboard",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.16.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforcing minimum supported OS versions prevents use of unsupported system components by ensuring all devices run Windows versions that receive security updates and vendor support.",
+          "nistRequirement": "Replace system components when support is no longer available from vendor"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-008",
+      "settingName": "validOperatingSystemBuilds",
+      "displayName": "Enforce Current Patch Level Compliance",
+      "settingPath": "deviceProperties.validOperatingSystemBuilds",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "array",
+      "expectedValue": "current_quarter_patches",
+      "validationOperator": "in",
+      "description": "Requires devices to run recent, supported Windows builds within current quarter to ensure security patches are applied and components are not outdated.",
+      "implementationGuide": "1. Navigate to Devices > Compliance policies > Create policy\n2. Select Platform: Windows 10 and later\n3. Under Device Properties, configure Valid operating system builds:\n   - Add entry for each supported Windows version (11 22H2, 11 23H2)\n   - Minimum build: Latest cumulative update from 3 months ago\n   - Maximum build: Latest available cumulative update\n4. Example entries:\n   - Windows 11 23H2: Min 10.0.22631.XXXX, Max 10.0.22631.YYYY\n5. Update monthly as new patches release\n6. Set grace period of 14 days for noncompliance\n7. Assign to device groups",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows#valid-operating-system-builds",
+      "controlMappings": [
+        {
+          "controlId": "03.16.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enforcing valid OS builds ensures devices maintain current patch levels and do not run outdated system components that may have known vulnerabilities or lack vendor support.",
+          "nistRequirement": "Replace system components when support is no longer available; maintain supported versions"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-009",
+      "settingName": "windowsUpdatePolicies",
+      "displayName": "Configure Automatic Windows Updates",
+      "settingPath": "updateRing.automaticUpdateBehavior",
+      "policyType": "Intune",
+      "policySubType": "UpdateRing",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "AutoInstallAndRebootAtScheduledTime",
+      "validationOperator": "==",
+      "description": "Enforces automatic installation of Windows updates to ensure system components are kept current with latest security patches and vendor support.",
+      "implementationGuide": "1. Navigate to Devices > Windows > Update rings for Windows 10 and later\n2. Create update ring policy with settings:\n   - Automatic update behavior: Auto install and restart at scheduled time\n   - Quality update deferral period: 0-7 days\n   - Feature update deferral period: 0-30 days\n   - Deadline for quality updates: 7 days\n   - Deadline for feature updates: 14 days\n3. Configure maintenance window for restarts\n4. Assign to device groups\n5. Monitor update compliance via Windows Updates reports",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/windows-update-for-business-configure",
+      "controlMappings": [
+        {
+          "controlId": "03.16.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Automated Windows updates ensure system components receive latest security patches and prevent components from becoming unsupported due to outdated versions.",
+          "nistRequirement": "Maintain supported system components through timely updates"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-010",
+      "settingName": "minimumDefenderVersion",
+      "displayName": "Require Current Microsoft Defender Version",
+      "settingPath": "deviceHealthSecurity.defenderMinimumVersion",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "string",
+      "expectedValue": "4.18.24000.0",
+      "validationOperator": ">=",
+      "description": "Enforces minimum Microsoft Defender anti-malware version to ensure security components are current and supported with latest threat definitions.",
+      "implementationGuide": "1. Navigate to Devices > Compliance policies > Create policy\n2. Select Platform: Windows 10 and later\n3. Under System Security, configure:\n   - Microsoft Defender Antimalware: Required\n   - Microsoft Defender Antimalware minimum version: 4.18.24000.0 (or current version)\n4. This ensures Defender engine is current and supported\n5. Set Actions for noncompliance\n6. Assign to device groups\n7. Update minimum version quarterly as new versions release",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows#microsoft-defender-for-endpoint",
+      "controlMappings": [
+        {
+          "controlId": "03.16.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Requiring current Defender versions ensures anti-malware protection components are supported by vendor and receive latest threat intelligence and security updates.",
+          "nistRequirement": "Replace security components when support is no longer available from vendor"
+        }
+      ]
+    },
+    {
+      "id": "IN-SA-011",
+      "settingName": "deviceEnrollmentRestriction",
+      "displayName": "Block Enrollment of Unsupported OS Versions",
+      "settingPath": "enrollment.restrictions.platformRestriction",
+      "policyType": "Intune",
+      "policySubType": "EnrollmentRestriction",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {
+        "minOSVersion": "10.0.22621.0",
+        "blockUnsupportedVersions": true
+      },
+      "validationOperator": "==",
+      "description": "Prevents enrollment of devices running unsupported Windows versions, ensuring only devices with vendor support can access organizational resources.",
+      "implementationGuide": "1. Navigate to Devices > Enrollment > Enrollment device platform restrictions\n2. Select Windows restrictions (or create new restriction)\n3. Configure Platform settings:\n   - Minimum version: 10.0.22621.0 (Windows 11 22H2 minimum)\n   - Block personally owned devices: Consider enabling\n4. This prevents unsupported OS versions from enrolling\n5. Assign restriction to All Users\n6. Users with unsupported OS will receive error during enrollment",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/enrollment/enrollment-restrictions-set",
+      "controlMappings": [
+        {
+          "controlId": "03.16.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Enrollment restrictions prevent unsupported system components from accessing organizational resources by blocking devices that do not meet minimum supported OS requirements at enrollment time.",
+          "nistRequirement": "Prevent use of system components when support is no longer available"
+        }
+      ]
+    },
+    {
+      "id": "DF-SA-012",
+      "settingName": "endOfSupportDetection",
+      "displayName": "Monitor End-of-Support Systems via Defender",
+      "settingPath": "defenderVulnerability.endOfSupportDetection",
+      "policyType": "Defender",
+      "policySubType": "VulnerabilityManagement",
+      "platform": "Windows",
+      "dataType": "boolean",
+      "expectedValue": true,
+      "validationOperator": "==",
+      "description": "Enables Microsoft Defender Vulnerability Management to detect and report on systems and software components approaching or past end-of-support dates.",
+      "implementationGuide": "1. Ensure Microsoft Defender for Endpoint is deployed\n2. Navigate to Microsoft Defender portal > Vulnerability management\n3. Enable Software inventory collection\n4. Configure recommendations to alert on:\n   - Operating systems approaching end-of-support\n   - Applications past end-of-support\n   - Outdated software versions\n5. Create remediation tasks for identified unsupported components\n6. Review Vulnerability Management dashboard weekly\n7. Integrate with Intune for automated remediation",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/microsoft-365/security/defender-vulnerability-management/",
+      "controlMappings": [
+        {
+          "controlId": "03.16.02",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Defender Vulnerability Management provides continuous monitoring and detection of system components approaching or past vendor support end dates, enabling proactive replacement before support expires.",
+          "nistRequirement": "Identify and replace system components when support is no longer available from vendor"
+        }
+      ]
+    }
+  ]
+}

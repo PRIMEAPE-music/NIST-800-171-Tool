@@ -1,0 +1,199 @@
+{
+  "controlId": "03.10.01",
+  "controlTitle": "Physical Access Authorizations",
+  "controlFamily": "PE",
+  "settings": [
+    {
+      "id": "AZ-PE-001",
+      "settingName": "namedLocations",
+      "displayName": "Named Locations - Trusted Corporate Locations",
+      "settingPath": "identity.conditionalAccess.namedLocations",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "array",
+      "expectedValue": "At least one named location defined with corporate IP ranges marked as trusted",
+      "validationOperator": "exists",
+      "description": "Defines trusted physical locations (headquarters, branch offices) by IP address ranges. This provides logical access control that correlates with physical location, supporting the requirement to maintain lists of authorized facility access locations. In cloud/hybrid environments, this complements physical access controls by restricting M365 access to users connecting from authorized corporate network locations.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as at least a Conditional Access Administrator\n2. Browse to Protection > Conditional Access > Named Locations\n3. Select '+ IP ranges location'\n4. Provide a descriptive name (e.g., 'Corporate HQ' or 'Branch Office - NY')\n5. Add IPv4/IPv6 address ranges for each physical location in CIDR format\n6. Check 'Mark as trusted location'\n7. Click Create\n8. Repeat for each authorized physical facility location\n9. Document the mapping between named locations and actual physical facilities",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-assignment-network",
+      "controlMappings": [
+        {
+          "controlId": "03.10.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Named Locations provide the technical foundation for implementing location-based access controls in M365. While the NIST control focuses on physical facility access (badges, credentials), in cloud environments this setting enables organizations to define and enforce access restrictions based on network location, which correlates with physical presence at authorized facilities. This is a complementary control that supports but does not replace physical access authorization requirements.",
+          "nistRequirement": "Develop, approve, and maintain a list of individuals with authorized access to the facility where the system resides"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-002",
+      "settingName": "conditionalAccessPolicy",
+      "displayName": "Conditional Access - Require Access from Trusted Locations",
+      "settingPath": "identity.conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "state": "enabled",
+        "conditions": {
+          "locations": {
+            "includeLocations": ["All"],
+            "excludeLocations": ["AllTrusted"]
+          }
+        },
+        "grantControls": {
+          "operator": "OR",
+          "builtInControls": ["mfa", "compliantDevice"]
+        }
+      },
+      "validationOperator": "==",
+      "description": "Enforces stronger authentication requirements (MFA or device compliance) when users access M365 from locations outside trusted corporate facilities. This provides compensating controls for access from non-authorized physical locations, ensuring that users connecting from untrusted locations must provide additional authentication factors. Aligns with the principle that physical access authorizations should be verified before granting system access.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as at least a Conditional Access Administrator\n2. Browse to Protection > Conditional Access > Policies\n3. Select 'New policy'\n4. Name: 'Block or Restrict Access from Untrusted Locations'\n5. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n6. Under Assignments > Cloud apps: Select 'All cloud apps'\n7. Under Conditions > Locations: Include 'Any location', Exclude 'All trusted locations'\n8. Under Grant: Select 'Require multifactor authentication' OR 'Require device to be marked as compliant'\n9. Set Enable policy to 'Report-only' initially for testing\n10. After validation, set to 'On'\n11. Click Create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-policy-location",
+      "controlMappings": [
+        {
+          "controlId": "03.10.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "This policy enforces location-based access restrictions that complement physical access authorizations. By requiring enhanced authentication from non-trusted locations, it ensures that only users with proper authorization credentials (MFA or compliant corporate devices) can access systems, mirroring the NIST requirement for authorization credentials like badges and smart cards in physical facilities. Provides compensating controls for cloud access in alignment with physical access authorization principles.",
+          "nistRequirement": "Issue authorization credentials for facility access"
+        }
+      ]
+    },
+    {
+      "id": "AZ-PE-003",
+      "settingName": "deviceComplianceRequired",
+      "displayName": "Conditional Access - Require Compliant or Hybrid Joined Devices",
+      "settingPath": "identity.conditionalAccess.policies",
+      "policyType": "AzureAD",
+      "policySubType": "ConditionalAccess",
+      "platform": "All",
+      "dataType": "object",
+      "expectedValue": {
+        "state": "enabled",
+        "grantControls": {
+          "operator": "OR",
+          "builtInControls": ["compliantDevice", "domainJoinedDevice"]
+        }
+      },
+      "validationOperator": "==",
+      "description": "Requires devices to be compliant with organizational security policies or hybrid Azure AD joined before accessing M365 resources. This setting acts as the digital equivalent of physical access credentials (badges, smart cards) by ensuring only authorized corporate devices can access systems. Supports the NIST requirement to issue and validate authorization credentials by verifying device identity and compliance status.",
+      "implementationGuide": "1. Sign in to Microsoft Entra admin center as at least a Conditional Access Administrator\n2. Browse to Protection > Conditional Access > Policies\n3. Select 'New policy'\n4. Name: 'Require Compliant or Hybrid Joined Devices'\n5. Under Assignments > Users: Select 'All users' (exclude break-glass accounts)\n6. Under Assignments > Cloud apps: Select 'Office 365' or specific apps handling CUI\n7. Under Conditions > Device platforms: Select 'Windows', 'iOS', 'Android' as needed\n8. Under Grant: Select 'Require device to be marked as compliant' OR 'Require Hybrid Azure AD joined device'\n9. Set Enable policy to 'Report-only' initially for testing\n10. After validation, set to 'On'\n11. Click Create\n12. Ensure device compliance policies are configured in Intune",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-grant",
+      "controlMappings": [
+        {
+          "controlId": "03.10.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Device compliance and hybrid join requirements serve as digital authorization credentials in cloud environments. Just as physical facilities require badges or smart cards to verify authorization, this setting ensures that only devices meeting organizational security standards and enrolled in corporate management can access M365 resources. This provides strong device identity verification analogous to physical access credentials, though it complements rather than replaces physical facility access controls.",
+          "nistRequirement": "Issue authorization credentials for facility access; Authorization credentials include identification badges, identification cards, and smart cards"
+        }
+      ]
+    },
+    {
+      "id": "IN-PE-001",
+      "settingName": "deviceCompliancePolicyWindows",
+      "displayName": "Intune Device Compliance Policy - Windows",
+      "settingPath": "deviceManagement.deviceCompliancePolicies",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Windows",
+      "dataType": "object",
+      "expectedValue": {
+        "requirePasswordType": "deviceDefault",
+        "passwordMinimumLength": 8,
+        "firewallRequired": true,
+        "antivirusRequired": true,
+        "antiSpywareRequired": true,
+        "defenderEnabled": true,
+        "securityBlockJailbrokenDevices": true
+      },
+      "validationOperator": "==",
+      "description": "Establishes baseline security requirements for Windows devices before they can be marked as compliant and granted access to M365 resources. This policy defines the security posture required for devices to receive 'authorization' to access systems, similar to how physical access authorizations require verification of credentials. Only devices meeting these requirements can be considered 'authorized devices' for system access.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Click 'Create Policy'\n4. Platform: Select 'Windows 10 and later'\n5. Settings > Device Health:\n   - Require BitLocker: Yes\n   - Require Secure Boot: Yes\n6. Settings > Device Properties:\n   - Minimum OS version: Set to supported version\n7. Settings > System Security:\n   - Require password: Yes\n   - Minimum password length: 8 or higher\n   - Firewall: Require\n   - Antivirus: Require\n   - Antispyware: Require\n   - Microsoft Defender Antimalware: Require\n8. Set Actions for noncompliance (mark noncompliant immediately)\n9. Assign to appropriate device groups\n10. Review and create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-windows",
+      "controlMappings": [
+        {
+          "controlId": "03.10.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Device compliance policies define the security requirements devices must meet to be considered 'authorized' for system access. In physical security, authorization involves verifying credentials match approved lists; in endpoint security, compliance policies perform the equivalent function by verifying devices meet organizational security standards before granting access. This creates an authoritative list of compliant (authorized) devices that can access M365 resources, supporting the requirement to maintain lists of authorized individuals/devices.",
+          "nistRequirement": "Develop, approve, and maintain a list of individuals with authorized access to the facility where the system resides"
+        }
+      ]
+    },
+    {
+      "id": "IN-PE-002",
+      "settingName": "deviceCompliancePolicyiOS",
+      "displayName": "Intune Device Compliance Policy - iOS/iPadOS",
+      "settingPath": "deviceManagement.deviceCompliancePolicies",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "iOS",
+      "dataType": "object",
+      "expectedValue": {
+        "passcodeRequired": true,
+        "passcodeMinimumLength": 6,
+        "securityBlockJailbrokenDevices": true,
+        "osMinimumVersion": "15.0",
+        "deviceThreatProtectionEnabled": true,
+        "deviceThreatProtectionRequiredSecurityLevel": "secured"
+      },
+      "validationOperator": "==",
+      "description": "Defines security compliance requirements for iOS/iPadOS devices accessing M365 resources. Ensures mobile devices meet organizational security standards before being granted access authorization, preventing compromised or non-compliant devices from accessing CUI. Acts as authorization credential verification for mobile endpoints, ensuring only devices meeting security requirements can access systems.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Click 'Create Policy'\n4. Platform: Select 'iOS/iPadOS'\n5. Settings > Device Health:\n   - Jailbroken devices: Block\n6. Settings > Device Properties:\n   - Minimum OS version: 15.0 or later\n7. Settings > System Security:\n   - Require a password: Yes\n   - Minimum password length: 6 or higher\n   - Password complexity: Require numeric or alphanumeric\n8. Settings > Device Security:\n   - Mobile Threat Defense: Enable if available\n   - Required threat level: Secured\n9. Set Actions for noncompliance\n10. Assign to iOS device groups\n11. Review and create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-ios",
+      "controlMappings": [
+        {
+          "controlId": "03.10.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "iOS compliance policies enforce device authorization requirements for mobile endpoints. By requiring passcodes, blocking jailbroken devices, and enforcing minimum OS versions, these policies ensure only secure, authorized mobile devices can access M365 resources. This mobile device authorization framework parallels physical access control systems that verify credentials before granting facility access.",
+          "nistRequirement": "Issue authorization credentials for facility access; Remove individuals from the facility access list when access is no longer required"
+        }
+      ]
+    },
+    {
+      "id": "IN-PE-003",
+      "settingName": "deviceCompliancePolicyAndroid",
+      "displayName": "Intune Device Compliance Policy - Android",
+      "settingPath": "deviceManagement.deviceCompliancePolicies",
+      "policyType": "Intune",
+      "policySubType": "DeviceCompliance",
+      "platform": "Android",
+      "dataType": "object",
+      "expectedValue": {
+        "passwordRequired": true,
+        "passwordMinimumLength": 6,
+        "securityBlockJailbrokenDevices": true,
+        "osMinimumVersion": "8.0",
+        "storageRequireEncryption": true,
+        "deviceThreatProtectionEnabled": true,
+        "deviceThreatProtectionRequiredSecurityLevel": "secured"
+      },
+      "validationOperator": "==",
+      "description": "Establishes compliance requirements for Android devices before granting access to M365 resources. Blocks rooted devices, enforces encryption, and requires minimum security standards to ensure only authorized, secure devices can access organizational systems. Provides device-level access authorization analogous to physical access credentials.",
+      "implementationGuide": "1. Sign in to Microsoft Intune admin center\n2. Navigate to Devices > Compliance policies > Policies\n3. Click 'Create Policy'\n4. Platform: Select 'Android device administrator' or 'Android Enterprise'\n5. Settings > Device Health:\n   - Rooted devices: Block\n6. Settings > Device Properties:\n   - Minimum OS version: 8.0 or later\n7. Settings > System Security:\n   - Require a password: Yes\n   - Minimum password length: 6 or higher\n   - Encryption of data storage: Require\n8. Settings > Device Security:\n   - Mobile Threat Defense: Enable if available\n   - Required threat level: Secured\n9. Set Actions for noncompliance\n10. Assign to Android device groups\n11. Review and create",
+      "microsoftDocUrl": "https://learn.microsoft.com/en-us/mem/intune/protect/compliance-policy-create-android",
+      "controlMappings": [
+        {
+          "controlId": "03.10.01",
+          "confidence": "High",
+          "isRequired": true,
+          "mappingRationale": "Android compliance policies provide authorization control for Android mobile devices accessing M365 resources. By blocking rooted devices, requiring encryption, and enforcing security baselines, these policies ensure only properly secured and authorized devices can access CUI. Functions as the mobile device equivalent of physical access authorization credentials.",
+          "nistRequirement": "Issue authorization credentials for facility access; Develop, approve, and maintain a list of individuals with authorized access to the facility"
+        }
+      ]
+    }
+  ],
+  "implementationNotes": "IMPORTANT: These M365 settings provide COMPLEMENTARY technical controls for PE-02 (Physical Access Authorizations) in cloud/hybrid environments. They do NOT replace the requirement for physical security measures such as:\n- Physical access control systems (badge readers, biometric systems)\n- Security guards and physical monitoring\n- Visitor management systems\n- Physical access logs and audit trails\n- Physical credentials (badges, smart cards, keys)\n\nThese M365 settings support the control by:\n1. Defining authorized network locations that correlate with physical facilities\n2. Enforcing device-based authorization analogous to physical credentials\n3. Restricting access based on location and device compliance\n4. Maintaining lists of compliant (authorized) devices\n\nFull NIST 800-171 compliance for 03.10.01 requires separate physical security controls for organizational facilities in addition to these technical controls.",
+  "complianceGaps": [
+    "Physical access control systems (badge readers, turnstiles) must be implemented separately",
+    "Physical visitor logs and access records require separate systems",
+    "Security personnel and physical monitoring cannot be replaced by technical controls",
+    "Physical credentials (badges, keys) issuance and management requires separate processes"
+  ]
+}
