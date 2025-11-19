@@ -53,7 +53,7 @@ export class ControlService {
       const sortOrder = filters?.sortOrder || 'asc';
 
       // Fetch controls and total count in parallel
-      const [controls, total, progressMap] = await Promise.all([
+      const [controls, total, progressMap, settingMappings] = await Promise.all([
         prisma.control.findMany({
           where,
           include: {
@@ -72,14 +72,76 @@ export class ControlService {
         }),
         prisma.control.count({ where }),
         controlProgressService.calculateAllControlsProgress(),
+        // Get M365 settings mappings with compliance checks for all controls
+        prisma.controlSettingMapping.findMany({
+          include: {
+            setting: {
+              include: {
+                complianceChecks: {
+                  orderBy: { lastChecked: 'desc' },
+                  take: 1,
+                },
+              },
+            },
+          },
+        }),
       ]);
 
-      // Enrich controls with progress data
+      // Calculate M365 compliance for each control from actual compliance checks
+      const m365ComplianceMap = new Map<number, {
+        compliancePercentage: number;
+        totalSettings: number;
+        compliantSettings: number;
+        nonCompliantSettings: number;
+        notConfiguredSettings: number;
+      }>();
+
+      // Group mappings by control ID and calculate compliance
+      const mappingsByControl = new Map<number, typeof settingMappings>();
+      settingMappings.forEach((mapping) => {
+        const existing = mappingsByControl.get(mapping.controlId) || [];
+        existing.push(mapping);
+        mappingsByControl.set(mapping.controlId, existing);
+      });
+
+      mappingsByControl.forEach((mappings, controlId) => {
+        let compliant = 0;
+        let nonCompliant = 0;
+        let notConfigured = 0;
+
+        mappings.forEach((mapping) => {
+          const latestCheck = mapping.setting.complianceChecks[0];
+          if (latestCheck) {
+            if (latestCheck.isCompliant) {
+              compliant++;
+            } else {
+              nonCompliant++;
+            }
+          } else {
+            notConfigured++;
+          }
+        });
+
+        const total = mappings.length;
+        const percentage = total > 0 ? (compliant / total) * 100 : 0;
+
+        m365ComplianceMap.set(controlId, {
+          compliancePercentage: percentage,
+          totalSettings: total,
+          compliantSettings: compliant,
+          nonCompliantSettings: nonCompliant,
+          notConfiguredSettings: notConfigured,
+        });
+      });
+
+      // Enrich controls with progress data and M365 compliance
       const enrichedControls = controls.map((control) => {
         const progress = progressMap.get(control.controlId);
+        const m365Compliance = m365ComplianceMap.get(control.id);
         return {
           ...control,
           improvementActionProgress: progress || null,
+          m365Compliance: m365Compliance || null,
         };
       });
 

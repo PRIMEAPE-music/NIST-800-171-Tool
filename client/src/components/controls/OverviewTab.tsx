@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Typography, TextField, Divider, Paper, LinearProgress, Chip } from '@mui/material';
-import { CheckCircle, Schedule, RadioButtonUnchecked } from '@mui/icons-material';
+import { Box, Typography, TextField, Divider, Paper, LinearProgress, Chip, Button } from '@mui/material';
+import { CheckCircle, Schedule, RadioButtonUnchecked, Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
 import { Control } from '@/services/controlService';
 import { M365CoverageStatus } from './M365CoverageStatus';
 
@@ -10,6 +10,10 @@ interface OverviewTabProps {
   localNotes: string;
   onNotesChange: (notes: string) => void;
   onViewM365Tab?: () => void;
+  onEditClick?: () => void;
+  onSaveClick?: () => void;
+  onCancelClick?: () => void;
+  isSaving?: boolean;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -18,6 +22,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   localNotes,
   onNotesChange,
   onViewM365Tab,
+  onEditClick,
+  onSaveClick,
+  onCancelClick,
+  isSaving,
 }) => {
   return (
     <Box sx={{ px: 3, width: '100%', display: 'block' }}>
@@ -91,9 +99,38 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* Implementation Notes */}
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" gutterBottom sx={{ color: '#E0E0E0' }}>
-          Implementation Notes
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Typography variant="h6" sx={{ color: '#E0E0E0' }}>
+            Implementation Notes
+          </Typography>
+          <Box>
+            {editMode ? (
+              <>
+                <Button
+                  startIcon={<SaveIcon />}
+                  onClick={onSaveClick}
+                  disabled={isSaving}
+                  size="small"
+                  sx={{ mr: 1 }}
+                >
+                  Save
+                </Button>
+                <Button onClick={onCancelClick} size="small" sx={{ color: '#B0B0B0' }}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button
+                startIcon={<EditIcon />}
+                onClick={onEditClick}
+                variant="outlined"
+                size="small"
+              >
+                Edit Notes
+              </Button>
+            )}
+          </Box>
+        </Box>
         {editMode ? (
           <TextField
             fullWidth

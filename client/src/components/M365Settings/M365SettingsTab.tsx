@@ -8,6 +8,7 @@ import {
   Paper,
   Divider,
   Chip,
+  LinearProgress,
   Table,
   TableBody,
   TableCell,
@@ -570,7 +571,7 @@ const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
 
           <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 3 }}>
             <Box>
               <Typography variant="body2" color="text.secondary" gutterBottom>
                 Compliance Percentage
@@ -580,6 +581,27 @@ const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
                   ? ((data.data.summary.compliant / data.data.summary.total) * 100).toFixed(1)
                   : 0}%
               </Typography>
+            </Box>
+            <Box sx={{ flex: 1, maxWidth: 400 }}>
+              <LinearProgress
+                variant="determinate"
+                value={data.data.summary.total > 0
+                  ? (data.data.summary.compliant / data.data.summary.total) * 100
+                  : 0}
+                sx={{
+                  height: 12,
+                  borderRadius: 1,
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  '& .MuiLinearProgress-bar': {
+                    borderRadius: 1,
+                    bgcolor: data.data.summary.total > 0 && (data.data.summary.compliant / data.data.summary.total) * 100 >= 80
+                      ? '#4caf50'
+                      : data.data.summary.total > 0 && (data.data.summary.compliant / data.data.summary.total) * 100 >= 50
+                      ? '#ffc107'
+                      : '#f44336',
+                  },
+                }}
+              />
             </Box>
           </Box>
         </Paper>

@@ -33,6 +33,13 @@ export interface Control {
     progressPercentage: number;
     status: 'Completed' | 'InProgress' | 'NotStarted' | 'NotApplicable';
   };
+  m365Compliance?: {
+    compliancePercentage: number;
+    totalSettings: number;
+    compliantSettings: number;
+    nonCompliantSettings: number;
+    notConfiguredSettings: number;
+  };
 }
 
 export interface ComplianceStats {

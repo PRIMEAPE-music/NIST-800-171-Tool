@@ -214,7 +214,7 @@ export const ControlTable: React.FC<ControlTableProps> = ({
                   </Typography>
                 </TableCell>
                 <TableCell onClick={() => handleRowClick(control.id)}>
-                  {control.improvementActionProgress && control.improvementActionProgress.totalActions > 0 ? (
+                  {control.m365Compliance && control.m365Compliance.totalSettings > 0 ? (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Box sx={{ flex: 1, minWidth: 80 }}>
                         <Box
@@ -228,14 +228,12 @@ export const ControlTable: React.FC<ControlTableProps> = ({
                           <Box
                             sx={{
                               height: '100%',
-                              width: `${control.improvementActionProgress.progressPercentage}%`,
+                              width: `${control.m365Compliance.compliancePercentage}%`,
                               bgcolor:
-                                control.improvementActionProgress.progressPercentage >= 80
+                                control.m365Compliance.compliancePercentage >= 80
                                   ? '#4caf50'
-                                  : control.improvementActionProgress.progressPercentage >= 50
+                                  : control.m365Compliance.compliancePercentage >= 50
                                   ? '#ffc107'
-                                  : control.improvementActionProgress.progressPercentage >= 25
-                                  ? '#ff9800'
                                   : '#f44336',
                               transition: 'width 0.3s ease',
                             }}
@@ -250,7 +248,7 @@ export const ControlTable: React.FC<ControlTableProps> = ({
                           fontFamily: 'monospace',
                         }}
                       >
-                        {control.improvementActionProgress.completedActions}/{control.improvementActionProgress.totalActions}
+                        {control.m365Compliance.compliantSettings}/{control.m365Compliance.totalSettings}
                       </Typography>
                     </Box>
                   ) : (

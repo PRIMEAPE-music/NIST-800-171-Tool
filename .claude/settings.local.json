@@ -3,7 +3,9 @@
     "allow": [
       "Bash(sqlite3 database/compliance.db \"SELECT policy_name, odata_type, substr(policy_data, 1, 2000) FROM m365_policies WHERE odata_type LIKE ''#settingsCatalog%'' LIMIT 1;\")",
       "Bash(npx tsx src/scripts/analyze-settings-catalog.ts)",
-      "Bash(npx tsx src/scripts/fix-setting-paths.ts)"
+      "Bash(npx tsx src/scripts/fix-setting-paths.ts)",
+      "Bash(del test-sync.js compare-improvement-actions.js generate-nist-specific-json.js map-remaining-actions.js generate-summary-report.js validate-mappings.js test-backend-service.js inspect-policy-properties.js check-database-controls.js check-mappings.js check-control-families.js check-all-families.js check-control-status.js verify-db-controls.js analyze-improvement-actions.js verify-corrected.js compare-controls.js extract-controls.js verify-97-controls.js parse-nist-controls.js parse-nist-controls-v2.js verify-controls.js test-search.js normalize_m365_settings.js analyze_normalization.js test-mappings.js check-policy-compliance.js debug-policy-extraction.js)",
+      "Bash(npx tsx src/scripts/combine-improvement-actions.ts)"
     ],
     "deny": [],
     "ask": []

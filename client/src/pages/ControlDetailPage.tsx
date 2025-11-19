@@ -11,7 +11,6 @@ import {
   Typography,
   Skeleton,
 } from '@mui/material';
-import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { controlService } from '@/services/controlService';
@@ -155,32 +154,6 @@ export const ControlDetailPage: React.FC = () => {
           <Tab label="Related" />
           <Tab label="M365 Settings" />
         </Tabs>
-
-        <Box>
-          {editMode ? (
-            <>
-              <Button
-                startIcon={<SaveIcon />}
-                onClick={handleSaveNotes}
-                disabled={updateMutation.isPending}
-                sx={{ mr: 1 }}
-              >
-                Save
-              </Button>
-              <Button onClick={handleCancelEdit} sx={{ color: '#B0B0B0' }}>
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <Button
-              startIcon={<EditIcon />}
-              onClick={() => setEditMode(true)}
-              variant="outlined"
-            >
-              Edit Notes
-            </Button>
-          )}
-        </Box>
       </Box>
 
       {/* Tab Content */}
@@ -191,6 +164,10 @@ export const ControlDetailPage: React.FC = () => {
             editMode={editMode}
             localNotes={localNotes}
             onNotesChange={setLocalNotes}
+            onEditClick={() => setEditMode(true)}
+            onSaveClick={handleSaveNotes}
+            onCancelClick={handleCancelEdit}
+            isSaving={updateMutation.isPending}
           />
         </TabPanel>
 
