@@ -42,6 +42,7 @@ model Control {
   controlEvidence ControlEvidence[]
   settingMappings ControlSettingMapping[]
   m365Compliance  ControlM365Compliance?
+  improvementActionMappings ImprovementActionMapping[]
 
   @@index([family])
   @@index([priority])
@@ -641,4 +642,48 @@ model ControlEvidence {
   @@index([status])
   @@index([evidenceType])
   @@map("control_evidence")
+}
+
+// ============================================================================
+// Microsoft Improvement Actions (from Compliance Manager)
+// ============================================================================
+
+model MicrosoftImprovementAction {
+  id          Int      @id @default(autoincrement())
+  actionId    String   @unique @map("action_id") // Microsoft's action ID (UUID)
+  actionTitle String   @map("action_title")
+
+  // Relationships
+  mappings    ImprovementActionMapping[]
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("microsoft_improvement_actions")
+}
+
+model ImprovementActionMapping {
+  id               Int      @id @default(autoincrement())
+
+  // Foreign Keys
+  controlId        Int      @map("control_id")
+  control          Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  actionId         Int      @map("action_id")
+  action           MicrosoftImprovementAction @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  // Mapping Details
+  confidence       String   // High, Medium, Low
+  coverageLevel    String   @map("coverage_level") // Full, Partial, Supplementary
+  isPrimary        Boolean  @map("is_primary")
+  mappingRationale String   @map("mapping_rationale")
+  nistRequirement  String   @map("nist_requirement")
+
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@unique([controlId, actionId])
+  @@index([controlId])
+  @@index([actionId])
+  @@map("improvement_action_mappings")
 }

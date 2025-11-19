@@ -1,0 +1,2451 @@
+[
+  {
+    "controlId": "03.01.01",
+    "controlTitle": "Account Management",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "b98b15c9-f85f-4357-90ee-2ba866164950",
+        "actionTitle": "Monitor groups access",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "Directly supports '03.01.01.c.2' by implementing access reviews for Azure AD groups to ensure appropriate membership. It also supports '03.01.01.e' by providing a mechanism to monitor group access rights. It doesn't cover the full account lifecycle (creation, deletion, etc.).",
+        "nistRequirement": "03.01.01.c.2 - Group and role membership; 03.01.01.e - Monitor the use of system accounts"
+      },
+      {
+        "actionId": "dd3ee96b-dba7-4ec7-8f78-7482b87f14b6",
+        "actionTitle": "Manage on-premises application provisioning",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.01.01.b' by automating the creation, modification, and removal of accounts for on-premises apps via Azure AD. It also enforces '03.01.01.c' by provisioning authorizations based on Azure AD group/role membership. Coverage is limited to provisioning for specific apps, not the entire system account management.",
+        "nistRequirement": "03.01.01.b - Create, enable, modify, disable, and remove system accounts; 03.01.01.c - Specify... Group and role membership, and Access authorizations"
+      },
+      {
+        "actionId": "4dd1fb10-a0c5-45ae-8262-e3d21627f420",
+        "actionTitle": "Enable deletion of an existing user",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This directly implements the 'remove' aspect of '03.01.01.b' and the 'no longer associated' aspect of '03.01.01.f.3'. Azure AD deprovisioning workflows ensure accounts are properly deleted. This action is specific to deletion and doesn't cover creation, modification, or monitoring.",
+        "nistRequirement": "03.01.01.b - ...remove system accounts; 03.01.01.f.3 - Disable system accounts when... no longer associated with a user"
+      },
+      {
+        "actionId": "6f2b622d-e380-455f-a401-7f3617638d3e",
+        "actionTitle": "Audit user account status",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action, using Azure AD Access Reviews, directly supports '03.01.01.e' by providing a mechanism to audit and monitor account status. It also helps enforce '03.01.01.f' by identifying inactive or orphaned accounts that should be disabled.",
+        "nistRequirement": "03.01.01.e - Monitor the use of system accounts; 03.01.01.f - Disable system accounts when..."
+      },
+      {
+        "actionId": "2a3873cd-f53c-446c-928a-7c5eb3a60edb",
+        "actionTitle": "Establish access reviews for high privileged roles",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a specific implementation of '03.01.01.e' and '03.01.01.c.3' focused on privileged accounts. Azure AD PIM access reviews allow for monitoring and re-validation of privileges, ensuring authorizations remain valid. It is limited to privileged roles, not all accounts.",
+        "nistRequirement": "03.01.01.c.3 - Access authorizations (i.e., privileges) for each account; 03.01.01.e - Monitor the use of system accounts"
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.02",
+    "controlTitle": "Access Enforcement",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "ae786f92-a5b5-46ce-9f79-2c918adc133a",
+        "actionTitle": "Block non-compliant devices and report policy violations",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.02' by enforcing access control policies. Azure AD Conditional Access, when integrated with Intune compliance, blocks or grants logical access to CUI and system resources based on the approved authorization (i.e., a compliant device). This doesn't cover user-based or role-based enforcement, only device-based.",
+        "nistRequirement": "03.01.02 - Enforce approved authorizations for logical access to CUI and system resources..."
+      },
+      {
+        "actionId": "b50e0477-6463-43de-ac2f-fc60d6063b04",
+        "actionTitle": "Restrict access to privileged accounts",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly enforces access policies for privileged accounts using Azure AD Conditional Access and PIM. It enforces authorizations by requiring compliant devices, specific locations, or MFA, thus controlling logical access to sensitive system resources. Its scope is limited to privileged accounts.",
+        "nistRequirement": "03.01.02 - Enforce approved authorizations for logical access to CUI and system resources..."
+      },
+      {
+        "actionId": "95523ad1-bcd3-48a6-b094-90cf6c480f7f",
+        "actionTitle": "Use boundary protection to limit access to services based on the location of the client",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct implementation of access enforcement. Azure AD Conditional Access policies enforce approved authorizations by evaluating the user's location (a defined access control policy) before granting logical access to CUI or system resources. This only covers the location aspect of enforcement.",
+        "nistRequirement": "03.01.02 - Enforce approved authorizations for logical access to CUI and system resources..."
+      },
+      {
+        "actionId": "c09a752e-f78b-4ea4-9946-fe564a3b41a1",
+        "actionTitle": "Use role-based privileged account management",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "Azure AD PIM is a primary mechanism for '03.01.02'. It enforces approved authorizations for privileged roles by requiring users to activate their roles (often with justification and MFA), thereby enforcing access control policies just-in-time. This is focused on privileged access, not general user access.",
+        "nistRequirement": "03.01.02 - Enforce approved authorizations for logical access to CUI and system resources..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.03",
+    "controlTitle": "Information Flow Enforcement",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "41c9c296-4884-42e8-8657-37dd707ffe85",
+        "actionTitle": "Utilize sensitivity labels for data restriction",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.01.03'. Microsoft Information Protection (MIP) sensitivity labels classify CUI, which can then be used as a condition by DLP policies to enforce information flow. The label itself doesn't enforce flow; it's the tag that enforcement mechanisms (like DLP) use.",
+        "nistRequirement": "03.01.03 - Enforce approved authorizations for controlling the flow of CUI..."
+      },
+      {
+        "actionId": "82b4694d-9b63-428e-84cc-51ceb9c2eeb2",
+        "actionTitle": "Create and deploy data loss prevention policies",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "Microsoft 365 DLP policies are a direct implementation of '03.01.03'. They enforce approved authorizations for CUI flow by monitoring and blocking unauthorized transmission of sensitive information (identified by content or labels) in email, SharePoint, OneDrive, and Teams. This covers M365 services but not all system-to-system network traffic.",
+        "nistRequirement": "03.01.03 - Enforce approved authorizations for controlling the flow of CUI within the system and between connected systems."
+      },
+      {
+        "actionId": "2a71f922-3b66-431d-b192-45c679035b9b",
+        "actionTitle": "Create customized or use default DLP policies for endpoints",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "Endpoint DLP extends the enforcement of '03.01.03' to Windows devices. It controls the flow of CUI to removable media, network shares, or clipboard/printing, regulating where CUI can transit from the endpoint. This is a critical piece of flow control but is limited to the endpoint itself.",
+        "nistRequirement": "03.01.03 - Enforce approved authorizations for controlling the flow of CUI within the system..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.04",
+    "controlTitle": "Separation of Duties",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "7027cdd2-03dd-4cfe-8fde-d5f68a5a15dd",
+        "actionTitle": "Maintain segregation of duties",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly addresses '03.01.04.b' by using Azure AD's Role-Based Access Control (RBAC) to define system access authorizations that support separation of duties. By creating distinct roles (e.g., Security Administrator vs. Global Auditor), it prevents conflicting privileges. It's a tool for implementation ('b'), not the identification ('a') of duties, which is a policy step.",
+        "nistRequirement": "03.01.04.b - Define system access authorizations to support separation of duties."
+      },
+      {
+        "actionId": "c09a752e-f78b-4ea4-9946-fe564a3b41a1",
+        "actionTitle": "Use role-based privileged account management",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.01.04.b'. While its main purpose is JIT access, the role-based nature of PIM is the mechanism used to define and enforce access authorizations. It ensures that a user only has the specific privileges for their duty, and only when needed, which inherently supports separation of duties.",
+        "nistRequirement": "03.01.04.b - Define system access authorizations to support separation of duties."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.05",
+    "controlTitle": "Least Privilege",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "f0d6fc16-778d-433e-8da6-59ce89c98b52",
+        "actionTitle": "Limit the use of administrative role access",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a core implementation of '03.01.05.a' (least privilege). Azure AD PIM provides Just-in-Time (JIT) access, ensuring users only have elevated privileges (necessary to accomplish tasks) for a limited time, rather than standing access. This is a primary tool for enforcing least privilege for admin roles.",
+        "nistRequirement": "03.01.05.a - Allow only authorized system access... that is necessary to accomplish assigned organizational tasks."
+      },
+      {
+        "actionId": "7027cdd2-03dd-4cfe-8fde-d5f68a5a15dd",
+        "actionTitle": "Maintain segregation of duties",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This supports '03.01.05.a' by providing the mechanism (Azure RBAC) to define roles with the minimum necessary access. Creating granular roles is a prerequisite for assigning least privilege, as opposed to giving everyone a broad 'administrator' role.",
+        "nistRequirement": "03.01.05.a - Allow only authorized system access... that is necessary..."
+      },
+      {
+        "actionId": "2a3873cd-f53c-446c-928a-7c5eb3a60edb",
+        "actionTitle": "Establish access reviews for high privileged roles",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.05.c' (review privileges) and '03.01.05.d' (remove privileges). Azure AD Access Reviews for privileged roles force a periodic review to validate the need for such privileges, and automatically remove them if not re-approved.",
+        "nistRequirement": "03.01.05.c - Review the privileges assigned to roles...; 03.01.05.d - Reassign or remove privileges, as necessary."
+      },
+      {
+        "actionId": "c09a752e-f78b-4ea4-9946-fe564a3b41a1",
+        "actionTitle": "Use role-based privileged account management",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary implementation of '03.01.05.b' by authorizing access to security functions. PIM manages and controls access to Azure AD roles (which manage security functions), requiring time-bound activation and approval, thus enforcing authorization.",
+        "nistRequirement": "03.01.05.b - Authorize access to [organization-defined security functions]..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.06",
+    "controlTitle": "Least Privilege – Privileged Accounts",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "f0d6fc16-778d-433e-8da6-59ce89c98b52",
+        "actionTitle": "Limit the use of administrative role access",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "PIM directly supports '03.01.06.a' by restricting privileged account access to defined personnel. Only users made 'eligible' for a PIM role can activate it. It also inherently supports '03.01.06.b' by ensuring the privileged access is temporary, forcing the user to revert to their non-privileged account for other tasks.",
+        "nistRequirement": "03.01.06.a - Restrict privileged accounts...; 03.01.06.b - Require that users... use non-privileged accounts..."
+      },
+      {
+        "actionId": "b50e0477-6463-43de-ac2f-fc60d6063b04",
+        "actionTitle": "Restrict access to privileged accounts",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.06.a'. By using Conditional Access policies specifically for privileged accounts (e.g., requiring MFA, specific device), it restricts *how* those accounts can be used, adding a layer of control beyond just *who* can use them.",
+        "nistRequirement": "03.01.06.a - Restrict privileged accounts on the system to... personnel or roles."
+      },
+      {
+        "actionId": "c09a752e-f78b-4ea4-9946-fe564a3b41a1",
+        "actionTitle": "Use role-based privileged account management",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This is the primary solution for '03.01.06'. PIM ('a') restricts *who* is eligible for privileged roles. The best practice of using a separate, non-privileged account for daily work and only activating the PIM role when needed is a direct implementation of ('b'). PIM's design is built around this very concept.",
+        "nistRequirement": "03.01.06.a - Restrict privileged accounts...; 03.01.06.b - Require that users... use non-privileged accounts..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.07",
+    "controlTitle": "Least Privilege – Privileged Functions",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "617354f0-d430-45c0-97eb-6847f3da4c78",
+        "actionTitle": "Detect misuse of privileged role access",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.07.b'. Azure AD PIM and Identity Protection log all privileged role activations and generate alerts for anomalous activities, providing a clear record of when privileged functions are executed.",
+        "nistRequirement": "03.01.07.b - Log the execution of privileged functions."
+      },
+      {
+        "actionId": "3f1ac16f-ffac-4c51-872b-c977cd4df6f7",
+        "actionTitle": "Deny account elevation requests from standard user accounts",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action, using Windows User Account Control (UAC) policies, is a direct implementation of '03.01.07.a'. It prevents non-privileged users from executing functions that require administrative privileges on the local device. This covers the endpoint, but not cloud service privileged functions.",
+        "nistRequirement": "03.01.07.a - Prevent non-privileged users from executing privileged functions."
+      },
+      {
+        "actionId": "bc7f43a7-7662-40d9-bd32-e5981d0e6b72",
+        "actionTitle": "Configure a privileged access policy",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.07.a' for M365 services. By requiring approval for administrative tasks (privileged functions), it explicitly prevents non-privileged users (or even standing-privileged users) from executing them without authorization.",
+        "nistRequirement": "03.01.07.a - Prevent non-privileged users from executing privileged functions."
+      },
+      {
+        "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+        "actionTitle": "Search the audit log in compliance portal",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.01.07.b'. The unified audit log in Microsoft 365 captures all administrative actions (privileged functions), such as changing a policy or accessing sensitive data. Searching this log is the *method* for reviewing the logged execution of these functions.",
+        "nistRequirement": "03.01.07.b - Log the execution of privileged functions."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.08",
+    "controlTitle": "Unsuccessful Logon Attempts",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "d05d36d5-e59f-4fd8-b321-71f5775758a1",
+        "actionTitle": "Establish lockout mechanism in macOS devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.08.a' and '03.01.08.b' for macOS devices. Intune policies configure the number of consecutive invalid logon attempts allowed and the lockout duration, automatically locking the node when the threshold is exceeded. This is specific to macOS. Azure AD Smart Lockout provides similar protection for cloud accounts.",
+        "nistRequirement": "03.01.08.a - Enforce a limit of... consecutive invalid logon attempts...; 03.01.08.b - Automatically... lock the... node..."
+      },
+      {
+        "actionId": "867bc946-67b3-47fc-84bd-28e24fe02516",
+        "actionTitle": "Set account lockout threshold to 5 or lower in macOS devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a more specific implementation of '03.01.08.a' and '03.01.08.b' for macOS. It directly configures the threshold (number of attempts) and the resulting action (lockout).",
+        "nistRequirement": "03.01.08.a - Enforce a limit of [organization-defined number]...; 03.01.08.b - Automatically [lock the... node...]"
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.09",
+    "controlTitle": "System Use Notification",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "bc6f73bf-cd13-4431-bb40-d93b67b35eac",
+        "actionTitle": "Display privacy statements for end users",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.09'. Azure AD Conditional Access can be configured to require users to accept 'Terms of Use' before granting access. This 'Terms of Use' page functions as the system use notification message, displaying privacy and security notices. This covers cloud app access, but not necessarily OS logon.",
+        "nistRequirement": "03.01.09 - Display a system use notification message with privacy and security notices... before granting access to the system."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.10",
+    "controlTitle": "Device Lock",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "d10de840-5160-4754-9de9-400601183d48",
+        "actionTitle": "Require mobile devices to lock upon inactivity",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements all parts of '03.01.10' for mobile devices. Intune compliance policies ('a') initiate a device lock after an organization-defined time period of inactivity. The device ('b') requires re-authentication (PIN, biometric) to unlock, and ('c') the lock screen conceals previous information.",
+        "nistRequirement": "03.01.10.a - ...initiating a device lock after [Assignment: organization-defined time period] of inactivity...; 03.01.10.b - Retain the device lock until the user reestablishes access...; 03.01.10.c - Conceal... information previously visible..."
+      },
+      {
+        "actionId": "51778fea-7950-499b-8169-2c367b09c5a4",
+        "actionTitle": "Prevent unauthorized access to systems that require user log-in",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.01.10' for Windows workstations. Intune or Group Policy settings ('a') initiate a device lock (screen saver) after a defined inactivity period. The lock ('b') is retained until the user re-authenticates with their password or Windows Hello, and ('c') the lock screen conceals the previous desktop.",
+        "nistRequirement": "03.01.10.a - ...initiating a device lock after [Assignment: organization-defined time period] of inactivity...; 03.01.10.b - Retain the device lock until the user reestablishes access...; 03.01.10.c - Conceal... information previously visible..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.11",
+    "controlTitle": "Session Termination",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+        "actionTitle": "Turn on idle session timeout",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.11'. Azure AD Conditional Access session lifetime policies can terminate a user's logical session (e.g., to M365 apps) after a defined period of inactivity, forcing re-authentication. This covers web/cloud sessions, but not necessarily local OS sessions.",
+        "nistRequirement": "03.01.11 - Terminate a user session automatically after... organization-defined periods of user inactivity..."
+      },
+      {
+        "actionId": "46e91838-ea12-4315-b120-688f4917e560",
+        "actionTitle": "Log off idle sessions",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.11' for Remote Desktop Services and Azure Virtual Desktop. It automatically terminates (logs off) a user's logical session after a defined period of inactivity. This is specific to VDI/RDS environments.",
+        "nistRequirement": "03.01.11 - Terminate a user session automatically after... organization-defined periods of user inactivity..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.12",
+    "controlTitle": "Remote Access",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "6f8f8ec8-639b-4782-8b08-1daba4d7aa85",
+        "actionTitle": "Enable remote help for tenants",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.01.12.a' and '03.01.12.b' by providing a specific, managed *type* of remote access (remote assistance). Microsoft Remote Help is a cloud-native solution that includes RBAC, auditing, and consent, fulfilling configuration and authorization requirements for this specific use case. It doesn't cover general-purpose remote access like VPN or VDI.",
+        "nistRequirement": "03.01.12.a - Establish... requirements... for each type of allowable remote system access.; 03.01.12.b - Authorize each type of remote system access..."
+      },
+      {
+        "actionId": "2aaa27af-16a0-4008-8ec3-3de63480f677",
+        "actionTitle": "Route traffic through managed network access points",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.12.c'. Azure AD Application Proxy is a managed access control point that routes remote access to internal web apps, eliminating the need for a direct external connection. This fulfills the requirement to route access through managed interfaces.",
+        "nistRequirement": "03.01.12.c - Route remote access to the system through authorized and managed access control points."
+      },
+      {
+        "actionId": "60a3eb36-d646-4efd-982e-0a8ac444cf84",
+        "actionTitle": "Add an on-premises application for remote access through application proxy",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a primary implementation for '03.01.12.a, b, c'. Azure AD App Proxy ('a') establishes configuration requirements (e.g., pre-authentication, Conditional Access) for a *type* of remote access (web apps). Access is ('b') authorized via Azure AD, and ('c') all connections are routed through the App Proxy connector (a managed access point).",
+        "nistRequirement": "03.01.12.a - Establish... requirements...; 03.01.12.b - Authorize... remote system access...; 03.01.12.c - Route remote access... through managed access control points."
+      },
+      {
+        "actionId": "ae786f92-a5b5-46ce-9f79-2c918adc133a",
+        "actionTitle": "Block non-compliant devices and report policy violations",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action is an *enforcement mechanism* for the *requirements* defined in '03.01.12.a'. By using Conditional Access to block non-compliant devices, the organization enforces its established configuration requirements (e.g., 'device must be encrypted') for remote access.",
+        "nistRequirement": "03.01.12.a - Establish... configuration requirements... for each type of allowable remote system access."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.16",
+    "controlTitle": "Wireless Access",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "87aebdbf-e221-4395-ac09-6f5e6d1ea1a4",
+        "actionTitle": "Install a configuration profile on your iOS devices",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly supports '03.01.16.a', 'b', and 'd' for iOS devices. An Intune configuration profile can push an authorized corporate Wi-Fi profile to the device, which includes the connection requirements (SSID) and enforces authentication (e.g., WPA2-Enterprise) and encryption. This automates authorization and protection.",
+        "nistRequirement": "03.01.16.a - Establish... configuration requirements...; 03.01.16.b - Authorize... wireless access...; 03.01.16.d - Protect wireless access... using authentication and encryption."
+      },
+      {
+        "actionId": "c31d51d0-6c35-42ad-89b4-0324b037e235",
+        "actionTitle": "Install a configuration profile on your Android enterprise devices",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly supports '03.01.16.a', 'b', and 'd' for Android devices. An Intune configuration profile can push an authorized corporate Wi-Fi profile, establishing connection requirements (SSID) and enforcing authentication (e.g., EAP-TLS) and encryption. This ensures only authorized devices can connect securely.",
+        "nistRequirement": "03.01.16.a - Establish... configuration requirements...; 03.01.16.b - Authorize... wireless access...; 03.01.16.d - Protect wireless access... using authentication and encryption."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.18",
+    "controlTitle": "Access Control for Mobile Devices",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "25f873b6-53ea-40d0-8720-2b84f32baa05",
+        "actionTitle": "Create a compliance policy",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.01.18.a'. An Intune device compliance policy is the primary mechanism to establish and enforce configuration requirements for mobile devices, such as minimum OS, encryption, and password settings.",
+        "nistRequirement": "03.01.18.a - Establish usage restrictions, configuration requirements, and connection requirements for mobile devices."
+      },
+      {
+        "actionId": "16d49f7b-858e-4ec8-83cb-8c7b79e0e2ad",
+        "actionTitle": "Require mobile devices to use encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct and specific implementation of '03.01.18.c'. An Intune compliance policy can check for and enforce full-device encryption on mobile devices, protecting the confidentiality of CUI stored on them.",
+        "nistRequirement": "03.01.18.c - Implement full-device... encryption to protect the confidentiality of CUI on mobile devices."
+      },
+      {
+        "actionId": "ae786f92-a5b5-46ce-9f79-2c918adc133a",
+        "actionTitle": "Block non-compliant devices and report policy violations",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.01.18.b'. By linking an Intune compliance policy (which defines the requirements from 'a') to an Azure AD Conditional Access policy, the organization can authorize (or block) the connection of mobile devices based on their compliance status.",
+        "nistRequirement": "03.01.18.b - Authorize the connection of mobile devices to the system."
+      },
+      {
+        "actionId": "6f9cb92b-cb36-48d8-8922-02612620540c",
+        "actionTitle": "Protect mobile and desktop applications",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of the 'container-based' option in '03.01.18.c'. Intune App Protection Policies (APP) create a secure container for corporate data within applications, protecting CUI even on unmanaged (BYOD) devices.",
+        "nistRequirement": "03.01.18.c - Implement... container-based encryption to protect the confidentiality of CUI on mobile devices."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.20",
+    "controlTitle": "Use of External Systems",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "ae786f92-a5b5-46ce-9f79-2c918adc133a",
+        "actionTitle": "Block non-compliant devices and report policy violations",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.01.20.a, b, c' for personally owned mobile devices (a type of external system). Conditional Access ('a') prohibits access unless authorized. The authorization check ('c') verifies the device meets the security requirements ('b') defined in an Intune compliance policy.",
+        "nistRequirement": "03.01.20.a - Prohibit the use of external systems unless... authorized.; 03.01.20.b - Establish... security requirements... on external systems...; 03.01.20.c.1 - Verifying that the security requirements... have been satisfied..."
+      },
+      {
+        "actionId": "6f9cb92b-cb36-48d8-8922-02612620540c",
+        "actionTitle": "Protect mobile and desktop applications",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action addresses '03.01.20.b' by *being* the security requirement for an external system (BYOD). Intune App Protection Policies (APP) apply data protection (e.g., encryption, copy/paste restrictions) to CUI on an external device *without* managing the device itself, allowing safe use.",
+        "nistRequirement": "03.01.20.b - Establish... security requirements to be satisfied on external systems..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.01.22",
+    "controlTitle": "Publicly Accessible Content",
+    "controlFamily": "AC",
+    "improvementActions": [
+      {
+        "actionId": "d29e3d65-16a8-483d-9dbc-20f354406937",
+        "actionTitle": "Run simulation attacks",
+        "confidence": "Low",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action provides supplementary support for '03.01.22.a'. While Attack Simulation Training is focused on phishing, the awareness it builds contributes to general security literacy, which includes understanding what CUI is and where it should not be placed. It does not, however, specifically train on 'publicly accessible information.'",
+        "nistRequirement": "03.01.22.a - Train authorized individuals to ensure that publicly accessible information does not contain CUI."
+      },
+      {
+        "actionId": "82b4694d-9b63-428e-84cc-51ceb9c2eeb2",
+        "actionTitle": "Create and deploy data loss prevention policies",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "Microsoft 365 DLP policies can be configured to partially implement '03.01.22.b'. Policies can scan for CUI shared with 'Everyone' or 'External users' in SharePoint Online sites (which can be publicly accessible) and generate alerts, facilitating the review and removal of such information. Its coverage is limited to M365 services.",
+        "nistRequirement": "03.01.22.b - Review the content on publicly accessible systems for CUI and remove such information, if discovered."
+      }
+    ]
+  },
+  {
+    "controlId": "03.02.01",
+    "controlTitle": "Literacy Training and Awareness",
+    "controlFamily": "AT",
+    "improvementActions": [
+      {
+        "actionId": "d29e3d65-16a8-483d-9dbc-20f354406937",
+        "actionTitle": "Run simulation attacks",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of '03.02.01.a.3' for social engineering. Microsoft's Attack Simulation Training is a tool to provide practical, hands-on training to users on recognizing phishing (a form of social engineering) and reporting it. It doesn't cover the full scope of literacy, insider threat, or initial/recurring training.",
+        "nistRequirement": "03.02.01.a.3 - On recognizing and reporting indicators of... social engineering..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.02.02",
+    "controlTitle": "Role-Based Training",
+    "controlFamily": "AT",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.03.01",
+    "controlTitle": "Event Logging",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+        "actionTitle": "Search the audit log in compliance portal",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action presumes '03.03.01.a' is complete. The M365 unified audit log automatically captures thousands of event types (e.g., file access, admin changes), which are *specified* by Microsoft. Organizations can review these and enable/disable more detailed logging (like mailbox auditing), partially addressing 'a' and 'b'.",
+        "nistRequirement": "03.03.01.a - Specify the following event types selected for logging...; 03.03.01.b - Review and update the event types..."
+      },
+      {
+        "actionId": "5f370882-dbab-4058-8f66-9373fe93935e",
+        "actionTitle": "Facilitate the investigation of compromised user account mailboxes",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of '03.03.01.a'. Enabling mailbox auditing specifies a new, detailed set of event types (e.g., logon, message send/delete) for logging, which are crucial for security but not all enabled by default. This is a key part of *specifying* the events to be logged.",
+        "nistRequirement": "03.03.01.a - Specify the following event types selected for logging..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.03.02",
+    "controlTitle": "Audit Record Content",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+        "actionTitle": "Search the audit log in compliance portal",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "The Microsoft 365 unified audit log is designed to meet '03.03.02'. Each audit record inherently contains ('a.1') the event type (e.g., 'FileModified'), ('a.2') a UTC time stamp, ('a.3'/'a.4') the source (IP address, workload), ('a.5') the outcome, and ('a.6') the identity (UserPrincipalName) associated with the event.",
+        "nistRequirement": "03.03.02.a - Include the following content in audit records: 1. What type of event occurred 2. When the event occurred 3. Where the event occurred 4. Source of the event 5. Outcome of the event 6. Identity of the individuals..."
+      },
+      {
+        "actionId": "79985842-c55b-48fc-b1bc-246f97e17d0f",
+        "actionTitle": "Use the system clock to generate time stamps for audit records",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action directly supports '03.03.02.a.2' (When the event occurred). By ensuring systems use authoritative time sources, it guarantees the time stamps in the audit records are accurate and consistent, which is critical for event correlation.",
+        "nistRequirement": "03.03.02.a.2 - When the event occurred"
+      }
+    ]
+  },
+  {
+    "controlId": "03.03.03",
+    "controlTitle": "Audit Record Generation",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+        "actionTitle": "Search the audit log in compliance portal",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implies '03.03.03.a'. The M365 compliance portal provides access to the unified audit log, which is *generated* by default for most workloads as soon as auditing is enabled. This action is the *use* of the generated logs.",
+        "nistRequirement": "03.03.03.a - Generate audit records for the selected event types..."
+      },
+      {
+        "actionId": "058cb140-f876-4a39-b903-fa5adf64a15f",
+        "actionTitle": "Restrict access to audit information",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly relates to '03.03.03.b'. The 'audit-log-retention-policies' documentation link associated with this action shows how to configure retention policies for audit logs, which is the implementation of 'Retain audit records for a time period...'.",
+        "nistRequirement": "03.03.03.b - Retain audit records for a time period consistent with the records retention policy."
+      }
+    ]
+  },
+  {
+    "controlId": "03.03.04",
+    "controlTitle": "Response to Audit Logging Process Failures",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "3f298850-3510-45db-80a2-3d60f5d0e7f2",
+        "actionTitle": "Send security and health alerts to syslog server",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.03.04.a'. By forwarding health alerts from services like Microsoft Defender to a SIEM/syslog, the organization can configure its monitoring solution to alert personnel if it *stops* receiving logs, which is a form of logging process failure.",
+        "nistRequirement": "03.03.04.a - Alert organizational personnel... in the event of an audit logging process failure."
+      },
+      {
+        "actionId": "1603d26d-8ed3-45aa-8a95-5ae7811b6d3b",
+        "actionTitle": "Manage security related incidents",
+        "confidence": "Low",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action is the *response* to an alert from '03.03.04.a'. An audit logging failure would be classified as a security-related incident, and this action describes using M365 Defender or Sentinel to track and manage the response to that incident.",
+        "nistRequirement": "03.03.04.a - Alert... in the event of an audit logging process failure."
+      }
+    ]
+  },
+  {
+    "controlId": "03.03.05",
+    "controlTitle": "Audit Record Review, Analysis, and Reporting",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+        "actionTitle": "Search the audit log in compliance portal",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct, manual implementation of '03.03.05.a'. The compliance portal search tool is the primary way to manually review and analyze system audit records for indications of inappropriate or unusual activity.",
+        "nistRequirement": "03.03.05.a - Review and analyze system audit records... for indications... of inappropriate or unusual activity."
+      },
+      {
+        "actionId": "b7367d05-1f7f-4def-8f9a-4c30076a9b0e",
+        "actionTitle": "Review cloud traffic logs for ongoing visibility",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is another direct implementation of '03.03.05.a', focused on a specific *type* of audit record (traffic logs). Reviewing Microsoft Cloud App Security and Azure network logs helps identify unusual activity and potential data exfiltration.",
+        "nistRequirement": "03.03.05.a - Review and analyze system audit records..."
+      },
+      {
+        "actionId": "56d3f8ae-c9a0-4c9d-ad74-089e4b9a7444",
+        "actionTitle": "View the timeline of risky events",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly addresses '03.03.05.c'. The timeline views in Azure AD Identity Protection and M365 Defender automatically correlate audit records from different repositories (e.g., sign-in logs, Defender alerts) to provide organization-wide situational awareness of an attack.",
+        "nistRequirement": "03.03.05.c - Analyze and correlate audit records across different repositories to gain organization-wide situational awareness."
+      },
+      {
+        "actionId": "1603d26d-8ed3-45aa-8a95-5ae7811b6d3b",
+        "actionTitle": "Manage security related incidents",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.03.05.b'. When analysis from ('a') or ('c') identifies an incident, M365 Defender or Sentinel is used to manage that incident, which includes the process of *reporting findings* to the appropriate organizational personnel.",
+        "nistRequirement": "03.03.05.b - Report findings to organizational personnel or roles."
+      }
+    ]
+  },
+  {
+    "controlId": "03.03.06",
+    "controlTitle": "Audit Record Reduction and Report Generation",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "65ca2fbb-902b-45b9-9800-12e23ab8d529",
+        "actionTitle": "Generate remote connection report for cloud desktops",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of '03.03.06.a'. Generating a report on AVD/Windows 365 connections is a form of audit record reduction (filtering for only connection events) and report generation that directly supports audit review.",
+        "nistRequirement": "03.03.06.a - Implement an audit record reduction and report generation capability that supports audit record review, analysis, reporting requirements..."
+      },
+      {
+        "actionId": "5e1608d2-3032-4fe8-874a-afad699916c1",
+        "actionTitle": "Search the audit log in compliance portal",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "The search functionality itself is a form of '03.03.06.a', as it allows filtering (reduction) of the audit log to specific users, activities, or timeframes. The export feature is a form of report generation. This capability ('b') preserves the original content of the logs.",
+        "nistRequirement": "03.03.06.a - Implement an audit record reduction and report generation capability...; 03.03.06.b - Preserve the original content and time ordering of audit records."
+      }
+    ]
+  },
+  {
+    "controlId": "03.03.07",
+    "controlTitle": "Time Stamps",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "79985842-c55b-48fc-b1bc-246f97e17d0f",
+        "actionTitle": "Use the system clock to generate time stamps for audit records",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.03.07'. It ensures ('a') internal system clocks are used and, by syncing with authoritative NTP sources, ('b') that the time stamps meet granularity requirements. M365 services universally use Coordinated Universal Time (UTC) for their audit logs, fulfilling the entire requirement.",
+        "nistRequirement": "03.03.07.a - Use internal system clocks to generate time stamps...; 03.03.07.b - Record time stamps... that use Coordinated Universal Time (UTC)..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.03.08",
+    "controlTitle": "Protection of Audit Information",
+    "controlFamily": "AU",
+    "improvementActions": [
+      {
+        "actionId": "058cb140-f876-4a39-b903-fa5adf64a15f",
+        "actionTitle": "Restrict access to audit information",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.03.08.a' by using Microsoft 365 RBAC to limit who can access (view, export) audit logs. It also fully implements '03.03.08.b' by ensuring that only specific, authorized roles (e.g., 'Audit Log' admin) can manage audit log functionality (like retention policies), separating this duty from other privileged roles.",
+        "nistRequirement": "03.03.08.a - Protect audit information...; 03.03.08.b - Authorize access to management of audit logging functionality to only a subset of privileged users or roles."
+      },
+      {
+        "actionId": "7027cdd2-03dd-4cfe-8fde-d5f68a5a15dd",
+        "actionTitle": "Maintain segregation of duties",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action provides the mechanism to implement '03.03.08.b'. By defining distinct Azure AD roles, an organization can create an 'Audit Manager' role that is separate from 'Global Administrator', thereby restricting the management of audit functionality to a subset of users as required.",
+        "nistRequirement": "03.03.08.b - Authorize access to management of audit logging functionality to only a subset of privileged users or roles."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.01",
+    "controlTitle": "Baseline Configuration",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "2f191dfd-38aa-49c7-b37d-4d484aa03af7",
+        "actionTitle": "Deploy security baseline policy",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.04.01'. Microsoft Intune provides recommended security baselines (developing the baseline per 'a') which can then be deployed, versioned (maintaining under configuration control), and updated ('b') to reflect new best practices. This covers Windows devices managed by Intune.",
+        "nistRequirement": "03.04.01.a - Develop and maintain under configuration control, a current baseline configuration...; 03.04.01.b - Review and update the baseline configuration..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.02",
+    "controlTitle": "Configuration Settings",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "2f191dfd-38aa-49c7-b37d-4d484aa03af7",
+        "actionTitle": "Deploy security baseline policy",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This directly implements '03.04.02.a'. Intune security baselines are a pre-defined set of organization-defined configuration settings, designed by Microsoft to reflect a restrictive mode consistent with operational requirements. Deploying them implements these settings.",
+        "nistRequirement": "03.04.02.a - Establish, document, and implement the following configuration settings..."
+      },
+      {
+        "actionId": "25f873b6-53ea-40d0-8720-2b84f32baa05",
+        "actionTitle": "Create a compliance policy",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.04.02.a' by establishing and implementing configuration settings (e.g., require encryption, minimum OS). A device's status as 'non-compliant' effectively documents a deviation ('03.04.02.b') from the established settings.",
+        "nistRequirement": "03.04.02.a - Establish, document, and implement... configuration settings...; 03.04.02.b - Identify, document, and approve any deviations..."
+      },
+      {
+        "actionId": "d4fb6a75-19fc-4bba-8737-6296471fef8e",
+        "actionTitle": "Disable autoplay for all drives",
+        "confidence": "High",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This is a specific example of implementing a configuration setting ('03.04.02.a'). Disabling AutoPlay is a specific, security-related setting that reflects a restrictive mode to mitigate risks from removable media.",
+        "nistRequirement": "03.04.02.a - ...implement... organization-defined configuration settings..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.03",
+    "controlTitle": "Configuration Change Control",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "2f191dfd-38aa-49c7-b37d-4d484aa03af7",
+        "actionTitle": "Deploy security baseline policy",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "Managing security baselines in Intune is a form of configuration change control. Changes to the baseline profile ('a') must be reviewed and approved by an administrator ('b'), are documented and versioned within Intune, and are then implemented ('c') on devices. This provides a mechanism for change control for these specific settings.",
+        "nistRequirement": "03.04.03.a, b, c - Define... Review proposed... Implement and document approved... changes"
+      },
+      {
+        "actionId": "30b85ad7-3674-4def-a76b-7ae03c049b9e",
+        "actionTitle": "Generate and review reports for device compliance",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action directly supports '03.04.03.d'. Reviewing device compliance reports is a key activity to monitor and review the status and impact of configuration-controlled changes (like a new baseline or compliance policy) deployed to endpoints.",
+        "nistRequirement": "03.04.03.d - Monitor and review activities associated with configuration-controlled changes..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.04",
+    "controlTitle": "Impact Analyses",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "30b85ad7-3674-4def-a76b-7ae03c049b9e",
+        "actionTitle": "Generate and review reports for device compliance",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary tool for '03.04.04.b'. After a configuration change is implemented, reviewing device compliance reports is the mechanism to verify that security requirements for the system (e.g., 'devices must be encrypted') continue to be satisfied.",
+        "nistRequirement": "03.04.04.b - Verify that the security requirements... continue to be satisfied after the system changes have been implemented."
+      },
+      {
+        "actionId": "a5526fe2-1f71-4b8b-9d04-009326eb2ee5",
+        "actionTitle": "Generate and review reports for device compliance trends",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.04.04.b' on anongoing basis. Analyzing compliance *trends* after a change (e.g., using Intune's trend reports) helps verify the long-term impact and ensures security requirements are continuously satisfied, not just immediately after the change.",
+        "nistRequirement": "03.04.04.b - Verify that the security requirements... continue to be satisfied after the system changes have been implemented."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.05",
+    "controlTitle": "Access Restrictions for Change",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "c09a752e-f78b-4ea4-9946-fe564a3b41a1",
+        "actionTitle": "Use role-based privileged account management",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This directly implements '03.04.05'. By using Azure AD PIM for roles like 'Intune Administrator' or 'Security Administrator', organizations enforce logical access restrictions. This ensures only authorized individuals can make configuration changes, and only after an approval/activation workflow.",
+        "nistRequirement": "03.04.05 - ...enforce physical and logical access restrictions associated with changes to the system."
+      },
+      {
+        "actionId": "7027cdd2-03dd-4cfe-8fde-d5f68a5a15dd",
+        "actionTitle": "Maintain segregation of duties",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is the foundation for '03.04.05'. Azure RBAC is used to *define* the specific roles (e.g., 'Intune Administrator') that are allowed to make changes, thereby *enforcing* logical access restrictions for system configuration.",
+        "nistRequirement": "03.04.05 - Define, document, approve, and enforce physical and logical access restrictions associated with changes to the system."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.06",
+    "controlTitle": "Least Functionality",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+        "actionTitle": "Prevent use of unauthorized software and cloud apps",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.04.06.a' and '03.04.06.b'. By using Defender for Cloud Apps to block unauthorized cloud apps (services) and Intune to block unauthorized software (functions), the organization configures the system to provide only mission-essential capabilities.",
+        "nistRequirement": "03.04.06.a - Configure the system to provide only mission-essential capabilities.; 03.04.06.b - Prohibit or restrict use of the following functions... and services..."
+      },
+      {
+        "actionId": "a5d3eb3b-cc37-496d-a317-9f05ff672850",
+        "actionTitle": "Disable SMBv1 client driver",
+        "confidence": "High",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This is a specific and critical implementation of '03.04.06.d'. Disabling the SMBv1 client is a key step in removing an unnecessary and nonsecure protocol, reducing functionality to only what is essential and secure.",
+        "nistRequirement": "03.04.06.d - Disable or remove functions, ports, protocols... that are unnecessary or nonsecure."
+      },
+      {
+        "actionId": "d4fb6a75-19fc-4bba-8737-6296471fef8e",
+        "actionTitle": "Disable autoplay for all drives",
+        "confidence": "High",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This is a specific implementation of '03.04.06.d'. Disabling the AutoPlay function is a classic example of removing an unnecessary function to reduce the attack surface, in line with the principle of least functionality.",
+        "nistRequirement": "03.04.06.d - Disable or remove functions... that are unnecessary..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.08",
+    "controlTitle": "Authorized Software – Allow by Exception",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+        "actionTitle": "Prevent use of unauthorized software and cloud apps",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly addresses this control. While the title suggests blacklisting, Intune's app control policies (like Windows Defender Application Control - WDAC or AppLocker) can be configured to implement a 'deny-all, allow-by-exception' policy ('03.04.08.b'), using a managed list of authorized software ('03.04.08.a').",
+        "nistRequirement": "03.04.08.a - Identify software programs authorized to execute...; 03.04.08.b - Implement a deny-all, allow-by-exception policy..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.10",
+    "controlTitle": "System Component Inventory",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "7d36827a-b389-4c8d-8aa5-6b22684d1cfe",
+        "actionTitle": "Review the software inventory",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements the software aspect of '03.04.10.a' and '03.04.10.b'. Microsoft Endpoint Manager (Intune) and Defender for Endpoint automatically develop a software inventory for enrolled devices, which administrators can then review.",
+        "nistRequirement": "03.04.10.a - Develop and document an inventory of system components.; 03.04.10.b - Review and update the system component inventory..."
+      },
+      {
+        "actionId": "56ad9225-1afb-42fd-af54-3e6230358e6f",
+        "actionTitle": "Create and manage device tags and groups",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action relates to the hardware aspect of '03.04.10.a'. The list of devices in Microsoft Intune, which can be grouped and tagged, forms the basis of the system component inventory for hardware (e.g., workstations, mobile devices).",
+        "nistRequirement": "03.04.10.a - Develop and document an inventory of system components."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.11",
+    "controlTitle": "Information Location",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "76cf86ef-3224-497c-b9e9-9b681afa4054",
+        "actionTitle": "Create and publish sensitivity label policies for content in relevant sites and applications",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action supports '03.04.11.a'. By creating and publishing label policies for *relevant sites* (e.g., a specific SharePoint site designated for CUI), the organization is explicitly identifying and documenting the system components (SharePoint) where CUI is processed and stored.",
+        "nistRequirement": "03.04.11.a - Identify and document the location of CUI and the system components on which the information is processed and stored."
+      },
+      {
+        "actionId": "82b4694d-9b63-428e-84cc-51ceb9c2eeb2",
+        "actionTitle": "Create and deploy data loss prevention policies",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "The data discovery capabilities of Microsoft 365 DLP help implement '03.04.11.a'. DLP policies scan content in Exchange, SharePoint, and OneDrive to *identify* the location of information matching CUI definitions, thus documenting where CUI is stored.",
+        "nistRequirement": "03.04.11.a - Identify and document the location of CUI..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.04.12",
+    "controlTitle": "System and Component Configuration for High-Risk Areas",
+    "controlFamily": "CM",
+    "improvementActions": [
+      {
+        "actionId": "2baa7422-fb9a-482f-84e0-f24a0346d281",
+        "actionTitle": "Manage Mobile Device Management (MDM) Devices remotely",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly supports '03.04.12.b'. The 'remote wipe' (retire/wipe) capability in Intune is a security requirement that can be applied to a device when an individual returns from travel, effectively sanitizing the component before it rejoins the network.",
+        "nistRequirement": "03.04.12.b - Apply the following security requirements to the systems or components when the individuals return from travel..."
+      },
+      {
+        "actionId": "56ad9225-1afb-42fd-af54-3e6230358e6f",
+        "actionTitle": "Create and manage device tags and groups",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action provides the mechanism to implement '03.04.12.a'. By creating a device group in Intune for 'High-Risk Travel', an organization can target and apply the specific, hardened configurations (e.g., a special baseline) to those devices before travel.",
+        "nistRequirement": "03.04.12.a - Issue systems or system components with the following configurations to individuals traveling to high-risk locations..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.01",
+    "controlTitle": "User Identification and Authentication",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "73ca6f00-05dc-4f18-869b-d97cb68848d7",
+        "actionTitle": "Enable multi-factor authentication for non-administrative users",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary implementation of '03.05.01.a'. Azure AD uniquely identifies users (by UserPrincipalName) and MFA provides a strong authentication mechanism for those unique identities. This is a modern, strong implementation of the base requirement.",
+        "nistRequirement": "03.05.01.a - Uniquely identify and authenticate system users..."
+      },
+      {
+        "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+        "actionTitle": "Turn on idle session timeout",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.05.01.b'. By setting an idle session timeout using Conditional Access, the system forces the user to *re-authenticate* after a period of inactivity, which is a common 'organization-defined circumstance' for re-authentication.",
+        "nistRequirement": "03.05.01.b - Re-authenticate users when [organization-defined circumstances...]"
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.02",
+    "controlTitle": "Device Identification and Authentication",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "ae786f92-a5b5-46ce-9f79-2c918adc133a",
+        "actionTitle": "Block non-compliant devices and report policy violations",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.05.02'. Azure AD Conditional Access, when requiring a 'compliant' or 'hybrid joined' device, is performing device *identification* (is this a known device in AAD?) and device *authentication* (does it meet Intune's compliance policy?) before establishing a system connection.",
+        "nistRequirement": "03.05.02 - Uniquely identify and authenticate... devices... before establishing a system connection."
+      },
+      {
+        "actionId": "25f873b6-53ea-40d0-8720-2b84f32baa05",
+        "actionTitle": "Create a compliance policy",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.05.02' by defining the *criteria* for device authentication. The compliance policy itself is the set of rules that Intune checks to 'authenticate' that the device is in a secure state before it's allowed to connect.",
+        "nistRequirement": "03.05.02 - Uniquely identify and authenticate... devices..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.03",
+    "controlTitle": "Multi-Factor Authentication",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "e56f5118-5cf5-4821-bbdc-e996fbd5bd61",
+        "actionTitle": "Enable multi-factor authentication for admins",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, primary implementation of the 'privileged accounts' portion of '03.05.03'. It uses Azure AD Conditional Access to require MFA for all administrative roles.",
+        "nistRequirement": "03.05.03 - Implement multi-factor authentication for access to privileged... accounts."
+      },
+      {
+        "actionId": "73ca6f00-05dc-4f18-869b-d97cb68848d7",
+        "actionTitle": "Enable multi-factor authentication for non-administrative users",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, primary implementation of the 'non-privileged accounts' portion of '03.05.03'. It uses Azure AD Conditional Access or Security Defaults to require MFA for all standard users.",
+        "nistRequirement": "03.05.03 - Implement multi-factor authentication for access to... non-privileged accounts."
+      },
+      {
+        "actionId": "58d74d4e-4ca2-4a84-baf5-d5bd50816981",
+        "actionTitle": "Block legacy authentication",
+        "confidence": "High",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action is a critical *enabling* step for '03.05.03'. Blocking legacy authentication protocols (like POP, SMTP) is necessary to ensure that MFA policies can be universally enforced, as these older protocols cannot prompt for a second factor and would bypass the control.",
+        "nistRequirement": "03.05.03 - Implement multi-factor authentication..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.04",
+    "controlTitle": "Replay-Resistant Authentication",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "73ca6f00-05dc-4f18-869b-d97cb68848d7",
+        "actionTitle": "Enable multi-factor authentication for non-administrative users",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.05.04'. Modern multi-factor authentication methods supported by Azure AD (e.g., Authenticator app one-time passcodes, push notifications, FIDO2 keys) are inherently replay-resistant, as they use nonces, challenges, or time-based codes, unlike a static password.",
+        "nistRequirement": "03.05.04 - Implement replay-resistant authentication mechanisms..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.05",
+    "controlTitle": "Identifier Management",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "4dd1fb10-a0c5-45ae-8262-e3d21627f420",
+        "actionTitle": "Enable deletion of an existing user",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.05.05.c'. Azure AD's user deletion process moves accounts to a 'soft-deleted' state for a defined period (e.g., 30 days) before permanent deletion. This policy inherently prevents the immediate reuse of that identifier (UPN).",
+        "nistRequirement": "03.05.05.c - Prevent the reuse of identifiers for [Assignment: organization-defined time period]."
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.07",
+    "controlTitle": "Password Management",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "2c0ba57b-d4ee-4dd4-be1a-126ccb7f6ffa",
+        "actionTitle": "Enforce authenticators strength and complexity",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This directly implements '03.05.07.f' by enforcing password complexity rules (length, etc.). It also implements '03.05.07.a' and '03.05.07.b' through Azure AD Password Protection, which checks new passwords against a global and custom list of compromised/common passwords.",
+        "nistRequirement": "03.05.07.a, b - Maintain a list of... compromised passwords... Verify that passwords are not found on the list...; 03.05.07.f - Enforce... composition and complexity rules..."
+      },
+      {
+        "actionId": "61dbb27e-b083-420b-9e47-5a1c4ffe410b",
+        "actionTitle": "Enforce immediate temporary password change",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct and full implementation of '03.05.07.e'. Azure AD SSPR (Self-Service Password Reset) and initial admin-created passwords can be flagged as 'temporary', forcing the user to select a new, permanent password upon first use.",
+        "nistRequirement": "03.05.07.e - Select a new password upon first use after account recovery."
+      },
+      {
+        "actionId": "18cc7e26-0ead-4a96-8adb-b888958c5484",
+        "actionTitle": "Use password hash sync in hybrid environments",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action supports '03.05.07.c' (transmit) and '03.05.07.d' (store). Password Hash Sync transmits password hashes over a cryptographically protected channel as part of the AAD Connect service. Azure AD then stores these hashes in a cryptographically protected (hashed, salted) form.",
+        "nistRequirement": "03.05.07.c - Transmit passwords only over cryptographically protected channels.; 03.05.07.d - Store passwords in a cryptographically protected form."
+      },
+      {
+        "actionId": "8cae54e1-9bfc-4b5b-8dd9-bd711eddc2df",
+        "actionTitle": "Disable the local storage of passwords and credentials",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.05.07.d' on the endpoint. By preventing Windows Credential Manager from caching domain credentials locally (a form of storage), it ensures passwords are not stored insecurely on the device, reducing the risk of theft from a compromised endpoint.",
+        "nistRequirement": "03.05.07.d - Store passwords in a cryptographically protected form."
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.11",
+    "controlTitle": "Authentication Feedback",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "73ca6f00-05dc-4f18-869b-d97cb68848d7",
+        "actionTitle": "Enable multi-factor authentication for non-administrative users",
+        "confidence": "Medium",
+        "coverageLevel": "Full",
+        "isPrimary": false,
+        "mappingRationale": "This action is implemented via the Azure AD authentication process, which adheres to '03.05.11' by default. The Azure AD sign-in page obscures password feedback (shows dots) and provides generic error messages (e.g., 'That username or password is not correct') to prevent account enumeration, thus obscuring feedback.",
+        "nistRequirement": "03.05.11 - Obscure feedback of authentication information during the authentication process."
+      }
+    ]
+  },
+  {
+    "controlId": "03.05.12",
+    "controlTitle": "Authenticator Management",
+    "controlFamily": "IA",
+    "improvementActions": [
+      {
+        "actionId": "61dbb27e-b083-420b-9e47-5a1c4ffe410b",
+        "actionTitle": "Enforce immediate temporary password change",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, primary implementation of '03.05.12.d'. Configuring temporary passwords (the 'default authenticator' given to a new user) to expire on first use is a key part of authenticator management.",
+        "nistRequirement": "03.05.12.d - Change default authenticators at first use."
+      },
+      {
+        "actionId": "5fbc75bf-cfe1-498d-b7a9-9153e112669c",
+        "actionTitle": "Protect authenticators",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of '03.05.12.f'. Using Azure Key Vault and other credential management policies ensures that authenticator content (like certificates, secrets, or API keys) is protected from unauthorized disclosure and modification.",
+        "nistRequirement": "03.05.12.f - Protect authenticator content from unauthorized disclosure and modification."
+      },
+      {
+        "actionId": "2c0ba57b-d4ee-4dd4-be1a-126ccb7f6ffa",
+        "actionTitle": "Enforce authenticators strength and complexity",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.05.12.b'. By defining password complexity rules and banning bad passwords, the organization *establishes the content requirements* for password authenticators issued by the organization.",
+        "nistRequirement": "03.05.12.b - Establish initial authenticator content for any authenticators issued by the organization."
+      }
+    ]
+  },
+  {
+    "controlId": "03.06.01",
+    "controlTitle": "Incident Handling",
+    "controlFamily": "IR",
+    "improvementActions": [
+      {
+        "actionId": "dcdfa6a5-25df-4505-a20e-e98944a3b6c1",
+        "actionTitle": "Automate investigation and response activities",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary technical implementation of the 'detection and analysis', 'containment', and 'eradication' phases of '03.06.01'. Automated Investigation and Response (AIR) in M365 Defender automatically investigates alerts and remediates threats, forming a core part of the incident-handling capability.",
+        "nistRequirement": "03.06.01 - Implement an incident-handling capability that... includes... detection and analysis, containment, eradication, and recovery."
+      },
+      {
+        "actionId": "1603d26d-8ed3-45aa-8a95-5ae7811b6d3b",
+        "actionTitle": "Manage security related incidents",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action describes the *process* of implementing '03.06.01'. Using M365 Defender and Sentinel to track, investigate, and respond to incidents establishes the operational workflow for the entire incident handling lifecycle (detection, analysis, containment, etc.).",
+        "nistRequirement": "03.06.01 - Implement an incident-handling capability..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.06.02",
+    "controlTitle": "Incident Monitoring, Reporting, and Response Assistance",
+    "controlFamily": "IR",
+    "improvementActions": [
+      {
+        "actionId": "1603d26d-8ed3-45aa-8a95-5ae7811b6d3b",
+        "actionTitle": "Manage security related incidents",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.06.02.a'. The incident management features in M365 Defender and Azure Sentinel are the primary tools to track and document system security incidents, maintain their status, and provide a record for forensics.",
+        "nistRequirement": "03.06.02.a - Track and document system security incidents."
+      },
+      {
+        "actionId": "6f8f8ec8-639b-4782-8b08-1daba4d7aa85",
+        "actionTitle": "Enable remote help for tenants",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of '03.06.02.d'. Microsoft Remote Help provides a support resource that allows IT (the response support) to offer advice and assistance to users who may be reporting or experiencing an incident.",
+        "nistRequirement": "03.06.02.d - Provide an incident response support resource that offers advice and assistance to system users..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.06.03",
+    "controlTitle": "Incident Response Testing",
+    "controlFamily": "IR",
+    "improvementActions": [
+      {
+        "actionId": "d29e3d65-16a8-483d-9dbc-20f354406937",
+        "actionTitle": "Run simulation attacks",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action directly supports '03.06.03'. Running phishing simulations is a method of testing the 'detection and analysis' part of the incident response capability, specifically how users identify and report a potential incident. This tests one component of the overall IR plan.",
+        "nistRequirement": "03.06.03 - Test the effectiveness of the incident response capability..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.06.04",
+    "controlTitle": "Incident Response Training",
+    "controlFamily": "IR",
+    "improvementActions": [
+      {
+        "actionId": "d29e3d65-16a8-483d-9dbc-20f354406937",
+        "actionTitle": "Run simulation attacks",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.06.04.a' for general users. Attack Simulation Training is a form of incident response training that teaches users their role: 'identifying and reporting suspicious activities' (as noted in the discussion of 03.06.04).",
+        "nistRequirement": "03.06.04.a - Provide incident response training to system users consistent with assigned roles and responsibilities..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.06.05",
+    "controlTitle": "Incident Response Plan",
+    "controlFamily": "IR",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.07.04",
+    "controlTitle": "Maintenance Tools",
+    "controlFamily": "MA",
+    "improvementActions": [
+      {
+        "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+        "actionTitle": "Prevent use of unauthorized software and cloud apps",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action supports '03.07.04.a'. By using Intune's application control policies (e.g., WDAC), an organization can create an allow-list of approved system maintenance tools, thereby approving, controlling, and monitoring their use.",
+        "nistRequirement": "03.07.04.a - Approve, control, and monitor the use of system maintenance tools."
+      },
+      {
+        "actionId": "301069cd-75f3-452c-ba39-9bf10bbc64ec",
+        "actionTitle": "Protect Windows devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.07.04.b'. Microsoft Defender for Endpoint's real-time protection will automatically scan media (like a USB drive) containing diagnostic or test programs for malicious code before it can be used.",
+        "nistRequirement": "03.07.04.b - Check media with diagnostic and test programs for malicious code..."
+      },
+      {
+        "actionId": "2a71f922-3b66-431d-b192-45c679035b9b",
+        "actionTitle": "Create customized or use default DLP policies for endpoints",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly supports '03.07.04.c'. Endpoint DLP policies can be configured to block CUI from being copied to removable storage devices (which could include maintenance equipment), thereby preventing its unauthorized removal from the facility.",
+        "nistRequirement": "03.07.04.c - Prevent the removal of system maintenance equipment containing CUI..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.07.05",
+    "controlTitle": "Nonlocal Maintenance",
+    "controlFamily": "MA",
+    "improvementActions": [
+      {
+        "actionId": "6f8f8ec8-639b-4782-8b08-1daba4d7aa85",
+        "actionTitle": "Enable remote help for tenants",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.07.05.a'. Microsoft Remote Help is a managed, cloud-native solution for nonlocal maintenance and diagnostics that is approved and monitored via Azure AD RBAC and audit logs. It requires Azure AD authentication, which supports '03.07.05.b' (MFA), and sessions are explicitly terminated ('03.07.05.c').",
+        "nistRequirement": "03.07.05.a - Approve and monitor nonlocal maintenance...; 03.07.05.b - Implement multi-factor authentication...; 03.07.05.c - Terminate session... when... completed."
+      },
+      {
+        "actionId": "73ca6f00-05dc-4f18-869b-d97cb68848d7",
+        "actionTitle": "Enable multi-factor authentication for non-administrative users",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action is the technical implementation for '03.07.05.b'. By enforcing MFA for the IT admin accounts that perform nonlocal maintenance (e.g., via Remote Help or other tools), this requirement is met for the establishment of the session.",
+        "nistRequirement": "03.07.05.b - Implement multi-factor authentication and replay resistance in the establishment of nonlocal maintenance..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.07.06",
+    "controlTitle": "Maintenance Personnel",
+    "controlFamily": "MA",
+    "improvementActions": [
+      {
+        "actionId": "6f8f8ec8-639b-4782-8b08-1daba4d7aa85",
+        "actionTitle": "Enable remote help for tenants",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action supports '03.07.06.a, b, c' for nonlocal maintenance. The RBAC roles for Microsoft Remote Help are the *process* for authorizing maintenance personnel ('a') and form the *list* of authorized personnel ('b'). The tool verifies their authorization ('c') before allowing a session.",
+        "nistRequirement": "03.07.06.a - Establish a process for maintenance personnel authorization.; 03.07.06.b - Maintain a list of authorized maintenance... personnel.; 03.07.06.c - Verify that... personnel who perform maintenance... possess the required access authorizations."
+      }
+    ]
+  },
+  {
+    "controlId": "03.08.01",
+    "controlTitle": "Media Storage",
+    "controlFamily": "MP",
+    "improvementActions": [
+      {
+        "actionId": "16d49f7b-858e-4ec8-83cb-8c7b79e0e2ad",
+        "actionTitle": "Require mobile devices to use encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.08.01' for mobile devices (a form of system media). Enforcing device encryption through Intune is a primary technical control to 'securely store' CUI on that media, protecting it from unauthorized access if the device is lost or stolen. This does not cover physical control (inventories, libraries).",
+        "nistRequirement": "03.08.01 - Physically control and securely store system media that contain CUI."
+      }
+    ]
+  },
+  {
+    "controlId": "03.08.02",
+    "controlTitle": "Media Access",
+    "controlFamily": "MP",
+    "improvementActions": [
+      {
+        "actionId": "51011470-328b-4f0f-b7d0-3a7c47876128",
+        "actionTitle": "Create removable storage groups",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, primary implementation of '03.08.02'. Microsoft Defender for Endpoint's device control allows administrators to restrict access to removable media (e.g., USB drives) to specific authorized personnel or groups, thereby restricting access to CUI on that media.",
+        "nistRequirement": "03.08.02 - Restrict access to CUI on system media to authorized personnel or roles."
+      },
+      {
+        "actionId": "16d49f7b-858e-4ec8-83cb-8c7b79e0e2ad",
+        "actionTitle": "Require mobile devices to use encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.08.02' as described in the discussion: 'For digital media, access to CUI can be restricted by using cryptographic means.' Enforcing encryption on mobile devices (media) restricts access to only users with the device password/PIN.",
+        "nistRequirement": "03.08.02 - Restrict access to CUI on system media..."
+      },
+      {
+        "actionId": "7cd4c197-0825-4907-b38a-301e68a53d92",
+        "actionTitle": "Require mobile devices to use a password",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary implementation of '03.08.02' for mobile media. Requiring a password or PIN is the most basic and essential control to restrict access to the CUI on the device (media) to the authorized user.",
+        "nistRequirement": "03.08.02 - Restrict access to CUI on system media to authorized personnel or roles."
+      }
+    ]
+  },
+  {
+    "controlId": "03.08.03",
+    "controlTitle": "Media Sanitization",
+    "controlFamily": "MP",
+    "improvementActions": [
+      {
+        "actionId": "8e372f54-c936-410a-a6af-4be75178b7a4",
+        "actionTitle": "Enable ability to remotely wipe data from mobile devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct implementation of '03.08.03' for mobile devices. The 'Wipe' or 'Retire' (selective wipe) actions in Intune are forms of media sanitization that remove CUI prior to the device's disposal, release (e.g., lost/stolen), or reuse (e.g., re-provisioning).",
+        "nistRequirement": "03.08.03 - Sanitize system media that contain CUI prior to disposal, release out of organizational control, or release for reuse."
+      }
+    ]
+  },
+  {
+    "controlId": "03.08.04",
+    "controlTitle": "Media Marking",
+    "controlFamily": "MP",
+    "improvementActions": [
+      {
+        "actionId": "41c9c296-4884-42e8-8657-37dd707ffe85",
+        "actionTitle": "Utilize sensitivity labels for data restriction",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This directly implements the digital aspect of '03.08.04'. Microsoft Information Protection (MIP) sensitivity labels apply human-readable security attributes (e.g., 'CUI' as a header/footer/watermark) to documents. When a file is on system media, it carries this CUI marking.",
+        "nistRequirement": "03.08.04 - Mark system media that contain CUI to indicate distribution limitations, handling caveats, and applicable CUI markings."
+      },
+      {
+        "actionId": "76cf86ef-3224-497c-b9e9-9b681afa4054",
+        "actionTitle": "Create and publish sensitivity label policies for content in relevant sites and applications",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action is the *implementation* of '03.08.04'. By creating and publishing label policies, an organization *enforces* the marking of digital media (files) containing CUI.",
+        "nistRequirement": "03.08.04 - Mark system media that contain CUI..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.08.05",
+    "controlTitle": "Media Transport",
+    "controlFamily": "MP",
+    "improvementActions": [
+      {
+        "actionId": "2a71f922-3b66-431d-b192-45c679035b9b",
+        "actionTitle": "Create customized or use default DLP policies for endpoints",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.08.05.a'. Endpoint DLP controls the transport of CUI by monitoring and blocking its transfer to system media (like USB drives) when a user tries to move it outside of controlled areas (the endpoint).",
+        "nistRequirement": "03.08.05.a - Protect and control system media that contain CUI during transport outside of controlled areas."
+      },
+      {
+        "actionId": "16d49f7b-858e-4ec8-83cb-8c7b79e0e2ad",
+        "actionTitle": "Require mobile devices to use encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.08.05.a' as described in the discussion ('Media protection during transport can include cryptography'). Encrypting a mobile device (media) protects the CUI on it during transport (e.g., when an employee carries it outside a controlled area).",
+        "nistRequirement": "03.08.05.a - Protect and control system media... during transport..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.08.07",
+    "controlTitle": "Media Use",
+    "controlFamily": "MP",
+    "improvementActions": [
+      {
+        "actionId": "51011470-328b-4f0f-b7d0-3a7c47876128",
+        "actionTitle": "Create removable storage groups",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, full implementation of '03.08.07.a'. Microsoft Defender for Endpoint device control allows an organization to define *exactly* which types of system media (e.g., specific trusted USBs) are allowed and to restrict or prohibit all others.",
+        "nistRequirement": "03.08.07.a - Restrict or prohibit the use of [Assignment: organization-defined types of system media]."
+      },
+      {
+        "actionId": "d4fb6a75-19fc-4bba-8737-6296471fef8e",
+        "actionTitle": "Disable autoplay for all drives",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.08.07.a' by placing a *restriction* on the *use* of system media. It doesn't prohibit the media itself, but it restricts a high-risk function associated with its use.",
+        "nistRequirement": "03.08.07.a - Restrict... the use of... system media."
+      },
+      {
+        "actionId": "974fc52a-6bed-4fa4-86dc-ef9ce69636ed",
+        "actionTitle": "Disable 'Autoplay for non-volume devices'",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action also supports '03.08.07.a' by restricting a function associated with the *use* of specific media types (like MTP devices).",
+        "nistRequirement": "03.08.07.a - Restrict... the use of... system media."
+      }
+    ]
+  },
+  {
+    "controlId": "03.08.09",
+    "controlTitle": "System Backup – Cryptographic Protection",
+    "controlFamily": "MP",
+    "improvementActions": [
+      {
+        "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+        "actionTitle": "Protect data in transit using encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is part of '03.08.09.a'. For cloud services like M365, backup information is protected in transit (e.g., during replication between datacenters) using encryption. This is an 'isManaged: true' action, meaning Microsoft implements this protection for the service's backups.",
+        "nistRequirement": "03.08.09.a - Protect the confidentiality of backup information."
+      },
+      {
+        "actionId": "1bfe3300-979f-4fcd-8aee-b22057645b77",
+        "actionTitle": "Protect data at rest with application-layer encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.08.09.b'. M365's service-level encryption (BitLocker at the disk level, and application-layer encryption) is a cryptographic mechanism that protects CUI at the backup storage locations (Azure datacenters). This is also an 'isManaged: true' control.",
+        "nistRequirement": "03.08.09.b - Implement cryptographic mechanisms to prevent the unauthorized disclosure of CUI at backup storage locations."
+      }
+    ]
+  },
+  {
+    "controlId": "03.09.01",
+    "controlTitle": "Personnel Screening",
+    "controlFamily": "PS",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.09.02",
+    "controlTitle": "Personnel Termination and Transfer",
+    "controlFamily": "PS",
+    "improvementActions": [
+      {
+        "actionId": "4dd1fb10-a0c5-45ae-8262-e3d21627f420",
+        "actionTitle": "Enable deletion of an existing user",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct, primary implementation of '03.09.02.a.1' (Disable system access) and '03.09.02.a.2' (Terminate... authenticators). Deleting or disabling the user account in Azure AD accomplishes both tasks for all federated cloud services.",
+        "nistRequirement": "03.09.02.a.1 - Disable system access...; 03.09.02.a.2 - Terminate or revoke authenticators..."
+      },
+      {
+        "actionId": "b98b15c9-f85f-4357-90ee-2ba866164950",
+        "actionTitle": "Monitor groups access",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.09.02.b'. Using Azure AD Access Reviews (part of this action) is the primary mechanism to review and confirm the ongoing need for access authorizations when an individual is transferred, and to modify ('b.2') that access if needed.",
+        "nistRequirement": "03.09.02.b - When individuals are reassigned or transferred... 1. Review and confirm the ongoing operational need... 2. Modify access authorization..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.10.01",
+    "controlTitle": "Physical Access Authorizations",
+    "controlFamily": "PE",
+    "improvementActions": [
+      {
+        "actionId": "b0427627-2e88-4020-93f8-f2451cb46ad8",
+        "actionTitle": "Import physical badging data",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action provides supplementary support for '03.10.01.a' and 'c'. By importing data from the physical access system, it allows the *list* of individuals with facility access ('a') to be correlated against digital identities. This correlation supports the *review* ('c') of the access list (e.g., finding digital accounts for users who no longer have physical access).",
+        "nistRequirement": "03.10.01.a - ...maintain a list of individuals with authorized access...; 03.10.01.c - Review the facility access list..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.10.02",
+    "controlTitle": "Monitoring Physical Access",
+    "controlFamily": "PE",
+    "improvementActions": [
+      {
+        "actionId": "b0427627-2e88-4020-93f8-f2451cb46ad8",
+        "actionTitle": "Import physical badging data",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly supports '03.10.02.a' and 'b'. By importing physical badging data (physical access logs) into Azure AD Identity Protection, it allows for the *monitoring* ('a') and *review* ('b') of this physical access data, correlating it with digital access to detect incidents (e.g., impossible travel).",
+        "nistRequirement": "03.10.02.a - Monitor physical access... to detect and respond to physical security incidents.; 03.10.02.b - Review physical access logs..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.10.06",
+    "controlTitle": "Alternate Work Site",
+    "controlFamily": "PE",
+    "improvementActions": [
+      {
+        "actionId": "ae786f92-a5b5-46ce-9f79-2c918adc133a",
+        "actionTitle": "Block non-compliant devices and report policy violations",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary implementation of '03.10.06.b'. It enforces the 'organization-defined security requirements' (e.g., device must be encrypted, have antivirus) for devices used at alternate work sites (like home) by blocking access if they are not met.",
+        "nistRequirement": "03.10.06.b - Employ the following security requirements at alternate work sites..."
+      },
+      {
+        "actionId": "95523ad1-bcd3-48a6-b094-90cf6c480f7f",
+        "actionTitle": "Use boundary protection to limit access to services based on the location of the client",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.10.06.a' and 'b'. It can *enforce* the list of determined alternate work sites ('a') by only allowing access from trusted IP addresses (e.g., corporate or known-good locations) and blocking un-vetted alternate sites.",
+        "nistRequirement": "03.10.06.a - Determine alternate work sites allowed...; 03.10.06.b - Employ... security requirements at alternate work sites..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.10.07",
+    "controlTitle": "Physical Access Control",
+    "controlFamily": "PE",
+    "improvementActions": [
+      {
+        "actionId": "51778fea-7950-499b-8169-2c367b09c5a4",
+        "actionTitle": "Prevent unauthorized access to systems that require user log-in",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.10.07.e'. By enforcing an automatic screen lock via Intune or GPO, it controls physical access to the monitor (an output device), preventing unauthorized individuals from viewing CUI on an unattended workstation.",
+        "nistRequirement": "03.10.07.e - Control physical access to output devices to prevent unauthorized individuals from obtaining access to CUI."
+      },
+      {
+        "actionId": "d10de840-5160-4754-9de9-400601183d48",
+        "actionTitle": "Require mobile devices to lock upon inactivity",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.10.07.e' for mobile devices. The screen is an output device, and enforcing an inactivity lock controls physical access to it.",
+        "nistRequirement": "03.10.07.e - Control physical access to output devices..."
+      },
+      {
+        "actionId": "e32edbed-0f0b-4a80-a3a6-58c79c39541d",
+        "actionTitle": "Restrict access to private keys",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.10.07.d' (Secure keys... and other physical access devices). While focused on *cryptographic* keys, Azure Key Vault is the mechanism to secure *logical* keys. For physical devices like FIDO2 keys (which are physical access devices), this represents the management of the logical credential tied to that physical key.",
+        "nistRequirement": "03.10.07.d - Secure keys, combinations, and other physical access devices."
+      }
+    ]
+  },
+  {
+    "controlId": "03.10.08",
+    "controlTitle": "Access Control for Transmission",
+    "controlFamily": "PE",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.11.01",
+    "controlTitle": "Risk Assessment",
+    "controlFamily": "RA",
+    "improvementActions": [
+      {
+        "actionId": "df419ffa-12fc-425a-9fb9-de7fb61cb660",
+        "actionTitle": "Discover and manage trends in shadow IT application usage",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct input to '03.11.01.a'. Discovering shadow IT (unmanaged cloud apps) with Defender for Cloud Apps identifies where CUI might be processed or stored without authorization, which is a key part of assessing the risk of unauthorized disclosure.",
+        "nistRequirement": "03.11.01.a - Assess the risk... of unauthorized disclosure resulting from the processing, storage, or transmission of CUI."
+      },
+      {
+        "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+        "actionTitle": "Review and approve remediation actions in risk-based Vulnerability Management software",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly supports '03.11.01.a'. Microsoft Defender Vulnerability Management is a risk assessment tool that identifies vulnerabilities (threats/vulnerabilities) and their potential impact, allowing an organization to assess the risk of disclosure. The 'b' requirement is met by its continuous, updated nature.",
+        "nistRequirement": "03.11.01.a - Assess the risk...; 03.11.01.b - Update risk assessments..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.11.02",
+    "controlTitle": "Vulnerability Monitoring and Scanning",
+    "controlFamily": "RA",
+    "improvementActions": [
+      {
+        "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+        "actionTitle": "Review and approve remediation actions in risk-based Vulnerability Management software",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, full implementation. Microsoft Defender Vulnerability Management ('a') continuously monitors and scans for vulnerabilities. It ('b') tracks and provides remediation actions within defined response times. It ('c') is continuously updated by Microsoft with new vulnerability definitions.",
+        "nistRequirement": "03.11.02.a - Monitor and scan the system for vulnerabilities...; 03.11.02.b - Remediate system vulnerabilities...; 03.11.02.c - Update system vulnerabilities to be scanned..."
+      },
+      {
+        "actionId": "069d732d-0e03-4441-8b00-8a6436af0ecc",
+        "actionTitle": "Manually update remote devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action is a specific implementation of the 'remediate' step in '03.11.02.b'. After a vulnerability is identified, using Intune to manually push a patch is one way to remediate it within the defined time.",
+        "nistRequirement": "03.11.02.b - Remediate system vulnerabilities within [Assignment: organization-defined response times]."
+      }
+    ]
+  },
+  {
+    "controlId": "03.11.04",
+    "controlTitle": "Risk Response",
+    "controlFamily": "RA",
+    "improvementActions": [
+      {
+        "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+        "actionTitle": "Review and approve remediation actions in risk-based Vulnerability Management software",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of '03.11.04'. The 'findings' are the identified vulnerabilities, and the 'response' is the process of reviewing, approving, and tracking the remediation actions provided by the Defender Vulnerability Management software.",
+        "nistRequirement": "03.11.04 - Respond to findings from security assessments, monitoring, and audits."
+      },
+      {
+        "actionId": "1603d26d-8ed3-45aa-8a95-5ae7811b6d3b",
+        "actionTitle": "Manage security related incidents",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is another primary implementation of '03.11.04'. An 'incident' is a 'finding' from monitoring. Using M365 Defender or Sentinel to manage the incident (investigate, remediate) is the definition of responding to that finding.",
+        "nistRequirement": "03.11.04 - Respond to findings from security assessments, monitoring, and audits."
+      }
+    ]
+  },
+  {
+    "controlId": "03.12.01",
+    "controlTitle": "Security Assessment",
+    "controlFamily": "CA",
+    "improvementActions": [
+      {
+        "actionId": "30b85ad7-3674-4def-a76b-7ae03c049b9e",
+        "actionTitle": "Generate and review reports for device compliance",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct implementation of '03.12.01'. Reviewing Intune compliance reports is a form of security assessment that determines if security requirements (e.g., encryption, OS version, password) have been satisfied on endpoints.",
+        "nistRequirement": "03.12.01 - Assess the security requirements for the system... to determine if the requirements have been satisfied."
+      },
+      {
+        "actionId": "bb597ab2-6b1d-4699-be44-9110455a6579",
+        "actionTitle": "View device health and compliance reports",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is synonymous with reviewing device compliance reports and directly implements '03.12.01'. It provides the data to assess if security requirements defined in Intune policies are satisfied.",
+        "nistRequirement": "03.12.01 - Assess the security requirements... to determine if the requirements have been satisfied."
+      },
+      {
+        "actionId": "dbd6a4ca-c084-4df3-bc62-5d66344ba712",
+        "actionTitle": "Review diagnostic data to verify that anti-malware software is deployed and up-to-date",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a specific example of '03.12.01'. It is a security assessment to determine if the specific security requirement for anti-malware (e.g., SI-03) has been satisfied.",
+        "nistRequirement": "03.12.01 - Assess the security requirements... to determine if the requirements have been satisfied."
+      }
+    ]
+  },
+  {
+    "controlId": "03.12.02",
+    "controlTitle": "Plan of Action and Milestones",
+    "controlFamily": "CA",
+    "improvementActions": [
+      {
+        "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+        "actionTitle": "Review and approve remediation actions in risk-based Vulnerability Management software",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.12.02.a.2'. The list of 'Security Recommendations' in Defender Vulnerability Management *is* a plan of action and milestones, documenting planned remediation actions to correct known system vulnerabilities.",
+        "nistRequirement": "03.12.02.a.2 - To reduce or eliminate known system vulnerabilities."
+      },
+      {
+        "actionId": "30b85ad7-3674-4def-a76b-7ae03c049b9e",
+        "actionTitle": "Generate and review reports for device compliance",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.12.02.a.1'. The list of non-compliant devices and their issues, generated from a compliance report (a security assessment), forms a POAM to document the planned remediation actions (e.g., 'user must update OS') to correct those deficiencies.",
+        "nistRequirement": "03.12.02.a.1 - To document the planned remediation actions to correct weaknesses or deficiencies noted during security assessments..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.12.03",
+    "controlTitle": "Continuous Monitoring",
+    "controlFamily": "CA",
+    "improvementActions": [
+      {
+        "actionId": "4d28a167-40a8-47c8-bc40-d659a5803e51",
+        "actionTitle": "Detect new OAuth applications connected to your corporate environment",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of a continuous monitoring strategy. The description explicitly states, 'This continuous monitoring helps identify shadow IT,' fulfilling '03.12.03'.",
+        "nistRequirement": "03.12.03 - Develop and implement a system-level continuous monitoring strategy..."
+      },
+      {
+        "actionId": "df419ffa-12fc-425a-9fb9-de7fb61cb660",
+        "actionTitle": "Discover and manage trends in shadow IT application usage",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is another component of a continuous monitoring strategy. Using Defender for Cloud Apps to discover and analyze shadow IT usage is an ongoing monitoring activity.",
+        "nistRequirement": "03.12.03 - ...implement a system-level continuous monitoring strategy..."
+      },
+      {
+        "actionId": "b7367d05-1f7f-4def-8f9a-4c30076a9b0e",
+        "actionTitle": "Review cloud traffic logs for ongoing visibility",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "The title 'Review cloud traffic logs for ongoing visibility' is synonymous with 'continuous monitoring'. This action, using Defender for Cloud Apps, is a core part of a continuous monitoring strategy.",
+        "nistRequirement": "03.12.03 - ...implement a system-level continuous monitoring strategy..."
+      },
+      {
+        "actionId": "dbd6a4ca-c084-4df3-bc62-5d66344ba712",
+        "actionTitle": "Review diagnostic data to verify that anti-malware software is deployed and up-to-date",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a continuous monitoring activity. The 'regular review' of antimalware status reports in Microsoft Endpoint Manager is a specific task within a continuous monitoring strategy.",
+        "nistRequirement": "03.12.03 - ...implement a system-level continuous monitoring strategy that includes ongoing monitoring..."
+      },
+      {
+        "actionId": "bb597ab2-6b1d-4699-be44-9110455a6579",
+        "actionTitle": "View device health and compliance reports",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a primary tool for '03.12.03'. The device health and compliance reports in Microsoft Endpoint Manager provide the 'ongoing awareness of the system security posture' mentioned in the control's discussion.",
+        "nistRequirement": "03.12.03 - ...implement a system-level continuous monitoring strategy that includes ongoing monitoring..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.12.05",
+    "controlTitle": "Information Exchange",
+    "controlFamily": "CA",
+    "improvementActions": [
+      {
+        "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+        "actionTitle": "Prevent use of unauthorized software and cloud apps",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action provides the technical *enforcement* for the procedural '03.12.05.a' requirement. After an organization *approves* an information exchange (e.g., with Salesforce), Defender for Cloud Apps can 'sanction' it. It can then *block* all other unauthorized cloud apps (un-approved exchanges), thereby managing the exchange.",
+        "nistRequirement": "03.12.05.a - Approve and manage the exchange of CUI between the system and other systems..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.01",
+    "controlTitle": "Boundary Protection",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "ef35e189-b4cb-4ee0-ba6a-201bdd5c78c4",
+        "actionTitle": "Configure indicators for IPs and URLs/domains",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements '03.13.01.a'. By configuring custom indicators in Microsoft Defender for Endpoint, an organization monitors and controls communications at the endpoint (a managed interface) to block known malicious IPs or URLs.",
+        "nistRequirement": "03.13.01.a - Monitor and control communications at external managed interfaces..."
+      },
+      {
+        "actionId": "bb753a1a-8070-45cc-a788-e6dfcdb04f6a",
+        "actionTitle": "Add boundary protection by preventing users from browsing untrusted sites",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements '03.13.01.a'. Microsoft Defender Application Guard is a boundary protection device (a container) that isolates and controls communications between the user and untrusted external websites (external interfaces).",
+        "nistRequirement": "03.13.01.a - Monitor and control communications at external managed interfaces..."
+      },
+      {
+        "actionId": "2aaa27af-16a0-4008-8ec3-3de63480f677",
+        "actionTitle": "Route traffic through managed network access points",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This directly implements '03.13.01.c'. Azure AD Application Proxy is a managed interface/boundary protection device that organizations connect *to* (instead of a traditional VPN) to access external systems (on-prem apps).",
+        "nistRequirement": "03.13.01.c - Connect to external systems only through managed interfaces that consist of boundary protection devices..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.04",
+    "controlTitle": "Information in Shared System Resources",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "8e372f54-c936-410a-a6af-4be75178b7a4",
+        "actionTitle": "Enable ability to remotely wipe data from mobile devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of object reuse prevention ('03.13.04'). When a device (a shared resource) is wiped via Intune and re-provisioned to a new user, the wipe action ensures that information produced by the prior user is not available to the current user.",
+        "nistRequirement": "03.13.04 - Prevent unauthorized and unintended information transfer via shared system resources."
+      },
+      {
+        "actionId": "7af30e39-e0e9-4bbd-a434-b04e3091bb40",
+        "actionTitle": "Configure retention period for deleted users in a shared drive",
+        "confidence": "Medium",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action supports '03.13.04'. By managing the retention of a deleted user's data in a shared drive (a shared resource), the organization can prevent that information from being unintentionally available to others, or ensure it is properly purged after a set time.",
+        "nistRequirement": "03.13.04 - Prevent unauthorized and unintended information transfer via shared system resources."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.06",
+    "controlTitle": "Network Communications – Deny by Default – Allow by Exception",
+    "controlFamily": "SC",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.13.08",
+    "controlTitle": "Transmission and Storage Confidentiality",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+        "actionTitle": "Protect data in transit using encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, primary implementation of the 'transmission' portion of 03.13.08. This is a Microsoft-managed action that ensures all communications with M365 services use strong, FIPS-validated TLS, implementing a cryptographic mechanism to prevent unauthorized disclosure during transmission.",
+        "nistRequirement": "03.13.08 - Implement cryptographic mechanisms to prevent the unauthorized disclosure of CUI during transmission..."
+      },
+      {
+        "actionId": "1bfe3300-979f-4fcd-8aee-b22057645b77",
+        "actionTitle": "Protect data at rest with application-layer encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a direct, primary implementation of the 'storage' portion of 03.13.08. This Microsoft-managed action ensures that CUI stored within M365 (e.g., in SharePoint, Exchange) is protected by multiple layers of encryption (BitLocker and service-level encryption), preventing unauthorized disclosure while in storage.",
+        "nistRequirement": "03.13.08 - Implement cryptographic mechanisms to prevent the unauthorized disclosure of CUI... while in storage."
+      },
+      {
+        "actionId": "41c9c296-4884-42e8-8657-37dd707ffe85",
+        "actionTitle": "Utilize sensitivity labels for data restriction",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action provides an organization-managed implementation for 03.13.08. Microsoft Information Protection (MIP) labels can apply persistent, file-level encryption. This cryptographic mechanism protects the CUI (the file) both 'in storage' (on a drive) and 'during transmission' (e.g., as an email attachment), independent of the underlying service's encryption.",
+        "nistRequirement": "03.13.08 - Implement cryptographic mechanisms to prevent the unauthorized disclosure of CUI during transmission and while in storage."
+      },
+      {
+        "actionId": "16d49f7b-858e-4ec8-83cb-8c7b79e0e2ad",
+        "actionTitle": "Require mobile devices to use encryption",
+        "confidence": "High",
+        "coverageLevel": "Supplementary",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of the 'storage' portion of 03.13.08 for a specific system component (mobile devices). Enforcing device-level encryption via Intune is a cryptographic mechanism to protect CUI stored on that device.",
+        "nistRequirement": "03.13.08 - ...implement cryptographic mechanisms to prevent the unauthorized disclosure of CUI... while in storage."
+      },
+      {
+        "actionId": "dec71072-44af-4ff4-b7cd-4ccb60422b9a",
+        "actionTitle": "Set 'Remote Desktop security level' to 'TLS'",
+        "confidence": "High",
+        "coverageLevel": "Supplementary",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of the 'transmission' portion of 03.13.08. Enforcing TLS for RDP sessions is a cryptographic mechanism that protects CUI from disclosure during that specific type of transmission (a remote session).",
+        "nistRequirement": "03.13.08 - Implement cryptographic mechanisms to prevent the unauthorized disclosure of CUI during transmission..."
+      },
+      {
+        "actionId": "a3b0c592-8e6e-4375-8b09-4f261dd4e054",
+        "actionTitle": "Enable peer-to-peer encryption for sending digitally signed and encrypted messages",
+        "confidence": "High",
+        "coverageLevel": "Supplementary",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of the 'transmission' portion of 03.13.08 for email. S/MIME provides end-to-end encryption, a cryptographic mechanism to protect CUI during its transmission via email.",
+        "nistRequirement": "03.13.08 - Implement cryptographic mechanisms to prevent the unauthorized disclosure of CUI during transmission..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.09",
+    "controlTitle": "Network Disconnect",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+        "actionTitle": "Turn on idle session timeout",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements 03.13.09 for cloud application sessions. Azure AD Conditional Access can terminate an idle web session after a defined period, which (from the application's view) terminates the 'network connection' (the authenticated session) and deallocates the session resources.",
+        "nistRequirement": "03.13.09 - Terminate the network connection associated with a communications session... after [Assignment: organization-defined time period] of inactivity."
+      },
+      {
+        "actionId": "46e91838-ea12-4315-b120-688f4917e560",
+        "actionTitle": "Log off idle sessions",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary implementation for VDI/RDS environments. Configuring an idle session logoff in Azure Virtual Desktop or RDS explicitly 'Terminate[s] the network connection associated with a communications session' after a defined period of inactivity.",
+        "nistRequirement": "03.13.09 - Terminate the network connection associated with a communications session... after [Assignment: organization-defined time period] of inactivity."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.10",
+    "controlTitle": "Cryptographic Key Establishment and Management",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "e32edbed-0f0b-4a80-a3a6-58c79c39541d",
+        "actionTitle": "Restrict access to private keys",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of key management requirements. Azure Key Vault provides the mechanism to manage the 'storage', 'access', and 'destruction' of cryptographic keys, with granular RBAC to restrict access to only authorized personnel or applications.",
+        "nistRequirement": "03.13.10 - ...manage cryptographic keys... in accordance with... requirements for key... storage, access, and destruction."
+      },
+      {
+        "actionId": "5fbc75bf-cfe1-498d-b7a9-9153e112669c",
+        "actionTitle": "Protect authenticators",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action also supports 03.13.10, as many authenticators (like application secrets or certificates) are cryptographic keys. Using Azure Key Vault to store and manage these authenticators fulfills the requirements for secure key storage and access management.",
+        "nistRequirement": "03.13.10 - ...manage cryptographic keys... in accordance with... requirements for key... storage, access, and destruction."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.11",
+    "controlTitle": "Cryptographic Protection",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+        "actionTitle": "Protect data in transit using encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This Microsoft-managed action implements 03.13.11. Microsoft uses FIPS 140-2 validated cryptography (a specific 'type of cryptography') for all M365 services in transit, meeting the requirement to use organization-defined (in this case, federally-recommended) types of crypto.",
+        "nistRequirement": "03.13.11 - Implement the following types of cryptography...: [Assignment: organization-defined types of cryptography]."
+      },
+      {
+        "actionId": "1bfe3300-979f-4fcd-8aee-b22057645b77",
+        "actionTitle": "Protect data at rest with application-layer encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This Microsoft-managed action also implements 03.13.11. Microsoft uses FIPS 140-2 validated cryptography (e.g., BitLocker, AES-256) to protect CUI at rest, meeting the requirement to use specific, approved types of cryptography.",
+        "nistRequirement": "03.13.11 - Implement the following types of cryptography...: [Assignment: organization-defined types of cryptography]."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.12",
+    "controlTitle": "Collaborative Computing Devices and Applications",
+    "controlFamily": "SC",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.13.13",
+    "controlTitle": "Mobile Code",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "4a2fd237-f28e-4ebc-a6a9-103c0ebf02a0",
+        "actionTitle": "Block execution of potentially obfuscated scripts",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of 03.13.13.b. By enabling this Attack Surface Reduction (ASR) rule, an organization monitors and controls the use of mobile code (JavaScript, VBScript) by blocking code that appears malicious or obfuscated.",
+        "nistRequirement": "03.13.13.b - Authorize, monitor, and control the use of mobile code."
+      },
+      {
+        "actionId": "a9639fec-b1d9-4f4b-9d3c-83309e0fa957",
+        "actionTitle": "Enable 'MIME Sniffing Safety Feature'",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports 03.13.13.b. It controls the use of mobile code by preventing a browser from executing code (e.g., a script) that is deceptively labeled as a different content type (e.g., an image), thus helping to block unauthorized mobile code execution.",
+        "nistRequirement": "03.13.13.b - ...control the use of mobile code."
+      }
+    ]
+  },
+  {
+    "controlId": "03.13.15",
+    "controlTitle": "Session Authenticity",
+    "controlFamily": "SC",
+    "improvementActions": [
+      {
+        "actionId": "f0704cb8-6466-46d0-b208-f922f172f264",
+        "actionTitle": "Protect data in transit using encryption",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is the primary implementation of 03.13.15. Using strong TLS for all communications sessions is the main defense against adversary-in-the-middle attacks, which ensures the authenticity of the session (i.e., that you are really talking to the M365 service).",
+        "nistRequirement": "03.13.15 - Protect the authenticity of communications sessions."
+      },
+      {
+        "actionId": "b74c8be3-8394-4602-9caa-18bbf6263953",
+        "actionTitle": "Turn on idle session timeout",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action provides supplementary protection against session hijacking. By terminating an idle session, it reduces the time an attacker has to hijack an authenticated session, thus indirectly protecting its authenticity.",
+        "nistRequirement": "03.13.15 - Protect the authenticity of communications sessions."
+      }
+    ]
+  },
+  {
+    "controlId": "03.14.01",
+    "controlTitle": "Flaw Remediation",
+    "controlFamily": "SI",
+    "improvementActions": [
+      {
+        "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+        "actionTitle": "Review and approve remediation actions in risk-based Vulnerability Management software",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements 03.14.01.a. Microsoft Defender Vulnerability Management identifies and reports system flaws (vulnerabilities). The 'remediation actions' list is the mechanism to 'correct' those flaws ('b'), and the tool tracks timeliness.",
+        "nistRequirement": "03.14.01.a - Identify, report, and correct system flaws.; 03.14.01.b - Install security-relevant software and firmware updates..."
+      },
+      {
+        "actionId": "069d732d-0e03-4441-8b00-8a6436af0ecc",
+        "actionTitle": "Manually update remote devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": false,
+        "mappingRationale": "This action is a method to 'correct system flaws' and 'install... updates' per 03.14.01.a and 'b'. After a flaw is identified, an administrator can use Intune to manually push the patch, ensuring it's installed within the defined time.",
+        "nistRequirement": "03.14.01.a - ...correct system flaws.; 03.14.01.b - Install security-relevant... updates within [Assignment: organization-defined time period]..."
+      },
+      {
+        "actionId": "f525c14a-c5cc-4fca-beff-ec47d4456f6a",
+        "actionTitle": "Manage software update policies on macOS devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is the primary implementation of 03.14.01.b for macOS devices. The Intune policy *enforces* the installation of security-relevant software updates, ensuring they are applied according to the organization's defined time period.",
+        "nistRequirement": "03.14.01.b - Install security-relevant software... updates within [Assignment: organization-defined time period]..."
+      },
+      {
+        "actionId": "6e06bdce-fcb5-4e9e-ac57-70d49f5b203f",
+        "actionTitle": "Enable 'Hide Option to Enable or Disable Updates'",
+        "confidence": "Medium",
+        "coverageLevel": "Supplementary",
+        "isPrimary": false,
+        "mappingRationale": "This action supports 03.14.01.b by removing a user's ability to interfere with the timely installation of updates. This helps ensure that the 'organization-defined time period' for remediation is met.",
+        "nistRequirement": "03.14.01.b - Install security-relevant... updates within [Assignment: organization-defined time period]..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.14.02",
+    "controlTitle": "Malicious Code Protection",
+    "controlFamily": "SI",
+    "improvementActions": [
+      {
+        "actionId": "301069cd-75f3-452c-ba39-9bf10bbc64ec",
+        "actionTitle": "Protect Windows devices",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This is a primary implementation of 03.14.02.a. Deploying Microsoft Defender for Endpoint is the mechanism to 'detect and eradicate malicious code' at the endpoint (a system entry/exit point).",
+        "nistRequirement": "03.14.02.a - Implement malicious code protection mechanisms at system entry and exit points..."
+      },
+      {
+        "actionId": "f7513c51-334f-460e-a389-de9de607decf",
+        "actionTitle": "Set cloud-based anti-phishing and anti-malware app",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action implements 03.14.02.a at the *email* entry point. Microsoft Defender for Office 365 (Safe Attachments) is a malicious code protection mechanism that detects and eradicates malware from emails.",
+        "nistRequirement": "03.14.02.a - Implement malicious code protection mechanisms at system entry and exit points..."
+      },
+      {
+        "actionId": "dbd6a4ca-c084-4df3-bc62-5d66344ba712",
+        "actionTitle": "Review diagnostic data to verify that anti-malware software is deployed and up-to-date",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is the validation step for 03.14.02.b. Reviewing reports in Intune or Defender confirms that the malicious code protection mechanisms *are being updated* as new releases are available.",
+        "nistRequirement": "03.14.02.b - Update malicious code protection mechanisms as new releases are available..."
+      },
+      {
+        "actionId": "122c3878-a307-4585-b27c-1ec16ad90d11",
+        "actionTitle": "Perform real-time threat detection",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements 03.14.02.c.1. Enabling real-time protection in Microsoft Defender is the technical control that 'perform[s]... real-time scans of files... as the files are downloaded, opened, or executed'.",
+        "nistRequirement": "03.14.02.c.1 - Perform... real-time scans of files from external sources... as the files are downloaded, opened, or executed"
+      },
+      {
+        "actionId": "e628caa2-ec78-4725-bd23-f084fe8e8d97",
+        "actionTitle": "Schedule threat scans for Mac",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements 03.14.02.c.1 for macOS. It configures the mechanism to 'Perform scans of the system [Assignment: organization-defined frequency]'.",
+        "nistRequirement": "03.14.02.c.1 - Perform scans of the system [Assignment: organization-defined frequency]..."
+      },
+      {
+        "actionId": "9f4859b8-edb3-48cb-80c1-36bb789e4c1a",
+        "actionTitle": "Keep antivirus definitions for macOS devices up to date",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements 03.14.02.b for macOS. It configures the mechanism to 'Update malicious code protection mechanisms as new releases are available'.",
+        "nistRequirement": "03.14.02.b - Update malicious code protection mechanisms as new releases are available..."
+      },
+      {
+        "actionId": "b39f32c0-a799-4e9c-abd6-a1f8dd650760",
+        "actionTitle": "Block executable content from email client and webmail",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements 03.14.02.c.2. By blocking executable content in email, the organization is configuring the protection mechanism to 'Block malicious code... in response to malicious code detection' (or in this case, a high-risk file type).",
+        "nistRequirement": "03.14.02.c.2 - Block malicious code... or take other mitigation actions..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.14.03",
+    "controlTitle": "Security Alerts, Advisories, and Directives",
+    "controlFamily": "SI",
+    "improvementActions": [
+      {
+        "actionId": "fbde19bb-03a3-4155-931c-500d9e95d0ec",
+        "actionTitle": "Collect and analyze information about cyber threats",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of 03.14.03.a. Microsoft 365 Defender's Threat Analytics feature 'Receive[s] system security alerts, advisories, and directives from external organizations (i.e., Microsoft's threat intelligence) on an ongoing basis.'",
+        "nistRequirement": "03.14.03.a - Receive system security alerts, advisories, and directives from external organizations on an ongoing basis."
+      }
+    ]
+  },
+  {
+    "controlId": "03.14.06",
+    "controlTitle": "System Monitoring",
+    "controlFamily": "SI",
+    "improvementActions": [
+      {
+        "actionId": "4d28a167-40a8-47c8-bc40-d659a5803e51",
+        "actionTitle": "Detect new OAuth applications connected to your corporate environment",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of 03.14.06.a.2, 'Monitor the system to detect... Unauthorized connections.' A new OAuth app is a new connection to the system.",
+        "nistRequirement": "03.14.06.a.2 - Monitor the system to detect... Unauthorized connections."
+      },
+      {
+        "actionId": "617354f0-d430-45c0-97eb-6847f3da4c78",
+        "actionTitle": "Detect misuse of privileged role access",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of 03.14.06.b, 'Identify unauthorized use of the system.' Monitoring for anomalous privileged access is a key part of this.",
+        "nistRequirement": "03.14.06.b - Identify unauthorized use of the system."
+      },
+      {
+        "actionId": "0f16878d-5ee9-4643-a7ce-017c02f1fe9f",
+        "actionTitle": "Detect and remediate illicit access consent grants",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a specific implementation of 03.14.06.a.1, 'Monitor the system to detect... Attacks and indicators of potential attacks,' as an illicit consent grant is a common attack vector.",
+        "nistRequirement": "03.14.06.a.1 - Monitor the system to detect... Attacks and indicators of potential attacks"
+      },
+      {
+        "actionId": "122c3878-a307-4585-b27c-1ec16ad90d11",
+        "actionTitle": "Perform real-time threat detection",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a primary, general implementation of 03.14.06.a.1. Real-time protection in Microsoft Defender is a core monitoring tool to 'detect... Attacks and indicators of potential attacks.'",
+        "nistRequirement": "03.14.06.a.1 - Monitor the system to detect... Attacks and indicators of potential attacks"
+      },
+      {
+        "actionId": "b7367d05-1f7f-4def-8f9a-4c30076a9b0e",
+        "actionTitle": "Review cloud traffic logs for ongoing visibility",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of 03.14.06.c. Reviewing traffic logs in Defender for Cloud Apps is the mechanism to 'Monitor inbound and outbound communications traffic to detect unusual or unauthorized activities'.",
+        "nistRequirement": "03.14.06.c - Monitor inbound and outbound communications traffic to detect unusual or unauthorized activities or conditions."
+      }
+    ]
+  },
+  {
+    "controlId": "03.14.08",
+    "controlTitle": "Information Management and Retention",
+    "controlFamily": "SI",
+    "improvementActions": [
+      {
+        "actionId": "7af30e39-e0e9-4bbd-a434-b04e3091bb40",
+        "actionTitle": "Configure retention period for deleted users in a shared drive",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct implementation of 03.14.08. Configuring a retention policy for data (CUI) in SharePoint/OneDrive is the technical control to 'Manage and retain CUI within the system... in accordance with applicable... policies'.",
+        "nistRequirement": "03.14.08 - Manage and retain CUI within the system... in accordance with applicable... policies..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.15.01",
+    "controlTitle": "Policy and Procedures",
+    "controlFamily": "PL",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.15.02",
+    "controlTitle": "System Security Plan",
+    "controlFamily": "PL",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.15.03",
+    "controlTitle": "Rules of Behavior",
+    "controlFamily": "PL",
+    "improvementActions": [
+      {
+        "actionId": "bc6f73bf-cd13-4431-bb40-d93b67b35eac",
+        "actionTitle": "Display privacy statements for end users",
+        "confidence": "High",
+        "coverageLevel": "Full",
+        "isPrimary": true,
+        "mappingRationale": "This action is a direct, technical implementation of 03.15.03. The Azure AD Conditional Access 'Terms of Use' feature ('a') establishes the rules, ('b') provides them to individuals at sign-in, and ('c') receives a documented acknowledgement (the 'Accept' click) before authorizing access.",
+        "nistRequirement": "03.15.03.a - Establish rules...; 03.15.03.b - Provide rules to individuals...; 03.15.03.c - Receive a documented acknowledgement..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.16.01",
+    "controlTitle": "Security Engineering Principles",
+    "controlFamily": "SA",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.16.02",
+    "controlTitle": "Unsupported System Components",
+    "controlFamily": "SA",
+    "improvementActions": [
+      {
+        "actionId": "d1e7d917-5456-4062-85e0-0bc0681a9271",
+        "actionTitle": "Review and approve remediation actions in risk-based Vulnerability Management software",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action supports 03.16.02 by *identifying* unsupported components. Microsoft Defender Vulnerability Management identifies end-of-life software and operating systems, which is the necessary first step to 'Replace system components' ('a').",
+        "nistRequirement": "03.16.02.a - Replace system components when support... is no longer available..."
+      },
+      {
+        "actionId": "30b85ad7-3674-4def-a76b-7ae03c049b9e",
+        "actionTitle": "Generate and review reports for device compliance",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action also supports 03.16.02 by *identifying* unsupported components. An Intune compliance policy can define a minimum OS version; any device reporting 'non-compliant' for this reason is identified as an unsupported component, triggering the replacement ('a') or mitigation ('b') process.",
+        "nistRequirement": "03.16.02.a - Replace system components...; 03.16.02.b - Provide options for risk mitigation..."
+      },
+      {
+        "actionId": "ae786f92-a5b5-46ce-9f79-2c918adc133a",
+        "actionTitle": "Block non-compliant devices and report policy violations",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is the primary implementation of 03.16.02.b. When an unsupported component (like a device with an old OS) 'cannot be replaced', this action provides the 'risk mitigation' by blocking it (via Conditional Access) from accessing organizational resources.",
+        "nistRequirement": "03.16.02.b - Provide options for risk mitigation... for unsupported components that cannot be replaced."
+      }
+    ]
+  },
+  {
+    "controlId": "03.16.03",
+    "controlTitle": "External System Services",
+    "controlFamily": "SA",
+    "improvementActions": [
+      {
+        "actionId": "df419ffa-12fc-425a-9fb9-de7fb61cb660",
+        "actionTitle": "Discover and manage trends in shadow IT application usage",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action directly implements 03.16.03.c. Discovering shadow IT with Defender for Cloud Apps is a primary method to 'monitor security requirement compliance' (or lack thereof) for external system services, especially unapproved ones.",
+        "nistRequirement": "03.16.03.c - Implement processes... to monitor security requirement compliance by external service providers..."
+      },
+      {
+        "actionId": "68e3eefb-c9f5-46e0-9bc1-d42367efde78",
+        "actionTitle": "Prevent use of unauthorized software and cloud apps",
+        "confidence": "High",
+        "coverageLevel": "Partial",
+        "isPrimary": true,
+        "mappingRationale": "This action is the *enforcement* part of 03.16.03.c. By blocking unauthorized cloud apps (external services) with Defender for Cloud Apps, the organization is implementing a process to monitor and enforce compliance.",
+        "nistRequirement": "03.16.03.c - Implement processes... to monitor security requirement compliance by external service providers..."
+      }
+    ]
+  },
+  {
+    "controlId": "03.17.01",
+    "controlTitle": "Supply Chain Risk Management Plan",
+    "controlFamily": "SR",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.17.02",
+    "controlTitle": "Acquisition Strategies, Tools, and Methods",
+    "controlFamily": "SR",
+    "improvementActions": []
+  },
+  {
+    "controlId": "03.17.03",
+    "controlTitle": "Supply Chain Requirements and Processes",
+    "controlFamily": "SR",
+    "improvementActions": []
+  }
+]

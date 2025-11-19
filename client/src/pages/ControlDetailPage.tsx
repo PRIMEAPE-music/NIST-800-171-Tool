@@ -22,19 +22,20 @@ import { RelatedTab } from '@/components/controls/RelatedTab';
 // REMOVED: M365 mapping tab imports - no longer mapping policies to controls
 import { GapAnalysisTab } from '@/components/controls/GapAnalysisTab';
 import M365SettingsTab from '@/components/M365Settings/M365SettingsTab';
+import { M365ActionsTab } from '@/components/controls/M365ActionsTab';
 import { StatusUpdateDialog } from '@/components/controls/StatusUpdateDialog';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
 
 interface TabPanelProps {
   children?: React.ReactNode;
-  index: number;
-  value: number;
+  tabKey: string;
+  activeTab: string;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => {
+const TabPanel: React.FC<TabPanelProps> = ({ children, tabKey, activeTab }) => {
   return (
-    <div hidden={value !== index} role="tabpanel" style={{ width: '100%' }}>
-      {value === index && <Box sx={{ py: 3, width: '100%' }}>{children}</Box>}
+    <div hidden={activeTab !== tabKey} role="tabpanel" style={{ width: '100%' }}>
+      {activeTab === tabKey && <Box sx={{ py: 3, width: '100%' }}>{children}</Box>}
     </div>
   );
 };
@@ -43,7 +44,7 @@ export const ControlDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<string>('overview');
   const [statusDialogOpen, setStatusDialogOpen] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [localNotes, setLocalNotes] = useState<string>('');
@@ -54,6 +55,19 @@ export const ControlDetailPage: React.FC = () => {
     queryFn: () => controlService.getControlById(Number(id)),
     enabled: !!id,
   });
+
+  // Fetch M365 improvement actions count
+  const { data: actionsData } = useQuery({
+    queryKey: ['microsoft-actions', control?.controlId],
+    queryFn: async () => {
+      const response = await fetch(`/api/microsoft-actions/control/${control?.controlId}`);
+      if (!response.ok) throw new Error('Failed to fetch actions');
+      return response.json();
+    },
+    enabled: !!control?.controlId,
+  });
+
+  const actionsCount = actionsData?.data?.length || 0;
 
   // Update control mutation
   const updateMutation = useMutation({
@@ -147,18 +161,21 @@ export const ControlDetailPage: React.FC = () => {
             '& .MuiTabs-indicator': { backgroundColor: '#90CAF9' },
           }}
         >
-          <Tab label="Overview" />
-          <Tab label="Gap Analysis" />
-          <Tab label={`Evidence (${control.evidence?.length || 0})`} />
-          <Tab label="History" />
-          <Tab label="Related" />
-          <Tab label="M365 Settings" />
+          <Tab label="Overview" value="overview" />
+          <Tab label="Gap Analysis" value="gap-analysis" />
+          <Tab label={`Evidence (${control.evidence?.length || 0})`} value="evidence" />
+          <Tab label="History" value="history" />
+          <Tab label="Related" value="related" />
+          {actionsCount > 0 && (
+            <Tab label={`M365 Actions (${actionsCount})`} value="m365-actions" />
+          )}
+          <Tab label="M365 Settings" value="m365-settings" />
         </Tabs>
       </Box>
 
       {/* Tab Content */}
       <Paper sx={{ backgroundColor: '#242424' }}>
-        <TabPanel value={activeTab} index={0}>
+        <TabPanel activeTab={activeTab} tabKey="overview">
           <OverviewTab
             control={control}
             editMode={editMode}
@@ -171,25 +188,27 @@ export const ControlDetailPage: React.FC = () => {
           />
         </TabPanel>
 
-        {/* REMOVED: M365 mapping tabs - no longer mapping policies to controls */}
-
-        <TabPanel value={activeTab} index={1}>
+        <TabPanel activeTab={activeTab} tabKey="gap-analysis">
           <GapAnalysisTab controlId={control.controlId} />
         </TabPanel>
 
-        <TabPanel value={activeTab} index={2}>
+        <TabPanel activeTab={activeTab} tabKey="evidence">
           <EvidenceTab control={control} />
         </TabPanel>
 
-        <TabPanel value={activeTab} index={3}>
+        <TabPanel activeTab={activeTab} tabKey="history">
           <HistoryTab history={[]} />
         </TabPanel>
 
-        <TabPanel value={activeTab} index={4}>
+        <TabPanel activeTab={activeTab} tabKey="related">
           <RelatedTab control={control} />
         </TabPanel>
 
-        <TabPanel value={activeTab} index={5}>
+        <TabPanel activeTab={activeTab} tabKey="m365-actions">
+          <M365ActionsTab controlId={control.controlId} />
+        </TabPanel>
+
+        <TabPanel activeTab={activeTab} tabKey="m365-settings">
           <M365SettingsTab controlId={control.controlId} />
         </TabPanel>
       </Paper>

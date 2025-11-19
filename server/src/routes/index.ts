@@ -8,6 +8,7 @@ import m365Routes from './m365.routes';
 import reportRoutes from './reportRoutes';
 import settingsRoutes from './settings.routes';
 import backupRoutes from './backup.routes';
+import microsoftActionsRoutes from './microsoft-actions.routes';
 // gapAnalysisRoutes import removed - standalone routes deleted
 
 const router = Router();
@@ -22,6 +23,7 @@ router.use('/m365', m365Routes);
 router.use('/reports', reportRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/backup', backupRoutes);
+router.use('/microsoft-actions', microsoftActionsRoutes);
 // Standalone gap analysis routes removed - use Gap Analysis tab on control detail pages
 
 export default router;
