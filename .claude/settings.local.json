@@ -1,14 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -e \"\nconst fs = require(''fs'');\nconst data = JSON.parse(fs.readFileSync(''data/nist-improvement-actions-mapped.json'', ''utf8''));\n\n// Check for duplicates within same control\nlet withinControlDupes = 0;\nfor (const control of data) {\n  const ids = control.improvementActions.map(a => a.actionId);\n  const uniqueIds = new Set(ids);\n  if (ids.length !== uniqueIds.size) {\n    console.log(''Duplicate within control'', control.controlId);\n    withinControlDupes++;\n  }\n}\n\n// Validate action IDs are proper GUIDs\nconst guidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;\nlet invalidIds = [];\nfor (const control of data) {\n  for (const action of control.improvementActions) {\n    if (!guidPattern.test(action.actionId)) {\n      invalidIds.push({ control: control.controlId, id: action.actionId, title: action.actionTitle });\n    }\n  }\n}\n\nconsole.log(''Duplicates within same control:'', withinControlDupes);\nconsole.log(''Invalid/fabricated action IDs:'', invalidIds.length);\n\nif (invalidIds.length > 0) {\n  console.log(''\\nInvalid IDs:'');\n  invalidIds.forEach(i => console.log(''  '', i.control, ''-'', i.title, '':'', i.id));\n}\n\")",
-      "Bash(if not exist \"C:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\server\\prisma\\data\" mkdir \"C:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\server\\prisma\\data\")",
-      "Bash(copy \"C:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\INSTRUCTIONS\\nist-improvement-actions-mapped.json\" \"C:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\server\\prisma\\data\\nist-improvement-actions-mapped.json\")",
-      "Bash(npx prisma migrate dev --name add-microsoft-improvement-actions)",
-      "Bash(npx ts-node -r tsconfig-paths/register src/scripts/import-m365-settings.ts)",
-      "Bash(npx ts-node prisma/seed-improvement-actions.ts)",
-      "Bash(npx tsc --noEmit --skipLibCheck)",
-      "Bash(npx vite build --mode development)"
+      "Bash(npx tsx src/scripts/check-db-state.ts)",
+      "Bash(npx tsx src/scripts/check-unmatched-settings.ts)",
+      "Bash(npx tsx src/scripts/update-policy-metadata.ts)",
+      "Bash(npx tsx src/scripts/diagnose-policy-data.ts)"
     ],
     "deny": [],
     "ask": []

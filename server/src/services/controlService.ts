@@ -165,26 +165,42 @@ export class ControlService {
    */
   async getControlById(id: number) {
     try {
-      const control = await prisma.control.findUnique({
-        where: { id },
-        include: {
-          status: true,
-          assessments: {
-            orderBy: { assessmentDate: 'desc' },
-            take: 5,
-          },
-          evidence: true,
-          poams: {
-            include: {
-              milestones: true,
+      const [control, settingMappings] = await Promise.all([
+        prisma.control.findUnique({
+          where: { id },
+          include: {
+            status: true,
+            assessments: {
+              orderBy: { assessmentDate: 'desc' },
+              take: 5,
+            },
+            evidence: true,
+            poams: {
+              include: {
+                milestones: true,
+              },
+            },
+            changeHistory: {
+              orderBy: { changedAt: 'desc' },
+              take: 10,
             },
           },
-          changeHistory: {
-            orderBy: { changedAt: 'desc' },
-            take: 10,
+        }),
+        // Get M365 settings mappings with compliance checks for this control
+        prisma.controlSettingMapping.findMany({
+          where: { controlId: id },
+          include: {
+            setting: {
+              include: {
+                complianceChecks: {
+                  orderBy: { lastChecked: 'desc' },
+                  take: 1,
+                },
+              },
+            },
           },
-        },
-      });
+        }),
+      ]);
 
       if (!control) {
         return null;
@@ -193,9 +209,42 @@ export class ControlService {
       // Add improvement action progress
       const progress = await controlProgressService.calculateControlProgress(control.controlId);
 
+      // Calculate M365 compliance from settings mappings
+      let m365Compliance = null;
+      if (settingMappings.length > 0) {
+        let compliant = 0;
+        let nonCompliant = 0;
+        let notConfigured = 0;
+
+        settingMappings.forEach((mapping) => {
+          const latestCheck = mapping.setting.complianceChecks[0];
+          if (latestCheck) {
+            if (latestCheck.isCompliant) {
+              compliant++;
+            } else {
+              nonCompliant++;
+            }
+          } else {
+            notConfigured++;
+          }
+        });
+
+        const total = settingMappings.length;
+        const percentage = total > 0 ? (compliant / total) * 100 : 0;
+
+        m365Compliance = {
+          compliancePercentage: percentage,
+          totalSettings: total,
+          compliantSettings: compliant,
+          nonCompliantSettings: nonCompliant,
+          notConfiguredSettings: notConfigured,
+        };
+      }
+
       return {
         ...control,
         improvementActionProgress: progress,
+        m365Compliance,
       };
     } catch (error) {
       logger.error(`Error fetching control ${id}:`, error);

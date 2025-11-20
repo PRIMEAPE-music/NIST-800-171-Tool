@@ -46,18 +46,18 @@ export async function validatePolicy(policyId: number): Promise<ValidationResult
   }
 
   // Get settings that match this policy template
-  // CORRECTED: Uses odataType from database field
+  // FIXED: Only match by exact template, or by family for uncategorized settings
+  // Do NOT match by family if setting has a specific policyTemplate
   const relevantSettings = await prisma.m365Setting.findMany({
     where: {
       OR: [
         { policyTemplate: policy.odataType }, // Exact template match
         {
           AND: [
-            { policyTemplate: null }, // Uncategorized settings
-            { templateFamily: policy.templateFamily } // But same family
+            { policyTemplate: null }, // Only uncategorized settings
+            { templateFamily: policy.templateFamily } // Can match by family
           ]
-        },
-        { templateFamily: policy.templateFamily } // Family match
+        }
       ],
       isActive: true
     },

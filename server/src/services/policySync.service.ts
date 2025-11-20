@@ -20,6 +20,37 @@ class PolicySyncService {
   }
 
   /**
+   * Derive templateFamily from odataType
+   */
+  private getTemplateFamilyFromOdataType(odataType: string): string {
+    if (!odataType) return 'Unknown';
+
+    // Compliance policies
+    if (odataType.includes('CompliancePolicy')) return 'Compliance';
+
+    // Update policies
+    if (odataType.includes('windowsUpdateForBusiness') || odataType.includes('Update')) return 'Update';
+
+    // App Protection
+    if (odataType.includes('ManagedAppProtection') || odataType.includes('AppProtection')) return 'AppProtection';
+
+    // Conditional Access
+    if (odataType.includes('conditionalAccess')) return 'ConditionalAccess';
+
+    // Defender/Security
+    if (odataType.includes('windowsDefenderAdvancedThreatProtection')) return 'DefenderSecurity';
+    if (odataType.includes('endpointSecurityEndpointDetectionAndResponse')) return 'EndpointDetection';
+    if (odataType.includes('endpointSecurityAttackSurfaceReduction')) return 'AttackSurfaceReduction';
+    if (odataType.includes('endpointSecurityDiskEncryption')) return 'DiskEncryption';
+    if (odataType.includes('baseline')) return 'SecurityBaseline';
+
+    // Configuration
+    if (odataType.includes('Configuration') || odataType.includes('customProfile')) return 'Configuration';
+
+    return 'Configuration'; // Default
+  }
+
+  /**
    * Load predefined control-to-policy mapping templates
    * REMOVED: No longer loading mapping data files
    */
@@ -234,12 +265,17 @@ class PolicySyncService {
         where: { policyId: policy.id },
       });
 
+      const odataType = policy['@odata.type'] || '';
+      const templateFamily = this.getTemplateFamilyFromOdataType(odataType);
+
       const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName,
           policyDescription: policy.description || '',
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
           lastSynced: new Date(),
           isActive: true,
         },
@@ -249,6 +285,8 @@ class PolicySyncService {
           policyName: policy.displayName,
           policyDescription: policy.description || '',
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
         },
       });
 
@@ -266,12 +304,17 @@ class PolicySyncService {
         where: { policyId: policy.id },
       });
 
+      const odataType = policy['@odata.type'] || '';
+      const templateFamily = this.getTemplateFamilyFromOdataType(odataType);
+
       const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName,
           policyDescription: policy.description || '',
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
           lastSynced: new Date(),
           isActive: true,
         },
@@ -281,6 +324,8 @@ class PolicySyncService {
           policyName: policy.displayName,
           policyDescription: policy.description || '',
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
         },
       });
 
@@ -298,12 +343,43 @@ class PolicySyncService {
         where: { policyId: policy.id },
       });
 
+      // Settings Catalog uses templateReference for type info
+      const templateId = policy.templateReference?.templateId || '';
+      let odataType = '#settingsCatalog.customProfile';
+      let templateFamily = 'Configuration';
+
+      // Determine type from templateId
+      if (templateId.includes('endpointSecurityAntivirus')) {
+        odataType = '#settingsCatalog.endpointSecurityAntivirus';
+        templateFamily = 'EndpointSecurity';
+      } else if (templateId.includes('endpointSecurityDiskEncryption')) {
+        odataType = '#settingsCatalog.endpointSecurityDiskEncryption';
+        templateFamily = 'DiskEncryption';
+      } else if (templateId.includes('endpointSecurityEndpointDetectionAndResponse')) {
+        odataType = '#settingsCatalog.endpointSecurityEndpointDetectionAndResponse';
+        templateFamily = 'EndpointDetection';
+      } else if (templateId.includes('endpointSecurityAttackSurfaceReduction')) {
+        odataType = '#settingsCatalog.endpointSecurityAttackSurfaceReduction';
+        templateFamily = 'AttackSurfaceReduction';
+      } else if (templateId.includes('endpointSecurityFirewall')) {
+        odataType = '#settingsCatalog.endpointSecurityFirewall';
+        templateFamily = 'Firewall';
+      } else if (templateId.includes('baseline')) {
+        odataType = '#settingsCatalog.baseline';
+        templateFamily = 'SecurityBaseline';
+      } else if (templateId.includes('deviceCompliance')) {
+        odataType = '#settingsCatalog.deviceCompliance';
+        templateFamily = 'Compliance';
+      }
+
       const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.name || policy.displayName,
           policyDescription: policy.description || '',
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
           lastSynced: new Date(),
           isActive: true,
         },
@@ -313,6 +389,8 @@ class PolicySyncService {
           policyName: policy.name || policy.displayName,
           policyDescription: policy.description || '',
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
         },
       });
 
@@ -330,12 +408,31 @@ class PolicySyncService {
         where: { policyId: policy.id },
       });
 
+      // Endpoint Security intents use templateId to determine type
+      const templateId = (policy as any).templateId || '';
+      let odataType = '#microsoft.graph.deviceManagementIntent';
+      let templateFamily = 'EndpointSecurity';
+
+      if (templateId.includes('antivirus')) {
+        templateFamily = 'Antivirus';
+      } else if (templateId.includes('diskEncryption')) {
+        templateFamily = 'DiskEncryption';
+      } else if (templateId.includes('firewall')) {
+        templateFamily = 'Firewall';
+      } else if (templateId.includes('attackSurfaceReduction')) {
+        templateFamily = 'AttackSurfaceReduction';
+      } else if (templateId.includes('endpointDetection')) {
+        templateFamily = 'EndpointDetection';
+      }
+
       const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName || policy.name,
-          policyDescription: policy.description || `Template: ${(policy as any).templateId || 'Unknown'}`,
+          policyDescription: policy.description || `Template: ${templateId || 'Unknown'}`,
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
           lastSynced: new Date(),
           isActive: true,
         },
@@ -343,8 +440,10 @@ class PolicySyncService {
           policyType: 'Intune',
           policyId: policy.id,
           policyName: policy.displayName || policy.name,
-          policyDescription: policy.description || `Template: ${(policy as any).templateId || 'Unknown'}`,
+          policyDescription: policy.description || `Template: ${templateId || 'Unknown'}`,
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
         },
       });
 
@@ -362,12 +461,17 @@ class PolicySyncService {
         where: { policyId: policy.id },
       });
 
+      const odataType = policy['@odata.type'] || '';
+      const templateFamily = 'AppProtection';
+
       const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
         update: {
           policyName: policy.displayName || policy.name,
-          policyDescription: policy.description || `Platform: ${policy['@odata.type'] || 'Unknown'}`,
+          policyDescription: policy.description || `Platform: ${odataType || 'Unknown'}`,
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
           lastSynced: new Date(),
           isActive: true,
         },
@@ -375,8 +479,10 @@ class PolicySyncService {
           policyType: 'Intune',
           policyId: policy.id,
           policyName: policy.displayName || policy.name,
-          policyDescription: policy.description || `Platform: ${policy['@odata.type'] || 'Unknown'}`,
+          policyDescription: policy.description || `Platform: ${odataType || 'Unknown'}`,
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
         },
       });
 
@@ -445,10 +551,13 @@ class PolicySyncService {
   ): Promise<number> {
     let count = 0;
 
-    for (const policy of data.conditionalAccessPolicies) {
+    for (const policy of data.conditionalAccessPolicies || []) {
       const existing = await prisma.m365Policy.findUnique({
         where: { policyId: policy.id },
       });
+
+      const odataType = '#microsoft.graph.conditionalAccessPolicy';
+      const templateFamily = 'ConditionalAccess';
 
       const result = await prisma.m365Policy.upsert({
         where: { policyId: policy.id },
@@ -456,6 +565,8 @@ class PolicySyncService {
           policyName: policy.displayName,
           policyDescription: `State: ${policy.state}`,
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
           lastSynced: new Date(),
           isActive: policy.state === 'enabled',
         },
@@ -465,6 +576,8 @@ class PolicySyncService {
           policyName: policy.displayName,
           policyDescription: `State: ${policy.state}`,
           policyData: JSON.stringify(policy),
+          odataType,
+          templateFamily,
         },
       });
 

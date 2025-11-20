@@ -1,110 +1,8 @@
 {
-  "version": "1.1.0",
-  "generated": "2025-11-19T00:00:00.000Z",
-  "totalMappings": 483,
-  "description": "Maps NIST controls to M365 settings (pruned version - controls 03.01.01-03.01.12 optimized to 4-8 mappings each)",
-  "pruningInfo": {
-    "prunedControls": [
-      "03.01.01",
-      "03.01.02",
-      "03.01.03",
-      "03.01.04",
-      "03.01.05",
-      "03.01.06",
-      "03.01.07",
-      "03.01.08",
-      "03.01.09",
-      "03.01.10",
-      "03.01.11",
-      "03.01.12"
-    ],
-    "summary": [
-      {
-        "controlId": "03.01.01",
-        "original": 27,
-        "target": 8,
-        "kept": 8,
-        "pruned": 19
-      },
-      {
-        "controlId": "03.01.02",
-        "original": 34,
-        "target": 8,
-        "kept": 8,
-        "pruned": 26
-      },
-      {
-        "controlId": "03.01.03",
-        "original": 32,
-        "target": 8,
-        "kept": 8,
-        "pruned": 24
-      },
-      {
-        "controlId": "03.01.04",
-        "original": 19,
-        "target": 7,
-        "kept": 7,
-        "pruned": 12
-      },
-      {
-        "controlId": "03.01.05",
-        "original": 34,
-        "target": 8,
-        "kept": 8,
-        "pruned": 26
-      },
-      {
-        "controlId": "03.01.06",
-        "original": 29,
-        "target": 8,
-        "kept": 8,
-        "pruned": 21
-      },
-      {
-        "controlId": "03.01.07",
-        "original": 22,
-        "target": 7,
-        "kept": 7,
-        "pruned": 15
-      },
-      {
-        "controlId": "03.01.08",
-        "original": 28,
-        "target": 8,
-        "kept": 8,
-        "pruned": 20
-      },
-      {
-        "controlId": "03.01.09",
-        "original": 14,
-        "target": 6,
-        "kept": 6,
-        "pruned": 8
-      },
-      {
-        "controlId": "03.01.10",
-        "original": 14,
-        "target": 6,
-        "kept": 6,
-        "pruned": 8
-      },
-      {
-        "controlId": "03.01.11",
-        "original": 16,
-        "target": 7,
-        "kept": 7,
-        "pruned": 9
-      },
-      {
-        "controlId": "03.01.12",
-        "original": 21,
-        "target": 7,
-        "kept": 7,
-        "pruned": 14
-      }
-    ]
-  },
+  "version": "1.0.0",
+  "generated": "2025-11-17T21:20:27.658Z",
+  "totalMappings": 681,
+  "description": "Maps NIST controls to M365 settings (references by uniqueKey)",
   "mappings": [
     {
       "uniqueKey": "state|AzureAD|All",
@@ -123,12 +21,28 @@
       "nistRequirement": "03.01.01.d - Authorize access to the system based on valid access authorization"
     },
     {
+      "uniqueKey": "grantControls.builtInControls|AzureAD|All",
+      "controlId": "03.05.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "MFA grant control directly enforces multi-factor authentication for account access",
+      "nistRequirement": "03.05.02 - Enforce MFA for account access"
+    },
+    {
       "uniqueKey": "conditions.users.includeUsers|AzureAD|All",
       "controlId": "03.01.01",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Ensures all system accounts are subject to defined access control policies and authorization requirements",
       "nistRequirement": "03.01.01.c.1 - Specify authorized users of the system"
+    },
+    {
+      "uniqueKey": "conditions.users.excludeUsers|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Exclusions should be minimized and documented to ensure proper account management and monitoring of all accounts",
+      "nistRequirement": "03.01.01.a - Define the types of system accounts allowed and prohibited"
     },
     {
       "uniqueKey": "conditions.users.includeGroups|AzureAD|All",
@@ -179,12 +93,52 @@
       "nistRequirement": "03.01.01.f - Disable system accounts when accounts have expired, been inactive, no longer associated with user, in violation of policy, or significant risks discovered"
     },
     {
+      "uniqueKey": "signInActivity.lastSignInDateTime|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Provides data needed to identify and disable inactive accounts based on organization-defined time periods",
+      "nistRequirement": "03.01.01.f.2 - Disable system accounts when accounts have been inactive for organization-defined time period"
+    },
+    {
+      "uniqueKey": "signInActivity.lastSignInDateTime|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Enables monitoring of account usage to detect anomalies or unauthorized access attempts",
+      "nistRequirement": "03.01.01.e - Monitor the use of system accounts"
+    },
+    {
+      "uniqueKey": "sessionControls.signInFrequency.value|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces automatic session termination after organization-defined time period of inactivity or circumstances",
+      "nistRequirement": "03.01.01.h - Require that users log out of the system after organization-defined time period of expected inactivity"
+    },
+    {
       "uniqueKey": "sessionControls.signInFrequency.value|AzureAD|All",
       "controlId": "03.01.11",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Automatically terminates user sessions after specified conditions are met",
       "nistRequirement": "03.01.11 - Automatically terminate a user session after organization-defined conditions or trigger events"
+    },
+    {
+      "uniqueKey": "sessionControls.signInFrequency.type|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Defines the unit of time for session timeout enforcement",
+      "nistRequirement": "03.01.01.h - Require logout after organization-defined time period"
+    },
+    {
+      "uniqueKey": "sessionControls.signInFrequency.isEnabled|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Activates enforcement of periodic reauthentication to ensure account usage monitoring",
+      "nistRequirement": "03.01.01.e - Monitor the use of system accounts"
     },
     {
       "uniqueKey": "sessionControls.signInFrequency.isEnabled|AzureAD|All",
@@ -195,6 +149,62 @@
       "nistRequirement": "03.01.11 - Automatically terminate user sessions"
     },
     {
+      "uniqueKey": "passwordRequired|Intune|Windows",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces password authentication requirement for device access, supporting account authorization controls",
+      "nistRequirement": "03.01.01.d - Authorize access to the system based on valid access authorization"
+    },
+    {
+      "uniqueKey": "passwordRequired|Intune|Windows",
+      "controlId": "03.05.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Requires identification and authentication via password before granting device access",
+      "nistRequirement": "03.05.01 - Identify and authenticate users"
+    },
+    {
+      "uniqueKey": "minPasswordLength|Intune|Windows",
+      "controlId": "03.05.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces minimum password length requirement as part of password management controls",
+      "nistRequirement": "03.05.07 - Enforce minimum password complexity including length requirements"
+    },
+    {
+      "uniqueKey": "passwordComplexity|Intune|Windows",
+      "controlId": "03.05.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces password complexity requirements including character diversity",
+      "nistRequirement": "03.05.07 - Enforce password complexity requirements"
+    },
+    {
+      "uniqueKey": "passwordExpiration|Intune|Windows",
+      "controlId": "03.05.07",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Enforces periodic password changes as part of password management policy",
+      "nistRequirement": "03.05.07 - Manage password lifecycle including expiration"
+    },
+    {
+      "uniqueKey": "passwordHistoryCount|Intune|Windows",
+      "controlId": "03.05.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Prevents password reuse by maintaining password history",
+      "nistRequirement": "03.05.07 - Prohibit password reuse"
+    },
+    {
+      "uniqueKey": "storageRequireEncryption|Intune|Windows",
+      "controlId": "03.13.11",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces cryptographic protection of CUI at rest on devices",
+      "nistRequirement": "03.13.11 - Employ cryptographic mechanisms to protect the confidentiality of CUI at rest"
+    },
+    {
       "uniqueKey": "maxInactivityBeforeLock|Intune|Windows",
       "controlId": "03.01.10",
       "confidence": "High",
@@ -203,12 +213,148 @@
       "nistRequirement": "03.01.10.a - Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity"
     },
     {
+      "uniqueKey": "allowedToSignUpEmailBasedSubscriptions|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Restricts self-service account creation to prevent unauthorized accounts",
+      "nistRequirement": "03.01.01.b - Create system accounts in accordance with policy and procedures"
+    },
+    {
+      "uniqueKey": "allowedToUseSSPR|AzureAD|All",
+      "controlId": "03.05.07",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supports password management by allowing users to reset forgotten passwords securely",
+      "nistRequirement": "03.05.07 - Manage password reset processes"
+    },
+    {
+      "uniqueKey": "blockMsolPowerShell|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Restricts legacy authentication methods for account management, enforcing modern security protocols",
+      "nistRequirement": "03.01.01.b - Manage system accounts in accordance with security procedures"
+    },
+    {
       "uniqueKey": "accountEnabled|AzureAD|All",
       "controlId": "03.01.01",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Direct control for disabling accounts under specified conditions",
       "nistRequirement": "03.01.01.f - Disable system accounts when accounts have expired, been inactive, no longer associated with user, in violation of policy, or significant risks discovered"
+    },
+    {
+      "uniqueKey": "conditions.locations.includeLocations|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supports defining access authorizations based on point of origin as part of account attributes",
+      "nistRequirement": "03.01.01 Discussion - Define access privileges and attributes including restrictions on point of origin"
+    },
+    {
+      "uniqueKey": "conditions.clientAppTypes|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Ensures access control policies apply across all client types used to access systems",
+      "nistRequirement": "03.01.01.d - Authorize access based on intended system usage"
+    },
+    {
+      "uniqueKey": "scope.inactiveDuration|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Automatically identifies and facilitates review of inactive accounts for potential disabling",
+      "nistRequirement": "03.01.01.f.2 - Disable system accounts when accounts have been inactive for organization-defined time period"
+    },
+    {
+      "uniqueKey": "settings.autoApplyDecisionsEnabled|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Automates enforcement of account management decisions including disabling inactive accounts",
+      "nistRequirement": "03.01.01.f - Disable system accounts under specified conditions"
+    },
+    {
+      "uniqueKey": "isEnabled|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Automates account creation, modification, and removal in accordance with organizational policies and procedures",
+      "nistRequirement": "03.01.01.b - Create, enable, modify, disable, and remove system accounts in accordance with policy, procedures, prerequisites, and criteria"
+    },
+    {
+      "uniqueKey": "tasks.taskDefinitionId|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Automatically disables accounts when users leave organization or no longer need access",
+      "nistRequirement": "03.01.01.f.3 - Disable system accounts when no longer associated with a user or individual"
+    },
+    {
+      "uniqueKey": "executionConditions.trigger.timeBasedAttribute|AzureAD|All",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Triggers automated account termination based on employment end date",
+      "nistRequirement": "03.01.01.g.2 - Notify when users are terminated or transferred"
+    },
+    {
+      "uniqueKey": "passwordRequired|Intune|iOS",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces authentication requirement for iOS device access",
+      "nistRequirement": "03.01.01.d - Authorize access based on valid access authorization"
+    },
+    {
+      "uniqueKey": "passwordRequired|Intune|iOS",
+      "controlId": "03.05.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Requires user identification and authentication via passcode",
+      "nistRequirement": "03.05.01 - Identify and authenticate users"
+    },
+    {
+      "uniqueKey": "simplePasswords|Intune|iOS",
+      "controlId": "03.05.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces password complexity by blocking simple, easily guessable passwords",
+      "nistRequirement": "03.05.07 - Enforce password complexity requirements"
+    },
+    {
+      "uniqueKey": "minPasswordLength|Intune|iOS",
+      "controlId": "03.05.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces minimum password length requirement",
+      "nistRequirement": "03.05.07 - Enforce minimum password length"
+    },
+    {
+      "uniqueKey": "passwordRequired|Intune|Android",
+      "controlId": "03.01.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces authentication requirement for Android device access",
+      "nistRequirement": "03.01.01.d - Authorize access based on valid access authorization"
+    },
+    {
+      "uniqueKey": "passwordRequired|Intune|Android",
+      "controlId": "03.05.01",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Requires user identification and authentication via password",
+      "nistRequirement": "03.05.01 - Identify and authenticate users"
+    },
+    {
+      "uniqueKey": "minPasswordLength|Intune|Android",
+      "controlId": "03.05.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces minimum password length requirement for Android devices",
+      "nistRequirement": "03.05.07 - Enforce minimum password length"
     },
     {
       "uniqueKey": "properties.state|AzureAD|All",
@@ -232,6 +378,14 @@
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Device compliance enforcement ensures only authorized devices meeting security baselines can access resources",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "properties.grantControls.builtInControls|AzureAD|Windows",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Hybrid Azure AD joined devices provide strong device identity verification for access enforcement",
       "nistRequirement": "Enforce approved authorizations for logical access to system resources"
     },
     {
@@ -259,6 +413,22 @@
       "nistRequirement": "Enforce approved authorizations in accordance with applicable access control policies"
     },
     {
+      "uniqueKey": "properties.sessionControls.applicationEnforcedRestrictions.isEnabled|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Application-level access restrictions enforce additional controls within applications for accessing CUI",
+      "nistRequirement": "Access enforcement mechanisms at the application level"
+    },
+    {
+      "uniqueKey": "properties.sessionControls.cloudAppSecurity.isEnabled|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Defender for Cloud Apps provides real-time access enforcement and session monitoring for cloud applications",
+      "nistRequirement": "Enforce approved authorizations for logical access to CUI"
+    },
+    {
       "uniqueKey": "properties.sessionControls.signInFrequency.isEnabled|AzureAD|All",
       "controlId": "03.01.02",
       "confidence": "High",
@@ -280,6 +450,182 @@
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Principal assignments determine which entities are authorized for specific access levels",
+      "nistRequirement": "Enforce approved authorizations for logical access"
+    },
+    {
+      "uniqueKey": "properties.directoryScopeId|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Scoped role assignments enforce least-privilege access by limiting administrative permissions to specific resources",
+      "nistRequirement": "Enforce approved authorizations in accordance with applicable access control policies"
+    },
+    {
+      "uniqueKey": "properties.assignmentType|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Assignment types control how and when administrative access is granted, enforcing just-in-time access principles",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "properties.isMemberManagementRestricted|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "RMAUs enforce access restrictions on privileged users and groups, preventing unauthorized access escalation",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "members|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "AU membership restricts which users/groups administrators can manage, enforcing scoped access control",
+      "nistRequirement": "Enforce approved authorizations for logical access"
+    },
+    {
+      "uniqueKey": "scopedRoleMembers|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Scoped role assignments enforce least-privilege by limiting administrative access to specific resource subsets",
+      "nistRequirement": "Enforce approved authorizations in accordance with applicable access control policies"
+    },
+    {
+      "uniqueKey": "assignments|Intune|iOS,Android",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "App protection policy assignments enforce which users can access CUI through mobile applications",
+      "nistRequirement": "Access enforcement mechanisms at the application level for increased protection"
+    },
+    {
+      "uniqueKey": "apps[].mobileAppPolicyConfiguration.dataProtection.blockDataIngestionIntoOrganizationDocuments|Intune|iOS,Android",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Data ingestion controls enforce access boundaries between personal and organizational data",
+      "nistRequirement": "Access enforcement mechanisms at the application level"
+    },
+    {
+      "uniqueKey": "apps[].mobileAppPolicyConfiguration.accessRequirements.pinRequired|Intune|iOS,Android",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "App PIN requirement enforces authentication before granting access to CUI at application level",
+      "nistRequirement": "Enforce approved authorizations for logical access at application level"
+    },
+    {
+      "uniqueKey": "apps[].mobileAppPolicyConfiguration.conditionalLaunch.maxPinAttempts|Intune|iOS,Android",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "PIN attempt limits enforce access controls by preventing brute force attacks on application authentication",
+      "nistRequirement": "Enforce approved authorizations for logical access"
+    },
+    {
+      "uniqueKey": "apps[].mobileAppPolicyConfiguration.conditionalLaunch.offlineGracePeriod|Intune|iOS,Android",
+      "controlId": "03.01.02",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Offline grace period ensures periodic re-validation of access authorizations even when device is offline",
+      "nistRequirement": "Enforce approved authorizations for logical access"
+    },
+    {
+      "uniqueKey": "permissions[].roles|SharePoint|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Site-level permissions enforce granular access control for applications accessing CUI in SharePoint",
+      "nistRequirement": "Enforce approved authorizations for logical access to CUI"
+    },
+    {
+      "uniqueKey": "permissions[].grantedToIdentities[].application.id|SharePoint|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Application identity tracking ensures only approved applications can access CUI in SharePoint sites",
+      "nistRequirement": "Enforce approved authorizations for logical access to CUI"
+    },
+    {
+      "uniqueKey": "requiredResourceAccess[].resourceAccess[].type|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Sites.Selected permission enforces granular, site-specific access rather than tenant-wide access to CUI",
+      "nistRequirement": "Enforce approved authorizations in accordance with applicable access control policies"
+    },
+    {
+      "uniqueKey": "appRoleAssignments|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "App role assignments control which applications can access organizational resources and APIs",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "appRoleAssignments[].resourceAppId|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Resource application tracking ensures apps only access approved APIs and services",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "appRoleAssignments[].appRoleId|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Specific app role IDs define exact permissions granted, enabling granular access enforcement",
+      "nistRequirement": "Enforce approved authorizations in accordance with applicable access control policies"
+    },
+    {
+      "uniqueKey": "managedDevices[].complianceState|Intune|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Device compliance state enforcement ensures only authorized, compliant devices can access CUI",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "deviceCompliancePolicies[].assignments|Intune|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Compliance policy assignments determine which devices must meet requirements before accessing CUI",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "roleManagementPolicies[].rules[].ruleType|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Just-in-time access enforces time-bound authorization for privileged access to system resources",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "roleManagementPolicies[].rules[].setting.isApprovalRequired|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Approval requirements enforce multi-person authorization before granting privileged access",
+      "nistRequirement": "Enforce approved authorizations for logical access to system resources"
+    },
+    {
+      "uniqueKey": "properties.conditions.applications.includeApplications|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Cloud app targeting ensures access controls are enforced for applications that process CUI",
+      "nistRequirement": "Enforce approved authorizations for logical access to CUI"
+    },
+    {
+      "uniqueKey": "properties.conditions.users.includeUsers|AzureAD|All",
+      "controlId": "03.01.02",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "User/group targeting ensures access enforcement applies to all users accessing CUI",
       "nistRequirement": "Enforce approved authorizations for logical access"
     },
     {
@@ -323,6 +669,14 @@
       "nistRequirement": "Keeping CUI from being transmitted in the clear to the internet; limiting CUI transfers between organizations"
     },
     {
+      "uniqueKey": "rule.actions.notifyUser|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "User notifications provide awareness of information flow restrictions and help prevent unintentional CUI exfiltration",
+      "nistRequirement": "Supporting enforcement of approved authorizations through user awareness and education"
+    },
+    {
       "uniqueKey": "endpointSettings.restrictedCloudAppDomains|Purview|Windows",
       "controlId": "03.01.03",
       "confidence": "High",
@@ -345,6 +699,190 @@
       "isRequired": true,
       "mappingRationale": "Policy must be in enforcement mode to actively enforce information flow controls, not just detect violations",
       "nistRequirement": "Enforce approved authorizations (active enforcement, not passive monitoring)"
+    },
+    {
+      "uniqueKey": "rule.actions.encryptContent|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Encryption provides additional information flow protection when CUI must be shared externally per approved authorizations",
+      "nistRequirement": "Keeping CUI from being transmitted in the clear to the internet (encryption for external transfers)"
+    },
+    {
+      "uniqueKey": "labelPolicy.settings.isMandatory|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Mandatory labeling ensures CUI is classified before information flow, enabling label-based flow enforcement",
+      "nistRequirement": "Flow control based on characteristics of the information (classification labels)"
+    },
+    {
+      "uniqueKey": "labelPolicy.settings.isDowngradeJustificationRequired|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Preventing unauthorized label downgrades maintains CUI classification integrity and associated information flow restrictions",
+      "nistRequirement": "Maintaining information flow controls based on classification (preventing bypass through reclassification)"
+    },
+    {
+      "uniqueKey": "label.encryptionSettings.enabled|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Encryption on CUI labels enforces access controls during information flow, preventing unauthorized access even if content leaves organization",
+      "nistRequirement": "Keeping CUI from being transmitted in the clear; employing hardware mechanisms to enforce one-way information flows"
+    },
+    {
+      "uniqueKey": "label.siteAndGroupSettings.privacy|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Label-based external sharing restrictions prevent CUI information flow to unauthorized external parties via collaboration platforms",
+      "nistRequirement": "Limiting CUI transfers between organizations; blocking external communications"
+    },
+    {
+      "uniqueKey": "label.defaultSharingLinkType|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Default sharing link restrictions reduce risk of accidental CUI exposure through overly permissive anonymous links",
+      "nistRequirement": "Preventing CUI from being transmitted to unauthorized recipients (safe defaults)"
+    },
+    {
+      "uniqueKey": "autoLabelingPolicy.enabled|Purview|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Auto-labeling ensures CUI is consistently classified, enabling reliable label-based information flow controls",
+      "nistRequirement": "Flow control based on characteristics of the information (automated classification)"
+    },
+    {
+      "uniqueKey": "tenant.sharingCapability|SharePoint|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Restricting external sharing prevents unauthorized CUI flow to unauthenticated external users via anonymous links",
+      "nistRequirement": "Limiting CUI transfers between organizations; restricting information flow to authorized destinations"
+    },
+    {
+      "uniqueKey": "tenant.defaultSharingLinkType|SharePoint|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Default sharing link type reduces risk of unintentional CUI disclosure through overly permissive default sharing settings",
+      "nistRequirement": "Preventing accidental CUI transmission to unauthorized parties (secure defaults)"
+    },
+    {
+      "uniqueKey": "tenant.requireAnonymousLinksExpireInDays|SharePoint|All",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Link expiration limits temporal window for unauthorized CUI access via anonymous links (defense-in-depth)",
+      "nistRequirement": "Time-limiting information flow authorizations to reduce exposure risk"
+    },
+    {
+      "uniqueKey": "tenant.externalUserExpirationRequired|SharePoint|All",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Guest access expiration enforces periodic review of external CUI access authorizations",
+      "nistRequirement": "Periodic review of approved authorizations for information flow to external parties"
+    },
+    {
+      "uniqueKey": "tenant.defaultLinkPermission|SharePoint|All",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "View-only default permissions reduce risk of unauthorized CUI modification through shared links",
+      "nistRequirement": "Controlling information flow with appropriate access restrictions (read vs. write)"
+    },
+    {
+      "uniqueKey": "transportRule.state|Exchange|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Mail flow rules enforce information flow restrictions on CUI sent via email to external recipients",
+      "nistRequirement": "Blocking external communications traffic; restricting CUI transfers between organizations"
+    },
+    {
+      "uniqueKey": "transportRule.actions.applyOME|Exchange|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Email encryption prevents CUI from being transmitted in cleartext when external sharing is authorized",
+      "nistRequirement": "Keeping CUI from being transmitted in the clear to the internet (encryption in transit)"
+    },
+    {
+      "uniqueKey": "transportRule.conditions.fromScope|Exchange|All",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Sender scope filtering ensures CUI flow rules apply to legitimate internal communications, preventing bypass",
+      "nistRequirement": "Blocking external communications traffic that claims to be from within the organization"
+    },
+    {
+      "uniqueKey": "teamsClientConfiguration.allowTeamsConsumer|Teams|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Blocking communication with unmanaged personal accounts prevents CUI exfiltration through Teams chat to external parties",
+      "nistRequirement": "Limiting CUI transfers between organizations; restricting flow to authorized external entities"
+    },
+    {
+      "uniqueKey": "guestAccessConfiguration.allowGuestAccess|Teams|All",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Guest access controls prevent unauthorized CUI flow to external parties via Teams collaboration",
+      "nistRequirement": "Limiting CUI transfers between organizations; controlling flow to external entities"
+    },
+    {
+      "uniqueKey": "guestAccessConfiguration.allowGuestEditChannelPosts|Teams|All",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Restricting guest editing capabilities prevents unauthorized modification of CUI information flow records",
+      "nistRequirement": "Maintaining integrity of information during external collaboration"
+    },
+    {
+      "uniqueKey": "appProtectionPolicy.dataProtection.allowedOutboundDataTransferDestinations|Intune|iOS,Android",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Restricting data transfer to managed apps prevents CUI exfiltration from mobile devices to personal apps and services",
+      "nistRequirement": "Controlling the flow of CUI within the system (between managed and unmanaged apps)"
+    },
+    {
+      "uniqueKey": "appProtectionPolicy.dataProtection.allowedInboundDataTransferSources|Intune|iOS,Android",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Controlling inbound data flow prevents potential CUI injection from unmanaged sources",
+      "nistRequirement": "Regulating where CUI can transit (inbound flow control)"
+    },
+    {
+      "uniqueKey": "appProtectionPolicy.dataProtection.allowedOutboundClipboardSharingLevel|Intune|iOS,Android",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Clipboard restrictions prevent CUI from being copied from managed apps and pasted into unmanaged apps (e.g., personal messaging apps)",
+      "nistRequirement": "Controlling CUI flow through device-level data transfer mechanisms"
+    },
+    {
+      "uniqueKey": "appProtectionPolicy.dataProtection.allowUserToSaveCopy|Intune|iOS,Android",
+      "controlId": "03.01.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Blocking 'Save As' to unmanaged locations prevents CUI exfiltration through file system operations on mobile devices",
+      "nistRequirement": "Limiting CUI transfers to unauthorized storage locations and cloud services"
+    },
+    {
+      "uniqueKey": "appProtectionPolicy.dataProtection.printBlocked|Intune|iOS,Android",
+      "controlId": "03.01.03",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Print blocking prevents CUI information flow to physical media from mobile devices",
+      "nistRequirement": "Controlling information flow through all output mechanisms including physical media"
     },
     {
       "uniqueKey": "roleManagement.directory.roleAssignments.roleDefinitionId|AzureAD|All",
@@ -403,6 +941,62 @@
       "nistRequirement": "Define system access authorizations to support separation of duties"
     },
     {
+      "uniqueKey": "policies.roleManagementPolicies.rules[?(@.ruleType=='RoleManagementPolicyExpirationRule')].maximumDuration|AzureAD|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Time-limited role activations enforce separation by ensuring privileged access is temporary and purpose-specific, reducing the risk of privilege abuse.",
+      "nistRequirement": "Define system access authorizations to support separation of duties"
+    },
+    {
+      "uniqueKey": "policies.roleManagementPolicies.rules[?(@.ruleType=='RoleManagementPolicyApprovalRule')].setting.isApprovalRequired|AzureAD|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Approval workflows enforce separation by requiring independent verification before granting privileged access, preventing unilateral privilege elevation.",
+      "nistRequirement": "Define system access authorizations to support separation of duties"
+    },
+    {
+      "uniqueKey": "directory.administrativeUnits.displayName|AzureAD|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Administrative Units enforce separation by limiting administrative scope to specific organizational divisions, preventing admins from managing resources outside their area of responsibility.",
+      "nistRequirement": "Define system access authorizations to support separation of duties"
+    },
+    {
+      "uniqueKey": "directory.administrativeUnits.scopedRoleMembers|AzureAD|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Scoped role assignments restrict administrative authority to specific organizational boundaries, enforcing separation between different administrative domains.",
+      "nistRequirement": "Define system access authorizations to support separation of duties"
+    },
+    {
+      "uniqueKey": "organization.limits.maxCustomRoleAssignmentsPerPrincipalAtNonTenantScope|AzureAD|All",
+      "controlId": "03.01.04",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Service limits on role assignments prevent excessive privilege accumulation, supporting the principle that users should have only necessary access.",
+      "nistRequirement": "Define system access authorizations to support separation of duties"
+    },
+    {
+      "uniqueKey": "organization.limits.maxBuiltInRoleAssignmentsPerPrincipalAtNonTenantScope|AzureAD|All",
+      "controlId": "03.01.04",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Limiting role assignments per principal supports separation of duties by preventing any single individual from accumulating excessive privileges across multiple scopes.",
+      "nistRequirement": "Define system access authorizations to support separation of duties"
+    },
+    {
+      "uniqueKey": "roleManagement.directory.roleDefinitions|AzureAD|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Custom roles enable precise definition of duties and permissions, allowing organizations to implement separation of duties tailored to their specific organizational structure and compliance requirements.",
+      "nistRequirement": "Identify the duties of individuals requiring separation; Define system access authorizations to support separation of duties"
+    },
+    {
       "uniqueKey": "roleManagement.directory.roleAssignments.roleDefinitionId|AzureAD|All",
       "controlId": "03.01.04",
       "confidence": "High",
@@ -411,11 +1005,43 @@
       "nistRequirement": "Dividing mission functions and support functions among different individuals or roles"
     },
     {
+      "uniqueKey": "deviceManagement.roleDefinitions.displayName|Intune|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Intune RBAC enforces separation of device management duties by assigning specific functions (policy creation, device actions, reporting) to different roles.",
+      "nistRequirement": "Conducting system support functions with different individuals or roles"
+    },
+    {
+      "uniqueKey": "deviceManagement.roleAssignments.scopeTags|Intune|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Scope tags enforce separation by restricting administrative visibility and control to specific organizational boundaries, preventing cross-functional administrative access.",
+      "nistRequirement": "Define system access authorizations to support separation of duties"
+    },
+    {
+      "uniqueKey": "purview.roleGroups.members|Purview|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Purview role groups enforce separation by dividing compliance functions (policy creation, data management, auditing, eDiscovery) into distinct roles that should be assigned to different personnel.",
+      "nistRequirement": "Dividing mission functions and support functions among different individuals or roles; Ensuring personnel who administer access control functions do not also administer audit functions"
+    },
+    {
+      "uniqueKey": "exchangeOnline.roleGroups.members|Exchange|All",
+      "controlId": "03.01.04",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Exchange RBAC role groups enforce separation by dividing email system management duties (recipient management, compliance, security, help desk) into distinct roles.",
+      "nistRequirement": "Conducting system support functions with different individuals or roles"
+    },
+    {
       "uniqueKey": "roleManagement.directory.roleAssignments|AzureAD|All",
       "controlId": "03.01.06",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Directly restricts the number of privileged accounts by limiting Global Administrator role assignments to organization-defined personnel (recommended \u22645)",
+      "mappingRationale": "Directly restricts the number of privileged accounts by limiting Global Administrator role assignments to organization-defined personnel (recommended ≤5)",
       "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
     },
     {
@@ -467,6 +1093,14 @@
       "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
     },
     {
+      "uniqueKey": "privilegedIdentityManagement.roleSettings.activationRules.justificationRequired|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Provides audit trail for privileged access, supporting restriction of privileged accounts to authorized purposes",
+      "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel/purposes"
+    },
+    {
       "uniqueKey": "privilegedIdentityManagement.roleSettings.activationRules.maximumActivationDuration|AzureAD|All",
       "controlId": "03.01.06",
       "confidence": "High",
@@ -475,12 +1109,172 @@
       "nistRequirement": "Requirement b - Use privileged accounts only for security functions"
     },
     {
+      "uniqueKey": "privilegedIdentityManagement.roleSettings.activationRules.approvalRequired|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Approval workflow further restricts privileged account usage by requiring authorization from another party before activation",
+      "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+    },
+    {
+      "uniqueKey": "privilegedIdentityManagement.roleAssignments.assignmentType|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Eligible assignments ensure privileged accounts are only active when needed, enforcing separation between privileged and non-privileged activities",
+      "nistRequirement": "Requirement b - Use privileged accounts only when needed"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces strong authentication for privileged accounts, restricting access to authorized personnel only",
+      "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Prevents privileged account compromise through legacy authentication that bypasses MFA, supporting restriction of privileged accounts",
+      "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Separate CA policies for admin accounts enforce that privileged accounts have different (stricter) security controls than standard user accounts",
+      "nistRequirement": "Requirement b - Separate privileged and non-privileged account usage"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Phishing-resistant authentication provides strongest protection for privileged accounts against credential theft, supporting restriction to authorized personnel",
+      "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+    },
+    {
+      "uniqueKey": "compliance.auditLog.unifiedAuditLogIngestionEnabled|Purview|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Audit logs provide accountability for privileged account usage, supporting monitoring and enforcement of restrictions",
+      "nistRequirement": "Requirements a & b - Monitor privileged account usage"
+    },
+    {
+      "uniqueKey": "compliance.auditLog.retentionPolicies|Purview|All",
+      "controlId": "03.01.06",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Extended retention supports long-term accountability and forensic investigation of privileged account usage",
+      "nistRequirement": "Requirements a & b - Monitor privileged account usage"
+    },
+    {
+      "uniqueKey": "privilegedIdentityManagement.alerts|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Real-time alerts on privileged account usage support monitoring and enforcement of access restrictions",
+      "nistRequirement": "Requirement a - Monitor privileged account restrictions"
+    },
+    {
+      "uniqueKey": "security.defender.priorityAccounts|Defender|All",
+      "controlId": "03.01.06",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Enhanced monitoring and protection for privileged accounts supports detection of unauthorized access attempts",
+      "nistRequirement": "Requirement a - Protect privileged accounts"
+    },
+    {
+      "uniqueKey": "governance.privilegedAccountInventory|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Inventory enables tracking and validation that privileged accounts are restricted to organization-defined personnel",
+      "nistRequirement": "Requirement a - Restrict privileged accounts to defined personnel"
+    },
+    {
+      "uniqueKey": "identityGovernance.accessReviews|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Periodic access reviews validate that privileged accounts remain restricted to authorized personnel and remove unnecessary access",
+      "nistRequirement": "Requirement a - Validate privileged account restrictions"
+    },
+    {
       "uniqueKey": "identityGovernance.accessReviews|AzureAD|All",
       "controlId": "03.01.05",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Access reviews directly implement NIST requirements for periodic privilege validation and removal",
       "nistRequirement": "Requirements c & d - Review and reassign/remove privileges"
+    },
+    {
+      "uniqueKey": "users.onPremisesSyncEnabled|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Cloud-only admin accounts prevent on-premises compromises from affecting cloud privileged accounts, supporting separation of privileged account domains",
+      "nistRequirement": "Requirement b - Separate privileged accounts from standard user accounts"
+    },
+    {
+      "uniqueKey": "governance.namingPolicy|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Clear identification of privileged accounts through naming convention supports governance and monitoring of privileged account restrictions",
+      "nistRequirement": "Requirement a - Identify and restrict privileged accounts"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies.sessionControls.signInFrequency|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Shorter session timeouts limit the duration of privileged access, supporting requirement to use privileged accounts only when needed",
+      "nistRequirement": "Requirement b - Limit duration of privileged account usage"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Blocking access to email and collaboration tools from privileged accounts directly enforces requirement to use non-privileged accounts for non-security functions",
+      "nistRequirement": "Requirement b - Use non-privileged accounts for non-security functions"
+    },
+    {
+      "uniqueKey": "monitoring.insightsAndReporting|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Continuous monitoring of privileged account activity enables detection of unauthorized usage and validates restriction to defined personnel",
+      "nistRequirement": "Requirements a & b - Monitor privileged account usage"
+    },
+    {
+      "uniqueKey": "monitoring.alerts.failedSignIns|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Failed sign-in alerts detect unauthorized access attempts to privileged accounts, supporting restriction to authorized personnel",
+      "nistRequirement": "Requirement a - Protect privileged accounts from unauthorized access"
+    },
+    {
+      "uniqueKey": "privilegedIdentityManagement.reporting|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Regular audit reports provide accountability for privileged account usage and validate restriction to authorized personnel and purposes",
+      "nistRequirement": "Requirements a & b - Audit privileged account usage"
+    },
+    {
+      "uniqueKey": "identityProtection.riskPolicies|AzureAD|All",
+      "controlId": "03.01.06",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Risk-based policies provide dynamic protection for privileged accounts against compromised credentials and suspicious sign-ins",
+      "nistRequirement": "Requirement a - Protect privileged accounts from unauthorized access"
     },
     {
       "uniqueKey": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_BehaviorOfTheElevationPromptForAdministrators|Intune|Windows",
@@ -507,11 +1301,35 @@
       "nistRequirement": "Prevent non-privileged users from executing privileged functions"
     },
     {
+      "uniqueKey": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_SwitchToTheSecureDesktopWhenPromptingForElevation|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Enhances UAC prompt security, preventing malware from spoofing elevation requests to trick users into granting privileged access",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+    },
+    {
       "uniqueKey": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_DetectApplicationInstallationsAndPromptForElevation|Intune|Windows",
       "controlId": "03.01.07",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Prevents non-privileged users from installing software (privileged function) without explicit admin approval",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+    },
+    {
+      "uniqueKey": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_OnlyElevateExecutableFilesThatAreSignedAndValidated|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Strengthens requirement (a) by ensuring only validated code can execute with privileges, blocking unsigned malicious executables",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+    },
+    {
+      "uniqueKey": "./Device/Vendor/MSFT/Policy/Config/LocalPoliciesSecurityOptions/UserAccountControl_VirtualizeFileAndRegistryWriteFailuresToPerUserLocations|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supports requirement (a) by allowing legacy apps to function without elevation while protecting system resources",
       "nistRequirement": "Prevent non-privileged users from executing privileged functions"
     },
     {
@@ -523,11 +1341,35 @@
       "nistRequirement": "Log the execution of privileged functions"
     },
     {
+      "uniqueKey": "Computer Configuration\\Administrative Templates\\Windows Components\\Windows PowerShell\\Turn on PowerShell Transcription|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Enhances requirement (b) by providing additional detail on PowerShell command execution and output",
+      "nistRequirement": "Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Computer Configuration\\Administrative Templates\\Windows Components\\Windows PowerShell\\Turn on Module Logging|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supplements requirement (b) by logging module usage, useful for security modules like ActiveDirectory",
+      "nistRequirement": "Log the execution of privileged functions"
+    },
+    {
       "uniqueKey": "Endpoint Security > App Control for Business > Base Policy XML|Intune|Windows",
       "controlId": "03.01.07",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Strongly enforces requirement (a) by preventing execution of unapproved privileged tools and scripts at kernel level",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+    },
+    {
+      "uniqueKey": "Endpoint Security > App Control for Business > Managed Installer|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Enhances WDAC usability while maintaining requirement (a) enforcement by auto-trusting organization-approved Intune deployments",
       "nistRequirement": "Prevent non-privileged users from executing privileged functions"
     },
     {
@@ -537,6 +1379,78 @@
       "isRequired": true,
       "mappingRationale": "Enforces requirement (a) by denying privilege elevation by default and (b) by enabling comprehensive reporting of all elevation attempts",
       "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Endpoint Security > Endpoint Privilege Management > Elevation Rules|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Precisely controls requirement (a) by allowing only specific approved applications to execute with privileges, and (b) by logging all elevation attempts",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Exchange Online PowerShell: Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled|Purview|All",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Directly satisfies requirement (b) by logging all privileged operations performed in Microsoft 365 cloud services",
+      "nistRequirement": "Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Security & Compliance PowerShell: New-UnifiedAuditRetentionPolicy|Purview|All",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Ensures requirement (b) audit logs are retained sufficiently for compliance and forensic analysis",
+      "nistRequirement": "Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Azure AD > PIM > Microsoft Entra roles > Assign eligibility|AzureAD|All",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces just-in-time privileged access (requirement a) and automatically logs all role activations (requirement b)",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Azure AD > PIM > Microsoft Entra roles > Resource audit|AzureAD|All",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Satisfies requirement (b) by comprehensively logging all privileged role activations in Azure AD",
+      "nistRequirement": "Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Microsoft 365 Admin Center > Settings > Org Settings > Security & Privacy > Privileged access|Purview|All",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Enhances requirement (a) with just-in-time approval for Exchange/M365 admin tasks and (b) by logging all requests and approvals",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Exchange Online PowerShell: New-ElevatedAccessApprovalPolicy|Purview|All",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Prevents unauthorized execution of high-risk Exchange/M365 privileged functions (requirement a) and logs all requests and outcomes (requirement b)",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions AND Log the execution of privileged functions"
+    },
+    {
+      "uniqueKey": "Azure AD > Security > Conditional Access > New policy|AzureAD|All",
+      "controlId": "03.01.07",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supports requirement (a) by ensuring strong authentication before privileged access granted, and (b) by logging authentication events",
+      "nistRequirement": "Prevent non-privileged users from executing privileged functions"
+    },
+    {
+      "uniqueKey": "Advanced Audit Policy Configuration\\System Audit Policies\\Privilege Use|Intune|Windows",
+      "controlId": "03.01.07",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Directly satisfies requirement (b) by logging Windows privilege usage at OS level",
+      "nistRequirement": "Log the execution of privileged functions"
     },
     {
       "uniqueKey": "authenticationMethodConfiguration.passwordProtection.lockoutThreshold|AzureAD|All",
@@ -587,6 +1501,14 @@
       "nistRequirement": "Requirement a: Enforce limit for all user accounts including privileged"
     },
     {
+      "uniqueKey": "deviceLock.maxDevicePasswordFailedAttempts|Intune|Windows",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Additional layer protecting device from extended brute force attacks by triggering BitLocker recovery",
+      "nistRequirement": "Requirement b: Take other action when maximum attempts exceeded"
+    },
+    {
       "uniqueKey": "restrictedApps.maxInactivityTimeDeviceLockWithPasscode|Intune|iOS",
       "controlId": "03.01.08",
       "confidence": "High",
@@ -601,6 +1523,158 @@
       "isRequired": true,
       "mappingRationale": "Enforces device/work profile wipe after maximum failed authentication attempts on Android",
       "nistRequirement": "Requirement b: Take action (wipe) when maximum attempts exceeded"
+    },
+    {
+      "uniqueKey": "identityProtection.riskPolicies.signInRisk|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Automatically challenges suspicious sign-in attempts with additional authentication, preventing unauthorized access",
+      "nistRequirement": "Requirement b: Take other action (require MFA) for suspicious attempts"
+    },
+    {
+      "uniqueKey": "identityProtection.riskPolicies.userRisk|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Automatically secures compromised accounts by forcing password change, preventing attacker from continued failed attempts",
+      "nistRequirement": "Requirement b: Take other action (secure password reset) for compromised accounts"
+    },
+    {
+      "uniqueKey": "identityProtection.reports.riskySignIns|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Provides visibility into unsuccessful and suspicious authentication attempts for security monitoring",
+      "nistRequirement": "Requirement b: Notify system administrator of failed attempts"
+    },
+    {
+      "uniqueKey": "monitoring.signInLogs.enabled|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Logs all authentication attempts including failures for audit and investigation",
+      "nistRequirement": "Requirement b: Monitoring and logging of failed logon attempts"
+    },
+    {
+      "uniqueKey": "monitoring.signInLogs.retentionDays|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Provides extended audit trail of failed authentication attempts for compliance and forensic analysis",
+      "nistRequirement": "Supporting capability for logging unsuccessful attempts"
+    },
+    {
+      "uniqueKey": "compliance.auditLog.unifiedAuditLogIngestionEnabled|Purview|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Logs authentication events across Microsoft 365 services including failed attempts",
+      "nistRequirement": "Supporting capability for comprehensive authentication logging"
+    },
+    {
+      "uniqueKey": "compliance.auditLog.retentionPolicies|Purview|All",
+      "controlId": "03.01.08",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Ensures long-term retention of failed authentication attempt records for compliance and investigation",
+      "nistRequirement": "Supporting capability for audit trail of unsuccessful attempts"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies.blockLegacyAuth|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Prevents brute force attacks via legacy authentication protocols that bypass modern lockout protections",
+      "nistRequirement": "Requirement b: Take action (block) to prevent continued failed attempts via unsecured protocols"
+    },
+    {
+      "uniqueKey": "conditionalAccess.policies.blockUnknownPlatforms|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Reduces attack surface by blocking authentication from unrecognized platforms used in automated attacks",
+      "nistRequirement": "Requirement b: Take other action (block unrecognized sources)"
+    },
+    {
+      "uniqueKey": "identityProtection.notifications.usersAtRisk|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Notifies system administrators of suspicious failed authentication attempts for immediate response",
+      "nistRequirement": "Requirement b: Notify system administrator when maximum attempts exceeded"
+    },
+    {
+      "uniqueKey": "identityProtection.notifications.weeklyDigest|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Provides regular summaries of authentication security including failed attempt patterns",
+      "nistRequirement": "Supporting notification capability for failed attempt monitoring"
+    },
+    {
+      "uniqueKey": "azureMonitor.alerts.failedSignIns|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Provides real-time alerting on patterns of failed authentication attempts indicating attacks",
+      "nistRequirement": "Requirement b: Notify system administrator of failed attempts"
+    },
+    {
+      "uniqueKey": "defenderForIdentity.alerts.bruteForce|Defender|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Advanced detection of sophisticated brute force attacks and password spray attempts",
+      "nistRequirement": "Requirement b: Notify administrator and take action on detected attack patterns"
+    },
+    {
+      "uniqueKey": "graph.signIns|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Enables programmatic access to failed authentication logs for automated monitoring and compliance reporting",
+      "nistRequirement": "Supporting capability for monitoring and reporting failed attempts"
+    },
+    {
+      "uniqueKey": "powershell.exchangeOnline.searchUnifiedAuditLog|Purview|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Provides PowerShell-based access to failed authentication logs for scripting and automation",
+      "nistRequirement": "Supporting capability for querying and analyzing failed attempts"
+    },
+    {
+      "uniqueKey": "powershell.azureAD.getAzureADAuditSignInLogs|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Provides direct PowerShell access to Azure AD sign-in logs for failed attempt analysis",
+      "nistRequirement": "Supporting capability for retrieving and analyzing failed attempts"
+    },
+    {
+      "uniqueKey": "sentinel.workbooks.failedSignIns|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Provides advanced analytics and visualization of failed authentication patterns for security operations",
+      "nistRequirement": "Supporting capability for analyzing and investigating failed attempts"
+    },
+    {
+      "uniqueKey": "compliance.deviceCompliance.passwordPolicy|Intune|All",
+      "controlId": "03.01.08",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Ensures devices accessing resources have account lockout protections in place",
+      "nistRequirement": "Supporting requirement to enforce lockout policies on managed devices"
+    },
+    {
+      "uniqueKey": "entra.workbooks.signInFailureAnalysis|AzureAD|All",
+      "controlId": "03.01.08",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Provides interactive visual analysis of failed authentication attempts for investigation",
+      "nistRequirement": "Supporting capability for analyzing patterns in failed attempts"
     },
     {
       "uniqueKey": "LocalPoliciesSecurityOptions.InteractiveLogon_MessageTextForUsersAttemptingToLogOn|Intune|Windows",
@@ -627,12 +1701,36 @@
       "nistRequirement": "Display privacy and security notices before granting access to the system"
     },
     {
+      "uniqueKey": "organizationalBranding.privacyAndCookiesUrl|AzureAD|All",
+      "controlId": "03.01.09",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Provides access to organization privacy notices on sign-in page. Complements but does not enforce acknowledgment of policies.",
+      "nistRequirement": "Display privacy notices consistent with applicable CUI rules"
+    },
+    {
+      "uniqueKey": "organizationalBranding.termsOfUseUrl|AzureAD|All",
+      "controlId": "03.01.09",
+      "confidence": "Low",
+      "isRequired": false,
+      "mappingRationale": "Provides passive link to terms of use but does not display notice or require acknowledgment. Consider using Conditional Access Terms of Use for enforcement.",
+      "nistRequirement": "Display security notices consistent with applicable CUI rules"
+    },
+    {
       "uniqueKey": "agreement.file|AzureAD|All",
       "controlId": "03.01.09",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Enforces display and acknowledgment of security notices before granting access to cloud applications. Users must explicitly accept terms before continuing.",
       "nistRequirement": "Display system use notification message before granting access to the system"
+    },
+    {
+      "uniqueKey": "agreement.displayName|AzureAD|All",
+      "controlId": "03.01.09",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Provides clear identification of security notice type to users during acceptance process.",
+      "nistRequirement": "Display security notices consistent with applicable CUI rules"
     },
     {
       "uniqueKey": "agreement.requireReviewBeforeAccept|AzureAD|All",
@@ -643,6 +1741,14 @@
       "nistRequirement": "Display system use notification message before granting access"
     },
     {
+      "uniqueKey": "agreement.userReacceptRequiredFrequency|AzureAD|All",
+      "controlId": "03.01.09",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Ensures security notice presented on each device accessing system. Useful for BYOD or multi-device scenarios but not strictly required by NIST.",
+      "nistRequirement": "Display system use notification before granting access"
+    },
+    {
       "uniqueKey": "SystemConfiguration.LockScreenMessage.LockScreenFootnote|Intune|iOS",
       "controlId": "03.01.09",
       "confidence": "High",
@@ -651,11 +1757,67 @@
       "nistRequirement": "Display system use notification message before granting access to the system"
     },
     {
+      "uniqueKey": "SystemConfiguration.LockScreenMessage.AssetTagInformation|Intune|iOS",
+      "controlId": "03.01.09",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supplements lock screen security notice with ownership/contact information. Supports but not directly enforces security notification requirement.",
+      "nistRequirement": "Display system use notification message before granting access"
+    },
+    {
+      "uniqueKey": "DeviceRestrictions.System.LockScreenMessage|Intune|Android",
+      "controlId": "03.01.09",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Displays security notice on Android device lock screen before authentication, providing pre-access system use notification.",
+      "nistRequirement": "Display system use notification message before granting access to the system"
+    },
+    {
+      "uniqueKey": "DeviceRestrictions.System.ShortSupportMessage|Intune|Android",
+      "controlId": "03.01.09",
+      "confidence": "Low",
+      "isRequired": false,
+      "mappingRationale": "Provides security policy context when users encounter restrictions, but shown reactively rather than proactively before access.",
+      "nistRequirement": "Display security notices consistent with applicable CUI rules"
+    },
+    {
+      "uniqueKey": "tenantAdmin.customization.privacyMessage_ios|Intune|iOS",
+      "controlId": "03.01.09",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Provides privacy notice accessible in Company Portal app. Complements but does not enforce pre-access notification requirement.",
+      "nistRequirement": "Display privacy notices consistent with applicable CUI rules"
+    },
+    {
+      "uniqueKey": "tenantAdmin.customization.privacyMessage_ios|Intune|iOS",
+      "controlId": "03.15.03",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Directly addresses privacy statement requirement by informing users what organization can/cannot access.",
+      "nistRequirement": "Provide a publicly accessible privacy statement"
+    },
+    {
       "uniqueKey": "Device.Vendor.MSFT.Policy.Config.DeviceLock.MaxInactivityTimeDeviceLock|Intune|Windows",
       "controlId": "03.01.10",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Directly enforces NIST 03.01.10(a) - initiate device lock after organization-defined inactivity period. Primary Windows setting for automatic lock.",
+      "nistRequirement": "Prevent access to the system by initiating a device lock after organization-defined time period of inactivity"
+    },
+    {
+      "uniqueKey": "Device.Vendor.MSFT.Policy.Config.LocalPoliciesSecurityOptions.InteractiveLogon_MachineInactivityLimit|Intune|Windows",
+      "controlId": "03.01.10",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Alternative GPO-equivalent method for device lock after inactivity. Use either this OR MaxInactivityTimeDeviceLock, not both (can conflict).",
+      "nistRequirement": "Prevent access to the system by initiating a device lock after organization-defined time period of inactivity"
+    },
+    {
+      "uniqueKey": "User.Vendor.MSFT.Policy.Config.ADMX_ControlPanelDisplay.CPL_Personalization_ScreenSaverTimeOut|Intune|Windows",
+      "controlId": "03.01.10",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supplementary setting - screen saver timeout works with password protection to enforce locking. Not primary method but supports NIST 03.01.10(a).",
       "nistRequirement": "Prevent access to the system by initiating a device lock after organization-defined time period of inactivity"
     },
     {
@@ -675,6 +1837,22 @@
       "nistRequirement": "Conceal, via the device lock, information previously visible on the display with a publicly viewable image"
     },
     {
+      "uniqueKey": "Device.Vendor.MSFT.Policy.Config.ADMX_ControlPanel.PreventChangingLockScreen|Intune|Windows",
+      "controlId": "03.01.10",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Supports NIST 03.01.10(c) by preventing users from changing corporate lock screen. Ensures consistent information concealment compliance.",
+      "nistRequirement": "Conceal, via the device lock, information previously visible on the display with a publicly viewable image"
+    },
+    {
+      "uniqueKey": "windows10EndpointProtectionConfiguration.windowsHelloForBusinessSettings.useBiometrics|Intune|Windows",
+      "controlId": "03.01.10",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Supports NIST 03.01.10(b) with robust biometric authentication for reestablishing access after lock. Hardware-backed cryptographic keys provide stronger auth than passwords.",
+      "nistRequirement": "Retain the device lock until the user reestablishes access using established identification and authentication procedures"
+    },
+    {
       "uniqueKey": "windows10EndpointProtectionConfiguration.windowsHelloForBusinessSettings.pinMinimumLength|Intune|Windows",
       "controlId": "03.01.10",
       "confidence": "High",
@@ -689,6 +1867,38 @@
       "isRequired": true,
       "mappingRationale": "Directly enforces NIST 03.01.10(a) for iOS by auto-locking after inactivity. CIS Benchmark recommends 5 min or less.",
       "nistRequirement": "Prevent access to the system by initiating a device lock after organization-defined time period of inactivity"
+    },
+    {
+      "uniqueKey": "iosGeneralDeviceConfiguration.maxGracePeriod|Intune|iOS",
+      "controlId": "03.01.10",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "CRITICAL for NIST 03.01.10(b) - ensures device lock retained until user re-authenticates. Setting to 0 prevents any grace period where device unlocks without auth.",
+      "nistRequirement": "Retain the device lock until the user reestablishes access using established identification and authentication procedures"
+    },
+    {
+      "uniqueKey": "iosGeneralDeviceConfiguration.lockScreenFootnote|Intune|iOS",
+      "controlId": "03.01.10",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Supports NIST 03.01.10(c) by providing publicly viewable info on locked iOS devices. Shows ownership/contact while concealing sensitive content. Supervised devices only.",
+      "nistRequirement": "Conceal, via the device lock, information previously visible on the display with a publicly viewable image"
+    },
+    {
+      "uniqueKey": "androidDeviceOwnerGeneralDeviceConfiguration.passwordMinutesOfInactivityBeforeScreenTimeout|Intune|Android",
+      "controlId": "03.01.10",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Directly enforces NIST 03.01.10(a) for Android Enterprise devices. CIS Android Benchmark recommends 1-5 min for security.",
+      "nistRequirement": "Prevent access to the system by initiating a device lock after organization-defined time period of inactivity"
+    },
+    {
+      "uniqueKey": "androidDeviceOwnerGeneralDeviceConfiguration.lockScreenMessage|Intune|Android",
+      "controlId": "03.01.10",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Supports NIST 03.01.10(c) with publicly viewable info on locked Android devices. Displays ownership/contact while concealing sensitive data.",
+      "nistRequirement": "Conceal, via the device lock, information previously visible on the display with a publicly viewable image"
     },
     {
       "uniqueKey": "sessionControls.signInFrequency|AzureAD|All",
@@ -707,6 +1917,22 @@
       "nistRequirement": "Terminate a user session automatically after organization-defined conditions - addresses event-driven termination (e.g., targeted responses to certain types of incidents, accessing sensitive resources)"
     },
     {
+      "uniqueKey": "sessionControls.persistentBrowser|AzureAD|All",
+      "controlId": "03.01.11",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Enforces session termination when users close their browsers by preventing persistent browser sessions. This ensures logical sessions don't continue indefinitely after users leave their workstation, supporting the requirement to automatically terminate sessions under defined conditions (e.g., end of user activity indicated by browser closure).",
+      "nistRequirement": "Terminate a user session automatically after organization-defined conditions - specifically addresses session termination when users end their browser sessions"
+    },
+    {
+      "uniqueKey": "LocalPoliciesSecurityOptions.InteractiveLogon_MachineInactivityLimit|Intune|Windows",
+      "controlId": "03.01.11",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Enforces automatic session termination (lock screen) after defined inactivity period. While primarily a device lock mechanism (covered in 03.01.10), it also serves session termination by preventing continued access after inactivity timeout. Can be configured to trigger actual logoff when used with screensaver password protection.",
+      "nistRequirement": "Terminate a user session automatically after organization-defined periods of user inactivity"
+    },
+    {
       "uniqueKey": "RemoteDesktopServices.RemoteDesktopSessionHost.SessionTimeLimit.IdleSessionLimit|Intune|Windows",
       "controlId": "03.01.11",
       "confidence": "High",
@@ -715,12 +1941,28 @@
       "nistRequirement": "Terminate a user session automatically after organization-defined periods of user inactivity - specifically for remote access sessions"
     },
     {
+      "uniqueKey": "RemoteDesktopServices.RemoteDesktopSessionHost.SessionTimeLimit.IdleSessionLimit|Intune|Windows",
+      "controlId": "03.01.12",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Supports remote access security by automatically terminating idle remote sessions, reducing risk of unauthorized access through abandoned remote connections.",
+      "nistRequirement": "Remote access control requirements - session management for remote connections"
+    },
+    {
       "uniqueKey": "RemoteDesktopServices.RemoteDesktopSessionHost.SessionTimeLimit.DisconnectedSessionLimit|Intune|Windows",
       "controlId": "03.01.11",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Enforces complete termination of Remote Desktop sessions after they become disconnected. This ensures logical sessions are fully terminated (all processes ended) rather than remaining in suspended state indefinitely. Critical for ending sessions when users close RDP clients without logging off properly.",
       "nistRequirement": "Terminate a user session automatically - session termination ends all system processes associated with user's logical session"
+    },
+    {
+      "uniqueKey": "RemoteDesktopServices.RemoteDesktopSessionHost.SessionTimeLimit.ActiveSessionLimit|Intune|Windows",
+      "controlId": "03.01.11",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Provides optional hard limit on session duration regardless of activity. Enforces session termination based on time-of-day restrictions or maximum session duration policies. However, typically NOT recommended as it terminates active working sessions, preferring idle-based termination instead.",
+      "nistRequirement": "Terminate a user session automatically after organization-defined conditions - addresses time-of-day restrictions and maximum session duration policies"
     },
     {
       "uniqueKey": "RemoteDesktopServices.RemoteDesktopSessionHost.SessionTimeLimit.EndSessionWhenTimeLimitsReached|Intune|Windows",
@@ -737,6 +1979,62 @@
       "isRequired": true,
       "mappingRationale": "Directly enforces automatic session termination for all Microsoft 365 web applications after user inactivity. This is a comprehensive cloud application session control that terminates logical user sessions across the Microsoft 365 ecosystem, preventing unauthorized access when users leave workstations unattended.",
       "nistRequirement": "Terminate a user session automatically after organization-defined periods of user inactivity - specifically for cloud application sessions"
+    },
+    {
+      "uniqueKey": "ConditionalAccess.SessionControls.UseAppEnforcedRestrictions|AzureAD|All",
+      "controlId": "03.01.11",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Provides conditional session termination based on device management status. Enforces stricter automatic session termination for higher-risk scenarios (unmanaged devices) while allowing more flexibility for managed, compliant devices. Addresses NIST requirement for organization-defined conditions triggering session termination.",
+      "nistRequirement": "Terminate a user session automatically after organization-defined conditions (specifically: device management/compliance status as trigger condition)"
+    },
+    {
+      "uniqueKey": "SharePoint.IdleSessionSignOut|Purview|All",
+      "controlId": "03.01.11",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Enforces automatic session termination specifically for SharePoint Online and OneDrive for Business browser sessions after user inactivity. Provides granular control over SharePoint/OneDrive sessions beyond global M365 timeout. NOTE: Superseded by M365 Admin Center global timeout if both are configured.",
+      "nistRequirement": "Terminate a user session automatically after organization-defined periods of user inactivity - application-specific session termination"
+    },
+    {
+      "uniqueKey": "Organization.ActivityBasedAuthenticationTimeout|Microsoft365|All",
+      "controlId": "03.01.11",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Legacy setting for OWA session timeout. Being deprecated in favor of M365 Admin Center global idle timeout. Historically enforced automatic session termination for Outlook Web App after inactivity. NOTE: Only document for environments not yet migrated to M365 Admin Center timeout. Superseded by M365-AC-001.",
+      "nistRequirement": "Terminate a user session automatically after organization-defined periods of user inactivity - legacy OWA-specific implementation"
+    },
+    {
+      "uniqueKey": "IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod|Intune|iOS",
+      "controlId": "03.01.11",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces automatic session termination for mobile app sessions after extended offline periods. Mobile users accessing Microsoft 365 apps must periodically check in online, effectively terminating stale sessions that haven't authenticated recently. Prevents indefinite offline access to potentially stale corporate data.",
+      "nistRequirement": "Terminate a user session automatically after organization-defined conditions - specifically addresses offline/disconnected session termination for mobile apps"
+    },
+    {
+      "uniqueKey": "IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod|Intune|iOS",
+      "controlId": "03.01.18",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supports mobile device access control by ensuring mobile app sessions require periodic online authentication, preventing extended offline access with potentially compromised credentials.",
+      "nistRequirement": "Mobile device access control - session management for mobile applications"
+    },
+    {
+      "uniqueKey": "IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod|Intune|Android",
+      "controlId": "03.01.11",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enforces automatic session termination for mobile app sessions on Android devices after extended offline periods. Mobile users accessing Microsoft 365 apps must periodically check in online, effectively terminating stale sessions that haven't authenticated recently.",
+      "nistRequirement": "Terminate a user session automatically after organization-defined conditions - specifically addresses offline/disconnected session termination for Android mobile apps"
+    },
+    {
+      "uniqueKey": "IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod|Intune|Android",
+      "controlId": "03.01.18",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Supports mobile device access control by ensuring Android app sessions require periodic online authentication, preventing extended offline access with potentially compromised credentials.",
+      "nistRequirement": "Mobile device access control - session management for mobile applications"
     },
     {
       "uniqueKey": "displayName|AzureAD|All",
@@ -763,12 +2061,28 @@
       "nistRequirement": "03.01.12.c - Route remote access to the system through authorized and managed access control points"
     },
     {
+      "uniqueKey": "countriesAndRegions|AzureAD|All",
+      "controlId": "03.01.12",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Country-based location restrictions establish geographic usage restrictions for remote access, providing an additional layer of access control for organizations with defined geographic presence",
+      "nistRequirement": "03.01.12.a - Establish usage restrictions, configuration requirements, and connection requirements for each type of allowable remote system access"
+    },
+    {
       "uniqueKey": "conditions.locations.includeLocations|AzureAD|All",
       "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
       "mappingRationale": "Including specific locations in Conditional Access policies authorizes those remote access types and enforces that connections must originate from designated access control points",
       "nistRequirement": "03.01.12.b - Authorize each type of remote system access prior to establishing such connections"
+    },
+    {
+      "uniqueKey": "conditions.locations.excludeLocations|AzureAD|All",
+      "controlId": "03.01.12",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Excluding trusted locations from certain policy requirements establishes differentiated configuration requirements based on the type and source of remote access",
+      "nistRequirement": "03.01.12.a - Establish usage restrictions, configuration requirements, and connection requirements for each type of allowable remote system access"
     },
     {
       "uniqueKey": "grantControls.builtInControls|AzureAD|All",
@@ -795,180 +2109,92 @@
       "nistRequirement": "03.01.12.c - Route remote access to the system through authorized and managed access control points"
     },
     {
-      "uniqueKey": "roleAssignments.filter(roleDefinitionId eq 'Global Administrator').count|AzureAD|All",
-      "controlId": "03.01.05",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Limiting Global Administrator assignments directly implements least privilege by restricting the number of accounts with highest-level access to organization-wide resources",
-      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
-    },
-    {
-      "uniqueKey": "roleAssignments.roleDefinitionId|AzureAD|All",
-      "controlId": "03.01.05",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Using least privileged built-in roles ensures users have exactly the permissions needed for their tasks, no more and no less, directly implementing the principle of least privilege",
-      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
-    },
-    {
-      "uniqueKey": "roleAssignments.filter(roleDefinition.isPrivileged eq true).count|AzureAD|All",
-      "controlId": "03.01.05",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Limiting privileged role assignments prevents accumulation of excessive high-level permissions and reduces the attack surface for credential compromise and privilege escalation",
-      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
-    },
-    {
-      "uniqueKey": "privilegedAccess.azureResources/roleSettings.isDefault|AzureAD|All",
-      "controlId": "03.01.05",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "PIM implements just-in-time privileged access, ensuring users only have elevated permissions when needed for specific tasks, directly implementing temporal least privilege",
-      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
-    },
-    {
-      "uniqueKey": "privilegedAccess.azureResources/roleSettings.userMemberSettings.mfaRule|AzureAD|All",
-      "controlId": "03.01.05",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "MFA on role activation provides strong authentication before granting privileged access, ensuring only authorized and verified users can elevate permissions",
-      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
-    },
-    {
-      "uniqueKey": "privilegedAccess.azureResources/roleSettings.userMemberSettings.maximumGrantPeriod|AzureAD|All",
-      "controlId": "03.01.05",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Limited activation duration implements temporal least privilege by automatically removing elevated permissions after a defined period, reducing the window of exposure",
-      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
-    },
-    {
-      "uniqueKey": "grantControls.builtInControls|AzureAD|All",
-      "controlId": "03.05.02",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "MFA grant control directly enforces multi-factor authentication for account access",
-      "nistRequirement": "03.05.02 - Enforce MFA for account access"
-    },
-    {
-      "uniqueKey": "passwordRequired|Intune|Windows",
-      "controlId": "03.05.01",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Requires identification and authentication via password before granting device access",
-      "nistRequirement": "03.05.01 - Identify and authenticate users"
-    },
-    {
-      "uniqueKey": "minPasswordLength|Intune|Windows",
-      "controlId": "03.05.07",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Enforces minimum password length requirement as part of password management controls",
-      "nistRequirement": "03.05.07 - Enforce minimum password complexity including length requirements"
-    },
-    {
-      "uniqueKey": "passwordComplexity|Intune|Windows",
-      "controlId": "03.05.07",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Enforces password complexity requirements including character diversity",
-      "nistRequirement": "03.05.07 - Enforce password complexity requirements"
-    },
-    {
-      "uniqueKey": "passwordExpiration|Intune|Windows",
-      "controlId": "03.05.07",
+      "uniqueKey": "onPremisesPublishing.internalUrl|AzureAD|All",
+      "controlId": "03.01.12",
       "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Internal URL configuration establishes the connection requirements between the managed access control point (Application Proxy) and the protected system",
+      "nistRequirement": "03.01.12.a - Establish usage restrictions, configuration requirements, and connection requirements for each type of allowable remote system access"
+    },
+    {
+      "uniqueKey": "onPremisesPublishing.isOnPremPublishingEnabled|AzureAD|All",
+      "controlId": "03.01.12",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Enabling Application Proxy publishing authorizes this specific remote access method and activates the managed access control point for the application",
+      "nistRequirement": "03.01.12.b - Authorize each type of remote system access prior to establishing such connections"
+    },
+    {
+      "uniqueKey": "onPremisesPublishing.externalAuthenticationType|AzureAD|All",
+      "controlId": "03.01.12",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Pre-authentication with Azure AD ensures users are authorized before remote access connections are established, enforcing authentication and authorization requirements",
+      "nistRequirement": "03.01.12.b - Authorize each type of remote system access prior to establishing such connections"
+    },
+    {
+      "uniqueKey": "onPremisesPublishing.applicationServerTimeout|AzureAD|All",
+      "controlId": "03.01.12",
+      "confidence": "Low",
       "isRequired": false,
-      "mappingRationale": "Enforces periodic password changes as part of password management policy",
-      "nistRequirement": "03.05.07 - Manage password lifecycle including expiration"
+      "mappingRationale": "Timeout configuration establishes connection requirements for the specific type of remote access through Application Proxy",
+      "nistRequirement": "03.01.12.a - Establish usage restrictions, configuration requirements, and connection requirements for each type of allowable remote system access"
     },
     {
-      "uniqueKey": "passwordHistoryCount|Intune|Windows",
-      "controlId": "03.05.07",
+      "uniqueKey": "onPremisesPublishing.connectorGroupId|AzureAD|All",
+      "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Prevents password reuse by maintaining password history",
-      "nistRequirement": "03.05.07 - Prohibit password reuse"
+      "mappingRationale": "Connector group assignment defines the specific managed access control points (physical connector servers) through which remote access traffic is routed",
+      "nistRequirement": "03.01.12.c - Route remote access to the system through authorized and managed access control points"
     },
     {
-      "uniqueKey": "storageRequireEncryption|Intune|Windows",
-      "controlId": "03.13.11",
+      "uniqueKey": "roleSettings.activationDuration|AzureAD|All",
+      "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Enforces cryptographic protection of CUI at rest on devices",
-      "nistRequirement": "03.13.11 - Employ cryptographic mechanisms to protect the confidentiality of CUI at rest"
+      "mappingRationale": "PIM activation duration establishes time-based usage restrictions for privileged remote access",
+      "nistRequirement": "03.01.12.a - Establish usage restrictions; 03.01.12.d - Authorize remote execution of privileged commands"
     },
     {
-      "uniqueKey": "allowedToUseSSPR|AzureAD|All",
-      "controlId": "03.05.07",
-      "confidence": "Medium",
-      "isRequired": false,
-      "mappingRationale": "Supports password management by allowing users to reset forgotten passwords securely",
-      "nistRequirement": "03.05.07 - Manage password reset processes"
-    },
-    {
-      "uniqueKey": "passwordRequired|Intune|iOS",
-      "controlId": "03.05.01",
+      "uniqueKey": "roleSettings.approvalRequired|AzureAD|All",
+      "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Requires user identification and authentication via passcode",
-      "nistRequirement": "03.05.01 - Identify and authenticate users"
+      "mappingRationale": "Approval requirements ensure privileged remote access is explicitly authorized",
+      "nistRequirement": "03.01.12.b - Authorize remote system access; 03.01.12.d - Authorize privileged commands"
     },
     {
-      "uniqueKey": "simplePasswords|Intune|iOS",
-      "controlId": "03.05.07",
+      "uniqueKey": "servers|Intune|Windows",
+      "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Enforces password complexity by blocking simple, easily guessable passwords",
-      "nistRequirement": "03.05.07 - Enforce password complexity requirements"
+      "mappingRationale": "VPN server configuration defines managed access control points",
+      "nistRequirement": "03.01.12.c - Route remote access through managed access control points"
     },
     {
-      "uniqueKey": "minPasswordLength|Intune|iOS",
-      "controlId": "03.05.07",
+      "uniqueKey": "connectionType|Intune|Windows",
+      "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Enforces minimum password length requirement",
-      "nistRequirement": "03.05.07 - Enforce minimum password length"
+      "mappingRationale": "Connection type establishes technical configuration requirements",
+      "nistRequirement": "03.01.12.a - Establish configuration requirements"
     },
     {
-      "uniqueKey": "passwordRequired|Intune|Android",
-      "controlId": "03.05.01",
+      "uniqueKey": "fDenyTSConnections|Intune|Windows",
+      "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Requires user identification and authentication via password",
-      "nistRequirement": "03.05.01 - Identify and authenticate users"
+      "mappingRationale": "Authorizes RDP as remote access type",
+      "nistRequirement": "03.01.12.b - Authorize remote system access"
     },
     {
-      "uniqueKey": "minPasswordLength|Intune|Android",
-      "controlId": "03.05.07",
+      "uniqueKey": "UserAuthentication|Intune|Windows",
+      "controlId": "03.01.12",
       "confidence": "High",
       "isRequired": true,
-      "mappingRationale": "Enforces minimum password length requirement for Android devices",
-      "nistRequirement": "03.05.07 - Enforce minimum password length"
-    },
-    {
-      "uniqueKey": "tenantAdmin.customization.privacyMessage_ios|Intune|iOS",
-      "controlId": "03.15.03",
-      "confidence": "High",
-      "isRequired": true,
-      "mappingRationale": "Directly addresses privacy statement requirement by informing users what organization can/cannot access.",
-      "nistRequirement": "Provide a publicly accessible privacy statement"
-    },
-    {
-      "uniqueKey": "IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod|Intune|iOS",
-      "controlId": "03.01.18",
-      "confidence": "Medium",
-      "isRequired": false,
-      "mappingRationale": "Supports mobile device access control by ensuring mobile app sessions require periodic online authentication, preventing extended offline access with potentially compromised credentials.",
-      "nistRequirement": "Mobile device access control - session management for mobile applications"
-    },
-    {
-      "uniqueKey": "IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod|Intune|Android",
-      "controlId": "03.01.18",
-      "confidence": "Medium",
-      "isRequired": false,
-      "mappingRationale": "Supports mobile device access control by ensuring Android app sessions require periodic online authentication, preventing extended offline access with potentially compromised credentials.",
-      "nistRequirement": "Mobile device access control - session management for mobile applications"
+      "mappingRationale": "NLA enforces authorization before connection",
+      "nistRequirement": "03.01.12.b - Authorize remote access"
     },
     {
       "uniqueKey": "wiFiConfiguration.securityType|Intune|All",
@@ -1153,6 +2379,262 @@
       "isRequired": true,
       "mappingRationale": "Teams external access controls prevent CUI from being discussed or shared in public team channels, external meetings, or anonymous join scenarios. By restricting external communications and guest capabilities, organizations prevent CUI from being inadvertently exposed through Teams collaboration features, supporting the requirement to ensure publicly accessible information does not contain CUI.",
       "nistRequirement": "Train authorized individuals to ensure that publicly accessible information does not contain CUI"
+    },
+    {
+      "uniqueKey": "roleAssignments.filter(roleDefinitionId eq 'Global Administrator').count|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Limiting Global Administrator assignments directly implements least privilege by restricting the number of accounts with highest-level access to organization-wide resources",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "roleAssignments.roleDefinitionId|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Using least privileged built-in roles ensures users have exactly the permissions needed for their tasks, no more and no less, directly implementing the principle of least privilege",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "roleDefinitions.isBuiltIn|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Custom roles enable organizations to define precise permission sets tailored to specific job functions, achieving greater least privilege granularity than built-in roles allow",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
+    },
+    {
+      "uniqueKey": "groups.isAssignableToRole|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Role-assignable groups simplify management of least privilege by allowing consistent permission sets across users with similar job functions, reducing risk of permission drift",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "roleAssignments.filter(roleDefinition.isPrivileged eq true).count|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Limiting privileged role assignments prevents accumulation of excessive high-level permissions and reduces the attack surface for credential compromise and privilege escalation",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
+    },
+    {
+      "uniqueKey": "users.filter(displayName contains 'emergency' or displayName contains 'breakglass').count|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Emergency access accounts ensure administrative access during system failures while supporting overall least privilege strategy by enabling removal of permanent Global Administrator assignments from regular accounts",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "roleAssignments.directoryScopeId|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Scoping role assignments to Administrative Units or specific resources limits the blast radius of privileged access, implementing least privilege at both the permission and scope dimensions",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "servicePrincipals.appRoleAssignments.count + roleAssignments.count|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "The service limit prevents excessive privilege accumulation by service principals, naturally enforcing least privilege through technical constraints",
+      "nistRequirement": "a. Allow only authorized system access for users (or processes acting on behalf of users) that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "privilegedAccess.azureResources/roleSettings.isDefault|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "PIM implements just-in-time privileged access, ensuring users only have elevated permissions when needed for specific tasks, directly implementing temporal least privilege",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "privilegedAccess.azureResources/roleSettings.userMemberSettings.mfaRule|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "MFA on role activation provides strong authentication before granting privileged access, ensuring only authorized and verified users can elevate permissions",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
+    },
+    {
+      "uniqueKey": "privilegedAccess.azureResources/roleSettings.userMemberSettings.justificationRule|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Activation justifications create accountability and audit trail for privileged access, helping organizations validate that elevated permissions are used only for legitimate business needs",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "privilegedAccess.azureResources/roleSettings.userMemberSettings.maximumGrantPeriod|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Limited activation duration implements temporal least privilege by automatically removing elevated permissions after a defined period, reducing the window of exposure",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "privilegedAccess.azureResources/roleSettings.userMemberSettings.approvalRule|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Approval workflows for highest privileged roles add human oversight and prevent unauthorized self-elevation, implementing principle of separation of duties alongside least privilege",
+      "nistRequirement": "b. Authorize access to organization-defined security functions"
+    },
+    {
+      "uniqueKey": "roleAssignments.assignmentState|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Eligible assignments eliminate standing privileged access, ensuring users only have elevated permissions when explicitly activated for specific tasks, core implementation of just-in-time least privilege",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "identityGovernance.accessReviews.definitions.instanceEnumerationScope.principalScoped|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Periodic access reviews validate the continued need for privileged role assignments, directly implementing the requirement to review and reassign/remove privileges as necessary",
+      "nistRequirement": "c. Review the privileges assigned to roles or classes of users to validate the need for such privileges; d. Reassign or remove privileges, as necessary"
+    },
+    {
+      "uniqueKey": "identityGovernance.accessReviews.definitions.settings.recurrence.pattern.type|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Frequent access reviews for highest privileged roles ensure rapid identification and removal of unnecessary privileged access, reducing the window of excessive privilege",
+      "nistRequirement": "c. Review the privileges assigned to roles or classes of users [organization-defined frequency] to validate the need for such privileges"
+    },
+    {
+      "uniqueKey": "identityGovernance.accessReviews.definitions.settings.autoApplyDecisionsEnabled|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Auto-applying review results ensures timely removal of unnecessary privileges without manual intervention, implementing the requirement to reassign or remove privileges",
+      "nistRequirement": "d. Reassign or remove privileges, as necessary"
+    },
+    {
+      "uniqueKey": "identityGovernance.accessReviews.definitions.settings.recurrence.pattern.daysOfMonth|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Short review durations ensure timely validation of privilege need and prevent prolonged periods of potentially unnecessary elevated access",
+      "nistRequirement": "c. Review the privileges assigned to roles or classes of users to validate the need for such privileges"
+    },
+    {
+      "uniqueKey": "identityGovernance.accessReviews.definitions.settings.recommendationsEnabled|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "System recommendations help reviewers identify potentially unnecessary privileges based on actual usage data, improving review quality and privilege removal accuracy",
+      "nistRequirement": "c. Review the privileges assigned to roles or classes of users to validate the need for such privileges; d. Reassign or remove privileges, as necessary"
+    },
+    {
+      "uniqueKey": "identityGovernance.accessReviews.definitions.settings.justificationRequiredOnApproval|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": true,
+      "mappingRationale": "Requiring justifications for privilege continuation creates accountability and audit trail, ensuring reviewers actively validate business need rather than rubber-stamping approvals",
+      "nistRequirement": "c. Review the privileges assigned to roles or classes of users to validate the need for such privileges"
+    },
+    {
+      "uniqueKey": "deviceEnrollmentConfigurations.windowsAutopilot.settings.enableWhiteGlove|Intune|Windows",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Provisioning standard user accounts prevents end users from having unnecessary local administrative privileges, implementing least privilege at the endpoint level from initial device setup",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "deviceConfigurations.endpointSecurityAccountProtection.localUsersAndGroups.configure|Intune|Windows",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Account Protection policies enforce least privilege by programmatically managing local administrator group membership, ensuring only authorized users have elevated access on endpoints",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "deviceConfigurations.settingsCatalog.localPoliciesSecurityOptions.userAccountControlTypeOfAdminApprovalMode|Intune|Windows",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Administrator Protection implements just-in-time privilege elevation by requiring explicit user consent for admin operations, ensuring users operate with least privilege by default",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "deviceManagement.elevationRequests.elevationRules|Intune|Windows",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "EPM enables granular just-in-time privilege elevation for specific applications, allowing users to remain standard users while still completing necessary elevated tasks",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "deviceConfigurations.settingsCatalog.laps|Intune|Windows",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "LAPS implements least privilege for local administrator access by ensuring unique, complex passwords per device and just-in-time access to local admin credentials",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
+    },
+    {
+      "uniqueKey": "roleManagement.roleDefinitions|Intune|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Custom Intune RBAC roles enable precise least privilege for device management functions, ensuring administrators only have permissions necessary for their specific job duties",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
+    },
+    {
+      "uniqueKey": "servicePrincipals.appRoles|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Granting applications minimum required permissions implements least privilege for automated processes and service principals, reducing the impact of application compromise",
+      "nistRequirement": "a. Allow only authorized system access for processes acting on behalf of users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "servicePrincipals.appRoleAssignments.appRoleId|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Requiring admin consent for high-privilege application permissions ensures human oversight and approval before granting broad access to organizational resources",
+      "nistRequirement": "b. Authorize access to organization-defined security functions and security-relevant information"
+    },
+    {
+      "uniqueKey": "servicePrincipals.appRoleAssignments|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": true,
+      "mappingRationale": "Periodic review of application permissions validates continued need for granted privileges and identifies permission creep, directly implementing the requirement to review and remove unnecessary privileges",
+      "nistRequirement": "c. Review the privileges assigned to roles or classes of users to validate the need for such privileges; d. Reassign or remove privileges, as necessary"
+    },
+    {
+      "uniqueKey": "servicePrincipals.oauth2PermissionGrants.scope|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Delegated permissions implement least privilege by limiting application access to the intersection of granted permissions and user's actual permissions, preventing privilege escalation",
+      "nistRequirement": "a. Allow only authorized system access for processes acting on behalf of users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "administrativeUnits|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "High",
+      "isRequired": false,
+      "mappingRationale": "Administrative Units implement least privilege by limiting the scope of role assignments to specific organizational boundaries, reducing the blast radius of administrative access",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks"
+    },
+    {
+      "uniqueKey": "administrativeUnits.isMemberManagementRestricted|AzureAD|All",
+      "controlId": "03.01.05",
+      "confidence": "Medium",
+      "isRequired": false,
+      "mappingRationale": "Restricted management AUs implement additional least privilege controls by preventing even Global Administrators from managing sensitive organizational units without explicit scoped access",
+      "nistRequirement": "a. Allow only authorized system access for users that is necessary to accomplish assigned organizational tasks; b. Authorize access to organization-defined security functions"
     },
     {
       "uniqueKey": "UnifiedAuditLogIngestionEnabled|Purview|All",

@@ -181,6 +181,7 @@ export const ControlDetailPage: React.FC = () => {
             editMode={editMode}
             localNotes={localNotes}
             onNotesChange={setLocalNotes}
+            onViewM365Tab={() => setActiveTab('m365-settings')}
             onEditClick={() => setEditMode(true)}
             onSaveClick={handleSaveNotes}
             onCancelClick={handleCancelEdit}

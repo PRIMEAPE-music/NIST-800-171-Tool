@@ -118,7 +118,7 @@ export class M365SettingsImportService {
       process.cwd(),
       '..',
       'INSTRUCTIONS',
-      'normalized-output',
+      'POLICY SETTINGS normalized-output',
       'master_settings_catalog.json'
     );
 
@@ -240,7 +240,7 @@ export class M365SettingsImportService {
       process.cwd(),
       '..',
       'INSTRUCTIONS',
-      'normalized-output',
+      'POLICY SETTINGS normalized-output',
       'control_settings_mappings.json'
     );
 
