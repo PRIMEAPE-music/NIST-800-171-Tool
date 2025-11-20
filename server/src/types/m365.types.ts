@@ -130,6 +130,18 @@ export interface AzureADMFAStatus {
   percentageCompliance: number;
 }
 
+/**
+ * Azure AD Security Summary including PIM
+ */
+export interface AzureADSecuritySummary {
+  conditionalAccessPolicies: AzureADConditionalAccessPolicy[];
+  mfaStatus: AzureADMFAStatus;
+  securityDefaultsEnabled: boolean;
+  privilegedRolesCount: number;
+  pimPolicies: any[];
+  pimAssignments: any[];
+}
+
 // REMOVED: ControlPolicyMappingTemplate interface - no longer mapping policies to controls
 
 // ============================================

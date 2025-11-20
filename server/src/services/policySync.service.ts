@@ -37,9 +37,18 @@ class PolicySyncService {
     // Conditional Access
     if (odataType.includes('conditionalAccess')) return 'ConditionalAccess';
 
+    // Authorization Policy (tenant-wide security settings)
+    if (odataType.includes('authorizationPolicy')) return 'AzureAD';
+
+    // Windows Custom Configuration (OMA-URI profiles)
+    if (odataType.includes('windows10CustomConfiguration')) return 'Configuration';
+
     // Defender/Security
     if (odataType.includes('windowsDefenderAdvancedThreatProtection')) return 'DefenderSecurity';
     if (odataType.includes('endpointSecurityEndpointDetectionAndResponse')) return 'EndpointDetection';
+
+    // Attack Simulation Training
+    if (odataType.includes('attackSimulation')) return 'SecurityTraining';
     if (odataType.includes('endpointSecurityAttackSurfaceReduction')) return 'AttackSurfaceReduction';
     if (odataType.includes('endpointSecurityDiskEncryption')) return 'DiskEncryption';
     if (odataType.includes('baseline')) return 'SecurityBaseline';
@@ -344,32 +353,61 @@ class PolicySyncService {
       });
 
       // Settings Catalog uses templateReference for type info
+      // PRIMARY: Use templateReference.templateFamily directly (most reliable)
+      // FALLBACK: Check templateId string for keywords
+      const templateRefFamily = policy.templateReference?.templateFamily || '';
       const templateId = policy.templateReference?.templateId || '';
       let odataType = '#settingsCatalog.customProfile';
       let templateFamily = 'Configuration';
 
-      // Determine type from templateId
-      if (templateId.includes('endpointSecurityAntivirus')) {
-        odataType = '#settingsCatalog.endpointSecurityAntivirus';
-        templateFamily = 'EndpointSecurity';
-      } else if (templateId.includes('endpointSecurityDiskEncryption')) {
-        odataType = '#settingsCatalog.endpointSecurityDiskEncryption';
-        templateFamily = 'DiskEncryption';
-      } else if (templateId.includes('endpointSecurityEndpointDetectionAndResponse')) {
-        odataType = '#settingsCatalog.endpointSecurityEndpointDetectionAndResponse';
-        templateFamily = 'EndpointDetection';
-      } else if (templateId.includes('endpointSecurityAttackSurfaceReduction')) {
-        odataType = '#settingsCatalog.endpointSecurityAttackSurfaceReduction';
-        templateFamily = 'AttackSurfaceReduction';
-      } else if (templateId.includes('endpointSecurityFirewall')) {
-        odataType = '#settingsCatalog.endpointSecurityFirewall';
-        templateFamily = 'Firewall';
-      } else if (templateId.includes('baseline')) {
-        odataType = '#settingsCatalog.baseline';
-        templateFamily = 'SecurityBaseline';
-      } else if (templateId.includes('deviceCompliance')) {
-        odataType = '#settingsCatalog.deviceCompliance';
-        templateFamily = 'Compliance';
+      // Use templateReference.templateFamily if available and valid
+      if (templateRefFamily && templateRefFamily !== 'none') {
+        odataType = `#settingsCatalog.${templateRefFamily}`;
+
+        // Map templateFamily to a user-friendly category
+        if (templateRefFamily.includes('endpointSecurity')) {
+          if (templateRefFamily.includes('Antivirus')) {
+            templateFamily = 'Antivirus';
+          } else if (templateRefFamily.includes('DiskEncryption')) {
+            templateFamily = 'DiskEncryption';
+          } else if (templateRefFamily.includes('EndpointDetectionAndResponse')) {
+            templateFamily = 'EndpointDetection';
+          } else if (templateRefFamily.includes('AttackSurfaceReduction')) {
+            templateFamily = 'AttackSurfaceReduction';
+          } else if (templateRefFamily.includes('Firewall')) {
+            templateFamily = 'Firewall';
+          } else {
+            templateFamily = 'EndpointSecurity';
+          }
+        } else if (templateRefFamily === 'baseline') {
+          templateFamily = 'SecurityBaseline';
+        } else if (templateRefFamily.includes('Compliance') || templateRefFamily.includes('deviceCompliance')) {
+          templateFamily = 'Compliance';
+        }
+      } else {
+        // Fallback: Determine type from templateId string (for policies without templateFamily)
+        if (templateId.includes('endpointSecurityAntivirus')) {
+          odataType = '#settingsCatalog.endpointSecurityAntivirus';
+          templateFamily = 'Antivirus';
+        } else if (templateId.includes('endpointSecurityDiskEncryption')) {
+          odataType = '#settingsCatalog.endpointSecurityDiskEncryption';
+          templateFamily = 'DiskEncryption';
+        } else if (templateId.includes('endpointSecurityEndpointDetectionAndResponse')) {
+          odataType = '#settingsCatalog.endpointSecurityEndpointDetectionAndResponse';
+          templateFamily = 'EndpointDetection';
+        } else if (templateId.includes('endpointSecurityAttackSurfaceReduction')) {
+          odataType = '#settingsCatalog.endpointSecurityAttackSurfaceReduction';
+          templateFamily = 'AttackSurfaceReduction';
+        } else if (templateId.includes('endpointSecurityFirewall')) {
+          odataType = '#settingsCatalog.endpointSecurityFirewall';
+          templateFamily = 'Firewall';
+        } else if (templateId.includes('baseline')) {
+          odataType = '#settingsCatalog.baseline';
+          templateFamily = 'SecurityBaseline';
+        } else if (templateId.includes('deviceCompliance')) {
+          odataType = '#settingsCatalog.deviceCompliance';
+          templateFamily = 'Compliance';
+        }
       }
 
       const result = await prisma.m365Policy.upsert({
@@ -461,7 +499,32 @@ class PolicySyncService {
         where: { policyId: policy.id },
       });
 
-      const odataType = policy['@odata.type'] || '';
+      // Determine odataType - App Protection policies may not have @odata.type set
+      let odataType = policy['@odata.type'] || '';
+
+      // If @odata.type is empty, determine from policy characteristics
+      if (!odataType) {
+        // Check for platform-specific indicators in the policy data
+        const policyStr = JSON.stringify(policy).toLowerCase();
+        if (policyStr.includes('ios') || policy.iosManagedAppProtection) {
+          odataType = '#microsoft.graph.iosManagedAppProtection';
+        } else if (policyStr.includes('android') || policy.androidManagedAppProtection) {
+          odataType = '#microsoft.graph.androidManagedAppProtection';
+        } else if (policyStr.includes('windows') || policy.windowsManagedAppProtection) {
+          odataType = '#microsoft.graph.windowsManagedAppProtection';
+        } else {
+          // Default based on common patterns in display name
+          const name = (policy.displayName || policy.name || '').toLowerCase();
+          if (name.includes('ios') || name.includes('iphone') || name.includes('ipad')) {
+            odataType = '#microsoft.graph.iosManagedAppProtection';
+          } else if (name.includes('android')) {
+            odataType = '#microsoft.graph.androidManagedAppProtection';
+          } else {
+            odataType = '#microsoft.graph.managedAppProtection'; // Generic fallback
+          }
+        }
+      }
+
       const templateFamily = 'AppProtection';
 
       const result = await prisma.m365Policy.upsert({
@@ -498,7 +561,7 @@ class PolicySyncService {
   }
 
   /**
-   * Sync Purview policies to database
+   * Sync Purview policies to database (Labels + DLP)
    */
   private async syncPurviewPolicies(
     data: any,
@@ -507,7 +570,8 @@ class PolicySyncService {
   ): Promise<number> {
     let count = 0;
 
-    for (const label of data.labels) {
+    // Sync Sensitivity Labels
+    for (const label of data.labels || []) {
       const existing = await prisma.m365Policy.findUnique({
         where: { policyId: label.id },
       });
@@ -518,6 +582,8 @@ class PolicySyncService {
           policyName: label.name,
           policyDescription: label.description || '',
           policyData: JSON.stringify(label),
+          odataType: '#microsoft.graph.sensitivityLabel',
+          templateFamily: 'Purview',
           lastSynced: new Date(),
           isActive: label.isActive !== false,
         },
@@ -527,6 +593,8 @@ class PolicySyncService {
           policyName: label.name,
           policyDescription: label.description || '',
           policyData: JSON.stringify(label),
+          odataType: '#microsoft.graph.sensitivityLabel',
+          templateFamily: 'Purview',
         },
       });
 
@@ -538,11 +606,48 @@ class PolicySyncService {
       count++;
     }
 
+    // Sync DLP Policies (NEW)
+    for (const policy of data.dlpPolicies || []) {
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: policy.id },
+      });
+
+      const result = await prisma.m365Policy.upsert({
+        where: { policyId: policy.id },
+        update: {
+          policyName: policy.name || policy.displayName,
+          policyDescription: policy.description || `Mode: ${policy.mode || 'Unknown'}`,
+          policyData: JSON.stringify(policy),
+          odataType: '#microsoft.graph.dataLossPreventionPolicy',
+          templateFamily: 'Purview',
+          lastSynced: new Date(),
+          isActive: policy.mode !== 'TestWithoutNotifications' && policy.mode !== 'Disabled',
+        },
+        create: {
+          policyType: 'Purview',
+          policyId: policy.id,
+          policyName: policy.name || policy.displayName,
+          policyDescription: policy.description || `Mode: ${policy.mode || 'Unknown'}`,
+          policyData: JSON.stringify(policy),
+          odataType: '#microsoft.graph.dataLossPreventionPolicy',
+          templateFamily: 'Purview',
+        },
+      });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
+      count++;
+    }
+
+    console.log(`✓ Synced ${count} Purview policies (Labels + DLP)`);
     return count;
   }
 
   /**
-   * Sync Azure AD policies to database
+   * Sync Azure AD policies to database (Conditional Access + PIM)
    */
   private async syncAzureADPolicies(
     data: any,
@@ -551,6 +656,7 @@ class PolicySyncService {
   ): Promise<number> {
     let count = 0;
 
+    // Sync Conditional Access Policies
     for (const policy of data.conditionalAccessPolicies || []) {
       const existing = await prisma.m365Policy.findUnique({
         where: { policyId: policy.id },
@@ -589,6 +695,187 @@ class PolicySyncService {
       count++;
     }
 
+    // Sync PIM Role Management Policies (NEW)
+    for (const pimPolicy of data.pimPolicies || []) {
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: pimPolicy.id },
+      });
+
+      const odataType = '#microsoft.graph.privilegedIdentityManagement';
+      const templateFamily = 'IdentityGovernance';
+
+      const result = await prisma.m365Policy.upsert({
+        where: { policyId: pimPolicy.id },
+        update: {
+          policyName: pimPolicy.displayName || `PIM Policy: ${pimPolicy.scopeId}`,
+          policyDescription: pimPolicy.description || `Scope: ${pimPolicy.scopeType || 'Unknown'}`,
+          policyData: JSON.stringify(pimPolicy),
+          odataType,
+          templateFamily,
+          lastSynced: new Date(),
+          isActive: pimPolicy.isOrganizationDefault || true,
+        },
+        create: {
+          policyType: 'AzureAD',
+          policyId: pimPolicy.id,
+          policyName: pimPolicy.displayName || `PIM Policy: ${pimPolicy.scopeId}`,
+          policyDescription: pimPolicy.description || `Scope: ${pimPolicy.scopeType || 'Unknown'}`,
+          policyData: JSON.stringify(pimPolicy),
+          odataType,
+          templateFamily,
+        },
+      });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
+      count++;
+    }
+
+    // Sync Authorization Policy (Singleton - one per tenant)
+    if (data.authorizationPolicy) {
+      const authPolicy = data.authorizationPolicy;
+
+      // Use a consistent ID for the singleton authorization policy
+      const policyId = authPolicy.id || 'authorizationPolicy';
+
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId },
+      });
+
+      const odataType = '#microsoft.graph.authorizationPolicy';
+      const templateFamily = 'AzureAD';
+
+      // Create descriptive summary of key settings
+      const guestSettings = [
+        authPolicy.allowInvitesFrom ? `Invites: ${authPolicy.allowInvitesFrom}` : null,
+        authPolicy.blockMsolPowerShell !== undefined ? `Block MSOL: ${authPolicy.blockMsolPowerShell}` : null,
+        authPolicy.allowedToSignUpEmailBasedSubscriptions !== undefined
+          ? `Email signup: ${authPolicy.allowedToSignUpEmailBasedSubscriptions}`
+          : null,
+      ].filter(Boolean).join(', ');
+
+      const result = await prisma.m365Policy.upsert({
+        where: { policyId },
+        update: {
+          policyName: authPolicy.displayName || 'Tenant Authorization Policy',
+          policyDescription: guestSettings || 'Tenant-wide authorization settings',
+          policyData: JSON.stringify(authPolicy),
+          odataType,
+          templateFamily,
+          lastSynced: new Date(),
+          isActive: true, // Authorization policy is always active
+        },
+        create: {
+          policyType: 'AzureAD',
+          policyId,
+          policyName: authPolicy.displayName || 'Tenant Authorization Policy',
+          policyDescription: guestSettings || 'Tenant-wide authorization settings',
+          policyData: JSON.stringify(authPolicy),
+          odataType,
+          templateFamily,
+          isActive: true,
+        },
+      });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
+      count++;
+    }
+
+    // Sync Attack Simulation Training Campaigns
+    for (const simulation of data.attackSimulations || []) {
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: simulation.id },
+      });
+
+      const odataType = '#microsoft.graph.attackSimulationTraining';
+      const templateFamily = 'SecurityTraining';
+
+      // Create descriptive summary
+      const description = [
+        simulation.attackTechnique ? `Technique: ${simulation.attackTechnique}` : null,
+        simulation.status ? `Status: ${simulation.status}` : null,
+        simulation.payload?.name ? `Payload: ${simulation.payload.name}` : null,
+      ].filter(Boolean).join(', ');
+
+      const result = await prisma.m365Policy.upsert({
+        where: { policyId: simulation.id },
+        update: {
+          policyName: simulation.displayName || 'Attack Simulation Campaign',
+          policyDescription: description || 'Security awareness training simulation',
+          policyData: JSON.stringify(simulation),
+          odataType,
+          templateFamily,
+          lastSynced: new Date(),
+          isActive: simulation.status === 'running' || simulation.status === 'scheduled',
+        },
+        create: {
+          policyType: 'AzureAD',
+          policyId: simulation.id,
+          policyName: simulation.displayName || 'Attack Simulation Campaign',
+          policyDescription: description || 'Security awareness training simulation',
+          policyData: JSON.stringify(simulation),
+          odataType,
+          templateFamily,
+          isActive: simulation.status === 'running' || simulation.status === 'scheduled',
+        },
+      });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
+      count++;
+    }
+
+    // Sync Attack Simulation Automations
+    for (const automation of data.attackSimulationAutomations || []) {
+      const existing = await prisma.m365Policy.findUnique({
+        where: { policyId: automation.id },
+      });
+
+      const odataType = '#microsoft.graph.attackSimulationAutomation';
+      const templateFamily = 'SecurityTraining';
+
+      const result = await prisma.m365Policy.upsert({
+        where: { policyId: automation.id },
+        update: {
+          policyName: automation.displayName || 'Attack Simulation Automation',
+          policyDescription: automation.description || 'Automated security training',
+          policyData: JSON.stringify(automation),
+          odataType,
+          templateFamily,
+          lastSynced: new Date(),
+          isActive: automation.status === 'running',
+        },
+        create: {
+          policyType: 'AzureAD',
+          policyId: automation.id,
+          policyName: automation.displayName || 'Attack Simulation Automation',
+          policyDescription: automation.description || 'Automated security training',
+          policyData: JSON.stringify(automation),
+          odataType,
+          templateFamily,
+          isActive: automation.status === 'running',
+        },
+      });
+
+      if (existing) {
+        updatedPolicyIds.push(result.id);
+      } else {
+        addedPolicyIds.push(result.id);
+      }
+      count++;
+    }
+
+    console.log(`✓ Synced ${count} Azure AD policies (Conditional Access + PIM + Authorization + Attack Simulation)`);
     return count;
   }
 

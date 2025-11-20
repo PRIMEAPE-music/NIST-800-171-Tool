@@ -1,0 +1,4 @@
+ID,Setting Name,Current Template,Template Family,Issue
+487,"DefenderBaselineProfile","#settingsCatalog.baseline","SecurityBaseline","Needs Review"
+632,"windowsDefenderATP","#settingsCatalog.baseline","SecurityBaseline","Needs Review"
+660,"DefenderBaselineProfile","#settingsCatalog.baseline","","Needs Review"

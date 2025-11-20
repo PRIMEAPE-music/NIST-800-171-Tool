@@ -45,17 +45,35 @@ export async function validatePolicy(policyId: number): Promise<ValidationResult
     throw new Error(`Policy ${policyId} not found`);
   }
 
+  // Get all existing policy templates for fallback matching
+  const allPolicies = await prisma.m365Policy.findMany({
+    select: { odataType: true }
+  });
+  const existingTemplates = allPolicies
+    .map(p => p.odataType)
+    .filter(Boolean) as string[];
+
   // Get settings that match this policy template
-  // FIXED: Only match by exact template, or by family for uncategorized settings
-  // Do NOT match by family if setting has a specific policyTemplate
+  // Strategy:
+  // 1. Exact template match (highest priority)
+  // 2. Family match for NULL template settings
+  // 3. Family fallback for settings whose template doesn't exist in any policy
   const relevantSettings = await prisma.m365Setting.findMany({
     where: {
       OR: [
         { policyTemplate: policy.odataType }, // Exact template match
         {
           AND: [
-            { policyTemplate: null }, // Only uncategorized settings
+            { policyTemplate: null }, // Uncategorized settings
             { templateFamily: policy.templateFamily } // Can match by family
+          ]
+        },
+        // NEW: templateFamily fallback for settings with unmatched templates
+        {
+          AND: [
+            { templateFamily: policy.templateFamily }, // Same family
+            { policyTemplate: { notIn: existingTemplates } }, // Template doesn't exist in any policy
+            { policyTemplate: { not: null } } // Has a template (not null)
           ]
         }
       ],

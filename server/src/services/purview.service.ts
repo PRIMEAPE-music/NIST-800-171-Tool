@@ -23,22 +23,26 @@ class PurviewService {
   }
 
   /**
-   * Fetch DLP policies (Note: Limited Graph API support, may need PowerShell)
+   * Fetch DLP policies from Microsoft Graph API (Beta)
+   *
+   * Note: Uses beta endpoint - requires InformationProtectionPolicy.Read.All permission
    */
   async getDLPPolicies(): Promise<any[]> {
     try {
-      console.log('Fetching DLP policies...');
+      console.log('Fetching DLP policies (beta API)...');
 
-      // Note: DLP policies have limited Graph API support
-      // This is a placeholder - actual implementation may require
-      // Security & Compliance PowerShell or different API endpoint
+      const response = await graphClientService.getBeta<{ value: any[] }>(
+        '/security/informationProtection/dataLossPreventionPolicies'
+      );
 
-      console.log('⚠️  DLP policies require Security & Compliance Center API');
-      console.log('   Current Graph API has limited DLP support');
+      console.log(`✅ Found ${response.value.length} DLP policies`);
+      return response.value;
+    } catch (error: any) {
+      console.error('⚠️  Could not fetch DLP policies:', error.message);
+      console.log('   This endpoint requires beta API and InformationProtectionPolicy.Read.All permission');
+      console.log('   If you see 403/404 errors, verify permissions in Azure AD app registration');
 
-      return [];
-    } catch (error) {
-      console.error('Error fetching DLP policies:', error);
+      // Return empty array instead of throwing - DLP may not be configured
       return [];
     }
   }
@@ -56,19 +60,25 @@ class PurviewService {
   }
 
   /**
-   * Get information protection summary
+   * Get information protection summary including DLP policies
    */
   async getInformationProtectionSummary(): Promise<{
     sensitivityLabelsCount: number;
     isConfigured: boolean;
     labels: PurviewSensitivityLabel[];
+    dlpPolicies: any[];
   }> {
-    const labels = await this.getSensitivityLabels();
+    // Fetch labels and DLP policies in parallel
+    const [labels, dlpPolicies] = await Promise.all([
+      this.getSensitivityLabels(),
+      this.getDLPPolicies()
+    ]);
 
     return {
       sensitivityLabelsCount: labels.length,
-      isConfigured: labels.length > 0,
+      isConfigured: labels.length > 0 || dlpPolicies.length > 0,
       labels,
+      dlpPolicies,
     };
   }
 }
