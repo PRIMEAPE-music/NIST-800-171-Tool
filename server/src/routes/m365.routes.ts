@@ -540,10 +540,75 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
     }
 
     // Convert map to array and calculate summary stats
-    const controls = Array.from(controlMap.values());
-    const totalSettings = complianceChecks.length;
-    const compliantSettings = complianceChecks.filter(c => c.isCompliant).length;
-    const nonCompliantSettings = totalSettings - compliantSettings;
+    let controls = Array.from(controlMap.values());
+    let totalSettings = complianceChecks.length;
+    let compliantSettings = complianceChecks.filter(c => c.isCompliant).length;
+    let nonCompliantSettings = totalSettings - compliantSettings;
+
+    // FALLBACK: If no verified controls found, show potential controls from template matching
+    if (controls.length === 0) {
+      const policyWithTemplate = await prisma.m365Policy.findUnique({
+        where: { id: policyId },
+        select: { odataType: true }
+      });
+
+      if (policyWithTemplate?.odataType) {
+        const potentialSettings = await prisma.m365Setting.findMany({
+          where: {
+            policyTemplate: policyWithTemplate.odataType,
+            isActive: true,
+            controlMappings: { some: {} }
+          },
+          include: {
+            controlMappings: {
+              include: {
+                control: {
+                  select: {
+                    id: true,
+                    controlId: true,
+                    title: true,
+                    family: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const potentialControlMap = new Map<number, any>();
+        for (const setting of potentialSettings) {
+          for (const mapping of setting.controlMappings) {
+            const controlId = mapping.control.id;
+            if (!potentialControlMap.has(controlId)) {
+              potentialControlMap.set(controlId, {
+                controlId: mapping.control.controlId,
+                controlTitle: mapping.control.title,
+                family: mapping.control.family,
+                settings: [],
+              });
+            }
+
+            potentialControlMap.get(controlId)!.settings.push({
+              settingId: setting.id,
+              settingName: setting.displayName,
+              expectedValue: setting.expectedValue,
+              actualValue: 'Not configured',
+              isCompliant: false,
+              confidence: 'Potential',
+              validationOperator: setting.validationOperator,
+              policyType: setting.policyType,
+              platform: setting.platform,
+              lastChecked: new Date(),
+            });
+          }
+        }
+
+        controls = Array.from(potentialControlMap.values());
+        totalSettings = controls.reduce((sum, c) => sum + c.settings.length, 0);
+        compliantSettings = 0;
+        nonCompliantSettings = 0;
+      }
+    }
 
     res.json({
       success: true,

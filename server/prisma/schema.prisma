@@ -306,6 +306,9 @@ model M365Setting {
   // Alternate paths to try during extraction
   pathVariants           String?   @map("path_variants") // JSON array: ["path1", "path2", "path3"]
 
+  // Alternate property names to try during extraction
+  alternateNames         String?   @map("alternate_names") // JSON array: ["name1", "name2", "name3"]
+
   // Extraction strategy hints for optimization
   extractionHints        String?   @map("extraction_hints") // JSON: {"preferredStrategy": "strip-prefix", "notes": "..."}
 

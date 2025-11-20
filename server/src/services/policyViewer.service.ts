@@ -68,8 +68,8 @@ class PolicyViewerService {
       orderBy,
     });
 
-    // Transform to PolicyDetail format
-    return policies.map((policy) => this.transformToPolicyDetail(policy));
+    // Transform to PolicyDetail format (now async)
+    return Promise.all(policies.map((policy) => this.transformToPolicyDetail(policy)));
   }
 
   /**
@@ -84,7 +84,7 @@ class PolicyViewerService {
       return null;
     }
 
-    return this.transformToPolicyDetail(policy);
+    return await this.transformToPolicyDetail(policy);
   }
 
   /**
@@ -144,7 +144,7 @@ class PolicyViewerService {
   /**
    * Transform database policy to PolicyDetail format
    */
-  private transformToPolicyDetail(policy: any): PolicyDetail {
+  private async transformToPolicyDetail(policy: any): Promise<PolicyDetail> {
     // Parse the policyData JSON string
     let parsedData: ParsedPolicyData;
     try {
@@ -158,9 +158,98 @@ class PolicyViewerService {
       };
     }
 
-    // Control mappings removed - new system uses M365Settings linked to controls
-    // To see which controls a policy affects, query SettingComplianceCheck
-    const mappedControls: MappedControl[] = [];
+    // Get controls this policy affects through SettingComplianceCheck
+    // Only include settings that are actually configured (actualValue is not null)
+    // This matches the logic in the control-mappings endpoint for consistency
+    const complianceChecks = await prisma.settingComplianceCheck.findMany({
+      where: {
+        policyId: policy.id,
+        // Filter out settings that aren't configured (actualValue is null or 'null')
+        NOT: {
+          OR: [
+            { actualValue: null },
+            { actualValue: 'null' }
+          ]
+        }
+      },
+      include: {
+        setting: {
+          include: {
+            controlMappings: {
+              include: {
+                control: {
+                  select: {
+                    id: true,
+                    controlId: true,
+                    title: true,
+                    family: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Extract unique VERIFIED controls from all compliance checks
+    const controlsMap = new Map<string, MappedControl>();
+
+    for (const check of complianceChecks) {
+      // Each check has a setting, and each setting can be mapped to multiple controls
+      for (const mapping of check.setting.controlMappings) {
+        if (!controlsMap.has(mapping.control.controlId)) {
+          controlsMap.set(mapping.control.controlId, {
+            controlId: mapping.control.controlId,
+            controlTitle: mapping.control.title,
+            mappingConfidence: mapping.confidence || 'High',
+            mappingNotes: `✓ Verified: ${check.setting.displayName}`,
+          });
+        }
+      }
+    }
+
+    // FALLBACK: If no verified controls found, use template matching to show potential controls
+    if (controlsMap.size === 0 && policy.odataType) {
+      const potentialSettings = await prisma.m365Setting.findMany({
+        where: {
+          policyTemplate: policy.odataType,
+          isActive: true,
+          controlMappings: {
+            some: {}
+          }
+        },
+        include: {
+          controlMappings: {
+            include: {
+              control: {
+                select: {
+                  id: true,
+                  controlId: true,
+                  title: true,
+                  family: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      for (const setting of potentialSettings) {
+        for (const mapping of setting.controlMappings) {
+          if (!controlsMap.has(mapping.control.controlId)) {
+            controlsMap.set(mapping.control.controlId, {
+              controlId: mapping.control.controlId,
+              controlTitle: mapping.control.title,
+              mappingConfidence: 'Potential',
+              mappingNotes: `📋 Potential: Can be configured via ${setting.displayName}`,
+            });
+          }
+        }
+      }
+    }
+
+    const mappedControls: MappedControl[] = Array.from(controlsMap.values());
 
     return {
       id: policy.id,
