@@ -40,8 +40,22 @@ import {
 } from './types';
 
 interface M365SettingsTabProps {
-  controlId: string;
+  controlId?: string;
 }
+
+// Policy type colors (matching PolicyViewer cards)
+const getPolicyTypeColor = (policyType: string): string => {
+  switch (policyType) {
+    case 'Intune':
+      return '#42A5F5';
+    case 'Purview':
+      return '#AB47BC';
+    case 'AzureAD':
+      return '#66BB6A';
+    default:
+      return '#757575';
+  }
+};
 
 // Expandable Setting Row Component
 interface SettingRowProps {
@@ -88,6 +102,8 @@ const SettingRow: React.FC<SettingRowProps> = ({ setting, getPlatformIcon, getCo
     return String(value);
   };
 
+  const policyTypeColor = getPolicyTypeColor(setting.policyType);
+
   return (
     <>
       <TableRow
@@ -95,6 +111,7 @@ const SettingRow: React.FC<SettingRowProps> = ({ setting, getPlatformIcon, getCo
         sx={{
           '& > *': { borderBottom: 'unset' },
           cursor: 'pointer',
+          borderLeft: `4px solid ${policyTypeColor}`,
         }}
         onClick={handleToggle}
       >
@@ -146,7 +163,7 @@ const SettingRow: React.FC<SettingRowProps> = ({ setting, getPlatformIcon, getCo
           </Typography>
         </TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow sx={{ borderLeft: `4px solid ${policyTypeColor}` }}>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ py: 2, px: 1 }}>
@@ -319,14 +336,14 @@ const SettingRow: React.FC<SettingRowProps> = ({ setting, getPlatformIcon, getCo
 
                   {/* Error Message - only show for non-compliant settings with actual error info */}
                   {detail.complianceCheck?.errorMessage &&
-                   !detail.complianceCheck.isCompliant &&
-                   !detail.complianceCheck.errorMessage.toLowerCase().includes('non-compliant') && (
-                    <Box mt={2}>
-                      <Alert severity="warning">
-                        {detail.complianceCheck.errorMessage}
-                      </Alert>
-                    </Box>
-                  )}
+                    !detail.complianceCheck.isCompliant &&
+                    !detail.complianceCheck.errorMessage.toLowerCase().includes('non-compliant') && (
+                      <Box mt={2}>
+                        <Alert severity="warning">
+                          {detail.complianceCheck.errorMessage}
+                        </Alert>
+                      </Box>
+                    )}
                 </Paper>
               )}
             </Box>
@@ -338,7 +355,7 @@ const SettingRow: React.FC<SettingRowProps> = ({ setting, getPlatformIcon, getCo
 };
 
 const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
-  console.log('🚀 M365SettingsTab rendering with controlId:', controlId);
+  console.log('🚀 M365SettingsTab rendering', controlId ? `with controlId: ${controlId}` : 'in global mode');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -351,16 +368,31 @@ const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
     searchQuery: '',
   });
 
-  // Fetch M365 settings for control
+  // Fetch M365 settings
   const fetchSettings = async () => {
-    console.log('📡 Fetching M365 settings for control:', controlId);
     try {
       setLoading(true);
       setError(null);
 
-      const response = await axios.get<M365SettingsApiResponse>(
-        `/api/m365/control/${controlId}/settings`
-      );
+      let response;
+      if (controlId) {
+        console.log('📡 Fetching M365 settings for control:', controlId);
+        response = await axios.get<M365SettingsApiResponse>(
+          `/api/m365/control/${controlId}/settings`
+        );
+      } else {
+        console.log('📡 Fetching all M365 settings');
+        response = await axios.get(
+          `/api/m365/policies/viewer/all-settings`
+        );
+        // Normalize response structure if needed
+        if (response.data.settings) {
+          response.data.data = {
+            settings: response.data.settings,
+            summary: response.data.summary
+          };
+        }
+      }
 
       console.log('✅ M365 settings response:', response.data);
       setData(response.data);
@@ -496,13 +528,17 @@ const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
     return (
       <Alert severity="info">
         <Typography variant="body2">
-          No M365 settings have been mapped to this control yet.
+          {controlId
+            ? 'No M365 settings have been mapped to this control yet.'
+            : 'No M365 settings found in the system.'}
         </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          M365 settings are automatically mapped based on NIST control requirements and
-          Microsoft 365 policy configurations. Check back after running the policy sync or
-          contact your administrator for more information.
-        </Typography>
+        {controlId && (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            M365 settings are automatically mapped based on NIST control requirements and
+            Microsoft 365 policy configurations. Check back after running the policy sync or
+            contact your administrator for more information.
+          </Typography>
+        )}
       </Alert>
     );
   }
@@ -540,7 +576,7 @@ const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
                 M365 Compliance Summary
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {data.data.summary.total} total settings mapped to this control
+                {data.data.summary.total} total settings {controlId ? 'mapped to this control' : 'monitored'}
               </Typography>
             </Box>
             <Tooltip title="Refresh data">
@@ -565,7 +601,7 @@ const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <ComplianceStatusBadge status="UNKNOWN" />
-              <Typography variant="body2">{data.data.summary.notChecked}</Typography>
+              <Typography variant="body2">{data.data.summary.notChecked || 0}</Typography>
             </Box>
           </Box>
 
@@ -597,8 +633,8 @@ const M365SettingsTab: React.FC<M365SettingsTabProps> = ({ controlId }) => {
                     bgcolor: data.data.summary.total > 0 && (data.data.summary.compliant / data.data.summary.total) * 100 >= 80
                       ? '#4caf50'
                       : data.data.summary.total > 0 && (data.data.summary.compliant / data.data.summary.total) * 100 >= 50
-                      ? '#ffc107'
-                      : '#f44336',
+                        ? '#ffc107'
+                        : '#f44336',
                   },
                 }}
               />

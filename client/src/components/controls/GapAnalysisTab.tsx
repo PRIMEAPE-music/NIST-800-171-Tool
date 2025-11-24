@@ -135,6 +135,7 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
           policyCoverage={data.policyCoverage}
           proceduralCoverage={data.proceduralCoverage}
           evidenceCoverage={data.evidenceCoverage}
+          physicalCoverage={0}
           overallCoverage={data.overallCoverage}
         />
 
@@ -151,59 +152,60 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
             </li>
             <li>
               <Typography variant="body2">
-                <strong>Policy ({data.policyCoverage}%):</strong> Written policies and standards documents
+                <strong>Operational ({data.proceduralCoverage}%):</strong> Operational procedures and processes
               </Typography>
             </li>
             <li>
               <Typography variant="body2">
-                <strong>Procedural ({data.proceduralCoverage}%):</strong> Documented procedures and processes
+                <strong>Documentation ({data.policyCoverage}%):</strong> Policies and supporting documentation
               </Typography>
             </li>
             <li>
               <Typography variant="body2">
-                <strong>Evidence ({data.evidenceCoverage}%):</strong> Audit evidence and supporting documentation
+                <strong>Physical (0%):</strong> Physical security controls (Not applicable to M365)
               </Typography>
             </li>
           </Box>
-          <Typography variant="body2" sx={{ mt: 2, color: '#B0B0B0' }}>
-            <strong>Note:</strong> NIST compliance requires BOTH technical controls AND
-            policies/procedures/evidence. Microsoft 365 provides technical controls,
-            but you must create the documentation.
-          </Typography>
         </Box>
+        <Typography variant="body2" sx={{ mt: 2, color: '#B0B0B0' }}>
+          <strong>Note:</strong> NIST compliance requires Technical, Operational, Documentation, and Physical controls.
+          Microsoft 365 primarily addresses Technical controls. You must implement the others.
+        </Typography>
       </Paper>
 
       {/* Gaps List */}
-      {hasGaps ? (
-        <Paper sx={{ p: 3, backgroundColor: '#2A2A2A' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-            <AlertTriangleIcon sx={{ color: '#FF9800' }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#E0E0E0' }}>
-              Identified Gaps ({data.totalGaps})
+      {
+        hasGaps ? (
+          <Paper sx={{ p: 3, backgroundColor: '#2A2A2A' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+              <AlertTriangleIcon sx={{ color: '#FF9800' }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#E0E0E0' }}>
+                Identified Gaps ({data.totalGaps})
+              </Typography>
+            </Box>
+            <GapList
+              gaps={data.gaps}
+              onStatusChange={handleStatusChange}
+              onCreatePOAM={handleCreatePOAM}
+            />
+          </Paper>
+        ) : (
+          <Paper sx={{ p: 6, backgroundColor: '#2A2A2A', textAlign: 'center' }}>
+            <CheckCircle sx={{ fontSize: 64, color: '#4CAF50', mb: 2 }} />
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#E0E0E0' }}>
+              No Gaps Detected!
             </Typography>
-          </Box>
-          <GapList
-            gaps={data.gaps}
-            onStatusChange={handleStatusChange}
-            onCreatePOAM={handleCreatePOAM}
-          />
-        </Paper>
-      ) : (
-        <Paper sx={{ p: 6, backgroundColor: '#2A2A2A', textAlign: 'center' }}>
-          <CheckCircle sx={{ fontSize: 64, color: '#4CAF50', mb: 2 }} />
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#E0E0E0' }}>
-            No Gaps Detected!
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#B0B0B0' }}>
-            This control appears to be fully compliant based on current analysis.
-          </Typography>
-        </Paper>
-      )}
+            <Typography variant="body2" sx={{ color: '#B0B0B0' }}>
+              This control appears to be fully compliant based on current analysis.
+            </Typography>
+          </Paper>
+        )
+      }
 
       {/* Last Assessed */}
       <Typography variant="caption" sx={{ textAlign: 'right', color: '#B0B0B0' }}>
         Last assessed: {new Date(data.lastAssessed).toLocaleString()}
       </Typography>
-    </Box>
+    </Box >
   );
 };

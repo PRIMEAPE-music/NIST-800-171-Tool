@@ -3,6 +3,8 @@ import {
   PolicyDetail,
   PolicyViewerStats,
   PolicySearchParams,
+  PolicySettingsToControlsResponse,
+  AllSettingsToControlsResponse,
 } from '../types/policyViewer.types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
@@ -49,6 +51,35 @@ class PolicyViewerService {
     const response = await axios.post(`${API_URL}/m365/sync`, {
       forceRefresh: true,
     });
+    return response.data;
+  }
+
+  /**
+   * Get settings-to-controls mapping for a policy
+   * Shows which settings from this policy are mapped to controls
+   *
+   * @param policyId - The policy ID
+   * @returns Promise with settings and their mapped controls
+   */
+  async getPolicySettingsToControls(
+    policyId: number
+  ): Promise<PolicySettingsToControlsResponse> {
+    const response = await axios.get<PolicySettingsToControlsResponse>(
+      `${API_URL}/m365/policies/viewer/${policyId}/settings-to-controls`
+    );
+    return response.data;
+  }
+
+  /**
+   * Get all settings-to-controls mappings across all policies
+   * Shows which settings are mapped to controls for the entire system
+   *
+   * @returns Promise with all settings and their mapped controls
+   */
+  async getAllSettingsToControls(): Promise<AllSettingsToControlsResponse> {
+    const response = await axios.get<AllSettingsToControlsResponse>(
+      `${API_URL}/m365/policies/viewer/all-settings`
+    );
     return response.data;
   }
 }

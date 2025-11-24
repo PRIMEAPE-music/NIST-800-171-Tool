@@ -172,6 +172,7 @@ const ControlMappingsTab: React.FC<ControlMappingsTabProps> = ({ policyId }) => 
         const compliantCount = control.settings.filter((s) => s.isCompliant).length;
         const totalCount = control.settings.length;
         const compliancePercentage = Math.round((compliantCount / totalCount) * 100);
+        const isPartiallyCompliant = compliantCount > 0 && compliantCount < totalCount;
 
         return (
           <Accordion
@@ -191,10 +192,17 @@ const ControlMappingsTab: React.FC<ControlMappingsTabProps> = ({ policyId }) => 
                 <Typography variant="body1" fontWeight="medium" sx={{ flexGrow: 1 }}>
                   {control.family} - {control.controlTitle}
                 </Typography>
+                {isPartiallyCompliant && (
+                  <Chip
+                    label="Partial Compliance"
+                    size="small"
+                    color="warning"
+                  />
+                )}
                 <Chip
                   label={`${compliantCount}/${totalCount} compliant`}
                   size="small"
-                  color={compliancePercentage === 100 ? 'success' : 'error'}
+                  color={compliancePercentage === 100 ? 'success' : compliancePercentage > 0 ? 'warning' : 'error'}
                 />
                 <Typography variant="body2" color="text.secondary">
                   {compliancePercentage}%

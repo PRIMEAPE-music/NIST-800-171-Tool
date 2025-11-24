@@ -426,6 +426,172 @@ router.get('/policies/viewer/export', async (req, res) => {
 });
 
 /**
+ * GET /api/m365/policies/viewer/all-settings
+ * Get all UNIQUE policy settings that are mapped to controls
+ * Shows unique settings → controls mapping for entire system
+ * IMPORTANT: This route must come BEFORE /:id routes to avoid matching "all-settings" as an ID
+ */
+router.get('/policies/viewer/all-settings', async (req, res) => {
+  try {
+    // Get all UNIQUE settings that have control mappings
+    const settings = await prisma.m365Setting.findMany({
+      where: {
+        controlMappings: {
+          some: {}, // Only include settings that ARE mapped to at least one control
+        },
+        isActive: true, // Only active settings
+      },
+      include: {
+        controlMappings: {
+          include: {
+            control: {
+              select: {
+                id: true,
+                controlId: true,
+                title: true,
+                family: true,
+                priority: true,
+              },
+            },
+          },
+        },
+        // Get the most recent compliance check for this setting across all policies
+        complianceChecks: {
+          orderBy: {
+            lastChecked: 'desc',
+          },
+          take: 1,
+          include: {
+            policy: {
+              select: {
+                id: true,
+                policyName: true,
+                policyType: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        displayName: 'asc',
+      },
+    });
+
+    // Transform the data into a more frontend-friendly format
+    const settingsWithControls = settings.map((setting) => {
+      // Get the most recent compliance check (if any)
+      const latestCheck = setting.complianceChecks[0];
+
+      return {
+        // Setting metadata
+        id: setting.id,
+        settingId: setting.id,
+        settingName: setting.displayName,
+        settingDescription: setting.description,
+        settingPath: setting.settingPath,
+        policyType: setting.policyType,
+        platform: setting.platform,
+
+        // Policy info (from latest check, if available)
+        policyId: latestCheck?.policy.id || null,
+        policyName: latestCheck?.policy.policyName || null,
+
+        // Compliance data (from latest check, if available)
+        expectedValue: setting.expectedValue || latestCheck?.expectedValue || 'Not specified',
+        actualValue: latestCheck?.actualValue || null,
+        isCompliant: latestCheck?.isCompliant || false,
+        complianceMessage: latestCheck?.complianceMessage || null,
+        complianceStatus: latestCheck
+          ? latestCheck.isCompliant
+            ? 'COMPLIANT'
+            : latestCheck.actualValue === null || latestCheck.actualValue === 'null'
+            ? 'NOT_CONFIGURED'
+            : 'NON_COMPLIANT'
+          : 'NOT_CONFIGURED',
+        lastChecked: latestCheck?.lastChecked || null,
+
+        // Validation details
+        validationOperator: setting.validationOperator,
+        implementationGuide: setting.implementationGuide,
+        microsoftDocsUrl: setting.microsoftDocsUrl,
+
+        // Confidence
+        confidence: setting.confidence || 'Unknown',
+
+        // Mapped controls (multiple controls can be mapped to one setting)
+        mappedControls: setting.controlMappings.map((mapping) => ({
+          controlId: mapping.control.controlId,
+          controlTitle: mapping.control.title,
+          controlFamily: mapping.control.family,
+          controlPriority: mapping.control.priority,
+          mappingConfidence: mapping.confidence,
+          mappingRationale: mapping.mappingRationale,
+          isRequired: mapping.isRequired,
+        })),
+      };
+    });
+
+    // Calculate summary statistics
+    const summary = {
+      total: settingsWithControls.length,
+      compliant: settingsWithControls.filter((s) => s.complianceStatus === 'COMPLIANT').length,
+      nonCompliant: settingsWithControls.filter((s) => s.complianceStatus === 'NON_COMPLIANT')
+        .length,
+      notConfigured: settingsWithControls.filter((s) => s.complianceStatus === 'NOT_CONFIGURED')
+        .length,
+
+      // Breakdown by control priority
+      byPriority: {
+        critical: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'Critical')
+        ).length,
+        high: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'High')
+        ).length,
+        medium: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'Medium')
+        ).length,
+        low: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'Low')
+        ).length,
+      },
+
+      // Breakdown by control family
+      byFamily: settingsWithControls.reduce((acc, setting) => {
+        setting.mappedControls.forEach((control) => {
+          acc[control.controlFamily] = (acc[control.controlFamily] || 0) + 1;
+        });
+        return acc;
+      }, {} as Record<string, number>),
+
+      // Breakdown by platform
+      byPlatform: settingsWithControls.reduce((acc, setting) => {
+        acc[setting.platform] = (acc[setting.platform] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>),
+
+      // Breakdown by policy type
+      byPolicyType: settingsWithControls.reduce((acc, setting) => {
+        acc[setting.policyType] = (acc[setting.policyType] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>),
+    };
+
+    res.json({
+      success: true,
+      settings: settingsWithControls,
+      summary,
+    });
+  } catch (error) {
+    console.error('Error fetching all settings-to-controls:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
  * GET /api/m365/policies/viewer/:id
  * Get single policy detail
  */
@@ -627,6 +793,164 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching policy control mappings:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/m365/policies/viewer/:id/settings-to-controls
+ * Get all policy settings that are mapped to controls for a specific policy
+ * Shows the inverse relationship - settings → controls
+ */
+router.get('/policies/viewer/:id/settings-to-controls', async (req, res) => {
+  try {
+    const policyId = parseInt(req.params.id);
+
+    // Verify policy exists
+    const policy = await prisma.m365Policy.findUnique({
+      where: { id: policyId },
+      select: { id: true, policyName: true, policyType: true },
+    });
+
+    if (!policy) {
+      return res.status(404).json({
+        success: false,
+        error: 'Policy not found',
+      });
+    }
+
+    // Get all compliance checks for this policy that have settings mapped to controls
+    const complianceChecks = await prisma.settingComplianceCheck.findMany({
+      where: {
+        policyId,
+        setting: {
+          controlMappings: {
+            some: {}, // Only include settings that ARE mapped to at least one control
+          },
+        },
+      },
+      include: {
+        setting: {
+          include: {
+            controlMappings: {
+              include: {
+                control: {
+                  select: {
+                    id: true,
+                    controlId: true,
+                    title: true,
+                    family: true,
+                    priority: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        setting: {
+          displayName: 'asc',
+        },
+      },
+    });
+
+    // Transform the data into a more frontend-friendly format
+    const settingsWithControls = complianceChecks.map((check) => ({
+      // Setting metadata
+      id: check.id,
+      settingId: check.settingId,
+      settingName: check.setting.displayName,
+      settingDescription: check.setting.description,
+      settingPath: check.setting.settingPath,
+      policyType: check.setting.policyType,
+      platform: check.setting.platform,
+
+      // Compliance data
+      expectedValue: check.expectedValue,
+      actualValue: check.actualValue,
+      isCompliant: check.isCompliant,
+      complianceMessage: check.complianceMessage,
+      complianceStatus: check.isCompliant
+        ? 'COMPLIANT'
+        : check.actualValue === null || check.actualValue === 'null'
+        ? 'NOT_CONFIGURED'
+        : 'NON_COMPLIANT',
+      lastChecked: check.lastChecked,
+
+      // Validation details
+      validationOperator: check.setting.validationOperator,
+      implementationGuide: check.setting.implementationGuide,
+      microsoftDocsUrl: check.setting.microsoftDocsUrl,
+
+      // Confidence
+      confidence: check.setting.confidence || 'Unknown',
+
+      // Mapped controls (multiple controls can be mapped to one setting)
+      mappedControls: check.setting.controlMappings.map((mapping) => ({
+        controlId: mapping.control.controlId,
+        controlTitle: mapping.control.title,
+        controlFamily: mapping.control.family,
+        controlPriority: mapping.control.priority,
+        mappingConfidence: mapping.confidence,
+        mappingRationale: mapping.mappingRationale,
+        isRequired: mapping.isRequired,
+      })),
+    }));
+
+    // Calculate summary statistics
+    const summary = {
+      total: settingsWithControls.length,
+      compliant: settingsWithControls.filter((s) => s.complianceStatus === 'COMPLIANT').length,
+      nonCompliant: settingsWithControls.filter((s) => s.complianceStatus === 'NON_COMPLIANT').length,
+      notConfigured: settingsWithControls.filter((s) => s.complianceStatus === 'NOT_CONFIGURED').length,
+
+      // Breakdown by control priority
+      byPriority: {
+        critical: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'Critical')
+        ).length,
+        high: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'High')
+        ).length,
+        medium: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'Medium')
+        ).length,
+        low: settingsWithControls.filter((s) =>
+          s.mappedControls.some((c) => c.controlPriority === 'Low')
+        ).length,
+      },
+
+      // Breakdown by control family
+      byFamily: settingsWithControls.reduce((acc, setting) => {
+        setting.mappedControls.forEach((control) => {
+          acc[control.controlFamily] = (acc[control.controlFamily] || 0) + 1;
+        });
+        return acc;
+      }, {} as Record<string, number>),
+
+      // Breakdown by platform
+      byPlatform: settingsWithControls.reduce((acc, setting) => {
+        acc[setting.platform] = (acc[setting.platform] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>),
+    };
+
+    res.json({
+      success: true,
+      policy: {
+        id: policy.id,
+        name: policy.policyName,
+        type: policy.policyType,
+      },
+      settings: settingsWithControls,
+      summary,
+    });
+  } catch (error) {
+    console.error('Error fetching policy settings-to-controls:', error);
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

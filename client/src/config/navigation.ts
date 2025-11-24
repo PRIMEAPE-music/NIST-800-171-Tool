@@ -57,7 +57,7 @@ export const navigationItems: NavigationItem[] = [
     description: 'View and manage M365 policies',
   },
   {
-    label: 'M365 Gap Analysis',
+    label: 'Gap Analysis',
     path: '/m365/gap-analysis',
     icon: FindInPageIcon,
     description: 'Identify M365 compliance gaps',

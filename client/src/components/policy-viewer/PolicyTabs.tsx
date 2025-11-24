@@ -5,6 +5,7 @@ import {
   PhoneAndroid as IntuneIcon,
   Security as PurviewIcon,
   Cloud as AzureADIcon,
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
 import { PolicyTypeTab } from '../../types/policyViewer.types';
 
@@ -75,6 +76,12 @@ const PolicyTabs: React.FC<PolicyTabsProps> = ({
             </Badge>
           }
           value="AzureAD"
+        />
+        <Tab
+          icon={<SettingsIcon />}
+          iconPosition="start"
+          label="All Settings"
+          value="allSettings"
         />
       </Tabs>
     </Box>

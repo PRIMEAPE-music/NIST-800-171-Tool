@@ -1,10 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsx src/scripts/check-db-state.ts)",
-      "Bash(npx tsx src/scripts/check-unmatched-settings.ts)",
-      "Bash(npx tsx src/scripts/update-policy-metadata.ts)",
-      "Bash(npx tsx src/scripts/diagnose-policy-data.ts)"
+      "Bash(curl -s http://localhost:5000/api/m365/policies/viewer/all-settings)",
+      "Bash(python -c \"import sys, json; data = json.load(sys.stdin); print(f\"\"Total settings returned: {len(data[''''settings''''])}\"\"); print(f\"\"Summary: {data[''''summary'''']}\"\")\")",
+      "Bash(python -c \"import sys, json; data = json.load(sys.stdin); print(f\"\"Total UNIQUE settings: {len(data[''''settings''''])}\"\"); print(f\"\"\\nSummary:\"\"); print(f\"\"  Compliant: {data[''''summary''''][''''compliant'''']}\"\"); print(f\"\"  Non-Compliant: {data[''''summary''''][''''nonCompliant'''']}\"\"); print(f\"\"  Not Configured: {data[''''summary''''][''''notConfigured'''']}\"\"); print(f\"\"\\nBy Policy Type:\"\"); print(json.dumps(data[''''summary''''][''''byPolicyType''''], indent=2)); print(f\"\"\\nBy Platform:\"\"); print(json.dumps(data[''''summary''''][''''byPlatform''''], indent=2))\")",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

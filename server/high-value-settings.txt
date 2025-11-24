@@ -1,0 +1,744 @@
+
+================================================================================
+HIGH-VALUE SETTINGS IDENTIFICATION
+================================================================================
+
+Analyzing 672 settings...
+
+================================================================================
+TOP 50 HIGH-VALUE SETTINGS
+================================================================================
+
+
+1. Lock Screen Image URL (Windows Enterprise)
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CustomConfiguration
+   Family: Configuration
+   Current settingName: LockScreenImageUrl
+   Current settingPath: Device.Vendor.MSFT.Policy.Config.Personalization.LockScreenImageUrl
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.10
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+2. Require WPA2-Enterprise Wi-Fi Security
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.authorizationPolicy
+   Family: AzureAD
+   Current settingName: wiFiSecurityType
+   Current settingPath: wiFiConfiguration.securityType
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.16
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+3. Require EAP-TLS Authentication for Enterprise Wi-Fi
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.conditionalAccessPolicy
+   Family: ConditionalAccess
+   Current settingName: eapType
+   Current settingPath: wiFiConfiguration.eapConfiguration.eapType
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.16
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+4. Block Jailbroken/Rooted Devices from Network
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.authorizationPolicy
+   Family: AzureAD
+   Current settingName: jailbroken
+   Current settingPath: deviceCompliancePolicy.deviceHealthAttestation.jailbroken
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.16
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+5. Enforce Minimum OS Version for Mobile Devices
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.iosManagedAppProtection
+   Family: AppProtection
+   Current settingName: minimumRequiredPatchVersion
+   Current settingPath: deviceCompliancePolicy.deviceProperties.osMinimumVersion
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.18
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+6. Require Strong Passcode on Mobile Devices
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.iosManagedAppProtection
+   Family: AppProtection
+   Current settingName: passwordRequired
+   Current settingPath: deviceCompliancePolicy.systemSecurity.passwordRequired
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.18
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+7. Require App Protection Policies for CUI Access
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.iosManagedAppProtection
+   Family: AppProtection
+   Current settingName: appProtectionPolicy
+   Current settingPath: appProtectionPolicy.settings.dataProtection
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.18
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+8. Block Personally Owned Device Enrollment
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.iosManagedAppProtection
+   Family: AppProtection
+   Current settingName: enrollmentRestrictions
+   Current settingPath: deviceEnrollmentConfiguration.platformRestrictions.personalDeviceEnrollment
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.18
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+9. BitLocker Removable Drive Encryption Method
+   Priority: Critical | Score: 135
+   Template: #settingsCatalog.endpointSecurityDiskEncryption
+   Family: DiskEncryption
+   Current settingName: BitLockerRemovableDriveEncryptionMethod
+   Current settingPath: Encryption.BitLocker.RemovableDrivesEncryptionType
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.13.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+10. BitLocker - Fixed Data Drive Encryption
+   Priority: Critical | Score: 135
+   Template: #settingsCatalog.endpointSecurityDiskEncryption
+   Family: DiskEncryption
+   Current settingName: BitLockerFixedDriveEncryption
+   Current settingPath: Intune.EndpointSecurity.DiskEncryption.BitLocker.FixedDriveSettings
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.13.11
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+11. Intune - Max Inactivity Before Lock (Windows)
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: maxInactivityBeforeLock
+   Current settingPath: maxInactivityBeforeLock
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.10
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+12. Maximum Inactivity Time Device Lock (Windows)
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: MaxInactivityTimeDeviceLock
+   Current settingPath: Device.Vendor.MSFT.Policy.Config.DeviceLock.MaxInactivityTimeDeviceLock
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.10
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+13. Password Protect Screen Saver (Windows)
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: ScreenSaverIsSecure
+   Current settingPath: User.Vendor.MSFT.Policy.Config.ADMX_ControlPanelDisplay.CPL_Personalization_EnableScreenSaver_PasswordProtect
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.10
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+14. Windows Hello - Minimum PIN Length
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: passwordMinimumLength
+   Current settingPath: windows10EndpointProtectionConfiguration.windowsHelloForBusinessSettings.pinMinimumLength
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.10
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+15. Maximum Minutes of Inactivity Until Screen Locks (iOS)
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.iosCompliancePolicy
+   Family: Compliance
+   Current settingName: passwordMinutesOfInactivityBeforeLock
+   Current settingPath: iosGeneralDeviceConfiguration.maxInactivityTimeDeviceLock
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.10
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+16. App Protection Policy - Offline Grace Period (Minutes)
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: AppProtectionPolicyOfflineGracePeriod
+   Current settingPath: IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.18
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+17. App Protection Policy - Offline Grace Period (Minutes) - Android
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.androidManagedAppProtection
+   Family: Compliance
+   Current settingName: AppProtectionPolicyOfflineGracePeriodAndroid
+   Current settingPath: IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.18
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+18. Require FIPS 140-2 Compliant Wi-Fi Profiles
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: fipsCompliant
+   Current settingPath: wiFiConfiguration.fipsCompliant
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.16
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+19. Disable Wi-Fi on Devices Before Deployment
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.authorizationPolicy
+   Family: AzureAD
+   Current settingName: wiFiDisabledBeforeDeployment
+   Current settingPath: deviceConfiguration.wireless.wiFiBlocked
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.16
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+20. Require Full Device Encryption on Mobile Devices
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: requireDeviceEncryption
+   Current settingPath: deviceCompliancePolicy.systemSecurity.requireEncryption
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.01.18
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+21. Require BitLocker Encryption on Windows Devices
+   Priority: Critical | Score: 135
+   Template: #microsoft.graph.conditionalAccessPolicy
+   Family: ConditionalAccess
+   Current settingName: RequireDeviceEncryption
+   Current settingPath: DeviceCompliance.SystemSecurity.RequireEncryption
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.13.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+22. BitLocker - Require Encryption for OS Drive
+   Priority: Critical | Score: 135
+   Template: #settingsCatalog.endpointSecurityDiskEncryption
+   Family: DiskEncryption
+   Current settingName: BitLockerEncryptionEnabled
+   Current settingPath: Intune.EndpointSecurity.DiskEncryption.BitLocker.RequireDeviceEncryption
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.13.11
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+23. BitLocker Operating System Drive Encryption Method
+   Priority: Critical | Score: 135
+   Template: #settingsCatalog.endpointSecurityDiskEncryption
+   Family: NULL
+   Current settingName: BitLockerOSDriveEncryptionMethod
+   Current settingPath: Encryption.BitLocker.SystemDrivesEncryptionType
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.13.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+24. BitLocker Fixed Data Drive Encryption Method
+   Priority: Critical | Score: 135
+   Template: #settingsCatalog.endpointSecurityDiskEncryption
+   Family: NULL
+   Current settingName: BitLockerFixedDriveEncryptionMethod
+   Current settingPath: Encryption.BitLocker.FixedDrivesEncryptionType
+   Controls: 1 total (1 critical, 0 high)
+   Control IDs: 03.13.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+25. App Control for Business: Code Integrity Policy
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: ApplicationControlCodeIntegrityPolicy
+   Current settingPath: Endpoint Security > App Control for Business > Base Policy XML
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.07
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+26. Endpoint Privilege Management: Elevation Settings Policy
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: EPMElevationSettingsPolicy
+   Current settingPath: Endpoint Security > Endpoint Privilege Management > Elevation Settings
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.07
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+27. Windows Time Service (W32Time) NTP Configuration
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CustomConfiguration
+   Family: Configuration
+   Current settingName: WindowsTimeServiceConfiguration
+   Current settingPath: Intune.DeviceConfiguration.WindowsTimeService
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.03.07
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+28. Azure AD Joined Device Time Synchronization
+   Priority: High | Score: 120
+   Template: #microsoft.graph.conditionalAccessPolicy
+   Family: ConditionalAccess
+   Current settingName: AzureADTimeSync
+   Current settingPath: Intune.DeviceCompliance.TimeSync
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.03.07
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+29. Windows Time Service Health Monitoring
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CustomConfiguration
+   Family: Configuration
+   Current settingName: TimeServiceMonitoring
+   Current settingPath: Intune.DeviceCompliance.TimeServiceStatus
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.03.07
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+30. Security Baseline Review and Update Schedule
+   Priority: High | Score: 120
+   Template: #settingsCatalog.baseline
+   Family: SecurityBaseline
+   Current settingName: ConfigurationBaseline.ReviewFrequency
+   Current settingPath: policies.securityBaseline.reviewSchedule
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.01
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+31. Windows Update Rings - Change Control Deployment
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CustomConfiguration
+   Family: Configuration
+   Current settingName: UpdateRings.DeploymentControl
+   Current settingPath: policies.windowsUpdate.updateRings
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.03
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+32. Windows Feature Updates - Manual Approval Control
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: FeatureUpdates.ApprovalRequired
+   Current settingPath: policies.windowsUpdate.featureUpdates
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.03
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+33. Configuration Profile Version Control
+   Priority: High | Score: 120
+   Template: #microsoft.graph.deviceManagement
+   Family: NULL
+   Current settingName: ConfigurationProfile.VersionControl
+   Current settingPath: policies.deviceConfiguration.versionControl
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.03
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+34. Windows Update Pause - Emergency Change Control
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+   Family: Update
+   Current settingName: featureUpdatesPauseExpiryDateTime
+   Current settingPath: policies.windowsUpdate.pauseUpdates
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.03
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+35. Intune - Limit Device Configuration and Policy Admin Roles
+   Priority: High | Score: 120
+   Template: #microsoft.graph.privilegedIdentityManagement
+   Family: IdentityGovernance
+   Current settingName: RestrictIntuneAdminRoles
+   Current settingPath: Intune.RBAC.RoleAssignments
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.05
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+36. Windows - Account Lockout Threshold (Local)
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: accountLockoutThreshold
+   Current settingPath: settings.accountPolicies.accountLockout.threshold
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+37. Windows - Account Lockout Duration (Local)
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: accountLockoutDuration
+   Current settingPath: settings.accountPolicies.accountLockout.duration
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+38. Windows - Reset Account Lockout Counter After
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: accountLockoutResetCounter
+   Current settingPath: settings.accountPolicies.accountLockout.resetCounter
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+39. Windows - Allow Administrator Account Lockout
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: allowAdministratorLockout
+   Current settingPath: deviceLock.allowAdministratorLockout
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+40. iOS/iPadOS - Number of Sign-In Failures Before Wiping Device
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: maxInactivityTimeDeviceLockWithPasscode
+   Current settingPath: restrictedApps.maxInactivityTimeDeviceLockWithPasscode
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+41. Android - Password Failure Count Before Device Wipe
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: passwordFailureCountBeforeWipe
+   Current settingPath: androidDeviceOwner.passwordFailureCountBeforeWipe
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.01.08
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+42. Intune Device Compliance Audit Logging
+   Priority: High | Score: 120
+   Template: #microsoft.graph.dataLossPreventionPolicy
+   Family: Purview
+   Current settingName: DeviceComplianceMonitoring
+   Current settingPath: microsoft.intune/deviceComplianceMonitoring
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.03.01
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+43. Windows Security Baseline Profile Deployment
+   Priority: High | Score: 120
+   Template: #settingsCatalog.baseline
+   Family: SecurityBaseline
+   Current settingName: SecurityBaselineProfile
+   Current settingPath: policies.securityBaseline.profile
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.01
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+44. Device Compliance Policy - Baseline Configuration
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: DeviceCompliancePolicy
+   Current settingPath: policies.compliance.configurationBaseline
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.01
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+45. Baseline Configuration Compliance Monitoring
+   Priority: High | Score: 120
+   Template: #microsoft.graph.conditionalAccessPolicy
+   Family: ConditionalAccess
+   Current settingName: BaselineMonitoring
+   Current settingPath: reporting.deviceCompliance.baselineStatus
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.01
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+46. Configuration Change Audit Logging
+   Priority: High | Score: 120
+   Template: #microsoft.graph.dataLossPreventionPolicy
+   Family: Purview
+   Current settingName: ChangeMonitoring.AuditLogs
+   Current settingPath: monitoring.auditLogs.configurationChanges
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.04.03
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+47. Require Antivirus and Antispyware Software
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windows10CompliancePolicy
+   Family: Compliance
+   Current settingName: RequireDeviceCompliance
+   Current settingPath: deviceCompliancePolicy.systemSecurity.antivirusRequired
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.07.04
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+48. Require Up-to-Date Security Intelligence
+   Priority: High | Score: 120
+   Template: #microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration
+   Family: Compliance
+   Current settingName: DefenderSignatureUpdate
+   Current settingPath: deviceCompliancePolicy.defenderForEndpoint.signatureOutOfDate
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.07.04
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+49. Automatic Device Wipe on Account Deletion
+   Priority: High | Score: 120
+   Template: #microsoft.graph.iosManagedAppProtection
+   Family: AppProtection
+   Current settingName: corporateWipeOnTermination
+   Current settingPath: properties.actions.wipe
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.09.02
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+50. Intune Device Compliance Policy Required
+   Priority: High | Score: 120
+   Template: #microsoft.graph.conditionalAccessPolicy
+   Family: ConditionalAccess
+   Current settingName: compliance.policy.deviceComplianceRequired
+   Current settingPath: Intune.Compliance.DeviceComplianceRequired
+   Controls: 1 total (0 critical, 1 high)
+   Control IDs: 03.11.02
+   Policy occurrences: 20
+   Current extraction rate: 0%
+   Sample policy: NIST 800-171 Windows Device Compliance (Pro) (ID: 1)
+
+================================================================================
+RESEARCH TRACKING TEMPLATE
+================================================================================
+
+Copy this to a spreadsheet for tracking your research:
+
+ID,Display Name,Template,Current Path,Research Status,Actual Property,Verified,Notes
+104,"Lock Screen Image URL (Windows Enterprise)","windows10CustomConfiguration","Device.Vendor.MSFT.Policy.Config.Personalization.LockScreenImageUrl",TODO,,,
+123,"Require WPA2-Enterprise Wi-Fi Security","authorizationPolicy","wiFiConfiguration.securityType",TODO,,,
+124,"Require EAP-TLS Authentication for Enterprise Wi-Fi","conditionalAccessPolicy","wiFiConfiguration.eapConfiguration.eapType",TODO,,,
+126,"Block Jailbroken/Rooted Devices from Network","authorizationPolicy","deviceCompliancePolicy.deviceHealthAttestation.jailbroken",TODO,,,
+127,"Enforce Minimum OS Version for Mobile Devices","iosManagedAppProtection","deviceCompliancePolicy.deviceProperties.osMinimumVersion",TODO,,,
+128,"Require Strong Passcode on Mobile Devices","iosManagedAppProtection","deviceCompliancePolicy.systemSecurity.passwordRequired",TODO,,,
+130,"Require App Protection Policies for CUI Access","iosManagedAppProtection","appProtectionPolicy.settings.dataProtection",TODO,,,
+131,"Block Personally Owned Device Enrollment","iosManagedAppProtection","deviceEnrollmentConfiguration.platformRestrictions.personalDeviceEnrollment",TODO,,,
+284,"BitLocker Removable Drive Encryption Method","#settingsCatalog.endpointSecurityDiskEncryption","Encryption.BitLocker.RemovableDrivesEncryptionType",TODO,,,
+286,"BitLocker - Fixed Data Drive Encryption","#settingsCatalog.endpointSecurityDiskEncryption","Intune.EndpointSecurity.DiskEncryption.BitLocker.FixedDriveSettings",TODO,,,
+333,"Intune - Max Inactivity Before Lock (Windows)","windows10CompliancePolicy","maxInactivityBeforeLock",TODO,,,
+421,"Maximum Inactivity Time Device Lock (Windows)","windows10CompliancePolicy","Device.Vendor.MSFT.Policy.Config.DeviceLock.MaxInactivityTimeDeviceLock",TODO,,,
+424,"Password Protect Screen Saver (Windows)","windows10CompliancePolicy","User.Vendor.MSFT.Policy.Config.ADMX_ControlPanelDisplay.CPL_Personalization_EnableScreenSaver_PasswordProtect",TODO,,,
+427,"Windows Hello - Minimum PIN Length","windows10CompliancePolicy","windows10EndpointProtectionConfiguration.windowsHelloForBusinessSettings.pinMinimumLength",TODO,,,
+428,"Maximum Minutes of Inactivity Until Screen Locks (iOS)","iosCompliancePolicy","iosGeneralDeviceConfiguration.maxInactivityTimeDeviceLock",TODO,,,
+438,"App Protection Policy - Offline Grace Period (Minutes)","windows10CompliancePolicy","IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod",TODO,,,
+439,"App Protection Policy - Offline Grace Period (Minutes) - Android","androidManagedAppProtection","IntuneMAMPolicy.ConditionalLaunch.OfflineGracePeriod",TODO,,,
+445,"Require FIPS 140-2 Compliant Wi-Fi Profiles","windows10CompliancePolicy","wiFiConfiguration.fipsCompliant",TODO,,,
+446,"Disable Wi-Fi on Devices Before Deployment","authorizationPolicy","deviceConfiguration.wireless.wiFiBlocked",TODO,,,
+447,"Require Full Device Encryption on Mobile Devices","windows10CompliancePolicy","deviceCompliancePolicy.systemSecurity.requireEncryption",TODO,,,
+579,"Require BitLocker Encryption on Windows Devices","conditionalAccessPolicy","DeviceCompliance.SystemSecurity.RequireEncryption",TODO,,,
+590,"BitLocker - Require Encryption for OS Drive","#settingsCatalog.endpointSecurityDiskEncryption","Intune.EndpointSecurity.DiskEncryption.BitLocker.RequireDeviceEncryption",TODO,,,
+669,"BitLocker Operating System Drive Encryption Method","#settingsCatalog.endpointSecurityDiskEncryption","Encryption.BitLocker.SystemDrivesEncryptionType",TODO,,,
+670,"BitLocker Fixed Data Drive Encryption Method","#settingsCatalog.endpointSecurityDiskEncryption","Encryption.BitLocker.FixedDrivesEncryptionType",TODO,,,
+72,"App Control for Business: Code Integrity Policy","windows10CompliancePolicy","Endpoint Security > App Control for Business > Base Policy XML",TODO,,,
+73,"Endpoint Privilege Management: Elevation Settings Policy","windows10CompliancePolicy","Endpoint Security > Endpoint Privilege Management > Elevation Settings",TODO,,,
+165,"Windows Time Service (W32Time) NTP Configuration","windows10CustomConfiguration","Intune.DeviceConfiguration.WindowsTimeService",TODO,,,
+166,"Azure AD Joined Device Time Synchronization","conditionalAccessPolicy","Intune.DeviceCompliance.TimeSync",TODO,,,
+169,"Windows Time Service Health Monitoring","windows10CustomConfiguration","Intune.DeviceCompliance.TimeServiceStatus",TODO,,,
+176,"Security Baseline Review and Update Schedule","#settingsCatalog.baseline","policies.securityBaseline.reviewSchedule",TODO,,,
+181,"Windows Update Rings - Change Control Deployment","windows10CustomConfiguration","policies.windowsUpdate.updateRings",TODO,,,
+182,"Windows Feature Updates - Manual Approval Control","windows10CompliancePolicy","policies.windowsUpdate.featureUpdates",TODO,,,
+183,"Configuration Profile Version Control","deviceManagement","policies.deviceConfiguration.versionControl",TODO,,,
+184,"Windows Update Pause - Emergency Change Control","windowsUpdateForBusinessConfiguration","policies.windowsUpdate.pauseUpdates",TODO,,,
+190,"Intune - Limit Device Configuration and Policy Admin Roles","privilegedIdentityManagement","Intune.RBAC.RoleAssignments",TODO,,,
+406,"Windows - Account Lockout Threshold (Local)","windows10CompliancePolicy","settings.accountPolicies.accountLockout.threshold",TODO,,,
+407,"Windows - Account Lockout Duration (Local)","windows10CompliancePolicy","settings.accountPolicies.accountLockout.duration",TODO,,,
+408,"Windows - Reset Account Lockout Counter After","windows10CompliancePolicy","settings.accountPolicies.accountLockout.resetCounter",TODO,,,
+409,"Windows - Allow Administrator Account Lockout","windows10CompliancePolicy","deviceLock.allowAdministratorLockout",TODO,,,
+411,"iOS/iPadOS - Number of Sign-In Failures Before Wiping Device","windows10CompliancePolicy","restrictedApps.maxInactivityTimeDeviceLockWithPasscode",TODO,,,
+412,"Android - Password Failure Count Before Device Wipe","windows10CompliancePolicy","androidDeviceOwner.passwordFailureCountBeforeWipe",TODO,,,
+472,"Intune Device Compliance Audit Logging","dataLossPreventionPolicy","microsoft.intune/deviceComplianceMonitoring",TODO,,,
+484,"Windows Security Baseline Profile Deployment","#settingsCatalog.baseline","policies.securityBaseline.profile",TODO,,,
+485,"Device Compliance Policy - Baseline Configuration","windows10CompliancePolicy","policies.compliance.configurationBaseline",TODO,,,
+486,"Baseline Configuration Compliance Monitoring","conditionalAccessPolicy","reporting.deviceCompliance.baselineStatus",TODO,,,
+490,"Configuration Change Audit Logging","dataLossPreventionPolicy","monitoring.auditLogs.configurationChanges",TODO,,,
+532,"Require Antivirus and Antispyware Software","windows10CompliancePolicy","deviceCompliancePolicy.systemSecurity.antivirusRequired",TODO,,,
+533,"Require Up-to-Date Security Intelligence","windowsDefenderAdvancedThreatProtectionConfiguration","deviceCompliancePolicy.defenderForEndpoint.signatureOutOfDate",TODO,,,
+554,"Automatic Device Wipe on Account Deletion","iosManagedAppProtection","properties.actions.wipe",TODO,,,
+565,"Intune Device Compliance Policy Required","conditionalAccessPolicy","Intune.Compliance.DeviceComplianceRequired",TODO,,,
+
+================================================================================
+RESEARCH METHODOLOGY
+================================================================================
+
+For each setting above:
+
+1. IDENTIFY THE POLICY TYPE
+   - Check the Template field
+   - Map to M365 admin portal location
+
+2. FIND A SAMPLE POLICY
+   - Use the Sample Policy ID from output
+   - Or create a test policy with this setting configured
+
+3. GET THE ACTUAL PROPERTY NAME
+   Method A: Graph Explorer
+     - Query: GET /deviceManagement/deviceConfigurations/{id}
+     - Or: GET /deviceManagement/deviceCompliancePolicies/{id}
+     - Look for property names in JSON response
+
+   Method B: Admin Portal + Browser DevTools
+     - Open policy in Intune portal
+     - Open browser DevTools (F12) > Network tab
+     - Edit the policy and save
+     - Find the PATCH request and inspect JSON payload
+
+4. VERIFY THE PROPERTY
+   - Ensure property exists in policyData
+   - Check value type matches expected
+   - Test with multiple policies if possible
+
+5. UPDATE THE SPREADSHEET
+   - Mark status as "Researched"
+   - Record actual property name
+   - Add verification notes
+
+
+================================================================================
+STATISTICS
+================================================================================
+
+Priority distribution:
+  Critical: 24
+  High: 26
+  Medium: 0
+
+Control coverage:
+  Total control mappings: 50
+  Unique controls: 15
+
+Template distribution:
+  windows10CompliancePolicy                18
+  conditionalAccessPolicy                  5
+  iosManagedAppProtection                  5
+  #settingsCatalog.endpointSecurityDiskEncryption 5
+  windows10CustomConfiguration             4
+  authorizationPolicy                      3
+  #settingsCatalog.baseline                2
+  dataLossPreventionPolicy                 2
+  iosCompliancePolicy                      1
+  androidManagedAppProtection              1
+
+================================================================================
+EXPECTED IMPACT
+================================================================================
+
+Settings with poor extraction (<50%): 50
+Total policy-setting combinations: 1000
+Estimated new successful extractions: 700
+
+If you successfully map these 50 settings:
+  - Expected match rate improvement: +15-20%
+  - Additional controls covered: 15
+  - Better compliance accuracy for high-priority controls

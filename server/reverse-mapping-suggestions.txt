@@ -1,0 +1,473 @@
+
+================================================================================
+REVERSE MAPPING GENERATION
+================================================================================
+
+Analyzing 22 policies...
+
+Found 519 settings needing better mappings
+
+================================================================================
+SUGGESTED MAPPINGS
+================================================================================
+
+Total unique suggestions: 165
+
+
+================================================================================
+HIGH CONFIDENCE SUGGESTIONS (31)
+================================================================================
+
+Setting: Intune - Minimum Password Length (iOS)
+  Current: minPasswordLength
+  Suggested: passwordMinimumLength
+  Confidence: 100%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 8
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Intune - Minimum Password Length (Windows)
+  Current: minPasswordLength
+  Suggested: passwordMinimumLength
+  Confidence: 100%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 8
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Enable Office Message Encryption (OME)
+  Current: OMEConfigurationEnabled
+  Suggested: disableAppEncryptionIfDeviceEncryptionIsEnabled
+  Confidence: 100%
+  Template: #microsoft.graph.androidManagedAppProtection
+  Sample Value: false
+  Reason: Found in NIST 800-171 App Protection - Android
+
+Setting: Allow Email-Based Subscriptions
+  Current: authorizationPolicy.allowedToSignUpEmailBasedSubscriptions
+  Suggested: allowedToSignUpEmailBasedSubscriptions
+  Confidence: 100%
+  Template: #microsoft.graph.authorizationPolicy
+  Sample Value: true
+  Reason: Found in Authorization Policy
+
+Setting: User Risk Policy - Require Password Change on High Risk
+  Current: userRiskPolicy
+  Suggested: conditions.userRiskLevels
+  Confidence: 98%
+  Template: #microsoft.graph.conditionalAccessPolicy
+  Sample Value: []
+  Reason: Found in NIST 800-171: Require Compliant Device for CUI Apps (Report Only)
+
+Setting: Windows Update for Business - Automatic Quality Updates
+  Current: Update ring for Windows 10 and later
+  Suggested: qualityUpdatesDeferralPeriodInDays
+  Confidence: 96%
+  Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+  Sample Value: 3
+  Reason: Found in NIST 800-171 - Windows Update Ring
+
+Setting: Sign-In Risk Policy - Require MFA on Medium/High Risk
+  Current: signInRiskPolicy
+  Suggested: conditions.signInRiskLevels
+  Confidence: 94%
+  Template: #microsoft.graph.conditionalAccessPolicy
+  Sample Value: []
+  Reason: Found in NIST 800-171: Require Compliant Device for CUI Apps (Report Only)
+
+Setting: Minimum TLS Version 1.2
+  Current: MinimumTLSVersion
+  Suggested: osMinimumVersion
+  Confidence: 93%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: "10.0.19045"
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Intune - Password History Count (Windows)
+  Current: passwordHistoryCount
+  Suggested: passwordPreviousPasswordBlockCount
+  Confidence: 91%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 10
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Intune - Block Simple Passwords (iOS)
+  Current: simplePasswords
+  Suggested: passwordBlockSimple
+  Confidence: 90%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: true
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Windows Update Automatic Updates Enabled
+  Current: updateRings.windowsUpdate.automaticUpdates
+  Suggested: userWindowsUpdateScanAccess
+  Confidence: 89%
+  Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+  Sample Value: "enabled"
+  Reason: Found in NIST 800-171 - Windows Update Ring
+
+Setting: Microsoft Edge Minimum SSL Version
+  Current: EdgeMinimumSSLVersion
+  Suggested: minimumRequiredPatchVersion
+  Confidence: 88%
+  Template: #microsoft.graph.androidManagedAppProtection
+  Sample Value: "0000-00-00"
+  Reason: Found in NIST 800-171 App Protection - Android
+
+Setting: Enforce Minimum OS Version for Mobile Devices
+  Current: minimumOSVersion
+  Suggested: minimumRequiredPatchVersion
+  Confidence: 87%
+  Template: #microsoft.graph.androidManagedAppProtection
+  Sample Value: "0000-00-00"
+  Reason: Found in NIST 800-171 App Protection - Android
+
+Setting: Block MSOL PowerShell
+  Current: authorizationPolicy.blockMsolPowerShell
+  Suggested: blockMsolPowerShell
+  Confidence: 85%
+  Template: #microsoft.graph.authorizationPolicy
+  Sample Value: false
+  Reason: Found in Authorization Policy
+
+Setting: Windows Hello - Minimum PIN Length
+  Current: WindowsHelloForBusiness_PINMinimumLength
+  Suggested: passwordMinimumLength
+  Confidence: 80%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 8
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Windows Autopatch - Automated Update Management
+  Current: Windows Autopatch enrollment
+  Suggested: userWindowsUpdateScanAccess
+  Confidence: 79%
+  Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+  Sample Value: "enabled"
+  Reason: Found in NIST 800-171 - Windows Update Ring
+
+Setting: Configure Automatic Windows Updates
+  Current: windowsUpdatePolicies
+  Suggested: userWindowsUpdateScanAccess
+  Confidence: 79%
+  Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+  Sample Value: "enabled"
+  Reason: Found in NIST 800-171 - Windows Update Ring
+
+Setting: Require Compliant Device for Wi-Fi Network Access
+  Current: grantControls.builtInControls
+  Suggested: deviceComplianceRequired
+  Confidence: 78%
+  Template: #microsoft.graph.iosManagedAppProtection
+  Sample Value: true
+  Reason: Found in NIST 800-171 App Protection - iOS
+
+Setting: Create OAuth App Permission Policies
+  Current: oAuthAppPermissionPolicies
+  Suggested: defaultUserRolePermissions.permissionGrantPoliciesAssigned
+  Confidence: 77%
+  Template: #microsoft.graph.authorizationPolicy
+  Sample Value: ["ManagePermissionGrantsForSelf.microsoft-user-default-recommended","ManagePermissionGrantsForOwnedR
+  Reason: Found in Authorization Policy
+
+Setting: Intune MAM - Block Print of Org Data
+  Current: printBlocked
+  Suggested: fingerprintBlocked
+  Confidence: 77%
+  Template: #microsoft.graph.iosManagedAppProtection
+  Sample Value: false
+  Reason: Found in NIST 800-171 App Protection - iOS
+
+Setting: Windows Update Pause - Emergency Change Control
+  Current: UpdatePause.EmergencyControl
+  Suggested: featureUpdatesPauseExpiryDateTime
+  Confidence: 76%
+  Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+  Sample Value: "0001-01-01T00:00:00Z"
+  Reason: Found in NIST 800-171 - Windows Update Ring
+
+Setting: Windows Update Reports - Impact Analysis Dashboard
+  Current: UpdateReporting.ImpactAnalysis
+  Suggested: userWindowsUpdateScanAccess
+  Confidence: 75%
+  Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+  Sample Value: "enabled"
+  Reason: Found in NIST 800-171 - Windows Update Ring
+
+Setting: Intune App Protection - Offline Grace Period
+  Current: conditionalLaunch.offlineGracePeriod
+  Suggested: periodOfflineBeforeWipeIsEnforced
+  Confidence: 75%
+  Template: #microsoft.graph.iosManagedAppProtection
+  Sample Value: "P90D"
+  Reason: Found in NIST 800-171 App Protection - iOS
+
+Setting: Intune - Password Complexity (Windows)
+  Current: passwordComplexity
+  Suggested: passwordExpirationDays
+  Confidence: 74%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 60
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Mail Flow Rule Encryption Action
+  Current: encryptAction
+  Suggested: appDataEncryptionType
+  Confidence: 74%
+  Template: #microsoft.graph.iosManagedAppProtection
+  Sample Value: "whenDeviceLocked"
+  Reason: Found in NIST 800-171 App Protection - iOS
+
+Setting: Maximum Minutes of Inactivity Until Screen Locks (iOS)
+  Current: MaxInactivityTimeDeviceLock_iOS
+  Suggested: passwordMinutesOfInactivityBeforeLock
+  Confidence: 74%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 15
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Maximum Minutes of Inactivity Until Screen Locks (Android)
+  Current: MaxInactivityTimeDeviceLock_Android
+  Suggested: passwordMinutesOfInactivityBeforeLock
+  Confidence: 73%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 15
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: Windows LAPS (Local Administrator Password Solution)
+  Current: WindowsLAPSConfiguration
+  Suggested: passwordPreviousPasswordBlockCount
+  Confidence: 71%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 10
+  Reason: Found in NIST 800-171 Windows Device Compliance (Pro)
+
+Setting: TLS Encryption for Password Transmission
+  Current: tlsEncryptionRequired
+  Suggested: appDataEncryptionType
+  Confidence: 71%
+  Template: #microsoft.graph.iosManagedAppProtection
+  Sample Value: "whenDeviceLocked"
+  Reason: Found in NIST 800-171 App Protection - iOS
+
+Setting: Windows Hello for Business Password Complexity
+  Current: PasswordPolicy.Complexity
+  Suggested: passwordMinimumCharacterSetCount
+  Confidence: 70%
+  Template: #microsoft.graph.windows10CompliancePolicy
+  Sample Value: 4
+  Reason: Found in NIST 800-171 Windows Device Compliance (Home)
+
+Setting: Windows Autopilot Standard User Provisioning
+  Current: AutopilotStandardUserProvisioning
+  Suggested: userWindowsUpdateScanAccess
+  Confidence: 70%
+  Template: #microsoft.graph.windowsUpdateForBusinessConfiguration
+  Sample Value: "enabled"
+  Reason: Found in NIST 800-171 - Windows Update Ring
+
+
+================================================================================
+MEDIUM CONFIDENCE SUGGESTIONS (85)
+================================================================================
+
+Setting: Intune - Password Expiration (Windows)
+  Current: passwordExpirationDays
+  Suggested: passwordRequiredType
+  Confidence: 70%
+
+Setting: Intune App Protection - Require PIN
+  Current: accessRequirements.pinRequired
+  Suggested: organizationalCredentialsRequired
+  Confidence: 70%
+
+Setting: Require App Protection Policies for CUI Access
+  Current: appProtectionPolicy
+  Suggested: organizationalCredentialsRequired
+  Confidence: 69%
+
+Setting: Enable Cloud App Discovery and Shadow IT Detection
+  Current: cloudAppDiscovery
+  Suggested: disableAppEncryptionIfDeviceEncryptionIsEnabled
+  Confidence: 69%
+
+Setting: Identity Protection - High Risk User Alerts
+  Current: idProtectionAlerts
+  Suggested: conditions.userRiskLevels
+  Confidence: 68%
+
+Setting: Require Approved Client App or App Protection Policy
+  Current: requireApprovedClientAppOrAppProtection
+  Suggested: organizationalCredentialsRequired
+  Confidence: 68%
+
+Setting: Enable Credential Guard
+  Current: EnableCredentialGuard
+  Suggested: disableAppEncryptionIfDeviceEncryptionIsEnabled
+  Confidence: 67%
+
+Setting: Require Strong Passcode on Mobile Devices
+  Current: passwordRequired
+  Suggested: managedBrowserToOpenLinksRequired
+  Confidence: 67%
+
+Setting: Entra ID - Sign-in Risk-based Conditional Access
+  Current: Azure AD sign-in risk policy
+  Suggested: conditions.signInRiskLevels
+  Confidence: 66%
+
+Setting: Require WPA2-Enterprise Wi-Fi Security
+  Current: wiFiSecurityType
+  Suggested: defaultUserRolePermissions.allowedToCreateSecurityGroups
+  Confidence: 66%
+
+Setting: Intune MAM - Block Org Data to Unmanaged Apps
+  Current: sendOrgDataToOtherApps
+  Suggested: dataBackupBlocked
+  Confidence: 62%
+
+Setting: Office 365 Message Encryption (OME)
+  Current: OMEEnabled
+  Suggested: disableAppEncryptionIfDeviceEncryptionIsEnabled
+  Confidence: 60%
+
+Setting: Azure AD Joined Device Time Synchronization
+  Current: AzureADTimeSync
+  Suggested: createdDateTime
+  Confidence: 60%
+
+Setting: Intune App Protection - Maximum PIN Attempts
+  Current: conditionalLaunch.maxPinAttempts
+  Suggested: maximumPinRetries
+  Confidence: 59%
+
+Setting: Azure AD Sign-in Log Time Stamps (UTC)
+  Current: AzureADSignInLogTimeStamps
+  Suggested: defaultUserRolePermissions.permissionGrantPoliciesAssigned
+  Confidence: 59%
+
+Setting: Identity Protection - Impossible Travel Risk Detection
+  Current: impossibleTravelDetection
+  Suggested: conditions.servicePrincipalRiskLevels
+  Confidence: 59%
+
+Setting: Intune App Protection - Block Data Ingestion
+  Current: dataProtection.blockDataIngestionIntoOrganizationDocuments
+  Suggested: dataBackupBlocked
+  Confidence: 59%
+
+Setting: Disable Unsafe ActiveX Controls
+  Current: DisableActiveXControlsInProtectedMode
+  Suggested: disableAppEncryptionIfDeviceEncryptionIsEnabled
+  Confidence: 58%
+
+Setting: Enforce App Compliance Policies
+  Current: appGovernanceCompliancePolicies
+  Suggested: defaultUserRolePermissions.permissionGrantPoliciesAssigned
+  Confidence: 58%
+
+Setting: Block Unknown or Unsupported Device Platforms
+  Current: blockUnsupportedDevicePlatforms
+  Suggested: defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice
+  Confidence: 58%
+
+Setting: Update Ring Pilot - Impact Analysis Phase
+  Current: UpdateRings.PilotValidation
+  Suggested: featureUpdatesDeferralPeriodInDays
+  Confidence: 57%
+
+Setting: Conditional Access - Block Legacy Authentication
+  Current: conditionalAccessBlockLegacyAuth
+  Suggested: conditions.applications.includeAuthenticationContextClassReferences
+  Confidence: 57%
+
+Setting: RDP: Set Time Limit for Active Sessions
+  Current: RDPActiveSessionLimit
+  Suggested: lastModifiedDateTime
+  Confidence: 57%
+
+Setting: Configure Risk-Based Consent Policies
+  Current: riskBasedConsentPolicy
+  Suggested: defaultUserRolePermissions.permissionGrantPoliciesAssigned
+  Confidence: 57%
+
+Setting: DLP Restricted Cloud Service Domains
+  Current: restrictedCloudAppDomains
+  Suggested: safariPasswordAutoFillDomains
+  Confidence: 57%
+
+Setting: Allow Self-Service Password Reset
+  Current: authorizationPolicy.allowedToUseSSPR
+  Suggested: allowedToSignUpEmailBasedSubscriptions
+  Confidence: 57%
+
+Setting: Require TLS for External Email Connections
+  Current: TLSRequiredForExternalEmail
+  Suggested: allowEmailVerifiedUsersToJoinOrganization
+  Confidence: 56%
+
+Setting: Azure AD Sign-In Page - Privacy & Cookies Link
+  Current: FooterPrivacyAndCookies
+  Suggested: defaultUserRolePermissions.permissionGrantPoliciesAssigned
+  Confidence: 56%
+
+Setting: Exchange Online Activity-Based Authentication Timeout
+  Current: ActivityBasedAuthenticationTimeout
+  Suggested: conditions.applications.includeAuthenticationContextClassReferences
+  Confidence: 56%
+
+Setting: RDP: End Session When Time Limits Are Reached
+  Current: RDPEndSessionWhenTimeLimitsReached
+  Suggested: activationLockAllowWhenSupervised
+  Confidence: 56%
+
+
+================================================================================
+SQL UPDATE SCRIPT (High Confidence Only)
+================================================================================
+
+-- Review these carefully before executing!
+-- Copy to SQLite browser or create a .sql file
+
+UPDATE M365Setting SET settingName = 'passwordMinimumLength' WHERE id = 340; -- Intune - Minimum Password Length (iOS)
+UPDATE M365Setting SET settingName = 'passwordMinimumLength' WHERE id = 637; -- Intune - Minimum Password Length (Windows)
+UPDATE M365Setting SET settingName = 'disableAppEncryptionIfDeviceEncryptionIsEnabled' WHERE id = 548; -- Enable Office Message Encryption (OME)
+UPDATE M365Setting SET settingName = 'allowedToSignUpEmailBasedSubscriptions' WHERE id = 334; -- Allow Email-Based Subscriptions
+UPDATE M365Setting SET settingName = 'conditions.userRiskLevels' WHERE id = 82; -- User Risk Policy - Require Password Change on High Risk
+UPDATE M365Setting SET settingName = 'qualityUpdatesDeferralPeriodInDays' WHERE id = 298; -- Windows Update for Business - Automatic Quality Updates
+UPDATE M365Setting SET settingName = 'conditions.signInRiskLevels' WHERE id = 81; -- Sign-In Risk Policy - Require MFA on Medium/High Risk
+UPDATE M365Setting SET settingName = 'osMinimumVersion' WHERE id = 293; -- Minimum TLS Version 1.2
+UPDATE M365Setting SET settingName = 'passwordPreviousPasswordBlockCount' WHERE id = 331; -- Intune - Password History Count (Windows)
+UPDATE M365Setting SET settingName = 'passwordBlockSimple' WHERE id = 16; -- Intune - Block Simple Passwords (iOS)
+UPDATE M365Setting SET settingName = 'userWindowsUpdateScanAccess' WHERE id = 566; -- Windows Update Automatic Updates Enabled
+UPDATE M365Setting SET settingName = 'minimumRequiredPatchVersion' WHERE id = 294; -- Microsoft Edge Minimum SSL Version
+UPDATE M365Setting SET settingName = 'minimumRequiredPatchVersion' WHERE id = 127; -- Enforce Minimum OS Version for Mobile Devices
+UPDATE M365Setting SET settingName = 'blockMsolPowerShell' WHERE id = 336; -- Block MSOL PowerShell
+UPDATE M365Setting SET settingName = 'passwordMinimumLength' WHERE id = 427; -- Windows Hello - Minimum PIN Length
+UPDATE M365Setting SET settingName = 'userWindowsUpdateScanAccess' WHERE id = 602; -- Windows Autopatch - Automated Update Management
+UPDATE M365Setting SET settingName = 'userWindowsUpdateScanAccess' WHERE id = 317; -- Configure Automatic Windows Updates
+UPDATE M365Setting SET settingName = 'deviceComplianceRequired' WHERE id = 125; -- Require Compliant Device for Wi-Fi Network Access
+UPDATE M365Setting SET settingName = 'defaultUserRolePermissions.permissionGrantPoliciesAssigned' WHERE id = 320; -- Create OAuth App Permission Policies
+UPDATE M365Setting SET settingName = 'fingerprintBlocked' WHERE id = 645; -- Intune MAM - Block Print of Org Data
+UPDATE M365Setting SET settingName = 'featureUpdatesPauseExpiryDateTime' WHERE id = 184; -- Windows Update Pause - Emergency Change Control
+UPDATE M365Setting SET settingName = 'userWindowsUpdateScanAccess' WHERE id = 663; -- Windows Update Reports - Impact Analysis Dashboard
+UPDATE M365Setting SET settingName = 'periodOfflineBeforeWipeIsEnforced' WHERE id = 350; -- Intune App Protection - Offline Grace Period
+UPDATE M365Setting SET settingName = 'passwordExpirationDays' WHERE id = 329; -- Intune - Password Complexity (Windows)
+UPDATE M365Setting SET settingName = 'appDataEncryptionType' WHERE id = 362; -- Mail Flow Rule Encryption Action
+UPDATE M365Setting SET settingName = 'passwordMinutesOfInactivityBeforeLock' WHERE id = 428; -- Maximum Minutes of Inactivity Until Screen Locks (iOS)
+UPDATE M365Setting SET settingName = 'passwordMinutesOfInactivityBeforeLock' WHERE id = 430; -- Maximum Minutes of Inactivity Until Screen Locks (Android)
+UPDATE M365Setting SET settingName = 'passwordPreviousPasswordBlockCount' WHERE id = 148; -- Windows LAPS (Local Administrator Password Solution)
+UPDATE M365Setting SET settingName = 'appDataEncryptionType' WHERE id = 511; -- TLS Encryption for Password Transmission
+UPDATE M365Setting SET settingName = 'passwordMinimumCharacterSetCount' WHERE id = 178; -- Windows Hello for Business Password Complexity
+UPDATE M365Setting SET settingName = 'userWindowsUpdateScanAccess' WHERE id = 144; -- Windows Autopilot Standard User Provisioning
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Review the high confidence suggestions above
+2. Copy the SQL UPDATE statements you want to apply
+3. Execute in your database (SQLite Browser or Prisma Studio)
+4. Re-run compliance checks: npx tsx src/scripts/rebuild-compliance-checks.ts
+5. Measure improvement: npx tsx src/scripts/final-coverage-analysis.ts
+

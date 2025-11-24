@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-export type ComplianceStatus = 'COMPLIANT' | 'NON_COMPLIANT' | 'NOT_CONFIGURED' | 'NOT_CHECKED';
+export type ComplianceStatus = 'COMPLIANT' | 'PARTIAL_COMPLIANT' | 'NON_COMPLIANT' | 'NOT_CONFIGURED' | 'NOT_CHECKED';
 
 interface ControlBadge {
   controlId: string;
@@ -29,11 +29,18 @@ export const usePolicyControlBadges = (policyId: number) => {
           const compliantCount = settings.filter((s: any) => s.isCompliant === true).length;
           const nonCompliantCount = settings.filter((s: any) => s.isCompliant === false).length;
 
-          if (nonCompliantCount > 0) {
+          // Determine compliance status
+          if (compliantCount > 0 && nonCompliantCount > 0) {
+            // Mixed compliance: some compliant, some not
+            complianceStatus = 'PARTIAL_COMPLIANT';
+          } else if (nonCompliantCount > 0 && compliantCount === 0) {
+            // All non-compliant
             complianceStatus = 'NON_COMPLIANT';
-          } else if (compliantCount > 0) {
+          } else if (compliantCount > 0 && nonCompliantCount === 0) {
+            // All compliant
             complianceStatus = 'COMPLIANT';
           } else {
+            // Not configured
             complianceStatus = 'NOT_CONFIGURED';
           }
         }

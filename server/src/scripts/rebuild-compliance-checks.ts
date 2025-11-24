@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
+import { SmartExtractor } from '../services/smart-extractor.service.js';
 
 const prisma = new PrismaClient();
+const smartExtractor = new SmartExtractor();
 
 /**
  * Script to rebuild SettingComplianceCheck records correctly
@@ -83,9 +85,9 @@ async function rebuildComplianceChecks() {
 
     // Create new compliance checks
     for (const setting of settings) {
-      // Extract actual value from policy data
-      // This is the key mapping logic that needs to be implemented
-      const actualValue = extractActualValue(parsedData, setting);
+      // Extract actual value using SmartExtractor (includes Settings Catalog & OMA-URI support)
+      const extractionResult = await smartExtractor.extractValue(policy, setting);
+      const actualValue = extractionResult.value;
 
       // Only create check if we found an actual value
       if (actualValue !== null && actualValue !== undefined) {

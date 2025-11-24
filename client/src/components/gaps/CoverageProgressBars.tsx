@@ -6,6 +6,7 @@ interface CoverageProgressBarsProps {
   policyCoverage: number;
   proceduralCoverage: number;
   evidenceCoverage: number;
+  physicalCoverage?: number;
   overallCoverage: number;
   showLabels?: boolean;
 }
@@ -15,6 +16,7 @@ export const CoverageProgressBars: React.FC<CoverageProgressBarsProps> = ({
   policyCoverage,
   proceduralCoverage,
   evidenceCoverage,
+  physicalCoverage = 0,
   overallCoverage,
   showLabels = true,
 }) => {
@@ -32,24 +34,24 @@ export const CoverageProgressBars: React.FC<CoverageProgressBarsProps> = ({
 
   const bars = [
     {
-      label: 'Technical Implementation',
+      label: 'Technical',
       value: technicalCoverage,
       description: 'M365 configurations and technical controls',
     },
     {
-      label: 'Policy Documentation',
-      value: policyCoverage,
-      description: 'Written policies and standards',
-    },
-    {
-      label: 'Procedural Controls',
+      label: 'Operational',
       value: proceduralCoverage,
-      description: 'Documented procedures and processes',
+      description: 'Operational procedures and processes',
     },
     {
-      label: 'Evidence Collection',
-      value: evidenceCoverage,
-      description: 'Audit evidence and documentation',
+      label: 'Documentation',
+      value: policyCoverage,
+      description: 'Policies and supporting documentation',
+    },
+    {
+      label: 'Physical',
+      value: physicalCoverage, // Placeholder as Physical coverage is not currently tracked in M365 analysis
+      description: 'Physical security controls (Not applicable to M365)',
     },
   ];
 
@@ -113,7 +115,7 @@ export const CoverageProgressBars: React.FC<CoverageProgressBarsProps> = ({
           }}
         />
         <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', color: '#B0B0B0', mt: 1 }}>
-          Weighted average: Technical (40%), Policy (30%), Procedural (20%), Evidence (10%)
+          Weighted average: Technical (40%), Documentation (30%), Operational (20%), Evidence (10%)
         </Typography>
       </Box>
     </Box>

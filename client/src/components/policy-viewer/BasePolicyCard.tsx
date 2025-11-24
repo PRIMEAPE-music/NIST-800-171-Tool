@@ -34,6 +34,8 @@ const getComplianceChipColor = (status: ComplianceStatus): 'success' | 'error' |
   switch (status) {
     case 'COMPLIANT':
       return 'success';
+    case 'PARTIAL_COMPLIANT':
+      return 'warning'; // Orange for partial compliance
     case 'NON_COMPLIANT':
       return 'error';
     case 'NOT_CONFIGURED':
@@ -50,6 +52,8 @@ const getComplianceTooltip = (controlTitle: string, family: string, status: Comp
   switch (status) {
     case 'COMPLIANT':
       return `${baseInfo}\n✓ All settings compliant`;
+    case 'PARTIAL_COMPLIANT':
+      return `${baseInfo}\n◐ Partially compliant (some settings meet requirements)`;
     case 'NON_COMPLIANT':
       return `${baseInfo}\n✗ Has non-compliant settings`;
     case 'NOT_CONFIGURED':
@@ -75,7 +79,8 @@ const BasePolicyCard: React.FC<BasePolicyCardProps> = ({
 }) => {
   const [settingsExpanded, setSettingsExpanded] = React.useState(false);
 
-  // Fetch control badges for this policy
+  // Fetch control badges with compliance status (now includes fallback for potential controls)
+  // The control-mappings endpoint has been updated to show potential controls when no verified controls exist
   const { data: controlBadges, isLoading: badgesLoading } = usePolicyControlBadges(policy.id);
 
   return (

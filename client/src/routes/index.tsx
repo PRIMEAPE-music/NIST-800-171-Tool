@@ -10,7 +10,7 @@ import { EvidenceGapReport } from '@/pages/EvidenceGapReport';
 import { M365Integration } from '@/pages/M365Integration';
 import SuggestedMappingsPage from '@/pages/SuggestedMappings';
 import PolicyViewer from '@/pages/PolicyViewer';
-import { M365GapAnalysis } from '@/pages/M365GapAnalysis';
+import { GapAnalysisPage } from '@/pages/GapAnalysisPage';
 import { Reports } from '@/pages/Reports';
 import { Settings } from '@/pages/Settings';
 // AssessmentWizard import removed - component deleted
@@ -30,7 +30,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/evidence/gaps" element={<EvidenceGapReport />} />
       <Route path="/m365" element={<M365Integration />} />
       <Route path="/m365/suggested-mappings" element={<SuggestedMappingsPage />} />
-      <Route path="/m365/gap-analysis" element={<M365GapAnalysis />} />
+      <Route path="/m365/gap-analysis" element={<GapAnalysisPage />} />
       <Route
         path="/policy-viewer"
         element={

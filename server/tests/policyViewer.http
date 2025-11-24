@@ -69,3 +69,19 @@ GET http://localhost:3001/api/m365/policies/viewer/99999
 
 ### Test with invalid policy type
 GET http://localhost:3001/api/m365/policies/viewer?policyType=InvalidType
+
+# ============================================================================
+# Policy Settings to Controls Mapping Endpoint
+# ============================================================================
+
+### Get settings-to-controls for policy ID 1
+GET http://localhost:3001/api/m365/policies/viewer/1/settings-to-controls
+
+### Get settings-to-controls for policy ID 2
+GET http://localhost:3001/api/m365/policies/viewer/2/settings-to-controls
+
+### Get settings-to-controls for policy ID 3
+GET http://localhost:3001/api/m365/policies/viewer/3/settings-to-controls
+
+### Test with non-existent policy ID
+GET http://localhost:3001/api/m365/policies/viewer/99999/settings-to-controls

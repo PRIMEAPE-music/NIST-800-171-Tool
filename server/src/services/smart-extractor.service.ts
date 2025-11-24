@@ -8,6 +8,8 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import { createSettingsCatalogStrategy } from './settings-catalog-extractor.service.js';
+import { createOmaUriStrategy } from './oma-uri-extractor.service.js';
 
 const prisma = new PrismaClient();
 
@@ -228,6 +230,127 @@ function searchSettingsDelta(settingsDelta: any[], searchKey: string): any {
   }
 
   return undefined;
+}
+
+// ===== PATTERN MATCHING HELPERS =====
+
+/**
+ * Abbreviation dictionary for common M365/security terms
+ */
+const ABBREVIATIONS: Record<string, string[]> = {
+  'pwd': ['password', 'passwd'],
+  'pswd': ['password'],
+  'min': ['minimum', 'minimized'],
+  'max': ['maximum', 'maximized'],
+  'auth': ['authentication', 'authorization', 'authorized'],
+  'config': ['configuration', 'configured', 'configure'],
+  'req': ['required', 'require', 'requirement'],
+  'mgmt': ['management', 'manage'],
+  'svc': ['service'],
+  'admin': ['administrator', 'administration'],
+  'sec': ['security', 'secure'],
+  'pol': ['policy'],
+  'num': ['number'],
+  'len': ['length'],
+  'exp': ['expiration', 'expire', 'expires'],
+  'prot': ['protection', 'protect'],
+  'encr': ['encryption', 'encrypted', 'encrypt'],
+  'def': ['defender', 'defense'],
+  'av': ['antivirus'],
+  'fw': ['firewall'],
+  'cond': ['conditional', 'condition']
+};
+
+/**
+ * Generate all possible expansions of abbreviations in a setting name
+ */
+function expandAbbreviations(settingName: string): string[] {
+  const variations: string[] = [settingName];
+  const lowerName = settingName.toLowerCase();
+
+  for (const [abbr, expansions] of Object.entries(ABBREVIATIONS)) {
+    // Check if abbreviation appears as a whole word or part of camelCase
+    const regex = new RegExp(`\\b${abbr}\\b|(?<=[a-z])${abbr}(?=[A-Z])|^${abbr}(?=[A-Z])`, 'gi');
+
+    if (regex.test(lowerName)) {
+      for (const expansion of expansions) {
+        // Try each expansion
+        const expanded = settingName.replace(
+          new RegExp(abbr, 'gi'),
+          (match) => {
+            // Preserve original casing pattern
+            if (match === match.toUpperCase()) return expansion.toUpperCase();
+            if (match[0] === match[0].toUpperCase()) {
+              return expansion.charAt(0).toUpperCase() + expansion.slice(1);
+            }
+            return expansion.toLowerCase();
+          }
+        );
+
+        if (expanded !== settingName) {
+          variations.push(expanded);
+        }
+      }
+    }
+  }
+
+  return Array.from(new Set(variations)); // Remove duplicates
+}
+
+/**
+ * Synonym dictionary for common setting terms
+ */
+const SYNONYMS: Record<string, string[]> = {
+  'required': ['enabled', 'enforce', 'mandatory', 'must'],
+  'blocked': ['disabled', 'prevent', 'deny', 'disallow'],
+  'allowed': ['enabled', 'permit', 'authorize', 'allow'],
+  'minimum': ['min', 'least', 'lowest'],
+  'maximum': ['max', 'most', 'highest'],
+  'enable': ['require', 'enforce', 'allow'],
+  'disable': ['block', 'prevent', 'deny'],
+  'enforce': ['require', 'mandatory'],
+  'password': ['pwd', 'passcode', 'pin'],
+  'length': ['size', 'len'],
+  'complexity': ['strength', 'complex'],
+  'expiration': ['expire', 'expires', 'expiry'],
+  'storage': ['data', 'disk'],
+  'device': ['endpoint', 'machine'],
+  'user': ['account', 'identity'],
+  'admin': ['administrator'],
+  'security': ['protection', 'secure']
+};
+
+/**
+ * Generate synonym variations of a setting name
+ */
+function getSynonymVariations(settingName: string): string[] {
+  const variations: string[] = [settingName];
+  const lowerName = settingName.toLowerCase();
+
+  for (const [word, synonyms] of Object.entries(SYNONYMS)) {
+    const wordRegex = new RegExp(`\\b${word}\\b`, 'gi');
+
+    if (wordRegex.test(lowerName)) {
+      for (const synonym of synonyms) {
+        const replaced = settingName.replace(
+          wordRegex,
+          (match) => {
+            // Preserve original casing
+            if (match[0] === match[0].toUpperCase()) {
+              return synonym.charAt(0).toUpperCase() + synonym.slice(1);
+            }
+            return synonym.toLowerCase();
+          }
+        );
+
+        if (replaced !== settingName) {
+          variations.push(replaced);
+        }
+      }
+    }
+  }
+
+  return Array.from(new Set(variations)); // Remove duplicates
 }
 
 // ===== EXTRACTION STRATEGIES =====
@@ -475,6 +598,94 @@ const settingsCatalogDeepStrategy: ExtractionStrategy = {
   }
 };
 
+/**
+ * Strategy 8: Abbreviation Expansion
+ * Expand common abbreviations in property names
+ * Example: 'pwdMinLen' -> 'passwordMinimumLength'
+ */
+const abbreviationExpansionStrategy: ExtractionStrategy = {
+  name: 'abbreviation-expansion',
+  priority: 8,
+  description: 'Expand abbreviations in setting path',
+  extract: (policyData, setting) => {
+    const propertyName = setting.settingPath.split('.').pop();
+    const variations = expandAbbreviations(propertyName);
+
+    // Try each variation in the policy data
+    for (const variation of variations) {
+      // Try direct property access
+      if (policyData[variation] !== undefined && policyData[variation] !== null) {
+        return {
+          value: policyData[variation],
+          strategy: 'abbreviation-expansion',
+          confidence: 0.65,
+          path: `${propertyName} -> ${variation}`
+        };
+      }
+
+      // Try nested access (one level deep)
+      for (const key of Object.keys(policyData)) {
+        if (typeof policyData[key] === 'object' && policyData[key] !== null) {
+          if (policyData[key][variation] !== undefined && policyData[key][variation] !== null) {
+            return {
+              value: policyData[key][variation],
+              strategy: 'abbreviation-expansion',
+              confidence: 0.60,
+              path: `${key}.${variation}`
+            };
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+};
+
+/**
+ * Strategy 9: Synonym Matching
+ * Replace words with synonyms to find property names
+ * Example: 'passwordRequired' -> 'passwordEnabled'
+ */
+const synonymMatchingStrategy: ExtractionStrategy = {
+  name: 'synonym-matching',
+  priority: 9,
+  description: 'Try synonym variations of setting terms',
+  extract: (policyData, setting) => {
+    const propertyName = setting.settingPath.split('.').pop();
+    const variations = getSynonymVariations(propertyName);
+
+    // Try each variation
+    for (const variation of variations) {
+      // Try direct property access
+      if (policyData[variation] !== undefined && policyData[variation] !== null) {
+        return {
+          value: policyData[variation],
+          strategy: 'synonym-matching',
+          confidence: 0.55,
+          path: `${propertyName} -> ${variation}`
+        };
+      }
+
+      // Try nested access (one level deep)
+      for (const key of Object.keys(policyData)) {
+        if (typeof policyData[key] === 'object' && policyData[key] !== null) {
+          if (policyData[key][variation] !== undefined && policyData[key][variation] !== null) {
+            return {
+              value: policyData[key][variation],
+              strategy: 'synonym-matching',
+              confidence: 0.50,
+              path: `${key}.${variation}`
+            };
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+};
+
 // ===== SMART EXTRACTOR CLASS =====
 
 export class SmartExtractor {
@@ -485,7 +696,11 @@ export class SmartExtractor {
     camelCaseVariantsStrategy,
     shallowSearchStrategy,
     settingsCatalogStrategy,
-    settingsCatalogDeepStrategy
+    settingsCatalogDeepStrategy,
+    createSettingsCatalogStrategy(), // NEW: Specialized Settings Catalog extractor
+    createOmaUriStrategy(), // NEW: OMA-URI extractor for windows10CustomConfiguration
+    abbreviationExpansionStrategy,
+    synonymMatchingStrategy
   ];
 
   /**

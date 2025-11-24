@@ -29,6 +29,7 @@ import AzureADPolicyCard from '../components/policy-viewer/AzureADPolicyCard';
 import PolicyDetailModal from '../components/policy-viewer/PolicyDetailModal';
 import PolicyCardSkeleton from '../components/policy-viewer/PolicyCardSkeleton';
 import EmptyState from '../components/policy-viewer/EmptyState';
+import AllSettingsView from '../components/policy-viewer/AllSettingsView';
 import {
   PolicyTypeTab,
   PolicySearchParams,
@@ -294,18 +295,24 @@ const PolicyViewer: React.FC = () => {
           counts={tabCounts}
         />
 
-        {/* Search & Filters */}
-        <PolicySearchBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          activeFilter={activeFilter}
-          onActiveFilterChange={setActiveFilter}
-          sortBy={sortBy}
-          onSortByChange={setSortBy}
-        />
+        {/* Conditional Content based on Tab */}
+        {currentTab === 'allSettings' ? (
+          /* All Settings View */
+          <AllSettingsView />
+        ) : (
+          <>
+            {/* Search & Filters */}
+            <PolicySearchBar
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              activeFilter={activeFilter}
+              onActiveFilterChange={setActiveFilter}
+              sortBy={sortBy}
+              onSortByChange={setSortBy}
+            />
 
-        {/* Policy List */}
-        <Paper sx={{ p: 2 }}>
+            {/* Policy List */}
+            <Paper sx={{ p: 2 }}>
           {loadingPolicies ? (
             <Box>
               <PolicyCardSkeleton />
@@ -358,7 +365,9 @@ const PolicyViewer: React.FC = () => {
               })}
             </Box>
           )}
-        </Paper>
+            </Paper>
+          </>
+        )}
       </Box>
 
       {/* Detail Modal */}
