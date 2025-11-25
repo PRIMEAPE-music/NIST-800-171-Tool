@@ -10,6 +10,8 @@ import settingsRoutes from './settings.routes';
 import backupRoutes from './backup.routes';
 import microsoftActionsRoutes from './microsoft-actions.routes';
 import { gapRoutes } from './gap.routes';
+import manualReviewRoutes from './manualReview.routes';
+import surveyRoutes from './survey.routes';
 // gapAnalysisRoutes import removed - standalone routes deleted
 
 const router = Router();
@@ -26,6 +28,8 @@ router.use('/settings', settingsRoutes);
 router.use('/backup', backupRoutes);
 router.use('/microsoft-actions', microsoftActionsRoutes);
 router.use('/gaps', gapRoutes);
+router.use('/manual-reviews', manualReviewRoutes);
+router.use('/surveys', surveyRoutes);
 // Standalone gap analysis routes removed - use Gap Analysis tab on control detail pages
 
 export default router;

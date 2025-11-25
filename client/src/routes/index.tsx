@@ -13,6 +13,8 @@ import PolicyViewer from '@/pages/PolicyViewer';
 import { GapAnalysisPage } from '@/pages/GapAnalysisPage';
 import { Reports } from '@/pages/Reports';
 import { Settings } from '@/pages/Settings';
+import Surveys from '@/pages/Surveys';
+import SurveyDetail from '@/pages/SurveyDetail';
 // AssessmentWizard import removed - component deleted
 import ErrorBoundary from '@/components/common/ErrorBoundary';
 
@@ -41,6 +43,8 @@ export const AppRoutes: React.FC = () => {
       />
       <Route path="/reports" element={<Reports />} />
       <Route path="/settings" element={<Settings />} />
+      <Route path="/surveys" element={<Surveys />} />
+      <Route path="/surveys/:surveyId" element={<SurveyDetail />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );

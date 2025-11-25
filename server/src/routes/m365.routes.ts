@@ -471,6 +471,11 @@ router.get('/policies/viewer/all-settings', async (req, res) => {
             },
           },
         },
+        // Get the most recent manual review
+        manualReviews: {
+          take: 1,
+          orderBy: { updatedAt: 'desc' },
+        },
       },
       orderBy: {
         displayName: 'asc',
@@ -528,6 +533,16 @@ router.get('/policies/viewer/all-settings', async (req, res) => {
           mappingRationale: mapping.mappingRationale,
           isRequired: mapping.isRequired,
         })),
+
+        // Manual review data
+        manualReview: setting.manualReviews[0] ? {
+          id: setting.manualReviews[0].id,
+          isReviewed: setting.manualReviews[0].isReviewed,
+          reviewedAt: setting.manualReviews[0].reviewedAt?.toISOString() || null,
+          manualComplianceStatus: setting.manualReviews[0].manualComplianceStatus,
+          manualExpectedValue: setting.manualReviews[0].manualExpectedValue,
+          rationale: setting.manualReviews[0].rationale,
+        } : null,
       };
     });
 
@@ -848,6 +863,10 @@ router.get('/policies/viewer/:id/settings-to-controls', async (req, res) => {
                 },
               },
             },
+            manualReviews: {
+              take: 1,
+              orderBy: { updatedAt: 'desc' },
+            },
           },
         },
       },
@@ -899,6 +918,16 @@ router.get('/policies/viewer/:id/settings-to-controls', async (req, res) => {
         mappingRationale: mapping.mappingRationale,
         isRequired: mapping.isRequired,
       })),
+
+      // Manual review data
+      manualReview: check.setting.manualReviews[0] ? {
+        id: check.setting.manualReviews[0].id,
+        isReviewed: check.setting.manualReviews[0].isReviewed,
+        reviewedAt: check.setting.manualReviews[0].reviewedAt?.toISOString() || null,
+        manualComplianceStatus: check.setting.manualReviews[0].manualComplianceStatus,
+        manualExpectedValue: check.setting.manualReviews[0].manualExpectedValue,
+        rationale: check.setting.manualReviews[0].rationale,
+      } : null,
     }));
 
     // Calculate summary statistics

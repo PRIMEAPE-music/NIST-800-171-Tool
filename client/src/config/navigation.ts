@@ -7,6 +7,7 @@ import CloudIcon from '@mui/icons-material/Cloud';
 import PolicyIcon from '@mui/icons-material/Policy';
 import DescriptionIcon from '@mui/icons-material/Description';
 import SettingsIcon from '@mui/icons-material/Settings';
+import QuizIcon from '@mui/icons-material/Quiz';
 // FactCheckIcon removed - no longer used
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 
@@ -61,6 +62,12 @@ export const navigationItems: NavigationItem[] = [
     path: '/m365/gap-analysis',
     icon: FindInPageIcon,
     description: 'Identify M365 compliance gaps',
+  },
+  {
+    label: 'Surveys',
+    path: '/surveys',
+    icon: QuizIcon,
+    description: 'Cybersecurity assessment questionnaires',
   },
   {
     label: 'Reports',

@@ -43,6 +43,7 @@ model Control {
   settingMappings ControlSettingMapping[]
   m365Compliance  ControlM365Compliance?
   improvementActionMappings ImprovementActionMapping[]
+  manualSettingReviews ManualSettingReview[]
 
   @@index([family])
   @@index([priority])
@@ -205,6 +206,7 @@ model M365Policy {
   propertiesLastExtracted DateTime? @map("properties_last_extracted")
 
   complianceChecks  SettingComplianceCheck[]
+  manualReviews     ManualSettingReview[]
 
   // === NEW INDEXES FOR PERFORMANCE ===
   @@index([odataType])
@@ -321,6 +323,7 @@ model M365Setting {
 
   controlMappings ControlSettingMapping[]
   complianceChecks SettingComplianceCheck[]
+  manualReviews   ManualSettingReview[]
 
   @@unique([settingPath, policyType, platform])
   @@index([policyType])
@@ -393,6 +396,52 @@ model SettingComplianceCheck {
   @@index([isCompliant])
   @@index([lastChecked])
   @@map("setting_compliance_checks")
+}
+
+// ============================================================================
+// Manual Setting Reviews (User Overrides & Annotations)
+// ============================================================================
+
+model ManualSettingReview {
+  id              Int       @id @default(autoincrement())
+
+  // Foreign Keys
+  settingId       Int       @map("setting_id")           // FK to M365Setting
+  policyId        Int?      @map("policy_id")            // FK to M365Policy (manually associated)
+  controlId       Int?      @map("control_id")           // FK to Control (context where review was made)
+
+  // Review Status
+  isReviewed      Boolean   @default(false) @map("is_reviewed")
+  reviewedAt      DateTime? @map("reviewed_at")
+  reviewedBy      String?   @map("reviewed_by")          // Username or identifier
+
+  // Manual Compliance Override
+  manualComplianceStatus String? @map("manual_compliance_status") // 'COMPLIANT' | 'PARTIAL' | 'NON_COMPLIANT'
+
+  // Value Overrides (optional)
+  manualExpectedValue    String?  @map("manual_expected_value")
+  manualActualValue      String?  @map("manual_actual_value")
+
+  // Required Rationale
+  rationale       String   // Required - explains why the override/review was made
+
+  // Audit Trail
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  setting         M365Setting @relation(fields: [settingId], references: [id], onDelete: Cascade)
+  policy          M365Policy? @relation(fields: [policyId], references: [id], onDelete: SetNull)
+  control         Control?    @relation(fields: [controlId], references: [id], onDelete: SetNull)
+
+  // Indexes
+  @@unique([settingId, policyId]) // One review per setting-policy combination
+  @@index([settingId])
+  @@index([policyId])
+  @@index([controlId])
+  @@index([isReviewed])
+  @@index([manualComplianceStatus])
+  @@map("manual_setting_reviews")
 }
 
 // ============================================================================
@@ -689,4 +738,71 @@ model ImprovementActionMapping {
   @@index([controlId])
   @@index([actionId])
   @@map("improvement_action_mappings")
+}
+
+// ============================================================================
+// Surveys and Questionnaires (Ford SIG Lite, etc.)
+// ============================================================================
+
+model Survey {
+  id          Int      @id @default(autoincrement())
+  surveyId    String   @unique // e.g., "ford-sig-lite-2024"
+  name        String   // e.g., "Ford SIG Lite 2024"
+  description String?
+  createdDate DateTime @default(now()) @map("created_date")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  sections    SurveySection[]
+
+  @@map("surveys")
+}
+
+model SurveySection {
+  id         Int      @id @default(autoincrement())
+  surveyId   Int      @map("survey_id")
+  sectionId  String   @map("section_id") // e.g., "A"
+  name       String   // e.g., "Enterprise Risk Management"
+  riskLevel  String?  @map("risk_level") // e.g., "High Availability"
+  sortOrder  Int      @default(0) @map("sort_order")
+
+  survey     Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  questions  SurveyQuestion[]
+
+  @@unique([surveyId, sectionId])
+  @@map("survey_sections")
+}
+
+model SurveyQuestion {
+  id            Int      @id @default(autoincrement())
+  sectionId     Int      @map("section_id")
+  questionId    String   @map("question_id") // e.g., "A.1"
+  questionText  String   @map("question_text")
+  helpText      String?  @map("help_text")
+  answerType    String   @map("answer_type") // "single-choice", "multiple-choice", "text"
+  options       String?  // JSON array of answer options
+  sortOrder     Int      @default(0) @map("sort_order")
+
+  // Risk scoring fields
+  likelihood    Int?     // Risk likelihood score (1-5)
+  overallImpact Int?     @map("overall_impact") // Overall impact score (1-5)
+
+  section       SurveySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  answers       SurveyAnswer[]
+
+  @@unique([sectionId, questionId])
+  @@map("survey_questions")
+}
+
+model SurveyAnswer {
+  id              Int      @id @default(autoincrement())
+  questionId      Int      @map("question_id")
+  selectedOption  String?  @map("selected_option") // JSON string or array of strings
+  comments        String?
+  answeredBy      String?  @map("answered_by")
+  answeredDate    DateTime? @map("answered_date")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  question        SurveyQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("survey_answers")
 }

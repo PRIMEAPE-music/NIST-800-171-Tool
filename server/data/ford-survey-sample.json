@@ -1,0 +1,176 @@
+{
+  "surveyId": "ford-sig-lite-2024",
+  "surveyName": "Ford SIG Lite 2024",
+  "surveyDescription": "Standardized Information Gathering (SIG) Lite questionnaire for cybersecurity assessment",
+  "createdDate": "2024-07-12",
+  "sections": [
+    {
+      "sectionId": "A",
+      "sectionName": "Enterprise Risk Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "A.1",
+          "questionText": "Is there a formalized risk governance plan approved by management that defines the Enterprise Risk Management program requirements?",
+          "helpText": "The risk governance plan should outline the organizational structure, roles, responsibilities, and processes for managing enterprise-wide risks.",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a formalized risk governance plan approved by management that defines the Enterprise Risk Management program requirements",
+            "No, there is not a formalized risk governance plan approved by management that defines the Enterprise Risk Management program requirements",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "No, there is not a formalized risk governance plan approved by management that defines the Enterprise Risk Management program requirements",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-07-12"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "B",
+      "sectionName": "Security Policy",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "B.1",
+          "questionText": "Is there a corporate security policy that is approved by management, communicated to constituents, and has an owner to maintain and review?",
+          "helpText": "The security policy should be a high-level document that sets the direction for security within the organization.",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a corporate security policy approved by management, communicated to constituents with an assigned owner",
+            "No, there is no corporate security policy",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "Yes, there is a corporate security policy approved by management, communicated to constituents with an assigned owner",
+            "comments": "Policy reviewed quarterly by CISO",
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-07-15"
+          }
+        },
+        {
+          "questionId": "B.2",
+          "questionText": "Does the security policy address information security roles and responsibilities?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, security policy addresses information security roles and responsibilities",
+            "No, security policy does not address information security roles and responsibilities",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "Yes, security policy addresses information security roles and responsibilities",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-07-15"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "H",
+      "sectionName": "Access Control",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "H.1",
+          "questionText": "Is there a policy that defines access control requirements that is approved by management, communicated to constituents and has an owner to maintain and review?",
+          "helpText": "Access control policies should define who can access what resources under what circumstances.",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is an access control policy that meets all requirements",
+            "No, there is no access control policy",
+            "Partial implementation",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "Yes, there is an access control policy that meets all requirements",
+            "comments": "Policy includes MFA requirements and role-based access controls",
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-08-01"
+          }
+        },
+        {
+          "questionId": "H.2",
+          "questionText": "Are user access rights reviewed at least annually?",
+          "helpText": "Regular access reviews help ensure that users only have the permissions they need.",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, user access rights are reviewed at least annually",
+            "No, user access rights are not reviewed regularly",
+            "Reviews are conducted but not annually",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "Yes, user access rights are reviewed at least annually",
+            "comments": "Quarterly reviews conducted by department managers",
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-08-01"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "N",
+      "sectionName": "Network Security",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "N.1",
+          "questionText": "Is there a policy that defines network security requirements that is approved by management, communicated to constituents and has an owner to maintain and review?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a network security policy that meets all requirements",
+            "No, there is no network security policy",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "Yes, there is a network security policy that meets all requirements",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-09-01"
+          }
+        },
+        {
+          "questionId": "N.2",
+          "questionText": "Are networks segmented to separate different security zones?",
+          "helpText": "Network segmentation helps contain security breaches and limit lateral movement.",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, networks are properly segmented into security zones",
+            "No, there is no network segmentation",
+            "Partial segmentation implemented",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "Yes, networks are properly segmented into security zones",
+            "comments": "DMZ, internal, and management networks are separated with firewalls",
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-09-01"
+          }
+        },
+        {
+          "questionId": "N.3",
+          "questionText": "Is intrusion detection/prevention system (IDS/IPS) deployed on the network?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, IDS/IPS is deployed and actively monitored",
+            "Yes, IDS/IPS is deployed but not actively monitored",
+            "No, there is no IDS/IPS",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": "Yes, IDS/IPS is deployed and actively monitored",
+            "comments": "Using Cisco Firepower with 24/7 SOC monitoring",
+            "answeredBy": "K Cain",
+            "answeredDate": "2024-09-01"
+          }
+        }
+      ]
+    }
+  ]
+}

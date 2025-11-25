@@ -26,6 +26,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { PolicyDetail } from '../../types/policyViewer.types';
 import ControlMappingsTab from './ControlMappingsTab';
+import SettingsToControlsTab from './SettingsToControlsTab';
 
 interface PolicyDetailModalProps {
   policy: PolicyDetail | null;
@@ -136,6 +137,7 @@ const PolicyDetailModal: React.FC<PolicyDetailModalProps> = ({
             <Tab label="Overview" id="policy-tab-0" aria-controls="policy-tabpanel-0" />
             <Tab label="Raw Data" id="policy-tab-1" aria-controls="policy-tabpanel-1" />
             <Tab label="Control Mappings" id="policy-tab-2" aria-controls="policy-tabpanel-2" />
+            <Tab label="Settings Editor" id="policy-tab-3" aria-controls="policy-tabpanel-3" />
           </Tabs>
         </Box>
 
@@ -196,6 +198,11 @@ const PolicyDetailModal: React.FC<PolicyDetailModalProps> = ({
         {/* Control Mappings Tab */}
         <TabPanel value={tabValue} index={2}>
           <ControlMappingsTab policyId={policy.id} />
+        </TabPanel>
+
+        {/* Settings to Controls Tab */}
+        <TabPanel value={tabValue} index={3}>
+          <SettingsToControlsTab policyId={policy.id} />
         </TabPanel>
       </DialogContent>
 

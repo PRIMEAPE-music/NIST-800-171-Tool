@@ -35,7 +35,7 @@ import {
   HelpOutline,
   OpenInNew,
 } from '@mui/icons-material';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import policyViewerService from '@/services/policyViewer.service';
 import SettingsToControlsFiltersComponent from './SettingsToControlsFilters';
 import {
@@ -43,6 +43,7 @@ import {
   SettingsToControlsFilters,
   ViewMode,
 } from '@/types/policyViewer.types';
+import { SettingAssociationButton, ReviewedBadge } from '../manual-review';
 
 interface SettingsToControlsTabProps {
   policyId: number;
@@ -139,8 +140,10 @@ const ComplianceStatusBadge: React.FC<{ status: string }> = ({ status }) => {
 const SettingRow: React.FC<{
   setting: PolicySettingToControl;
   onNavigateToControl: (controlId: string) => void;
-}> = ({ setting, onNavigateToControl }) => {
+  policyId: number;
+}> = ({ setting, onNavigateToControl, policyId }) => {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -295,6 +298,32 @@ const SettingRow: React.FC<{
                 </Box>
               )}
 
+              {/* Manual Review Actions */}
+              <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
+                <SettingAssociationButton
+                  setting={{
+                    id: setting.id,
+                    displayName: setting.settingName,
+                    settingPath: setting.settingPath,
+                    expectedValue: setting.expectedValue,
+                    description: setting.settingDescription,
+                    policyType: setting.policyType,
+                  }}
+                  policyId={policyId}
+                  onSuccess={() => {
+                    queryClient.invalidateQueries({ queryKey: ['all-settings-to-controls'] });
+                  }}
+                />
+                {setting.manualReview?.isReviewed && (
+                  <ReviewedBadge
+                    isReviewed={setting.manualReview.isReviewed}
+                    manualComplianceStatus={setting.manualReview.manualComplianceStatus}
+                    reviewedAt={setting.manualReview.reviewedAt}
+                    rationale={setting.manualReview.rationale}
+                  />
+                )}
+              </Box>
+
               {/* Mapped Controls */}
               <Box>
                 <Typography variant="subtitle2" gutterBottom sx={{ color: '#B0B0B0' }}>
@@ -336,8 +365,10 @@ const SettingRow: React.FC<{
 const SettingCard: React.FC<{
   setting: PolicySettingToControl;
   onNavigateToControl: (controlId: string) => void;
-}> = ({ setting, onNavigateToControl }) => {
+  policyId: number;
+}> = ({ setting, onNavigateToControl, policyId }) => {
   const [expanded, setExpanded] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <Card
@@ -390,6 +421,32 @@ const SettingCard: React.FC<{
           <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
             {setting.expectedValue}
           </Typography>
+        </Box>
+
+        {/* Manual Review Actions */}
+        <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
+          <SettingAssociationButton
+            setting={{
+              id: setting.id,
+              displayName: setting.settingName,
+              settingPath: setting.settingPath,
+              expectedValue: setting.expectedValue,
+              description: setting.settingDescription,
+              policyType: setting.policyType,
+            }}
+            policyId={policyId}
+            onSuccess={() => {
+              queryClient.invalidateQueries({ queryKey: ['all-settings-to-controls'] });
+            }}
+          />
+          {setting.manualReview?.isReviewed && (
+            <ReviewedBadge
+              isReviewed={setting.manualReview.isReviewed}
+              manualComplianceStatus={setting.manualReview.manualComplianceStatus}
+              reviewedAt={setting.manualReview.reviewedAt}
+              rationale={setting.manualReview.rationale}
+            />
+          )}
         </Box>
 
         {/* Mapped Controls (always visible) */}
@@ -783,6 +840,7 @@ const SettingsToControlsTab: React.FC<SettingsToControlsTabProps> = ({ policyId 
                   key={setting.id}
                   setting={setting}
                   onNavigateToControl={handleNavigateToControl}
+                  policyId={policyId}
                 />
               ))}
             </TableBody>
@@ -795,7 +853,11 @@ const SettingsToControlsTab: React.FC<SettingsToControlsTabProps> = ({ policyId 
         <Grid container spacing={2}>
           {filteredSettings.map((setting) => (
             <Grid item xs={12} md={6} lg={4} key={setting.id}>
-              <SettingCard setting={setting} onNavigateToControl={handleNavigateToControl} />
+              <SettingCard
+                setting={setting}
+                onNavigateToControl={handleNavigateToControl}
+                policyId={policyId}
+              />
             </Grid>
           ))}
         </Grid>

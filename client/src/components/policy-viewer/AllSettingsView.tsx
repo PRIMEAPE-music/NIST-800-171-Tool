@@ -35,7 +35,7 @@ import {
   HelpOutline,
   OpenInNew,
 } from '@mui/icons-material';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import policyViewerService from '@/services/policyViewer.service';
 import SettingsToControlsFiltersComponent from './SettingsToControlsFilters';
 import {
@@ -43,6 +43,7 @@ import {
   SettingsToControlsFilters,
   ViewMode,
 } from '@/types/policyViewer.types';
+import { SettingAssociationButton, ReviewedBadge } from '../manual-review';
 
 // Helper functions (copied from SettingsToControlsTab)
 const getPlatformIcon = (platform: string): string => {
@@ -135,6 +136,7 @@ const SettingRow: React.FC<{
   onNavigateToControl: (controlId: string) => void;
 }> = ({ setting, onNavigateToControl }) => {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -283,6 +285,31 @@ const SettingRow: React.FC<{
                 </Box>
               )}
 
+              {/* Manual Review Actions */}
+              <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
+                <SettingAssociationButton
+                  setting={{
+                    id: setting.id,
+                    displayName: setting.settingName,
+                    settingPath: setting.settingPath,
+                    expectedValue: setting.expectedValue,
+                    description: setting.settingDescription,
+                    policyType: setting.policyType,
+                  }}
+                  onSuccess={() => {
+                    queryClient.invalidateQueries({ queryKey: ['all-settings-to-controls'] });
+                  }}
+                />
+                {setting.manualReview?.isReviewed && (
+                  <ReviewedBadge
+                    isReviewed={setting.manualReview.isReviewed}
+                    manualComplianceStatus={setting.manualReview.manualComplianceStatus}
+                    reviewedAt={setting.manualReview.reviewedAt}
+                    rationale={setting.manualReview.rationale}
+                  />
+                )}
+              </Box>
+
               <Box>
                 <Typography variant="subtitle2" gutterBottom sx={{ color: '#B0B0B0' }}>
                   Mapped Controls:
@@ -325,6 +352,7 @@ const SettingCard: React.FC<{
   onNavigateToControl: (controlId: string) => void;
 }> = ({ setting, onNavigateToControl }) => {
   const [expanded, setExpanded] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <Card
@@ -380,6 +408,31 @@ const SettingCard: React.FC<{
           <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
             {setting.expectedValue}
           </Typography>
+        </Box>
+
+        {/* Manual Review Actions */}
+        <Box sx={{ display: 'flex', gap: 1, mb: 2, alignItems: 'center' }}>
+          <SettingAssociationButton
+            setting={{
+              id: setting.id,
+              displayName: setting.settingName,
+              settingPath: setting.settingPath,
+              expectedValue: setting.expectedValue,
+              description: setting.settingDescription,
+              policyType: setting.policyType,
+            }}
+            onSuccess={() => {
+              queryClient.invalidateQueries({ queryKey: ['all-settings-to-controls'] });
+            }}
+          />
+          {setting.manualReview?.isReviewed && (
+            <ReviewedBadge
+              isReviewed={setting.manualReview.isReviewed}
+              manualComplianceStatus={setting.manualReview.manualComplianceStatus}
+              reviewedAt={setting.manualReview.reviewedAt}
+              rationale={setting.manualReview.rationale}
+            />
+          )}
         </Box>
 
         <Box>

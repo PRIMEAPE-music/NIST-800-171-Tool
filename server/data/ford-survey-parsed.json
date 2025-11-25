@@ -1,0 +1,383 @@
+{
+  "surveyId": "ford-sig-lite-2024",
+  "surveyName": "Ford SIG Lite 2024",
+  "surveyDescription": "Standardized Information Gathering (SIG) Lite questionnaire for cybersecurity assessment",
+  "createdDate": "2025-11-25",
+  "sections": [
+    {
+      "sectionId": "A",
+      "sectionName": "Enterprise Risk Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "A.1",
+          "questionText": "Answered by: K Cain",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "B",
+      "sectionName": "Security Policy",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "B.1",
+          "questionText": "approved by management which includes 4th and Nth parties as part of the program.",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "15 -",
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "B.2",
+          "questionText": "Answered by: K Cain",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "C",
+      "sectionName": "Organizational Security",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "C.2",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": null,
+            "answeredDate": null
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "D",
+      "sectionName": "Asset & Information Management",
+      "riskLevel": "Enhanced",
+      "questions": []
+    },
+    {
+      "sectionId": "E",
+      "sectionName": "Human Resource Security",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "E.1",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": null,
+            "answeredDate": null
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "F",
+      "sectionName": "Physical & Environmental Security",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "F.3",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": null,
+            "answeredDate": null
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "G",
+      "sectionName": "IT Operations Management",
+      "riskLevel": "Enhanced",
+      "questions": []
+    },
+    {
+      "sectionId": "H",
+      "sectionName": "Access Control",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "H.8",
+          "questionText": "Help Text",
+          "helpText": "Multi-factor authentication requires the use of solutions from two or more of the three categories of factors:",
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "08/31/2022"
+          }
+        },
+        {
+          "questionId": "H.9",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "08/31/2022"
+          }
+        },
+        {
+          "questionId": "H.10",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "08/31/2022"
+          }
+        },
+        {
+          "questionId": "H.11",
+          "questionText": "Help Text",
+          "helpText": "Organizations",
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": null,
+            "answeredDate": null
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "I",
+      "sectionName": "Application Security",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "I.2",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": null,
+            "answeredDate": null
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "J",
+      "sectionName": "Cybersecurity Incident Management",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "J.2",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": null,
+            "answeredBy": null,
+            "answeredDate": null
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "K",
+      "sectionName": "Operational Resilience",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "K.2",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        },
+        {
+          "questionId": "K.3",
+          "questionText": "Help Text",
+          "helpText": "Third",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there are dependencies on critical third party service providers",
+            "No, there are not dependencies on critical third party service providers",
+            "Not applicable",
+            "Yes,",
+            "No,",
+            "Not applicable"
+          ],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        },
+        {
+          "questionId": "K.4",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        },
+        {
+          "questionId": "K.5",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        },
+        {
+          "questionId": "K.6",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        },
+        {
+          "questionId": "K.7",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "N",
+      "sectionName": "Network Security",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "N.3",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        },
+        {
+          "questionId": "N.4",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "T",
+      "sectionName": "Threat Management",
+      "riskLevel": "Enhanced",
+      "questions": []
+    },
+    {
+      "sectionId": "V",
+      "sectionName": "Cloud Hosting Services",
+      "riskLevel": "Enhanced",
+      "questions": [
+        {
+          "questionId": "V.1",
+          "questionText": "Help Text",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [],
+          "givenAnswer": {
+            "selectedOption": null,
+            "comments": "Answered by: K Cain",
+            "answeredBy": null,
+            "answeredDate": "09/01/2022"
+          }
+        }
+      ]
+    }
+  ]
+}

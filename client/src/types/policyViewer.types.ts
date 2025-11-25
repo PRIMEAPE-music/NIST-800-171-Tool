@@ -87,6 +87,16 @@ export interface PolicySettingToControl {
 
   // Mapped controls
   mappedControls: MappedControlForSetting[];
+
+  // Manual review data
+  manualReview?: {
+    id: number;
+    isReviewed: boolean;
+    reviewedAt: string | null;
+    manualComplianceStatus: 'COMPLIANT' | 'PARTIAL' | 'NON_COMPLIANT' | null;
+    manualExpectedValue: string | null;
+    rationale: string;
+  } | null;
 }
 
 export interface MappedControlForSetting {
