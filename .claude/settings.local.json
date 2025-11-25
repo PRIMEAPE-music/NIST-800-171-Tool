@@ -18,7 +18,9 @@
       "Bash(npx ts-node:*)",
       "Bash(cat:*)",
       "Bash(pip install:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(taskkill /F /PID 26596)",
+      "Bash(taskkill //F //PID 26596)"
     ],
     "deny": [],
     "ask": []
