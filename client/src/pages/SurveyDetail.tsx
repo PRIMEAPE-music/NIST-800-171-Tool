@@ -73,16 +73,14 @@ const SurveyDetail: React.FC = () => {
 
   const getRiskColor = (score: number | null) => {
     if (!score) return '#666';
-    if (score >= 4) return '#f44336'; // High risk - red
-    if (score >= 3) return '#ff9800'; // Medium risk - orange
-    return '#4caf50'; // Low risk - green
+    if (score >= 4) return '#f44336'; // Critical - red
+    return '#ff9800'; // High - orange (1-3)
   };
 
   const getRiskLabel = (score: number | null) => {
     if (!score) return 'N/A';
-    if (score >= 4) return 'High';
-    if (score >= 3) return 'Medium';
-    return 'Low';
+    if (score >= 4) return 'Critical';
+    return 'High'; // 1-3
   };
 
   const renderAnswer = (question: SurveyQuestion) => {
@@ -156,10 +154,24 @@ const SurveyDetail: React.FC = () => {
     );
   };
 
+  const getTotalRiskColor = (total: number) => {
+    if (total >= 20) return '#f44336'; // Critical - red
+    if (total >= 10) return '#ff9800'; // High - orange
+    return '#666'; // Below 10 - gray
+  };
+
+  const getTotalRiskLabel = (total: number) => {
+    if (total >= 20) return 'Critical';
+    if (total >= 10) return 'High';
+    return ''; // No label for low scores
+  };
+
   const renderScoring = (question: SurveyQuestion) => {
     if (!question.likelihood && !question.overallImpact) {
       return null;
     }
+
+    const riskTotal = (question.likelihood || 0) * (question.overallImpact || 0);
 
     return (
       <Box sx={{ mt: 2 }}>
@@ -168,7 +180,7 @@ const SurveyDetail: React.FC = () => {
         </Typography>
         <Grid container spacing={2}>
           {question.likelihood && (
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <Paper sx={{ p: 2, bgcolor: '#242424', border: '1px solid #2C2C2C' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
@@ -188,7 +200,7 @@ const SurveyDetail: React.FC = () => {
             </Grid>
           )}
           {question.overallImpact && (
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <Paper sx={{ p: 2, bgcolor: '#242424', border: '1px solid #2C2C2C' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">
@@ -199,6 +211,26 @@ const SurveyDetail: React.FC = () => {
                     size="small"
                     sx={{
                       bgcolor: getRiskColor(question.overallImpact),
+                      color: '#fff',
+                      fontWeight: 600
+                    }}
+                  />
+                </Box>
+              </Paper>
+            </Grid>
+          )}
+          {question.likelihood && question.overallImpact && (
+            <Grid item xs={12} sm={4}>
+              <Paper sx={{ p: 2, bgcolor: '#242424', border: '1px solid #2C2C2C' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Risk Total:
+                  </Typography>
+                  <Chip
+                    label={getTotalRiskLabel(riskTotal) ? `${riskTotal} - ${getTotalRiskLabel(riskTotal)}` : `${riskTotal}`}
+                    size="small"
+                    sx={{
+                      bgcolor: getTotalRiskColor(riskTotal),
                       color: '#fff',
                       fontWeight: 600
                     }}

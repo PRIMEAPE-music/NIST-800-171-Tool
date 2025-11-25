@@ -38,7 +38,7 @@ async function seedSurveys() {
     console.log('Starting survey data seeding...\n');
 
     // Load parsed survey data
-    const dataPath = path.join(__dirname, '../data/ford-survey-2024-real.json');
+    const dataPath = path.join(__dirname, '../data/ford-survey-2024-corrected final.json');
     const surveyData: ParsedSurvey = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
 
     // Check if survey already exists

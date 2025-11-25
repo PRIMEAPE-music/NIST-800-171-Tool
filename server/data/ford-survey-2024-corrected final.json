@@ -1,0 +1,1366 @@
+{
+  "surveyId": "ford-sig-lite-2024-high-availability",
+  "surveyName": "Ford SIG Lite 2024 - High Availability (ROC)",
+  "surveyDescription": "Ford Standardized Information Gathering (SIG) Lite 2024 - High Availability Risk Operations Center Survey",
+  "createdDate": "2024-07-12",
+  "sections": [
+    {
+      "sectionId": "A",
+      "sectionName": "Enterprise Risk Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "A.1",
+          "questionText": "Is there a formalized risk governance plan approved by management that defines the Enterprise Risk Management program requirements?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a formalized risk governance plan approved by management that defines the Enterprise Risk Management program requirements",
+            "No, there is not a formalized risk governance plan approved by management that defines the Enterprise Risk Management program requirements",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 4
+          },
+          "givenAnswer": {
+            "selectedOption": "No formalized Risk Governance policy that defines the Enterprise Risk Management program requirements",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "B",
+      "sectionName": "Third Party Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "B.1",
+          "questionText": "Is there a third party risk management program that is reviewed and approved by management which includes 4th and Nth parties as part of the program?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a third party risk management program that is reviewed and approved by management which includes 4th and Nth parties as part of the program",
+            "No, there is not a third party risk management program that is reviewed and approved by management which includes 4th and Nth parties as part of the program",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No third party risk management program that is reviewed and approved by management which includes 4th and Nth parties as part of the program",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "B.2",
+          "questionText": "For all organizational entities (e.g., vendor's vendors, subcontractors, fourth parties, Nth parties) is there a contractual relationship that extends obligations to each entity?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a contractual relationship that extends obligations to each entity",
+            "No, there is not a contractual relationship that extends obligations to each entity",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No contractual relationship for all subcontractors.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "C",
+      "sectionName": "Organizational Security",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "C.1",
+          "questionText": "Has the organization implemented and documented an information security program and policy that is communicated, monitored, maintained, continually improved, and approved by management?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization has implemented and documented an information security program and policy that is communicated, monitored, maintained, continually improved, and approved by management",
+            "No, the organization has not implemented and documented an information security program and policy that is communicated, monitored, maintained, continually improved, and approved by management",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No information security policy or program that has been approved by management, published, and communicated to constituents",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "C.2F",
+          "questionText": "Are information security personnel (internal or outsourced) responsible for information security processes?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there are information security personnel (internal or outsourced) responsible for information security processes.",
+            "No, there are no information security personnel (internal or outsourced) responsible for information security processes.",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, there are information security personnel (internal or outsourced) responsible for information security processes.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "C.4",
+          "questionText": "Is there a documented risk assessment process for information security with consistent and comparable results?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a documented risk assessment process for information security with consistent and comparable results",
+            "No, there is not a documented risk assessment process for information security with consistent and comparable results",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No documented risk assessment process for information security",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "D",
+      "sectionName": "Asset & Information Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "D.1",
+          "questionText": "Is there an asset management program approved by management, communicated to constituents and has an owner to maintain, review, and manage asset controls?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is an asset management program approved by management, communicated to constituents and has an owner to maintain, review, and manage asset controls",
+            "No, there is not an asset management program approved by management, communicated to constituents and has an owner to maintain, review, and manage asset controls",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "No Asset Management Program",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "D.2",
+          "questionText": "Is there an acceptable use policy for information and associated assets that has been approved by management, communicated to appropriate constituents, and assigned an owner to maintain and periodically review the policy?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is an acceptable use policy for information and associated assets that has been approved by management, communicated to appropriate constituents, and assigned an owner to maintain and periodically review the policy",
+            "No, there is not an acceptable use policy for information and associated assets that has been approved by management, communicated to appropriate constituents, and assigned an owner to maintain and periodically review the policy",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 4
+          },
+          "givenAnswer": {
+            "selectedOption": "No acceptable use policy for information and associated assets",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "D.3",
+          "questionText": "Is there a records retention policy and retention schedule covering paper and electronic records, including email in support of applicable regulations, standards, and contractual requirements?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a records retention policy and retention schedule covering paper and electronic records, including email in support of applicable regulations, standards, and contractual requirements",
+            "No, there is not a records retention policy and retention schedule covering paper and electronic records, including email in support of applicable regulations, standards, and contractual requirements",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 4
+          },
+          "givenAnswer": {
+            "selectedOption": "No records retention policy in place",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "D.4F",
+          "questionText": "Is Information classified according to legal or regulatory requirements, business value, and sensitivity to unauthorized disclosure or modification?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, information is classified according to legal or regulatory requirements, business value, and sensitivity to unauthorized disclosure or modification.",
+            "No, information is not classified according to legal or regulatory requirements, business value, and sensitivity to unauthorized disclosure or modification.",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 4
+          },
+          "givenAnswer": {
+            "selectedOption": "Information is not classified according to legal or regulatory requirements, business value, and sensitivity to unauthorized disclosure or modification.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "E",
+      "sectionName": "Human Resource Security",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "E.1",
+          "questionText": "Are Human Resources policies and procedures approved by management, communicated to constituents and have an owner to maintain and review?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, Human Resources policies and procedures are approved by management, communicated to constituents and have an owner to maintain and review",
+            "No, Human Resources policies and procedures are not approved by management, communicated to constituents and have an owner to maintain and review",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, Human Resources policies and procedures are approved by management, communicated to constituents and have an owner to maintain and review",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "E.3",
+          "questionText": "Does the organization have an employee performance process that is documented, maintained, and reviewed by management periodically?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization has an employee performance process that is documented, maintained, and reviewed by management periodically",
+            "No, the organization does not have an employee performance process that is documented, maintained, and reviewed by management periodically",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, the organization has an employee performance process that is documented, maintained, and reviewed by management periodically",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "F",
+      "sectionName": "Physical & Environmental Security",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "F.1",
+          "questionText": "Has management approved a physical security program that is communicated to all parties involved, with an assigned owner responsible for maintenance and review?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, management has approved a physical security program that is communicated to all parties involved, with an assigned owner responsible for maintenance and review",
+            "No, management has not approved a physical security program that is communicated to all parties involved, with an assigned owner responsible for maintenance and review",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No physical security program approved by management and communicated to constituents",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "G",
+      "sectionName": "IT Operations Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "G.1",
+          "questionText": "Does the organization's executive leadership ensure Information Technology Operation's policies, and procedures are established and aligned with organizational strategy, and communicated to the entire organization?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization's executive leadership ensures Information Technology Operation's policies, and procedures are established and aligned with organizational strategy, and communicated to the entire organization",
+            "No, the organization's executive leadership does not ensure Information Technology Operation's policies, and procedures are established and aligned with organizational strategy, and communicated to the entire organization",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, the organization's executive leadership ensures Information Technology Operation's policies, and procedures are established and aligned with organizational strategy, and communicated to the entire organization",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "G.2",
+          "questionText": "Is there an operational Change Management/Change Control policy or program that has been documented, approved by management, communicated to appropriate constituents, and assigned an owner to maintain and review the policy?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is an operational Change Management/Change Control policy or program that has been documented, approved by management, communicated to appropriate constituents, and assigned an owner to maintain and review the policy",
+            "No, there is not an operational Change Management/Change Control policy or program that has been documented, approved by management, communicated to appropriate constituents, and assigned an owner to maintain and review the policy",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, there is an operational Change Management/Change Control policy or program that has been documented, approved by management, communicated to appropriate constituents, and assigned an owner to maintain and review the policy",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "G.3",
+          "questionText": "Are Information security requirements specified and implemented when new systems are introduced, upgraded, or enhanced?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, Information security requirements are specified and implemented when new systems are introduced, upgraded, or enhanced",
+            "No, Information security requirements are not specified and implemented when new systems are introduced, upgraded, or enhanced",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, Information security requirements are specified and implemented when new systems are introduced, upgraded, or enhanced",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "H",
+      "sectionName": "Access Control",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "H.1",
+          "questionText": "Has management approved an access control policy, communicated it to constituents, appointed an owner to maintain it, and reviewed it?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, management has approved an access control policy, communicated it to constituents, appointed an owner to maintain it, and reviewed it",
+            "No, management has not approved an access control policy, communicated it to constituents, appointed an owner to maintain it, and reviewed it",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No access control policy that has been approved by management, communicated to constituents and an owner to maintain and review the program",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "H.2F",
+          "questionText": "Has management approved, communicated, and enforced a password policy on all platforms and network devices?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, management has approved, communicated, and enforced a password policy on all platforms and network devices.",
+            "No, management has not approved, communicated, and enforced a password policy on all platforms and network devices.",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, management has approved, communicated, and enforced a password policy on all platforms and network devices.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "H.2.1",
+          "questionText": "Does the password policy require keeping passwords confidential?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the password policy requires keeping passwords confidential",
+            "No, the password policy does not require keeping passwords confidential",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, the password policy requires keeping passwords confidential",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "H.8F",
+          "questionText": "Is Multi-factor Authentication deployed?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, Multi-factor Authentication is deployed.",
+            "No, Multi-factor Authentication is not deployed.",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, Multi-factor Authentication is deployed.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "I",
+      "sectionName": "Application Security",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "I.2",
+          "questionText": "Is application development performed?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, application development is performed",
+            "No, application development is not performed",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 10,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "Application development is performed",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "I.2.1",
+          "questionText": "Is there a secure software development lifecycle policy that has been approved by management, communicated to appropriate constituents and an owner to maintain and review the policy?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a secure software development lifecycle policy that has been approved by management, communicated to appropriate constituents and an owner to maintain and review the policy",
+            "No, there is not a secure software development lifecycle policy that has been approved by management, communicated to appropriate constituents and an owner to maintain and review the policy",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "There is no secure software development lifecycle policy that has been approved by management",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "J",
+      "sectionName": "Cybersecurity Incident Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "J.1",
+          "questionText": "Has management approved and communicated a Cybersecurity Incident Management Program with a designated owner to maintain and review it?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, management has approved and communicated a Cybersecurity Incident Management Program with a designated owner to maintain and review it",
+            "No, management has not approved and communicated a Cybersecurity Incident Management Program with a designated owner to maintain and review it",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 4
+          },
+          "givenAnswer": {
+            "selectedOption": "No established Cybersecurity Incident Management Program that has been approved by management, communicated to appropriate constituents and an owner to maintain and review the program",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "J.4F",
+          "questionText": "Is there a formal Incident Response Plan that includes an escalation procedure containing a stipulation to contact Ford's Cyber Incident Response Team (CIRT) at CIRT@Ford.com when a cyber incident occurs?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a formal Incident Response Plan that includes an escalation procedure containing a stipulation to contact Ford's Cyber Incident Response Team (CIRT) at CIRT@Ford.com when a cyber incident occurs.",
+            "No, there is not a formal Incident Response Plan that includes an escalation procedure containing a stipulation to contact Ford's Cyber Incident Response Team (CIRT) at CIRT@Ford.com when a cyber incident occurs.",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 4
+          },
+          "givenAnswer": {
+            "selectedOption": "No formal Incident Response Plan that includes an escalation procedure to contact Ford's Cyber Incident Response Team (CIRT) at CIRT@Ford.com when a cyber incident occurs.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "J.5F",
+          "questionText": "Is there a specific methodology to regularly review events to uncover potential incidents?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a specific methodology to regularly review events to uncover potential incidents.",
+            "No, there is not a specific methodology to regularly review events to uncover potential incidents.",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No specific methodology to regularly review events to uncover potential incidents.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "K",
+      "sectionName": "Operational Resilience",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "K.1",
+          "questionText": "Has the organization established a Business Resilience Policy, designated an owner to maintain and review it, and communicated it?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization has established a Business Resilience Policy, designated an owner to maintain and review it, and communicated it",
+            "No, the organization has not established a Business Resilience Policy, designated an owner to maintain and review it, and communicated it",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 25,
+            "likelihood": 5,
+            "overallImpact": 5
+          },
+          "givenAnswer": {
+            "selectedOption": "No established business resiliency program that has been approved by management",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.2",
+          "questionText": "Is there a formal, documented information technology disaster recovery exercise and testing program in place?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a formal, documented information technology disaster recovery exercise and testing program in place",
+            "No, there is not a formal, documented information technology disaster recovery exercise and testing program in place",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 25,
+            "likelihood": 5,
+            "overallImpact": 5
+          },
+          "givenAnswer": {
+            "selectedOption": "No formal, documented information technology disaster recovery exercise and testing program in place",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.3",
+          "questionText": "Are there any dependencies on critical third party service providers?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there are dependencies on critical third party service providers",
+            "No, there are no dependencies on critical third party service providers",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "Dependencies exist for critical third party service providers",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.4",
+          "questionText": "Is there a pandemic/infectious disease outbreak plan?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a pandemic/infectious disease outbreak plan",
+            "No, there is not a pandemic/infectious disease outbreak plan",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No pandemic/infectious disease outbreak plan",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.5F",
+          "questionText": "Is there a policy or process for the backup of data?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a policy or process for the backup of data",
+            "No, there is no policy or process for the backup of data",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, there is a policy or process for the backup of data",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.6",
+          "questionText": "Is there a formal process focused on identifying and addressing risks of disruptive events to business operations (e.g., operational risk assessment?)",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a formal process focused on identifying and addressing risks of disruptive events to business operations",
+            "No, there is not a formal process focused on identifying and addressing risks of disruptive events to business operations",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 25,
+            "likelihood": 5,
+            "overallImpact": 5
+          },
+          "givenAnswer": {
+            "selectedOption": "No formal process focused on identifying and addressing risks of disruptive events to business operations",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.7",
+          "questionText": "Have formal procedures for business continuity been developed and documented?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, formal procedures for business continuity have been developed and documented",
+            "No, formal procedures for business continuity have not been developed and documented",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 25,
+            "likelihood": 5,
+            "overallImpact": 5
+          },
+          "givenAnswer": {
+            "selectedOption": "No formal procedures for business continuity have been developed and documented",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.11F",
+          "questionText": "Is there a data retention policy or process with a retention schedule in place?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a data retention policy or process with a retention schedule in place",
+            "No, there is not a data retention policy or process with a retention schedule in place",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, there is a data retention policy or process with a retention schedule in place",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        },
+        {
+          "questionId": "K.12F",
+          "questionText": "Is there a plan for managing a data recovery effort in the aftermath of a successful data compromising cyberattack e.g., ransomware, data-wipe malware?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a plan for managing a data recovery effort in the aftermath of a successful data compromising cyberattack",
+            "No, there is not a plan for managing a data recovery effort in the aftermath of a successful data compromising cyberattack",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 25,
+            "likelihood": 5,
+            "overallImpact": 5
+          },
+          "givenAnswer": {
+            "selectedOption": "No plan for managing a data recovery effort in the aftermath of a successful data compromising cyberattack e.g., ransomware, data-wipe malware.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/12/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "M",
+      "sectionName": "Endpoint Security",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "M.3",
+          "questionText": "Does the organization maintain policies and procedures for the access to and the usage of collaborative computing devices or applications e.g., networked white boards, cameras, and microphones?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization maintains policies and procedures for the access to and the usage of collaborative computing devices or applications",
+            "No, the organization does not maintain policies and procedures for the access to and the usage of collaborative computing devices or applications",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "Collaborative computing devices (e.g., networked white boards, cameras, and microphones) or applications (e.g., Webex, Microsoft Teams, and Zoom) are used in the organization with no policies and procedures",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/23/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "N",
+      "sectionName": "Network Security",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "N.1",
+          "questionText": "Does the organization build and maintain a secure network and systems?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization builds and maintains a secure network and systems",
+            "No, the organization does not build and maintain a secure network and systems",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 20,
+            "likelihood": 5,
+            "overallImpact": 4
+          },
+          "givenAnswer": {
+            "selectedOption": "No maintenance of secure networks and systems",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.2",
+          "questionText": "Does the organization have a Network Security Program with a defined policy that outlines security requirements, is reviewed regularly by an owner, and communicated to relevant parties?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization has a Network Security Program with a defined policy that outlines security requirements, is reviewed regularly by an owner, and communicated to relevant parties",
+            "No, the organization does not have a Network Security Program with a defined policy that outlines security requirements, is reviewed regularly by an owner, and communicated to relevant parties",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No policy defining network security requirements that is reviewed regularly by an owner, and communicated to relevant parties approved by management",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.3",
+          "questionText": "Is every connection to an external network terminated at a firewall e.g., the Internet, partner networks?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, every connection to an external network is terminated at a firewall",
+            "No, every connection to an external network is not terminated at a firewall",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, every connection to an external network is terminated at a firewall",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.4",
+          "questionText": "Are all network devices patched with all, available high-risk security patches applied and verified?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, all network devices are patched with all, available high-risk security patches applied and verified",
+            "No, all network devices are not patched with all, available high-risk security patches applied and verified",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 10,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "Network devices are not patched with all, available high-risk security patches applied and verified",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.5F",
+          "questionText": "Has management approved a policy for remote access?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, management have approved a policy for remote access",
+            "No, management have not approved a policy for remote access",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 5,
+            "likelihood": 5,
+            "overallImpact": 1
+          },
+          "givenAnswer": {
+            "selectedOption": "No policy that defines the requirements for remote access",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.7",
+          "questionText": "Are Network Intrusion Detection/Prevention Systems (NIDS/NIPS) employed e.g., appliances, software, etc.?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, Network Intrusion Detection/Prevention Systems (NIDS/NIPS) are employed",
+            "No, Network Intrusion Detection/Prevention Systems (NIDS/NIPS) are not employed",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, Network Intrusion Detection/Prevention Systems (NIDS/NIPS) are employed",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.9",
+          "questionText": "Is there a wireless policy or program that has been approved by management, communicated to appropriate constituents and an owner to maintain, and review the policy?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a wireless policy or program that has been approved by management, communicated to appropriate constituents and an owner to maintain, and review the policy",
+            "No, there is not a wireless policy or program that has been approved by management, communicated to appropriate constituents and an owner to maintain, and review the policy",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 10,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "No wireless policy or program that has been approved by management, communicated to appropriate constituents and an owner to maintain and review the policy",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.11",
+          "questionText": "Are there security standards, baseline configurations, patching, access control, and strong passwords for network devices such as Firewalls, Switches, Routers, and Wireless Access Points?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there are security standards, baseline configurations, patching, access control, and strong passwords for network devices such as Firewalls, Switches, Routers, and Wireless Access Points",
+            "No, there are not security standards, baseline configurations, patching, access control, and strong passwords for network devices such as Firewalls, Switches, Routers, and Wireless Access Points",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, there are security standards, baseline configurations, patching, access control, and strong passwords for network devices such as Firewalls, Switches, Routers, and Wireless Access Points",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.12",
+          "questionText": "Are default passwords changed or disabled prior to placing network devices into production?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, default passwords are changed or disabled prior to placing network devices into production",
+            "No, default passwords are not changed or disabled prior to placing network devices into production",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, default passwords are changed or disabled prior to placing network devices into production",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.13F",
+          "questionText": "Are network or security technologies used to establish and enforce security requirements and block unauthorized traffic between segregated systems and other networks and systems?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, network or security technologies are used to establish and enforce security requirements and block unauthorized traffic between segregated systems and other networks and systems",
+            "No, network or security technologies are not used to establish and enforce security requirements and block unauthorized traffic between segregated systems and other networks and systems",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, network or security technologies are used to establish and enforce security requirements and block unauthorized traffic between segregated systems and other networks and systems",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.13.1F",
+          "questionText": "Are all firewall and other network Access Control List (ACL) rules reviewed and updated at least quarterly and include identification and removal of networks, sub networks, hosts, protocols or ports no longer in use?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, all firewall and other network Access Control List (ACL) rules are reviewed and updated at least quarterly and include identification and removal of networks, sub networks, hosts, protocols or ports no longer in use",
+            "No, all firewall and other network Access Control List (ACL) rules are not reviewed and updated at least quarterly and include identification and removal of networks, sub networks, hosts, protocols or ports no longer in use",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "Firewall and other network Access Control List (ACL) rules are not reviewed and updated at least quarterly",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "N.14F",
+          "questionText": "Are encrypted communications required for all remote network connections from external networks?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, encrypted communications are required for all remote network connections from external networks.",
+            "No, encrypted communications are not required for all remote network connections from external networks.",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "Yes, encrypted communications are required for all remote network connections from external networks.",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "P",
+      "sectionName": "Privacy",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "P.4F",
+          "questionText": "Is there a training and awareness program that addresses data privacy and data protection obligations based on role?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a training and awareness program that addresses data privacy and data protection obligations based on role",
+            "No, there is not a training and awareness program that addresses data privacy and data protection obligations based on role",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "No training and awareness program that addresses data privacy and data protection obligations based on role",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "R",
+      "sectionName": "AI",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "R.1F",
+          "questionText": "Does the organization have a process to inform personnel of legal and regulatory considerations of deployed AI system(s)?",
+          "helpText": "AI (Artificial Intelligence) systems may be subject to specific applicable legal and regulatory requirements. Some legal requirements can mandate (e.g., non-discrimination, data privacy and security controls) documentation, disclosure, and increased AI system transparency.",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization does have a process to inform personnel of legal and regulatory considerations of the deployed AI system(s)",
+            "No, the organization does not have a process to inform personnel of legal and regulatory considerations of the deployed AI system(s)",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 10,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "No process to inform personnel of legal and regulatory considerations of deployed AI (Artificial Intelligence) systems",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "R.2",
+          "questionText": "Do organizational policies, processes, and procedures include the characteristics of trustworthy AI?",
+          "helpText": "Based on the EU (European Union) Commission, trustworthy AI should be:\n• Lawful - respecting all applicable laws and regulations\n• Ethical - respecting ethical principles and values\n• Robust - both from a technical perspective while taking into account its social environment",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, organizational policies, processes, and procedures include the characteristics of trustworthy AI",
+            "No, organizational policies, processes, and procedures do not include the characteristics of trustworthy AI",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 10,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "No documented policy, process or procedure that provides guidance on the permissible uses of internal and external AI (Artificial Intelligence) tools",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "R.5",
+          "questionText": "Does the organization establish policies that define the creation and maintenance of AI system inventories?",
+          "helpText": "An AI system inventory is an organized database of artifacts relating to an AI system or model. It may include system documentation, incident response plans, data dictionaries, links to implementation software or source code, names and contact information for relevant AI actors, or other information that may be helpful for model or system maintenance and incident response purposes.",
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization establish policies that define the creation and maintenance of AI system inventories",
+            "No, the organization does not establish policies that define the creation and maintenance of AI system inventories",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 10,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "No policies that define the creation and maintenance of AI (Artificial Intelligence) system inventories",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "T",
+      "sectionName": "Threat Management",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "T.1",
+          "questionText": "Is there a centrally managed Vulnerability Management Program and associated Policy that has been approved by management, communicated to appropriate constituent and an owner assigned to maintain and review the policy?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there is a centrally managed Vulnerability Management Program and associated Policy that has been approved by management, communicated to appropriate constituent and an owner assigned to maintain and review the policy",
+            "No, there is not a centrally managed Vulnerability Management Program and associated Policy that has been approved by management, communicated to appropriate constituent and an owner assigned to maintain and review the policy",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "There is not a vulnerability management policy or program that has been approved by management",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "T.2",
+          "questionText": "Does the organization maintain policies, standards, and procedures for identifying and managing cyber supply chain risks i.e., ensuring software and hardware components used as part of delivering a service or product do not present a risk?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, the organization maintains policies, standards, and procedures for identifying and managing cyber supply chain risks i.e., ensuring software and hardware components used as part of delivering a service or product do not present a risk",
+            "No, the organization does not maintain policies, standards, and procedures for identifying and managing cyber supply chain risks i.e., ensuring software and hardware components used as part of delivering a service or product do not present a risk",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 15,
+            "likelihood": 5,
+            "overallImpact": 3
+          },
+          "givenAnswer": {
+            "selectedOption": "The organization does not maintain policies, standards and procedures for identifying and managing cyber supply chain risks",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "U",
+      "sectionName": "Server Security",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "U.2F",
+          "questionText": "Do asset inventory and management processes include all physical objects with network connectivity (IoT Devices)?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, asset inventory and management processes include all physical objects with network connectivity (IoT Devices)",
+            "No, asset inventory and management processes do not include all physical objects with network connectivity (IoT Devices)",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": 10,
+            "likelihood": 5,
+            "overallImpact": 2
+          },
+          "givenAnswer": {
+            "selectedOption": "Asset inventory and management processes do not include all physical objects with network connectivity (IoT Devices)",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        },
+        {
+          "questionId": "U.3F",
+          "questionText": "Are there any Operating System versions in use that no longer have patches released?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, there are Operating System versions in use within the scoped services that no longer have patches released",
+            "No, there are no Operating System versions in use within the scoped services that no longer have patches released",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "No, there are no Operating System versions in use within the scoped services that no longer have patches released",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        }
+      ]
+    },
+    {
+      "sectionId": "V",
+      "sectionName": "Cloud Hosting Services",
+      "riskLevel": "High Availability",
+      "questions": [
+        {
+          "questionId": "V.1",
+          "questionText": "Are Cloud Hosting services provided?",
+          "helpText": null,
+          "answerType": "single-choice",
+          "options": [
+            "Yes, Cloud Hosting services are provided",
+            "No, Cloud Hosting services are not provided",
+            "Not applicable"
+          ],
+          "scoring": {
+            "total": null,
+            "likelihood": null,
+            "overallImpact": null
+          },
+          "givenAnswer": {
+            "selectedOption": "No, Cloud Hosting services are not provided",
+            "comments": null,
+            "answeredBy": "K Cain",
+            "answeredDate": "07/25/2024"
+          }
+        }
+      ]
+    }
+  ]
+}
