@@ -708,22 +708,89 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
         controlMap.get(controlId)!.settings.push({
           settingId: check.setting.id,
           settingName: check.setting.displayName,
+          settingDescription: check.setting.description,
+          settingPath: check.setting.settingPath,
           expectedValue: check.setting.expectedValue,
           actualValue: check.actualValue,
           isCompliant: check.isCompliant,
           confidence: mapping.confidence,
           validationOperator: check.setting.validationOperator,
+          implementationGuide: check.setting.implementationGuide,
+          microsoftDocsUrl: check.setting.microsoftDocsUrl,
           policyType: check.setting.policyType,
           platform: check.setting.platform,
           lastChecked: check.lastChecked,
+          mappedControls: check.setting.controlMappings.map((m) => ({
+            controlId: m.control.controlId,
+            controlTitle: m.control.title,
+            controlFamily: m.control.family,
+          })),
         });
       }
     }
 
-    // Convert map to array and calculate summary stats
+    // Fetch manual reviews for all settings
+    const settingIds = complianceChecks.map(check => check.setting.id);
+
+    const manualReviews = await prisma.manualSettingReview.findMany({
+      where: {
+        settingId: { in: settingIds },
+        policyId: policyId,
+      },
+      include: {
+        evidenceFiles: true,
+      },
+    });
+
+    const reviewMap = new Map(
+      manualReviews.map(r => [
+        r.settingId,
+        {
+          id: r.id,
+          manualComplianceStatus: r.manualComplianceStatus,
+          rationale: r.rationale,
+          reviewedAt: r.reviewedAt,
+          reviewedBy: r.reviewedBy,
+          evidenceCount: r.evidenceFiles.length,
+        },
+      ])
+    );
+
+    // Attach manual reviews to settings in controlMap and override compliance status
+    for (const control of controlMap.values()) {
+      control.settings = control.settings.map((setting: any) => {
+        const manualReview = reviewMap.get(setting.settingId) || null;
+
+        // Override isCompliant based on manual review status if present
+        let isCompliant = setting.isCompliant;
+        if (manualReview?.manualComplianceStatus) {
+          isCompliant = manualReview.manualComplianceStatus === 'COMPLIANT';
+          // PARTIAL is considered non-compliant for the purposes of the compliance count
+        }
+
+        return {
+          ...setting,
+          isCompliant,
+          manualReview,
+        };
+      });
+    }
+
+    // Convert map to array and calculate summary stats (using updated isCompliant values)
     let controls = Array.from(controlMap.values());
-    let totalSettings = complianceChecks.length;
-    let compliantSettings = complianceChecks.filter(c => c.isCompliant).length;
+    let totalSettings = 0;
+    let compliantSettings = 0;
+
+    // Count settings across all controls, using the potentially overridden isCompliant value
+    for (const control of controls) {
+      for (const setting of control.settings) {
+        totalSettings++;
+        if (setting.isCompliant) {
+          compliantSettings++;
+        }
+      }
+    }
+
     let nonCompliantSettings = totalSettings - compliantSettings;
 
     // FALLBACK: If no verified controls found, show potential controls from template matching
@@ -772,14 +839,23 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
             potentialControlMap.get(controlId)!.settings.push({
               settingId: setting.id,
               settingName: setting.displayName,
+              settingDescription: setting.description,
+              settingPath: setting.settingPath,
               expectedValue: setting.expectedValue,
               actualValue: 'Not configured',
               isCompliant: false,
               confidence: 'Potential',
               validationOperator: setting.validationOperator,
+              implementationGuide: setting.implementationGuide,
+              microsoftDocsUrl: setting.microsoftDocsUrl,
               policyType: setting.policyType,
               platform: setting.platform,
               lastChecked: new Date(),
+              mappedControls: setting.controlMappings.map((m) => ({
+                controlId: m.control.controlId,
+                controlTitle: m.control.title,
+                controlFamily: m.control.family,
+              })),
             });
           }
         }

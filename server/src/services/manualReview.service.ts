@@ -404,6 +404,71 @@ class ManualReviewService {
 
     return uncatalogued;
   }
+
+  /**
+   * Add evidence files to a manual review
+   */
+  async addEvidenceToReview(reviewId: number, files: Express.Multer.File[]): Promise<void> {
+    // First verify the review exists
+    const review = await prisma.manualSettingReview.findUnique({
+      where: { id: reviewId },
+    });
+
+    if (!review) {
+      throw new Error(`Manual review ${reviewId} not found`);
+    }
+
+    // Create evidence records and link them to the review
+    for (const file of files) {
+      // Create evidence record (assuming controlId from the review's controlId)
+      const evidence = await prisma.evidence.create({
+        data: {
+          controlId: review.controlId || 1, // Default to control 1 if not set
+          fileName: file.filename,
+          originalName: file.originalname,
+          filePath: file.path,
+          fileType: file.mimetype,
+          fileSize: file.size,
+          description: `Evidence for manual review of setting ${review.settingId}`,
+        },
+      });
+
+      // Create the link between review and evidence
+      await prisma.manualReviewEvidence.create({
+        data: {
+          reviewId: reviewId,
+          evidenceId: evidence.id,
+        },
+      });
+    }
+  }
+
+  /**
+   * Get evidence files for a manual review
+   */
+  async getEvidenceForReview(reviewId: number) {
+    const evidenceLinks = await prisma.manualReviewEvidence.findMany({
+      where: { reviewId },
+      include: {
+        evidence: true,
+      },
+    });
+
+    return evidenceLinks.map(link => link.evidence);
+  }
+
+  /**
+   * Delete an evidence file from a manual review
+   */
+  async deleteEvidenceFromReview(reviewId: number, evidenceId: number): Promise<void> {
+    // Delete the link (this will cascade delete if needed)
+    await prisma.manualReviewEvidence.deleteMany({
+      where: {
+        reviewId,
+        evidenceId,
+      },
+    });
+  }
 }
 
 export const manualReviewService = new ManualReviewService();

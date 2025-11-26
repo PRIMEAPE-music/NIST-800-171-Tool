@@ -2,6 +2,7 @@
 
 import { Router } from 'express';
 import { manualReviewService } from '../services/manualReview.service';
+import { uploadMultiple } from '../middleware/upload.middleware';
 
 const router = Router();
 
@@ -173,6 +174,82 @@ router.delete('/:id', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Error deleting review:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * POST /api/manual-reviews/:id/evidence
+ * Upload evidence files for a manual review
+ */
+router.post('/:id/evidence', uploadMultiple, async (req, res) => {
+  try {
+    const reviewId = parseInt(req.params.id);
+
+    if (!req.files || (req.files as Express.Multer.File[]).length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No files uploaded',
+      });
+    }
+
+    await manualReviewService.addEvidenceToReview(reviewId, req.files as Express.Multer.File[]);
+
+    res.json({
+      success: true,
+      message: `Uploaded ${(req.files as Express.Multer.File[]).length} file(s) successfully`,
+    });
+  } catch (error) {
+    console.error('Error uploading evidence:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/manual-reviews/:id/evidence
+ * Get evidence files for a manual review
+ */
+router.get('/:id/evidence', async (req, res) => {
+  try {
+    const reviewId = parseInt(req.params.id);
+    const evidence = await manualReviewService.getEvidenceForReview(reviewId);
+
+    res.json({
+      success: true,
+      evidence,
+    });
+  } catch (error) {
+    console.error('Error fetching evidence:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * DELETE /api/manual-reviews/:id/evidence/:evidenceId
+ * Delete an evidence file from a manual review
+ */
+router.delete('/:id/evidence/:evidenceId', async (req, res) => {
+  try {
+    const reviewId = parseInt(req.params.id);
+    const evidenceId = parseInt(req.params.evidenceId);
+
+    await manualReviewService.deleteEvidenceFromReview(reviewId, evidenceId);
+
+    res.json({
+      success: true,
+      message: 'Evidence file deleted successfully',
+    });
+  } catch (error) {
+    console.error('Error deleting evidence:', error);
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

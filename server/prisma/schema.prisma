@@ -118,6 +118,7 @@ model Evidence {
 
   // Relations
   control Control @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  manualReviewLinks ManualReviewEvidence[] // Manual reviews that reference this evidence
 
   // Indexes for performance
   @@index([controlId])
@@ -433,6 +434,7 @@ model ManualSettingReview {
   setting         M365Setting @relation(fields: [settingId], references: [id], onDelete: Cascade)
   policy          M365Policy? @relation(fields: [policyId], references: [id], onDelete: SetNull)
   control         Control?    @relation(fields: [controlId], references: [id], onDelete: SetNull)
+  evidenceFiles   ManualReviewEvidence[] // Evidence files linked to this review
 
   // Indexes
   @@unique([settingId, policyId]) // One review per setting-policy combination
@@ -442,6 +444,27 @@ model ManualSettingReview {
   @@index([isReviewed])
   @@index([manualComplianceStatus])
   @@map("manual_setting_reviews")
+}
+
+// ============================================================================
+// Manual Review Evidence (Join Table)
+// ============================================================================
+
+model ManualReviewEvidence {
+  id          Int      @id @default(autoincrement())
+  reviewId    Int      @map("review_id")
+  evidenceId  Int      @map("evidence_id")
+  uploadedAt  DateTime @default(now()) @map("uploaded_at")
+
+  // Relations
+  review      ManualSettingReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  evidence    Evidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+
+  // Unique constraint - one evidence file can only be linked to a review once
+  @@unique([reviewId, evidenceId])
+  @@index([reviewId])
+  @@index([evidenceId])
+  @@map("manual_review_evidence")
 }
 
 // ============================================================================
