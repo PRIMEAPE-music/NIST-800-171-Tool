@@ -27,7 +27,7 @@ export interface ExtractionStrategy {
   name: string;
   priority: number;
   description: string;
-  extract: (policyData: any, setting: any) => ExtractionResult | null;
+  extract: (policyData: any, setting: any) => ExtractionResult | null | Promise<ExtractionResult | null>;
 }
 
 // ===== UTILITY FUNCTIONS =====
@@ -504,23 +504,47 @@ const shallowSearchStrategy: ExtractionStrategy = {
 /**
  * Strategy 6: Settings Catalog Search
  * Search in settings array for Settings Catalog policies (primary format)
+ * ENHANCEMENT: Now supports automatic decoding of reference values
  */
 const settingsCatalogStrategy: ExtractionStrategy = {
   name: 'settings-catalog',
   priority: 6,
-  description: 'Search in Settings Catalog settings array',
-  extract: (policyData, setting) => {
+  description: 'Search in Settings Catalog settings array with automatic decoding',
+  extract: async (policyData, setting) => {
     // Try the new settings array format first (primary format)
     if (policyData.settings && Array.isArray(policyData.settings)) {
       const searchKey = setting.settingPath.split('.').pop();
       const result = searchSettingsCatalog(policyData.settings, searchKey);
 
       if (result) {
+        // Check if value needs decoding (Settings Catalog reference format)
+        const needsDecoding = typeof result.value === 'string' && result.value.match(/_\d+$/);
+
+        if (needsDecoding) {
+          console.log(`[Settings Catalog] Decoding reference: ${result.value}`);
+
+          const { settingsCatalogDefinitionService } = await import('./settings-catalog-definition.service');
+          const decoded = await settingsCatalogDefinitionService.decodeValue(
+            result.definitionId,
+            result.value
+          );
+
+          if (decoded) {
+            return {
+              value: decoded.value,
+              strategy: 'settings-catalog',
+              confidence: 0.85,
+              path: `[settings: ${result.definitionId}] (decoded from ${result.value})`,
+            };
+          }
+        }
+
+        // Return raw value if no decoding needed or decoding failed
         return {
           value: result.value,
           strategy: 'settings-catalog',
           confidence: 0.80,
-          path: `[settings: ${result.definitionId}]`
+          path: `[settings: ${result.definitionId}]`,
         };
       }
     }
@@ -695,9 +719,9 @@ export class SmartExtractor {
     directPropertyStrategy,
     camelCaseVariantsStrategy,
     shallowSearchStrategy,
-    settingsCatalogStrategy,
-    settingsCatalogDeepStrategy,
-    createSettingsCatalogStrategy(), // NEW: Specialized Settings Catalog extractor
+    // settingsCatalogStrategy, // DISABLED: Replaced by specialized extractor with better matching
+    // settingsCatalogDeepStrategy, // DISABLED: Too aggressive, returns first keyword match
+    createSettingsCatalogStrategy(), // NEW: Specialized Settings Catalog extractor with flattened settings support
     createOmaUriStrategy(), // NEW: OMA-URI extractor for windows10CustomConfiguration
     abbreviationExpansionStrategy,
     synonymMatchingStrategy
@@ -744,7 +768,7 @@ export class SmartExtractor {
     // Try each strategy in priority order
     for (const strategy of this.strategies) {
       try {
-        const result = strategy.extract(policyData, setting);
+        const result = await strategy.extract(policyData, setting);
 
         if (result !== null) {
           // Success! Record it

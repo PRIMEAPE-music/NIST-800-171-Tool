@@ -9,25 +9,56 @@
  * - Each setting has a settingInstance object
  * - Values are in choiceSettingValue, simpleSettingValue, groupSettingValue, or groupSettingCollectionValue
  * - Setting identification uses settingDefinitionId (lowercase with underscores)
+ *
+ * ENHANCEMENT: Now automatically decodes reference values (e.g., _0, _1, _2)
+ * to their actual meanings using Graph API definition lookup
  */
+
+import { settingsCatalogDefinitionService } from './settings-catalog-definition.service';
 
 export interface SettingsCatalogResult {
   definitionId: string;
   value: any;
   type: 'choice' | 'simple' | 'group' | 'collection';
   displayName?: string;
+  rawValue?: string; // Original reference value before decoding
+  decoded?: boolean; // Whether value was decoded from a reference
 }
 
 /**
  * Extract all settings from a Settings Catalog policy
  * Returns a Map keyed by settingDefinitionId (lowercase)
+ *
+ * ENHANCEMENT: Now uses flattenedSettings when available (includes all nested children)
  */
 export function extractSettingsCatalog(policyData: any): Map<string, SettingsCatalogResult> {
   const results = new Map<string, SettingsCatalogResult>();
 
+  // PRIORITY 1: Use flattenedSettings if available (includes all nested children)
+  if (policyData.flattenedSettings && Array.isArray(policyData.flattenedSettings)) {
+    console.log(`[Settings Catalog] Using flattenedSettings array (${policyData.flattenedSettings.length} settings)`);
+
+    for (const flatSetting of policyData.flattenedSettings) {
+      const definitionId = flatSetting.settingDefinitionId?.toLowerCase();
+      if (!definitionId) continue;
+
+      results.set(definitionId, {
+        definitionId,
+        value: flatSetting.value,
+        type: flatSetting.type || 'simple',
+        displayName: definitionId // Use definitionId as display name
+      });
+    }
+
+    return results;
+  }
+
+  // FALLBACK: Use traditional settings array if flattenedSettings not available
   if (!policyData.settings || !Array.isArray(policyData.settings)) {
     return results;
   }
+
+  console.log(`[Settings Catalog] Using traditional settings array (${policyData.settings.length} settings)`);
 
   for (const setting of policyData.settings) {
     // Settings Catalog items might not have @odata.type at the setting level
@@ -103,12 +134,96 @@ export function extractSettingsCatalog(policyData: any): Map<string, SettingsCat
 }
 
 /**
+ * Common mapping patterns for path normalization
+ * Maps documentation-style paths to Settings Catalog definition IDs
+ */
+const COMMON_PATH_MAPPINGS: Record<string, string> = {
+  'encryption.bitlocker.requiredeviceencryption': 'device_vendor_msft_bitlocker_requiredeviceencryption',
+  'encryption.bitlocker.fixeddrivesencryptiontype': 'device_vendor_msft_bitlocker_fixeddrivesencryptiontype',
+  'encryption.bitlocker.systemdrivesencryptiontype': 'device_vendor_msft_bitlocker_systemdrivesencryptiontype',
+  'encryption.bitlocker.removabledrivesencryptiontype': 'device_vendor_msft_bitlocker_removabledrivesencryptiontype',
+  'defender.attacksurfacereductionrules': 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules',
+  'defender.allowarchivescanning': 'device_vendor_msft_policy_config_defender_allowarchivescanning',
+  'defender.allowrealtimemonitoring': 'device_vendor_msft_policy_config_defender_allowrealtimemonitoring',
+  'defender.allowbehaviormonitoring': 'device_vendor_msft_policy_config_defender_allowbehaviormonitoring',
+};
+
+/**
+ * Normalize common path formats to Settings Catalog definition ID format
+ * Returns an array of possible normalized variants to try
+ */
+export function normalizePathToSettingsCatalog(path: string): string[] {
+  const variants: string[] = [];
+  const pathLower = path.toLowerCase().trim();
+
+  // Check common mappings first
+  if (COMMON_PATH_MAPPINGS[pathLower]) {
+    variants.push(COMMON_PATH_MAPPINGS[pathLower]);
+  }
+
+  // Convert dot notation to underscore with vendor prefix
+  // Pattern 1: "Encryption.BitLocker.X" → "device_vendor_msft_bitlocker_X"
+  if (pathLower.includes('encryption.bitlocker.')) {
+    const suffix = pathLower.replace(/encryption\.bitlocker\./gi, '');
+    variants.push(`device_vendor_msft_bitlocker_${suffix}`);
+  }
+
+  // Pattern 2: "Defender.X" → "device_vendor_msft_policy_config_defender_X"
+  if (pathLower.includes('defender.')) {
+    const suffix = pathLower.replace(/defender\./gi, '');
+    variants.push(`device_vendor_msft_policy_config_defender_${suffix}`);
+  }
+
+  // Pattern 3: "FirewallPolicy.X" → "device_vendor_msft_firewall_mdmstore_X"
+  if (pathLower.includes('firewallpolicy.')) {
+    const suffix = pathLower.replace(/firewallpolicy\./gi, '').replace(/\./g, '_');
+    variants.push(`device_vendor_msft_firewall_mdmstore_${suffix}`);
+  }
+
+  // Pattern 4: "endpointProtection.bitLocker.X" → "device_vendor_msft_bitlocker_X"
+  if (pathLower.includes('endpointprotection.bitlocker.')) {
+    const suffix = pathLower.replace(/endpointprotection\.bitlocker\./gi, '');
+    variants.push(`device_vendor_msft_bitlocker_${suffix}`);
+  }
+
+  // Pattern 5: Generic dot notation → underscore with device_vendor_msft prefix
+  const genericNormalized = pathLower
+    .replace(/\./g, '_')
+    .replace(/-/g, '')
+    .replace(/\s+/g, '');
+
+  // Try with device_vendor_msft prefix
+  if (!genericNormalized.startsWith('device_vendor_msft')) {
+    variants.push(`device_vendor_msft_${genericNormalized}`);
+  }
+
+  // Also try the path as-is (in case it's already normalized)
+  variants.push(pathLower);
+
+  // Remove duplicates while preserving order
+  return [...new Set(variants)];
+}
+
+/**
  * Match a setting to Settings Catalog data using multiple strategies
+ * ENHANCED: Now uses path normalization for better matching
  */
 export function matchSettingsCatalog(
   setting: { displayName: string; settingName: string | null; settingPath: string },
   catalogData: Map<string, SettingsCatalogResult>
 ): SettingsCatalogResult | null {
+
+  // Strategy 0: Try normalized path variants (HIGHEST PRIORITY)
+  if (setting.settingPath) {
+    const normalizedVariants = normalizePathToSettingsCatalog(setting.settingPath);
+    for (const variant of normalizedVariants) {
+      const match = catalogData.get(variant);
+      if (match) {
+        console.log(`[Settings Catalog] ✅ Matched using normalized path: ${variant}`);
+        return match;
+      }
+    }
+  }
 
   // Strategy 1: Exact match on settingPath (normalized to lowercase)
   if (setting.settingPath) {
@@ -128,11 +243,29 @@ export function matchSettingsCatalog(
     }
   }
 
-  // Strategy 3: Partial match - check if settingPath/settingName is contained in any definitionId
+  // Strategy 3: Strict substring match - only if one is a COMPLETE substring of the other
+  // This prevents false matches where both just share common words
+  if (setting.settingName) {
+    const nameLower = setting.settingName.toLowerCase();
+    for (const [definitionId, result] of Array.from(catalogData.entries())) {
+      // Only match if one is a complete substring of the other (not just sharing keywords)
+      if (
+        (definitionId.length > nameLower.length && definitionId.includes(nameLower)) ||
+        (nameLower.length > definitionId.length && nameLower.includes(definitionId))
+      ) {
+        return result;
+      }
+    }
+  }
+
   if (setting.settingPath) {
     const pathLower = setting.settingPath.toLowerCase();
     for (const [definitionId, result] of Array.from(catalogData.entries())) {
-      if (definitionId.includes(pathLower) || pathLower.includes(definitionId)) {
+      // Only match if one is a complete substring of the other
+      if (
+        (definitionId.length > pathLower.length && definitionId.includes(pathLower)) ||
+        (pathLower.length > definitionId.length && pathLower.includes(definitionId))
+      ) {
         return result;
       }
     }
@@ -192,13 +325,15 @@ export function matchSettingsCatalog(
 /**
  * Create an extraction strategy for Settings Catalog policies
  * This can be integrated into the SmartExtractor
+ *
+ * ENHANCEMENT: Now includes automatic decoding of reference values
  */
 export function createSettingsCatalogStrategy() {
   return {
     name: 'settings-catalog-specialized',
     priority: 10, // High priority for Settings Catalog policies
-    description: 'Specialized extractor for Settings Catalog deep matching',
-    extract: (policyData: any, setting: any) => {
+    description: 'Specialized extractor for Settings Catalog with automatic value decoding',
+    extract: async (policyData: any, setting: any) => {
       // Only run on Settings Catalog policies
       // Settings Catalog policies have a settings[] array with settingInstance objects
       const isSettingsCatalog =
@@ -224,6 +359,35 @@ export function createSettingsCatalogStrategy() {
       const match = matchSettingsCatalog(setting, catalogData);
 
       if (match) {
+        console.log(`[Settings Catalog] ✅ Matched: ${match.definitionId}`);
+        console.log(`[Settings Catalog] Raw value: ${match.value}`);
+
+        // Check if value is a reference that needs decoding
+        const needsDecoding = typeof match.value === 'string' && match.value.match(/_\d+$/);
+
+        if (needsDecoding) {
+          console.log(`[Settings Catalog] Decoding reference value...`);
+
+          // Decode the reference value
+          const decoded = await settingsCatalogDefinitionService.decodeValue(
+            match.definitionId,
+            match.value
+          );
+
+          if (decoded) {
+            console.log(`[Settings Catalog] Decoded to: ${JSON.stringify(decoded.value)}`);
+            return {
+              value: decoded.value,
+              strategy: 'settings-catalog-specialized',
+              confidence: 0.85, // High confidence with successful decoding
+              path: `[settings: ${match.definitionId}] (decoded)`,
+            };
+          } else {
+            console.warn(`[Settings Catalog] Failed to decode, using raw value`);
+          }
+        }
+
+        // Return raw value if no decoding needed or decoding failed
         console.log(`[Settings Catalog] ✅ Matched! Definition: ${match.definitionId}, Value: ${JSON.stringify(match.value)}`);
         return {
           value: match.value,

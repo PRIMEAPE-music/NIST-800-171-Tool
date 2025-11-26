@@ -1,5 +1,6 @@
 import { graphClientService } from './graphClient.service';
 import { IntuneDeviceCompliancePolicy, IntuneConfigurationPolicy } from '../types/m365.types';
+import { settingsHierarchyFlattenerService } from './settings-hierarchy-flattener.service';
 
 class IntuneService {
   /**
@@ -120,9 +121,22 @@ class IntuneService {
             const settings = await graphClientService.getBeta<{ value: any[] }>(
               `/deviceManagement/configurationPolicies/${policy.id}/settings`
             );
+
+            // Flatten settings to extract nested children
+            const flattenedSettings = settingsHierarchyFlattenerService.flattenPolicySettings(
+              settings.value
+            );
+
+            const childCount = flattenedSettings.length - settings.value.length;
+            if (childCount > 0) {
+              console.log(`   📦 ${policy.name}: extracted ${childCount} child settings`);
+            }
+
             return {
               ...policy,
-              settings: settings.value,
+              settings: settings.value, // Keep original structure
+              flattenedSettings, // Add flattened structure with children
+              settingsCount: flattenedSettings.length,
             };
           } catch (error) {
             console.warn(`⚠️  Could not fetch settings for policy ${policy.id}:`, error);
@@ -165,9 +179,22 @@ class IntuneService {
             const settings = await graphClientService.getBeta<{ value: any[] }>(
               `/deviceManagement/intents/${intent.id}/settings`
             );
+
+            // Flatten settings to extract nested children
+            const flattenedSettings = settingsHierarchyFlattenerService.flattenPolicySettings(
+              settings.value
+            );
+
+            const childCount = flattenedSettings.length - settings.value.length;
+            if (childCount > 0) {
+              console.log(`   📦 ${intent.displayName || intent.id}: extracted ${childCount} child settings`);
+            }
+
             return {
               ...intent,
-              settings: settings.value,
+              settings: settings.value, // Keep original structure
+              flattenedSettings, // Add flattened structure with children
+              settingsCount: flattenedSettings.length,
             };
           } catch (error) {
             console.warn(`⚠️  Could not fetch settings for intent ${intent.id}:`, error);

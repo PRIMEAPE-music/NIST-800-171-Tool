@@ -434,24 +434,23 @@ class PolicyViewerService {
 
     // === Settings Catalog & Endpoint Security Settings ===
     // Handle nested settings arrays (Settings Catalog policies)
-    if (rawData.settings && Array.isArray(rawData.settings)) {
+    // PRIORITY: Use flattenedSettings if available (includes all nested children)
+    const settingsArray = rawData.flattenedSettings || rawData.settings;
+
+    if (settingsArray && Array.isArray(settingsArray)) {
       // This is likely a Settings Catalog policy with nested structure
       const catalogSettings: any[] = [];
+      const isFlattened = !!rawData.flattenedSettings;
 
-      rawData.settings.forEach((setting: any, index: number) => {
-        if (setting.settingInstance) {
-          // Settings Catalog structure
-          const settingId = setting.settingInstance.settingDefinitionId || `setting_${index}`;
+      settingsArray.forEach((setting: any, index: number) => {
+        // Handle flattened settings structure (from settingsHierarchyFlattenerService)
+        if (isFlattened && setting.settingDefinitionId) {
+          const settingId = setting.settingDefinitionId;
+          const rawValue = setting.value;
 
-          // Extract the setting value
-          let value = null;
-          if (setting.settingInstance.simpleSettingValue) {
-            value = setting.settingInstance.simpleSettingValue.value;
-          } else if (setting.settingInstance.choiceSettingValue) {
-            value = setting.settingInstance.choiceSettingValue.value;
-          } else if (setting.settingInstance.groupSettingCollectionValue) {
-            value = setting.settingInstance.groupSettingCollectionValue;
-          }
+          // Add indicator if value is a reference that should be decoded
+          const isReference = typeof rawValue === 'string' && rawValue.match(/_\d+$/);
+          const needsDecoding = isReference;
 
           // Create a friendly key from the setting ID
           const friendlyKey = settingId
@@ -461,11 +460,62 @@ class PolicyViewerService {
             .replace(/{/g, '')
             .replace(/}/g, '');
 
-          catalogSettings.push({
+          const catalogSetting: any = {
+            id: settingId,
+            friendlyName: friendlyKey,
+            value: rawValue,
+            depth: setting.depth,
+            parentId: setting.parentId,
+            type: setting.type,
+          };
+
+          if (isReference) {
+            catalogSetting.isReference = true;
+            catalogSetting.needsDecoding = needsDecoding;
+          }
+
+          catalogSettings.push(catalogSetting);
+        } else if (setting.settingInstance) {
+          // Traditional Settings Catalog structure (with settingInstance)
+          const settingId = setting.settingInstance.settingDefinitionId || `setting_${index}`;
+
+          // Extract the setting value
+          let rawValue = null;
+          if (setting.settingInstance.simpleSettingValue) {
+            rawValue = setting.settingInstance.simpleSettingValue.value;
+          } else if (setting.settingInstance.choiceSettingValue) {
+            rawValue = setting.settingInstance.choiceSettingValue.value;
+          } else if (setting.settingInstance.groupSettingCollectionValue) {
+            rawValue = setting.settingInstance.groupSettingCollectionValue;
+          }
+
+          // Store raw value for display
+          const value = rawValue;
+
+          // Add indicator if value is a reference that should be decoded
+          const isReference = typeof rawValue === 'string' && rawValue.match(/_\d+$/);
+          const needsDecoding = isReference;
+
+          // Create a friendly key from the setting ID
+          const friendlyKey = settingId
+            .replace(/device_vendor_msft_/gi, '')
+            .replace(/policy_/gi, '')
+            .replace(/\//g, '_')
+            .replace(/{/g, '')
+            .replace(/}/g, '');
+
+          const catalogSetting: any = {
             id: settingId,
             friendlyName: friendlyKey,
             value: value
-          });
+          };
+
+          if (isReference) {
+            catalogSetting.isReference = true;
+            catalogSetting.needsDecoding = needsDecoding;
+          }
+
+          catalogSettings.push(catalogSetting);
         } else {
           // Old Endpoint Security structure
           const endpointSetting: any = {
