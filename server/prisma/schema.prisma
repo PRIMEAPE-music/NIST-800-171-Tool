@@ -413,6 +413,7 @@ model ManualSettingReview {
 
   // Review Status
   isReviewed      Boolean   @default(false) @map("is_reviewed")
+  isConfirmedMapping Boolean @default(false) @map("is_confirmed_mapping") // Confirms this setting-policy mapping is valid
   reviewedAt      DateTime? @map("reviewed_at")
   reviewedBy      String?   @map("reviewed_by")          // Username or identifier
 
@@ -442,6 +443,7 @@ model ManualSettingReview {
   @@index([policyId])
   @@index([controlId])
   @@index([isReviewed])
+  @@index([isConfirmedMapping])
   @@index([manualComplianceStatus])
   @@map("manual_setting_reviews")
 }

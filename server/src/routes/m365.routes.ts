@@ -643,10 +643,10 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
   try {
     const policyId = parseInt(req.params.id);
 
-    // Get policy to verify it exists
+    // Get policy to verify it exists and get its template
     const policy = await prisma.m365Policy.findUnique({
       where: { id: policyId },
-      select: { id: true, policyName: true, policyType: true },
+      select: { id: true, policyName: true, policyType: true, odataType: true },
     });
 
     if (!policy) {
@@ -720,6 +720,7 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
           policyType: check.setting.policyType,
           platform: check.setting.platform,
           lastChecked: check.lastChecked,
+          mappingStatus: 'CONFIRMED', // Configured in policy = confirmed
           mappedControls: check.setting.controlMappings.map((m) => ({
             controlId: m.control.controlId,
             controlTitle: m.control.title,
@@ -729,16 +730,29 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
       }
     }
 
-    // Fetch manual reviews for all settings
-    const settingIds = complianceChecks.map(check => check.setting.id);
-
+    // Fetch ALL manual reviews for this policy (including confirmed mappings)
     const manualReviews = await prisma.manualSettingReview.findMany({
       where: {
-        settingId: { in: settingIds },
         policyId: policyId,
       },
       include: {
         evidenceFiles: true,
+        setting: {
+          include: {
+            controlMappings: {
+              include: {
+                control: {
+                  select: {
+                    id: true,
+                    controlId: true,
+                    title: true,
+                    family: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -747,6 +761,7 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
         r.settingId,
         {
           id: r.id,
+          isConfirmedMapping: r.isConfirmedMapping,
           manualComplianceStatus: r.manualComplianceStatus,
           rationale: r.rationale,
           reviewedAt: r.reviewedAt,
@@ -755,6 +770,51 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
         },
       ])
     );
+
+    // Add manually confirmed mappings to controlMap
+    for (const review of manualReviews) {
+      if (review.isConfirmedMapping && review.setting.controlMappings.length > 0) {
+        // Skip if already in controlMap from compliance checks
+        const alreadyMapped = complianceChecks.some(check => check.setting.id === review.settingId);
+        if (alreadyMapped) continue;
+
+        for (const mapping of review.setting.controlMappings) {
+          const controlId = mapping.control.id;
+
+          if (!controlMap.has(controlId)) {
+            controlMap.set(controlId, {
+              controlId: mapping.control.controlId,
+              controlTitle: mapping.control.title,
+              family: mapping.control.family,
+              settings: [],
+            });
+          }
+
+          controlMap.get(controlId)!.settings.push({
+            settingId: review.setting.id,
+            settingName: review.setting.displayName,
+            settingDescription: review.setting.description,
+            settingPath: review.setting.settingPath,
+            expectedValue: review.setting.expectedValue,
+            actualValue: 'Manually confirmed',
+            isCompliant: review.manualComplianceStatus === 'COMPLIANT',
+            confidence: mapping.confidence,
+            validationOperator: review.setting.validationOperator,
+            implementationGuide: review.setting.implementationGuide,
+            microsoftDocsUrl: review.setting.microsoftDocsUrl,
+            policyType: review.setting.policyType,
+            platform: review.setting.platform,
+            lastChecked: review.reviewedAt || new Date(),
+            mappingStatus: 'CONFIRMED',
+            mappedControls: review.setting.controlMappings.map((m) => ({
+              controlId: m.control.controlId,
+              controlTitle: m.control.title,
+              controlFamily: m.control.family,
+            })),
+          });
+        }
+      }
+    }
 
     // Attach manual reviews to settings in controlMap and override compliance status
     for (const control of controlMap.values()) {
@@ -776,37 +836,41 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
       });
     }
 
-    // Convert map to array and calculate summary stats (using updated isCompliant values)
+    // Convert confirmed mappings map to array
     let controls = Array.from(controlMap.values());
-    let totalSettings = 0;
+    let confirmedSettings = 0;
     let compliantSettings = 0;
 
-    // Count settings across all controls, using the potentially overridden isCompliant value
+    // Count confirmed settings across all controls
     for (const control of controls) {
       for (const setting of control.settings) {
-        totalSettings++;
+        confirmedSettings++;
         if (setting.isCompliant) {
           compliantSettings++;
         }
       }
     }
 
-    let nonCompliantSettings = totalSettings - compliantSettings;
+    let nonCompliantSettings = confirmedSettings - compliantSettings;
 
-    // FALLBACK: If no verified controls found, show potential controls from template matching
-    if (controls.length === 0) {
-      const policyWithTemplate = await prisma.m365Policy.findUnique({
-        where: { id: policyId },
-        select: { odataType: true }
-      });
+    // ALWAYS fetch potential settings from catalog (not a fallback anymore)
+    const potentialControlMap = new Map<number, any>();
+    let potentialSettings = 0;
 
-      if (policyWithTemplate?.odataType) {
-        const potentialSettings = await prisma.m365Setting.findMany({
-          where: {
-            policyTemplate: policyWithTemplate.odataType,
-            isActive: true,
-            controlMappings: { some: {} }
-          },
+    if (policy.odataType) {
+      // Track confirmed setting IDs to avoid duplicates
+      const confirmedSettingIds = new Set(
+        [...complianceChecks.map(c => c.setting.id),
+         ...manualReviews.filter(r => r.isConfirmedMapping).map(r => r.settingId)]
+      );
+
+      // Get all potential settings from catalog that match this policy template
+      const catalogSettings = await prisma.m365Setting.findMany({
+        where: {
+          policyTemplate: policy.odataType,
+          isActive: true,
+          controlMappings: { some: {} }
+        },
           include: {
             controlMappings: {
               include: {
@@ -823,10 +887,18 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
           },
         });
 
-        const potentialControlMap = new Map<number, any>();
-        for (const setting of potentialSettings) {
-          for (const mapping of setting.controlMappings) {
-            const controlId = mapping.control.id;
+      // Build potential mappings (exclude already confirmed settings)
+      for (const setting of catalogSettings) {
+        // Skip if already confirmed
+        if (confirmedSettingIds.has(setting.id)) continue;
+
+        for (const mapping of setting.controlMappings) {
+          const controlId = mapping.control.id;
+
+          // Check if control already exists in main controlMap
+          let targetMap = controlMap.get(controlId);
+          if (!targetMap) {
+            // Check if it exists in potentialControlMap
             if (!potentialControlMap.has(controlId)) {
               potentialControlMap.set(controlId, {
                 controlId: mapping.control.controlId,
@@ -835,37 +907,52 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
                 settings: [],
               });
             }
-
-            potentialControlMap.get(controlId)!.settings.push({
-              settingId: setting.id,
-              settingName: setting.displayName,
-              settingDescription: setting.description,
-              settingPath: setting.settingPath,
-              expectedValue: setting.expectedValue,
-              actualValue: 'Not configured',
-              isCompliant: false,
-              confidence: 'Potential',
-              validationOperator: setting.validationOperator,
-              implementationGuide: setting.implementationGuide,
-              microsoftDocsUrl: setting.microsoftDocsUrl,
-              policyType: setting.policyType,
-              platform: setting.platform,
-              lastChecked: new Date(),
-              mappedControls: setting.controlMappings.map((m) => ({
-                controlId: m.control.controlId,
-                controlTitle: m.control.title,
-                controlFamily: m.control.family,
-              })),
-            });
+            targetMap = potentialControlMap.get(controlId)!;
           }
-        }
 
-        controls = Array.from(potentialControlMap.values());
-        totalSettings = controls.reduce((sum, c) => sum + c.settings.length, 0);
-        compliantSettings = 0;
-        nonCompliantSettings = 0;
+          targetMap.settings.push({
+            settingId: setting.id,
+            settingName: setting.displayName,
+            settingDescription: setting.description,
+            settingPath: setting.settingPath,
+            expectedValue: setting.expectedValue,
+            actualValue: 'Not configured',
+            isCompliant: false,
+            confidence: mapping.confidence,
+            validationOperator: setting.validationOperator,
+            implementationGuide: setting.implementationGuide,
+            microsoftDocsUrl: setting.microsoftDocsUrl,
+            policyType: setting.policyType,
+            platform: setting.platform,
+            lastChecked: new Date(),
+            mappingStatus: 'POTENTIAL', // Not confirmed yet
+            mappedControls: setting.controlMappings.map((m) => ({
+              controlId: m.control.controlId,
+              controlTitle: m.control.title,
+              controlFamily: m.control.family,
+            })),
+          });
+          potentialSettings++;
+        }
       }
+
+      // Merge potential controls into main controls array
+      for (const [controlId, potentialControl] of potentialControlMap.entries()) {
+        const existingControl = controlMap.get(controlId);
+        if (existingControl) {
+          // Add potential settings to existing control
+          existingControl.settings.push(...potentialControl.settings);
+        } else {
+          // Add new control with only potential settings
+          controlMap.set(controlId, potentialControl);
+        }
+      }
+
+      // Rebuild controls array after merging
+      controls = Array.from(controlMap.values());
     }
+
+    const totalSettings = confirmedSettings + potentialSettings;
 
     res.json({
       success: true,
@@ -875,6 +962,8 @@ router.get('/policies/viewer/:id/control-mappings', async (req, res) => {
         policyType: policy.policyType,
         summary: {
           totalSettings,
+          confirmedSettings,
+          potentialSettings,
           compliantSettings,
           nonCompliantSettings,
           controlsAffected: controls.length,

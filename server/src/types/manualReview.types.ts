@@ -7,6 +7,7 @@ export interface ManualSettingReviewCreate {
   policyId?: number;
   controlId?: number;
   isReviewed: boolean;
+  isConfirmedMapping?: boolean;
   manualComplianceStatus?: ManualComplianceStatus;
   manualExpectedValue?: string;
   manualActualValue?: string;
@@ -29,6 +30,7 @@ export interface ManualSettingReviewResponse {
   policyId: number | null;
   controlId: number | null;
   isReviewed: boolean;
+  isConfirmedMapping: boolean;
   reviewedAt: string | null;
   reviewedBy: string | null;
   manualComplianceStatus: ManualComplianceStatus | null;

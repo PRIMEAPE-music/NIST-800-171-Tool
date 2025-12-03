@@ -29,6 +29,7 @@ class ManualReviewService {
         policyId: policyId || null,
         controlId: reviewData.controlId || null,
         isReviewed: reviewData.isReviewed,
+        isConfirmedMapping: reviewData.isConfirmedMapping ?? false,
         reviewedAt: reviewData.isReviewed ? new Date() : null,
         reviewedBy: reviewData.reviewedBy || null,
         manualComplianceStatus: reviewData.manualComplianceStatus || null,
@@ -38,6 +39,7 @@ class ManualReviewService {
       },
       update: {
         isReviewed: reviewData.isReviewed,
+        isConfirmedMapping: reviewData.isConfirmedMapping ?? undefined,
         reviewedAt: reviewData.isReviewed ? new Date() : null,
         reviewedBy: reviewData.reviewedBy || null,
         manualComplianceStatus: reviewData.manualComplianceStatus || null,

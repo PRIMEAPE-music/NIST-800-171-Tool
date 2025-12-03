@@ -45,6 +45,43 @@ router.post('/', async (req, res) => {
 });
 
 /**
+ * POST /api/manual-reviews/confirm-mapping
+ * Confirm a potential setting-policy mapping
+ */
+router.post('/confirm-mapping', async (req, res) => {
+  try {
+    const { settingId, policyId, rationale } = req.body;
+
+    // Validate required fields
+    if (!settingId) {
+      return res.status(400).json({ success: false, error: 'settingId is required' });
+    }
+    if (!policyId) {
+      return res.status(400).json({ success: false, error: 'policyId is required' });
+    }
+    if (!rationale || rationale.trim() === '') {
+      return res.status(400).json({ success: false, error: 'rationale is required' });
+    }
+
+    const review = await manualReviewService.upsertReview({
+      settingId,
+      policyId,
+      isReviewed: false, // Not reviewed yet, just confirmed mapping
+      isConfirmedMapping: true,
+      rationale: rationale.trim(),
+    });
+
+    res.json({ success: true, review });
+  } catch (error) {
+    console.error('Error confirming mapping:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
  * GET /api/manual-reviews/policies/selector
  * Get policies for the policy selector sidebar
  * IMPORTANT: Must be before /:settingId/:policyId to avoid route collision

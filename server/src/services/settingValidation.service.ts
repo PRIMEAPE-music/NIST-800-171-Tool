@@ -217,17 +217,18 @@ class SettingValidationService {
     policyId: number
   ): Promise<void> {
     try {
-      // Delete old results for these setting/policy combinations
-      const settingIds = results.map(r => parseInt(r.settingId));
+      // Filter to only include settings that are actually configured (have non-null actual values)
+      const configuredResults = results.filter(result => result.validationResult.actualValue !== null);
+
+      // Delete ALL old results for this policy (cleanup stale data)
       await prisma.settingComplianceCheck.deleteMany({
         where: {
-          settingId: { in: settingIds },
           policyId: policyId,
         },
       });
 
-      // Insert new results
-      const creates = results.map(result =>
+      // Insert new results (only for configured settings)
+      const creates = configuredResults.map(result =>
         prisma.settingComplianceCheck.create({
           data: {
             settingId: parseInt(result.settingId),
@@ -243,7 +244,7 @@ class SettingValidationService {
       );
 
       await Promise.all(creates);
-      console.log(`Stored ${results.length} validation results`);
+      console.log(`Stored ${configuredResults.length} validation results (${results.length} total validated, ${results.length - configuredResults.length} unconfigured skipped)`);
     } catch (error) {
       console.error('Error storing validation results:', error);
       throw error;
