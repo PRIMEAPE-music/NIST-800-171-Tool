@@ -24,6 +24,7 @@ model Control {
   references             String?  @map("references") // Full references text
   sourceControls         String?  @map("source_controls") // JSON array of source control IDs
   supportingPublications String?  @map("supporting_publications") // JSON array of supporting publications
+  operationalActivities  String?  @map("operational_activities") // JSON array of operational activities for compliance
   priority               String   @default("Medium") // Critical, High, Medium, Low
   revision               String   @default("3") // NIST 800-171 Revision number
   publicationDate        String   @default("May 2024") @map("publication_date") // Publication date

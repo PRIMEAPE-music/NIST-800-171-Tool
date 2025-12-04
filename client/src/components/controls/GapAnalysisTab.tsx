@@ -69,6 +69,7 @@ interface EvidenceRequirement {
 
 export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => {
   const [expandedType, setExpandedType] = useState<string | false>('policy');
+  const [operationalActivitiesExpanded, setOperationalActivitiesExpanded] = useState(true);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [selectedRequirement, setSelectedRequirement] = useState<EvidenceRequirement | null>(null);
 
@@ -92,7 +93,19 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
     },
   });
 
-  const isLoading = loadingCoverage || loadingRequirements;
+  // Fetch control data for operational activities
+  const { data: controlData, isLoading: loadingControl } = useQuery({
+    queryKey: ['control', controlId],
+    queryFn: async () => {
+      const response = await fetch(`/api/controls/control/${controlId}`);
+      if (!response.ok) throw new Error('Failed to fetch control');
+      const result = await response.json();
+      // API wraps response in { data: {...} } structure
+      return result.data || result;
+    },
+  });
+
+  const isLoading = loadingCoverage || loadingRequirements || loadingControl;
 
   if (isLoading) {
     return (
@@ -103,7 +116,7 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
     );
   }
 
-  if (!coverage || !requirements) {
+  if (!coverage || !requirements || !controlData) {
     return (
       <Box sx={{ p: 3 }}>
         <Alert severity="error">
@@ -112,6 +125,11 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
       </Box>
     );
   }
+
+  // Parse operational activities
+  const operationalActivities = controlData.operationalActivities
+    ? JSON.parse(controlData.operationalActivities)
+    : [];
 
   // Group requirements by type
   const requirementsByType = {
@@ -356,6 +374,44 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
 
       {/* Coverage Card */}
       {coverage && <ControlCoverageCard coverage={coverage} />}
+
+      {/* Operational Activities */}
+      {operationalActivities.length > 0 && (
+        <Accordion
+          expanded={operationalActivitiesExpanded}
+          onChange={() => setOperationalActivitiesExpanded(!operationalActivitiesExpanded)}
+          sx={{ bgcolor: '#2A2A2A' }}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#E0E0E0' }}>
+                Required Operational Activities ({operationalActivities.length})
+              </Typography>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2" sx={{ mb: 2, color: '#B0B0B0' }}>
+              Activities that must be performed to maintain compliance with this control:
+            </Typography>
+            <Box component="ul" sx={{ pl: 3, m: 0, color: '#E0E0E0' }}>
+              {operationalActivities.map((activity: string, index: number) => (
+                <Box
+                  component="li"
+                  key={index}
+                  sx={{
+                    mb: 1.5,
+                    '&::marker': {
+                      color: '#90CAF9',
+                    },
+                  }}
+                >
+                  <Typography variant="body2">{activity}</Typography>
+                </Box>
+              ))}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      )}
 
       {/* Evidence Requirements by Type */}
       <Paper sx={{ p: 3, backgroundColor: '#2A2A2A' }}>

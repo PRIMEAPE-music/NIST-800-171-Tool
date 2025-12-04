@@ -65,6 +65,7 @@ interface ConsolidatedData {
         description: string;
         rationale: string;
       }>;
+      operationalActivities?: string[];
     };
   }>;
 }
@@ -224,6 +225,17 @@ async function importEvidenceRequirements() {
           }
         });
         totalRequirements++;
+      }
+
+      // Update control with operational activities
+      if (control.evidenceRequirements.operationalActivities && control.evidenceRequirements.operationalActivities.length > 0) {
+        await prisma.control.update({
+          where: { id: existingControl.id },
+          data: {
+            operationalActivities: JSON.stringify(control.evidenceRequirements.operationalActivities)
+          }
+        });
+        console.log(`    ✓ Imported ${control.evidenceRequirements.operationalActivities.length} operational activities`);
       }
 
       processedControls++;

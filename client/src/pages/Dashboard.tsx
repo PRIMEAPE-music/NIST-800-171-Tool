@@ -10,7 +10,7 @@ import { controlService } from '@/services/controlService';
 import OverallComplianceCard from '@/components/dashboard/OverallComplianceCard';
 import ControlsByStatusCard from '@/components/dashboard/ControlsByStatusCard';
 import PriorityDistributionCard from '@/components/dashboard/PriorityDistributionCard';
-import ImprovementActionsCard from '@/components/dashboard/ImprovementActionsCard';
+import M365SettingsCoverageCard from '@/components/dashboard/M365SettingsCoverageCard';
 import FamilyComplianceChart from '@/components/dashboard/FamilyComplianceChart';
 import RecentActivityFeed from '@/components/dashboard/RecentActivityFeed';
 import TopGapsCard from '@/components/dashboard/TopGapsCard';
@@ -71,7 +71,7 @@ export const Dashboard: React.FC = () => {
       {/* Row 2: Progress Metrics */}
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3, mb: 3 }}>
         <PriorityDistributionCard stats={stats?.byPriority} />
-        <ImprovementActionsCard data={stats?.improvementActions} />
+        <M365SettingsCoverageCard />
       </Box>
 
       {/* Row 3: Family Breakdown */}
