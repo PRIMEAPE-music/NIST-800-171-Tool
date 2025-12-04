@@ -18,7 +18,7 @@ import {
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { Control } from '@/services/controlService';
-import { FileUpload } from '@/components/evidence/FileUpload';
+import { EvidenceUploadDialog } from '@/components/evidence/EvidenceUploadDialog';
 import { EvidenceCard } from '@/components/evidence/EvidenceCard';
 import {
   useEvidenceForControl,
@@ -187,39 +187,12 @@ export const EvidenceTab: React.FC<EvidenceTabProps> = ({ control }) => {
       )}
 
       {/* Upload Dialog */}
-      <Dialog
+      <EvidenceUploadDialog
         open={uploadDialogOpen}
         onClose={() => setUploadDialogOpen(false)}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: {
-            backgroundColor: '#242424',
-            backgroundImage: 'none',
-          },
-        }}
-      >
-        <DialogTitle sx={{ color: '#E0E0E0' }}>
-          Upload Evidence for {control.controlId}
-        </DialogTitle>
-        <DialogContent>
-          <Typography variant="body2" sx={{ color: '#B0B0B0', mb: 3 }}>
-            {control.title}
-          </Typography>
-          <FileUpload
-            controlId={control.id}
-            onUploadComplete={handleUploadComplete}
-          />
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button
-            onClick={() => setUploadDialogOpen(false)}
-            sx={{ color: '#B0B0B0' }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+        preSelectedControlId={control.id}
+        onUploadComplete={handleUploadComplete}
+      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog

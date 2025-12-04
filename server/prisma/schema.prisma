@@ -42,7 +42,8 @@ model Control {
   // Relations
   status          ControlStatus?
   assessments     Assessment[]
-  evidence        Evidence[]
+  evidence        Evidence[] @relation("LegacyEvidenceControl") // Legacy relation
+  evidenceMappings EvidenceControlMapping[] // NEW: Multi-control evidence
   poams           Poam[]
   changeHistory   ChangeHistory[]
   gaps            ControlGap[]
@@ -111,30 +112,170 @@ model Assessment {
 
 model Evidence {
   id           Int      @id @default(autoincrement())
-  controlId    Int      @map("control_id")
-  fileName     String   @map("file_name") // Stored file name (sanitized + timestamp)
-  originalName String   @map("original_name") // Original uploaded file name
-  filePath     String   @map("file_path") // Relative path from uploads directory
-  fileType     String   @map("file_type") // MIME type (application/pdf, image/png, etc.)
-  fileSize     Int      @map("file_size") // Size in bytes
-  description  String? // Optional user description
-  uploadedBy   String?  @map("uploaded_by") // User who uploaded (optional for single-user app)
+
+  // DEPRECATED: Keep for backward compatibility during migration
+  controlId    Int?     @map("control_id") // Made optional - use controlMappings instead
+
+  // File information
+  fileName     String   @map("file_name")
+  originalName String   @map("original_name")
+  filePath     String   @map("file_path")
+  fileType     String   @map("file_type")
+  fileSize     Int      @map("file_size")
+
+  // Evidence classification
+  evidenceType String   @default("general") @map("evidence_type") // 'policy', 'procedure', 'execution', 'screenshot', 'log', 'report', 'configuration', 'general'
+
+  // Metadata
+  description  String?
+  uploadedBy   String?  @map("uploaded_by")
   uploadedDate DateTime @default(now()) @map("uploaded_date")
+
+  // Versioning
   version      Int      @default(1)
-  tags         String? // JSON array stored as string: ["policy", "audit"]
+  parentId     Int?     @map("parent_id") // Link to previous version
+
+  // Categorization
+  tags         String?  // JSON array stored as string: ["policy", "audit", "annual-review"]
+
+  // Status tracking
+  status       String   @default("uploaded") // 'uploaded', 'under_review', 'approved', 'rejected', 'expired'
+  reviewedBy   String?  @map("reviewed_by")
+  reviewedAt   DateTime? @map("reviewed_at")
+  reviewNotes  String?  @map("review_notes")
+
+  // Archival
   isArchived   Boolean  @default(false) @map("is_archived")
+  archivedBy   String?  @map("archived_by")
+  archivedAt   DateTime? @map("archived_at")
+  archivedReason String? @map("archived_reason")
+
+  // Timestamps
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  // Relations
-  control Control @relation(fields: [controlId], references: [id], onDelete: Cascade)
-  manualReviewLinks ManualReviewEvidence[] // Manual reviews that reference this evidence
+  // Relations - NEW: Many-to-many with controls
+  control           Control?                 @relation("LegacyEvidenceControl", fields: [controlId], references: [id], onDelete: SetNull)
+  controlMappings   EvidenceControlMapping[] // NEW: Multi-control mapping
+  manualReviewLinks ManualReviewEvidence[]
 
-  // Indexes for performance
   @@index([controlId])
   @@index([uploadedDate])
   @@index([fileType])
+  @@index([evidenceType])
+  @@index([status])
+  @@index([isArchived])
   @@map("evidence")
+}
+
+// ============================================================================
+// Evidence to Control Mappings (Many-to-Many)
+// ============================================================================
+
+model EvidenceControlMapping {
+  id          Int      @id @default(autoincrement())
+  evidenceId  Int      @map("evidence_id")
+  controlId   Int      @map("control_id")
+
+  // Relationship type
+  relationship String   @default("supporting") // 'primary', 'supporting', 'referenced', 'supplementary'
+  notes        String?  // Why this evidence supports this control
+
+  // Link to formal requirement (optional - connects to EvidenceRequirement)
+  requirementId Int?    @map("requirement_id")
+  requirement   EvidenceRequirement? @relation(fields: [requirementId], references: [id], onDelete: SetNull)
+
+  // Validation workflow
+  isVerified   Boolean  @default(false) @map("is_verified")
+  verifiedBy   String?  @map("verified_by")
+  verifiedAt   DateTime? @map("verified_at")
+
+  // Auto-suggested vs manual
+  isSuggested  Boolean  @default(false) @map("is_suggested")
+  suggestionScore Float? @map("suggestion_score") // 0-1 confidence score
+
+  // Metadata
+  mappedBy     String?  @map("mapped_by")
+  mappedAt     DateTime @default(now()) @map("mapped_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  evidence     Evidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  control      Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+
+  @@unique([evidenceId, controlId])
+  @@index([evidenceId])
+  @@index([controlId])
+  @@index([requirementId])
+  @@index([isVerified])
+  @@index([relationship])
+  @@map("evidence_control_mappings")
+}
+
+// ============================================================================
+// Evidence Templates (for auto-suggestions)
+// ============================================================================
+
+model EvidenceTemplate {
+  id               Int      @id @default(autoincrement())
+  name             String   @unique // e.g., "Information Security Policy"
+  description      String?
+  evidenceType     String   @map("evidence_type") // 'policy', 'procedure', 'execution', etc.
+
+  // Suggested controls (JSON array of control IDs)
+  suggestedControls String  @map("suggested_controls") // ["AC.01.01", "AC.01.02", ...]
+
+  // Keywords for matching
+  keywords         String   // JSON array: ["information", "security", "policy", "infosec"]
+
+  // File type hints
+  expectedFileTypes String? @map("expected_file_types") // JSON array: ["pdf", "docx"]
+
+  // Default relationship when mapped
+  defaultRelationship String @default("primary") @map("default_relationship")
+
+  // Usage tracking
+  timesUsed        Int      @default(0) @map("times_used")
+  lastUsed         DateTime? @map("last_used")
+
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@index([evidenceType])
+  @@index([isActive])
+  @@map("evidence_templates")
+}
+
+// ============================================================================
+// Evidence Upload Sessions (for bulk operations)
+// ============================================================================
+
+model EvidenceUploadSession {
+  id               Int      @id @default(autoincrement())
+  sessionId        String   @unique @map("session_id") // UUID for tracking
+
+  // Session metadata
+  uploadedBy       String?  @map("uploaded_by")
+  totalFiles       Int      @default(0) @map("total_files")
+  successfulUploads Int     @default(0) @map("successful_uploads")
+  failedUploads    Int      @default(0) @map("failed_uploads")
+
+  // Session data (JSON)
+  fileData         String?  @map("file_data") // JSON array of file metadata
+  errors           String?  // JSON array of error messages
+
+  // Status
+  status           String   @default("in_progress") // 'in_progress', 'completed', 'failed'
+
+  // Timestamps
+  startedAt        DateTime @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+
+  @@index([sessionId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("evidence_upload_sessions")
 }
 
 // ============================================================================
@@ -760,6 +901,7 @@ model EvidenceRequirement {
   procedure           ProcedureDocument? @relation(fields: [procedureId], references: [id], onDelete: SetNull)
 
   uploadedEvidence    ControlEvidence[]
+  fulfillments        EvidenceControlMapping[] // NEW: Track which evidence satisfies this requirement
 
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")

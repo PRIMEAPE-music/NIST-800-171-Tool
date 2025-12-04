@@ -20,7 +20,7 @@ import {
   Add as AddIcon,
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
-import { FileUpload } from '../components/evidence/FileUpload';
+import { EvidenceUploadDialog } from '../components/evidence/EvidenceUploadDialog';
 import { EvidenceCard } from '../components/evidence/EvidenceCard';
 import { useEvidence, useDeleteEvidence } from '../hooks/useEvidence';
 import { EvidenceFilters } from '../types/evidence.types';
@@ -29,7 +29,6 @@ export const EvidenceLibrary: React.FC = () => {
   const [filters] = useState<EvidenceFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [selectedControlId, setSelectedControlId] = useState<number>(0);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [evidenceToDelete, setEvidenceToDelete] = useState<number | null>(null);
 
@@ -154,41 +153,14 @@ export const EvidenceLibrary: React.FC = () => {
       )}
 
       {/* Upload Dialog */}
-      <Dialog
+      <EvidenceUploadDialog
         open={uploadDialogOpen}
         onClose={() => setUploadDialogOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>Upload Evidence</DialogTitle>
-        <DialogContent>
-          <Box sx={{ mb: 2 }}>
-            <TextField
-              fullWidth
-              label="Control ID"
-              type="number"
-              value={selectedControlId || ''}
-              onChange={(e) => setSelectedControlId(parseInt(e.target.value) || 0)}
-              sx={{ mb: 2 }}
-            />
-          </Box>
-          {selectedControlId > 0 && (
-            <FileUpload
-              controlId={selectedControlId}
-              onUploadComplete={() => {
-                setUploadDialogOpen(false);
-                setSelectedControlId(0);
-                refetch();
-              }}
-            />
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setUploadDialogOpen(false)}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onUploadComplete={() => {
+          setUploadDialogOpen(false);
+          refetch();
+        }}
+      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>

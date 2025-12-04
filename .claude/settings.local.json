@@ -37,7 +37,12 @@
       "Bash(powershell -Command \"Copy-Item compliance.db -Destination ''backups\\compliance_backup_20251204_dod_scoring.db''\")",
       "Bash(powershell -Command:*)",
       "Bash(npm run seed:dod:*)",
-      "Bash(npx prisma db push:*)"
+      "Bash(npx prisma db push:*)",
+      "Bash(copy:*)",
+      "Bash(cmd /c copy \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\server\\database\\compliance.db\" \"c:\\Users\\justin\\Desktop\\IT Software\\Custom Programs\\NIST Tool\\database\\backups\\compliance_backup_20251204_evidence_library_phase1.db\")",
+      "Bash(cp:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

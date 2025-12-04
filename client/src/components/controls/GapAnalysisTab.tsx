@@ -17,10 +17,6 @@ import {
   TableHead,
   TableRow,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   IconButton,
   Tooltip,
   Stack,
@@ -28,13 +24,11 @@ import {
 import {
   ExpandMore,
   Warning,
-  Error,
   Policy as PolicyIcon,
   Description as ProcedureIcon,
   PlayArrow as ExecutionIcon,
   Business as PhysicalIcon,
   Upload as UploadIcon,
-  Close as CloseIcon,
   PictureAsPdf as PdfIcon,
   Image as ImageIcon,
   Description as DocIcon,
@@ -43,7 +37,7 @@ import {
 } from '@mui/icons-material';
 import ControlCoverageCard from '../ControlCoverageCard';
 import { format } from 'date-fns';
-import { FileUpload } from '../evidence/FileUpload';
+import { EvidenceUploadDialog } from '../evidence/EvidenceUploadDialog';
 
 interface GapAnalysisTabProps {
   controlId: string;
@@ -71,7 +65,6 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
   const [expandedType, setExpandedType] = useState<string | false>('policy');
   const [operationalActivitiesExpanded, setOperationalActivitiesExpanded] = useState(true);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [selectedRequirement, setSelectedRequirement] = useState<EvidenceRequirement | null>(null);
 
   // Fetch coverage data
   const { data: coverage, isLoading: loadingCoverage } = useQuery({
@@ -206,14 +199,12 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
     }
   };
 
-  const handleOpenUploadDialog = (requirement: EvidenceRequirement) => {
-    setSelectedRequirement(requirement);
+  const handleOpenUploadDialog = () => {
     setUploadDialogOpen(true);
   };
 
   const handleCloseUploadDialog = () => {
     setUploadDialogOpen(false);
-    setSelectedRequirement(null);
   };
 
   const handleUploadComplete = () => {
@@ -317,7 +308,7 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
                       <Tooltip title="Upload Evidence">
                         <IconButton
                           size="small"
-                          onClick={() => handleOpenUploadDialog(req)}
+                          onClick={handleOpenUploadDialog}
                           sx={{
                             bgcolor: req.uploadedEvidence.length > 0 ? '#424242' : '#1976d2',
                             color: '#fff',
@@ -564,47 +555,12 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
       </Paper>
 
       {/* Upload Evidence Dialog */}
-      <Dialog
+      <EvidenceUploadDialog
         open={uploadDialogOpen}
         onClose={handleCloseUploadDialog}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Box>
-            <Typography variant="h6">Upload Evidence</Typography>
-            {selectedRequirement && (
-              <Typography variant="body2" sx={{ color: '#B0B0B0', mt: 0.5 }}>
-                {selectedRequirement.name} • {selectedRequirement.evidenceType}
-              </Typography>
-            )}
-          </Box>
-          <IconButton onClick={handleCloseUploadDialog} size="small">
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          {selectedRequirement && (
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                <strong>Description:</strong> {selectedRequirement.description}
-              </Typography>
-              {selectedRequirement.rationale && (
-                <Typography variant="body2" sx={{ color: '#B0B0B0', fontStyle: 'italic' }}>
-                  <strong>Rationale:</strong> {selectedRequirement.rationale}
-                </Typography>
-              )}
-            </Box>
-          )}
-          <FileUpload
-            controlId={parseInt(controlId)}
-            onUploadComplete={handleUploadComplete}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseUploadDialog}>Close</Button>
-        </DialogActions>
-      </Dialog>
+        preSelectedControlId={parseInt(controlId)}
+        onUploadComplete={handleUploadComplete}
+      />
     </Box>
   );
 };
