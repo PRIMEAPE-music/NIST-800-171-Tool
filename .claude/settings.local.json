@@ -31,7 +31,8 @@
       "Bash(sqlite3:*)",
       "Bash(timeout /t 2)",
       "Bash(dir:*)",
-      "Bash(copy compliance.db \"backups\\compliance_backup_20251203_141735_before_gap_analysis.db\")"
+      "Bash(copy compliance.db \"backups\\compliance_backup_20251203_141735_before_gap_analysis.db\")",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

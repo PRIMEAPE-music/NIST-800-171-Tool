@@ -17,19 +17,33 @@ import {
   TableHead,
   TableRow,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Tooltip,
+  Stack,
 } from '@mui/material';
 import {
   ExpandMore,
-  CheckCircle,
   Warning,
   Error,
   Policy as PolicyIcon,
   Description as ProcedureIcon,
   PlayArrow as ExecutionIcon,
   Business as PhysicalIcon,
+  Upload as UploadIcon,
+  Close as CloseIcon,
+  PictureAsPdf as PdfIcon,
+  Image as ImageIcon,
+  Description as DocIcon,
+  TableChart as ExcelIcon,
+  InsertDriveFile as FileIcon,
 } from '@mui/icons-material';
 import ControlCoverageCard from '../ControlCoverageCard';
 import { format } from 'date-fns';
+import { FileUpload } from '../evidence/FileUpload';
 
 interface GapAnalysisTabProps {
   controlId: string;
@@ -55,6 +69,8 @@ interface EvidenceRequirement {
 
 export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => {
   const [expandedType, setExpandedType] = useState<string | false>('policy');
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [selectedRequirement, setSelectedRequirement] = useState<EvidenceRequirement | null>(null);
 
   // Fetch coverage data
   const { data: coverage, isLoading: loadingCoverage } = useQuery({
@@ -151,6 +167,43 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
     return { status: 'uploaded', color: '#4caf50', label: 'Uploaded' };
   };
 
+  const getFileIcon = (fileName: string) => {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'pdf':
+        return <PdfIcon sx={{ fontSize: 18 }} />;
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+        return <ImageIcon sx={{ fontSize: 18 }} />;
+      case 'xlsx':
+      case 'xls':
+      case 'csv':
+        return <ExcelIcon sx={{ fontSize: 18 }} />;
+      case 'docx':
+      case 'doc':
+        return <DocIcon sx={{ fontSize: 18 }} />;
+      default:
+        return <FileIcon sx={{ fontSize: 18 }} />;
+    }
+  };
+
+  const handleOpenUploadDialog = (requirement: EvidenceRequirement) => {
+    setSelectedRequirement(requirement);
+    setUploadDialogOpen(true);
+  };
+
+  const handleCloseUploadDialog = () => {
+    setUploadDialogOpen(false);
+    setSelectedRequirement(null);
+  };
+
+  const handleUploadComplete = () => {
+    handleCloseUploadDialog();
+    // Refetch evidence requirements to show updated data
+    window.location.reload(); // Simple reload for now, can be improved with query invalidation
+  };
+
   const renderRequirementsTable = (reqs: EvidenceRequirement[], type: string) => {
     if (reqs.length === 0) {
       return (
@@ -165,11 +218,11 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Requirement</TableCell>
-              <TableCell>Description</TableCell>
-              {type === 'execution' && <TableCell>Frequency</TableCell>}
-              <TableCell>Status</TableCell>
-              <TableCell>Evidence</TableCell>
+              <TableCell sx={{ width: '15%' }}>Requirement</TableCell>
+              <TableCell sx={{ width: '45%' }}>Description & Rationale</TableCell>
+              {type === 'execution' && <TableCell sx={{ width: '10%' }}>Frequency</TableCell>}
+              <TableCell sx={{ width: '10%' }}>Status</TableCell>
+              <TableCell sx={{ width: type === 'execution' ? '20%' : '30%' }}>Evidence</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -183,11 +236,14 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
-                      {req.description.length > 100
-                        ? `${req.description.substring(0, 100)}...`
-                        : req.description}
+                    <Typography variant="body2" sx={{ fontSize: '0.85rem', mb: req.rationale ? 1 : 0 }}>
+                      {req.description}
                     </Typography>
+                    {req.rationale && (
+                      <Typography variant="body2" sx={{ fontSize: '0.8rem', color: '#B0B0B0', fontStyle: 'italic' }}>
+                        <strong>Rationale:</strong> {req.rationale}
+                      </Typography>
+                    )}
                   </TableCell>
                   {type === 'execution' && (
                     <TableCell>
@@ -206,25 +262,58 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
                     />
                   </TableCell>
                   <TableCell>
-                    {req.uploadedEvidence.length > 0 ? (
-                      <Box>
-                        <Typography variant="caption">
-                          {req.uploadedEvidence[0].fileName}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {req.uploadedEvidence.length > 0 ? (
+                        <Stack direction="row" spacing={0.5} alignItems="center" sx={{ flex: 1 }}>
+                          <Tooltip title={req.uploadedEvidence[0].fileName}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#90CAF9' }}>
+                              {getFileIcon(req.uploadedEvidence[0].fileName)}
+                            </Box>
+                          </Tooltip>
+                          <Box sx={{ minWidth: 0, flex: 1 }}>
+                            <Typography variant="caption" noWrap sx={{ display: 'block' }}>
+                              {req.uploadedEvidence[0].fileName}
+                            </Typography>
+                            <Typography variant="caption" sx={{ color: '#B0B0B0', fontSize: '0.7rem' }}>
+                              {format(new Date(req.uploadedEvidence[0].uploadedAt), 'MMM d, yyyy')}
+                            </Typography>
+                          </Box>
+                          {req.uploadedEvidence.length > 1 && (
+                            <Chip
+                              label={`+${req.uploadedEvidence.length - 1}`}
+                              size="small"
+                              sx={{
+                                height: 18,
+                                fontSize: '0.7rem',
+                                bgcolor: '#424242',
+                                color: '#90CAF9',
+                              }}
+                            />
+                          )}
+                        </Stack>
+                      ) : (
+                        <Typography variant="caption" sx={{ color: '#f44336', flex: 1 }}>
+                          No evidence uploaded
                         </Typography>
-                        <Typography variant="caption" display="block" sx={{ color: '#B0B0B0' }}>
-                          {format(new Date(req.uploadedEvidence[0].uploadedAt), 'MMM d, yyyy')}
-                        </Typography>
-                        {req.uploadedEvidence.length > 1 && (
-                          <Typography variant="caption" sx={{ color: '#90CAF9' }}>
-                            +{req.uploadedEvidence.length - 1} more
-                          </Typography>
-                        )}
-                      </Box>
-                    ) : (
-                      <Typography variant="caption" sx={{ color: '#f44336' }}>
-                        No evidence uploaded
-                      </Typography>
-                    )}
+                      )}
+                      <Tooltip title="Upload Evidence">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleOpenUploadDialog(req)}
+                          sx={{
+                            bgcolor: req.uploadedEvidence.length > 0 ? '#424242' : '#1976d2',
+                            color: '#fff',
+                            '&:hover': {
+                              bgcolor: req.uploadedEvidence.length > 0 ? '#616161' : '#1565c0',
+                            },
+                            width: 28,
+                            height: 28,
+                          }}
+                        >
+                          <UploadIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   </TableCell>
                 </TableRow>
               );
@@ -417,6 +506,49 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
           <li>Overall Coverage: {coverage.overallCoverage}%</li>
         </Box>
       </Paper>
+
+      {/* Upload Evidence Dialog */}
+      <Dialog
+        open={uploadDialogOpen}
+        onClose={handleCloseUploadDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box>
+            <Typography variant="h6">Upload Evidence</Typography>
+            {selectedRequirement && (
+              <Typography variant="body2" sx={{ color: '#B0B0B0', mt: 0.5 }}>
+                {selectedRequirement.name} • {selectedRequirement.evidenceType}
+              </Typography>
+            )}
+          </Box>
+          <IconButton onClick={handleCloseUploadDialog} size="small">
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          {selectedRequirement && (
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                <strong>Description:</strong> {selectedRequirement.description}
+              </Typography>
+              {selectedRequirement.rationale && (
+                <Typography variant="body2" sx={{ color: '#B0B0B0', fontStyle: 'italic' }}>
+                  <strong>Rationale:</strong> {selectedRequirement.rationale}
+                </Typography>
+              )}
+            </Box>
+          )}
+          <FileUpload
+            controlId={parseInt(controlId)}
+            onUploadComplete={handleUploadComplete}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseUploadDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
