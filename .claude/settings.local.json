@@ -32,7 +32,11 @@
       "Bash(timeout /t 2)",
       "Bash(dir:*)",
       "Bash(copy compliance.db \"backups\\compliance_backup_20251203_141735_before_gap_analysis.db\")",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(cmd /c \"copy compliance.db backups\\compliance_backup_%date:~10,4%%date:~4,2%%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%_dod_scoring.db\")",
+      "Bash(powershell -Command \"Copy-Item compliance.db -Destination ''backups\\compliance_backup_20251204_dod_scoring.db''\")",
+      "Bash(powershell -Command:*)",
+      "Bash(npm run seed:dod:*)"
     ],
     "deny": [],
     "ask": []

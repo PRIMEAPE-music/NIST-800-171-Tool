@@ -30,6 +30,14 @@ model Control {
   createdAt              DateTime @default(now()) @map("created_at")
   updatedAt              DateTime @updatedAt @map("updated_at")
 
+  // === DoD Assessment Scoring Fields ===
+  dodPoints             Int       @default(1) @map("dod_points")        // Penalty points (0, 1, 3, or 5)
+  dodSpecialScoring     Boolean   @default(false) @map("dod_special_scoring")    // MFA or FIPS crypto
+  dodNaAllowed          Boolean   @default(false) @map("dod_na_allowed")    // Remote/Wireless/Mobile
+  dodRev2Mapping        String?   @map("dod_rev2_mapping")                      // Original Rev 2 control ID(s)
+  dodMappingType        String?   @map("dod_mapping_type")                      // Direct, Consolidated, New, Moved
+  // === End DoD Scoring Fields ===
+
   // Relations
   status          ControlStatus?
   assessments     Assessment[]

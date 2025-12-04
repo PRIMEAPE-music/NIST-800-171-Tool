@@ -1,0 +1,1088 @@
+{
+  "metadata": {
+    "title": "NIST SP 800-171 DoD Assessment Scoring - Revision 3 Mapping",
+    "description": "Maps DoD Assessment Methodology scoring to NIST 800-171 Revision 3 controls (97 active controls)",
+    "sourceDocument": "NIST SP 800-171 DoD Assessment Methodology, Version 1.2.1, June 24, 2020",
+    "rev2TotalControls": 110,
+    "rev2MaxScore": 110,
+    "rev3ActiveControls": 97,
+    "rev3MaxScore": 97,
+    "rev3TotalWeightedPoints": 292,
+    "rev3MinimumPossibleScore": -195,
+    "scoringMethod": "Subtractive - Start at maxScore, subtract points for each non-compliant control",
+    "complianceTrigger": "Control status must be 'Verified' to count as implemented (0 points deducted)",
+    "dateCreated": "2024",
+    "notes": [
+      "Max score equals number of controls (97), matching DoD methodology where Rev 2 max = 110 controls",
+      "Score can go NEGATIVE - minimum possible is -195 (97 - 292 total weighted points)",
+      "Weighted points (1, 3, 5) are PENALTY values subtracted when controls are not verified",
+      "Basic Security Requirements are weighted 3-5 points (highest penalty)",
+      "Derived Security Requirements with exploitation potential are weighted 5 points",
+      "Derived Security Requirements with specific/confined effects are weighted 3 points",
+      "Other Derived Security Requirements are weighted 1 point",
+      "New Rev 3 controls scored using DoD methodology principles",
+      "Some controls have special conditional scoring (MFA, FIPS crypto)",
+      "System Security Plan (03.15.02) uses N/A scoring - absence prevents assessment"
+    ]
+  },
+  "scoringRules": {
+    "maxScore": 97,
+    "formula": "97 - SUM(dodPoints for each control where status != 'Verified')",
+    "canBeNegative": true,
+    "minimumPossibleScore": -195,
+    "totalWeightedPoints": 292,
+    "implementationNotes": {
+      "verifiedStatus": "Control is fully implemented - 0 points deducted",
+      "otherStatuses": "Control NOT implemented - full dodPoints value deducted",
+      "statusValues": ["Not Started", "In Progress", "Partially Implemented", "Implemented", "Verified", "Not Applicable"]
+    },
+    "specialScoringControls": [
+      {
+        "controlId": "03.05.03",
+        "title": "Multi-Factor Authentication",
+        "defaultPoints": 5,
+        "conditions": [
+          { "scenario": "MFA not implemented for any users", "pointsToDeduct": 5 },
+          { "scenario": "MFA implemented only for remote/privileged users (not general users)", "pointsToDeduct": 3 },
+          { "scenario": "MFA implemented for all users", "pointsToDeduct": 0 }
+        ]
+      },
+      {
+        "controlId": "03.13.11",
+        "title": "Cryptographic Protection (FIPS)",
+        "defaultPoints": 5,
+        "conditions": [
+          { "scenario": "No cryptography employed where required", "pointsToDeduct": 5 },
+          { "scenario": "Cryptography employed but NOT FIPS validated", "pointsToDeduct": 3 },
+          { "scenario": "FIPS-validated cryptography employed", "pointsToDeduct": 0 }
+        ]
+      }
+    ],
+    "notApplicableControls": [
+      {
+        "controlId": "03.01.12",
+        "title": "Remote Access",
+        "condition": "Remote access is not permitted AND policy exists to prevent inadvertent enablement",
+        "scoring": "Do not deduct points if N/A with documented policy"
+      },
+      {
+        "controlId": "03.01.16",
+        "title": "Wireless Access",
+        "condition": "Wireless access is not permitted AND policy exists to prevent inadvertent enablement",
+        "scoring": "Do not deduct points if N/A with documented policy"
+      },
+      {
+        "controlId": "03.01.18",
+        "title": "Access Control for Mobile Devices",
+        "condition": "Mobile device connection is not permitted AND policy exists to prevent inadvertent enablement",
+        "scoring": "Do not deduct points if N/A with documented policy"
+      },
+      {
+        "controlId": "03.15.02",
+        "title": "System Security Plan",
+        "condition": "This control is prerequisite for assessment",
+        "scoring": "Absence results in 'assessment cannot be completed' finding, not point deduction"
+      }
+    ]
+  },
+  "familySummary": [
+    { "code": "AC", "name": "Access Control", "count": 16, "totalPoints": 30 },
+    { "code": "AT", "name": "Awareness and Training", "count": 2, "totalPoints": 10 },
+    { "code": "AU", "name": "Audit and Accountability", "count": 8, "totalPoints": 18 },
+    { "code": "CM", "name": "Configuration Management", "count": 10, "totalPoints": 34 },
+    { "code": "IA", "name": "Identification and Authentication", "count": 8, "totalPoints": 22 },
+    { "code": "IR", "name": "Incident Response", "count": 5, "totalPoints": 15 },
+    { "code": "MA", "name": "Maintenance", "count": 3, "totalPoints": 11 },
+    { "code": "MP", "name": "Media Protection", "count": 7, "totalPoints": 17 },
+    { "code": "PS", "name": "Personnel Security", "count": 2, "totalPoints": 8 },
+    { "code": "PE", "name": "Physical Protection", "count": 5, "totalPoints": 13 },
+    { "code": "RA", "name": "Risk Assessment", "count": 3, "totalPoints": 9 },
+    { "code": "CA", "name": "Assessment, Authorization, and Monitoring", "count": 4, "totalPoints": 16 },
+    { "code": "SC", "name": "System and Communications Protection", "count": 10, "totalPoints": 27 },
+    { "code": "SI", "name": "System and Information Integrity", "count": 5, "totalPoints": 25 },
+    { "code": "PL", "name": "Planning", "count": 3, "totalPoints": 4 },
+    { "code": "SA", "name": "System and Services Acquisition", "count": 3, "totalPoints": 11 },
+    { "code": "SR", "name": "Supply Chain Risk Management", "count": 3, "totalPoints": 11 }
+  ],
+  "controls": [
+    {
+      "controlId": "03.01.01",
+      "title": "Account Management",
+      "family": "AC",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.1.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - if not implemented, all other AC controls become ineffective"
+    },
+    {
+      "controlId": "03.01.02",
+      "title": "Access Enforcement",
+      "family": "AC",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.1.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - enforces approved authorizations"
+    },
+    {
+      "controlId": "03.01.03",
+      "title": "Information Flow Enforcement",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.3",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - limited/indirect effect on network security"
+    },
+    {
+      "controlId": "03.01.04",
+      "title": "Separation of Duties",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.4",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - indirect effect, prevents collusion"
+    },
+    {
+      "controlId": "03.01.05",
+      "title": "Least Privilege",
+      "family": "AC",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.5",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - specific/confined effect on privilege management"
+    },
+    {
+      "controlId": "03.01.06",
+      "title": "Least Privilege — Privileged Accounts",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.6",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - limits use of privileged accounts for non-security functions"
+    },
+    {
+      "controlId": "03.01.07",
+      "title": "Least Privilege — Privileged Functions",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.7",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - prevents unauthorized privileged function execution"
+    },
+    {
+      "controlId": "03.01.08",
+      "title": "Unsuccessful Logon Attempts",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.8",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - limits brute force attacks"
+    },
+    {
+      "controlId": "03.01.09",
+      "title": "System Use Notification",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.9",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - provides legal notice, indirect security effect"
+    },
+    {
+      "controlId": "03.01.10",
+      "title": "Device Lock",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.10",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - session lock with pattern-hiding"
+    },
+    {
+      "controlId": "03.01.11",
+      "title": "Session Termination",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.11",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - automatic session termination"
+    },
+    {
+      "controlId": "03.01.12",
+      "title": "Remote Access",
+      "family": "AC",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.12,3.1.13,3.1.14,3.1.15",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact - uncontrolled remote access allows network exploitation",
+      "notApplicableAllowed": true
+    },
+    {
+      "controlId": "03.01.16",
+      "title": "Wireless Access",
+      "family": "AC",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.16,3.1.17",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact - unprotected wireless allows network exploitation",
+      "notApplicableAllowed": true
+    },
+    {
+      "controlId": "03.01.18",
+      "title": "Access Control for Mobile Devices",
+      "family": "AC",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.18,3.1.19",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact - uncontrolled mobile access enables data exfiltration",
+      "notApplicableAllowed": true
+    },
+    {
+      "controlId": "03.01.20",
+      "title": "Use of External Systems",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.20,3.1.21",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Controls external system connections and portable storage"
+    },
+    {
+      "controlId": "03.01.22",
+      "title": "Publicly Accessible Content",
+      "family": "AC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.1.22",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - prevents CUI disclosure on public systems"
+    },
+    {
+      "controlId": "03.02.01",
+      "title": "Literacy Training and Awareness",
+      "family": "AT",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.2.1,3.2.3",
+      "mappingType": "Consolidated",
+      "rationale": "Basic requirement - foundational security awareness including insider threat"
+    },
+    {
+      "controlId": "03.02.02",
+      "title": "Role-Based Training",
+      "family": "AT",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.2.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - ensures personnel can perform security duties"
+    },
+    {
+      "controlId": "03.03.01",
+      "title": "Event Logging",
+      "family": "AU",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.3.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - enables detection and investigation of unauthorized activity"
+    },
+    {
+      "controlId": "03.03.02",
+      "title": "Audit Record Content",
+      "family": "AU",
+      "dodPoints": 3,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.3.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - ensures accountability through traceable user actions"
+    },
+    {
+      "controlId": "03.03.03",
+      "title": "Audit Record Generation",
+      "family": "AU",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.3.3",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - maintains audit event definitions"
+    },
+    {
+      "controlId": "03.03.04",
+      "title": "Response to Audit Logging Process Failures",
+      "family": "AU",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.3.4",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - alerts on audit failures"
+    },
+    {
+      "controlId": "03.03.05",
+      "title": "Audit Record Review, Analysis, and Reporting",
+      "family": "AU",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.3.5",
+      "mappingType": "Direct",
+      "rationale": "High impact derived requirement - correlates audit data for incident detection"
+    },
+    {
+      "controlId": "03.03.06",
+      "title": "Audit Record Reduction and Report Generation",
+      "family": "AU",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.3.6",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - supports on-demand audit analysis"
+    },
+    {
+      "controlId": "03.03.07",
+      "title": "Time Stamps",
+      "family": "AU",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.3.7",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - synchronizes system clocks for audit accuracy"
+    },
+    {
+      "controlId": "03.03.08",
+      "title": "Protection of Audit Information",
+      "family": "AU",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.3.8,3.3.9",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Protects audit logs from tampering"
+    },
+    {
+      "controlId": "03.04.01",
+      "title": "Baseline Configuration",
+      "family": "CM",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.4.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - establishes known secure configuration state"
+    },
+    {
+      "controlId": "03.04.02",
+      "title": "Configuration Settings",
+      "family": "CM",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.4.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - enforces security configuration settings"
+    },
+    {
+      "controlId": "03.04.03",
+      "title": "Configuration Change Control",
+      "family": "CM",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.4.3",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - tracks and approves system changes"
+    },
+    {
+      "controlId": "03.04.04",
+      "title": "Impact Analyses",
+      "family": "CM",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.4.4",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - analyzes security impact before changes"
+    },
+    {
+      "controlId": "03.04.05",
+      "title": "Access Restrictions for Change",
+      "family": "CM",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.4.5",
+      "mappingType": "Direct",
+      "rationale": "High impact derived - unauthorized changes can compromise entire system"
+    },
+    {
+      "controlId": "03.04.06",
+      "title": "Least Functionality",
+      "family": "CM",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.4.6,3.4.7",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact - reduces attack surface significantly"
+    },
+    {
+      "controlId": "03.04.08",
+      "title": "Authorized Software — Allow by Exception",
+      "family": "CM",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.4.8",
+      "mappingType": "Direct",
+      "rationale": "High impact derived - prevents unauthorized/malicious software execution"
+    },
+    {
+      "controlId": "03.04.10",
+      "title": "System Component Inventory",
+      "family": "CM",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Specific effect - inventory accuracy affects vulnerability management"
+    },
+    {
+      "controlId": "03.04.11",
+      "title": "Information Location",
+      "family": "CM",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Specific effect - knowing CUI location is critical for protection"
+    },
+    {
+      "controlId": "03.04.12",
+      "title": "System and Component Configuration for High-Risk Areas",
+      "family": "CM",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Addresses high-risk travel scenarios"
+    },
+    {
+      "controlId": "03.05.01",
+      "title": "User Identification and Authentication",
+      "family": "IA",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.5.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - foundational for all access control"
+    },
+    {
+      "controlId": "03.05.02",
+      "title": "Device Identification and Authentication",
+      "family": "IA",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.5.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - verifies device identities"
+    },
+    {
+      "controlId": "03.05.03",
+      "title": "Multi-Factor Authentication",
+      "family": "IA",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.5.3",
+      "mappingType": "Direct",
+      "rationale": "High impact - MFA significantly reduces credential compromise risk",
+      "specialScoring": true,
+      "specialScoringNote": "5 points if not implemented; 3 points if only remote/privileged users"
+    },
+    {
+      "controlId": "03.05.04",
+      "title": "Replay-Resistant Authentication",
+      "family": "IA",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.5.4",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - prevents replay attacks"
+    },
+    {
+      "controlId": "03.05.05",
+      "title": "Identifier Management",
+      "family": "IA",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.5.5,3.5.6",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Manages identifier lifecycle"
+    },
+    {
+      "controlId": "03.05.07",
+      "title": "Password Management",
+      "family": "IA",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.5.7,3.5.8,3.5.9,3.5.10",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact from 3.5.10 - cryptographic protection of passwords"
+    },
+    {
+      "controlId": "03.05.11",
+      "title": "Authentication Feedback",
+      "family": "IA",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.5.11",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - obscures authentication information"
+    },
+    {
+      "controlId": "03.05.12",
+      "title": "Authenticator Management",
+      "family": "IA",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Specific effect on credential protection"
+    },
+    {
+      "controlId": "03.06.01",
+      "title": "Incident Handling",
+      "family": "IR",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.6.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - establishes incident response capability"
+    },
+    {
+      "controlId": "03.06.02",
+      "title": "Incident Monitoring, Reporting, and Response Assistance",
+      "family": "IR",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.6.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - ensures proper incident reporting"
+    },
+    {
+      "controlId": "03.06.03",
+      "title": "Incident Response Testing",
+      "family": "IR",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.6.3",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - validates IR capability through testing"
+    },
+    {
+      "controlId": "03.06.04",
+      "title": "Incident Response Training",
+      "family": "IR",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Supplementary training with indirect effect"
+    },
+    {
+      "controlId": "03.06.05",
+      "title": "Incident Response Plan",
+      "family": "IR",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Documented plan has specific effect on response effectiveness"
+    },
+    {
+      "controlId": "03.07.04",
+      "title": "Maintenance Tools",
+      "family": "MA",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.7.2,3.7.4",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Basic requirement - maintenance tools can introduce malware"
+    },
+    {
+      "controlId": "03.07.05",
+      "title": "Nonlocal Maintenance",
+      "family": "MA",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.7.5",
+      "mappingType": "Direct",
+      "rationale": "High impact - nonlocal maintenance requires MFA protection"
+    },
+    {
+      "controlId": "03.07.06",
+      "title": "Maintenance Personnel",
+      "family": "MA",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.7.3,3.7.6",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Supervises maintenance activities"
+    },
+    {
+      "controlId": "03.08.01",
+      "title": "Media Storage",
+      "family": "MP",
+      "dodPoints": 3,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.8.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - exposure limited to CUI on media"
+    },
+    {
+      "controlId": "03.08.02",
+      "title": "Media Access",
+      "family": "MP",
+      "dodPoints": 3,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.8.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - limits access to CUI on media"
+    },
+    {
+      "controlId": "03.08.03",
+      "title": "Media Sanitization",
+      "family": "MP",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.8.3",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - failure to sanitize causes continual CUI exposure"
+    },
+    {
+      "controlId": "03.08.04",
+      "title": "Media Marking",
+      "family": "MP",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.8.4",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - proper CUI marking"
+    },
+    {
+      "controlId": "03.08.05",
+      "title": "Media Transport",
+      "family": "MP",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.8.5,3.8.6",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Controls media during transport"
+    },
+    {
+      "controlId": "03.08.07",
+      "title": "Media Use",
+      "family": "MP",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.8.7,3.8.8",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact - uncontrolled removable media enables exfiltration"
+    },
+    {
+      "controlId": "03.08.09",
+      "title": "System Backup — Cryptographic Protection",
+      "family": "MP",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.8.9",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - protects backup CUI at storage locations"
+    },
+    {
+      "controlId": "03.09.01",
+      "title": "Personnel Screening",
+      "family": "PS",
+      "dodPoints": 3,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.9.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - screens individuals before CUI access"
+    },
+    {
+      "controlId": "03.09.02",
+      "title": "Personnel Termination and Transfer",
+      "family": "PS",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.9.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - protects systems during personnel actions"
+    },
+    {
+      "controlId": "03.10.01",
+      "title": "Physical Access Authorizations",
+      "family": "PE",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.10.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - limits physical access to authorized individuals"
+    },
+    {
+      "controlId": "03.10.02",
+      "title": "Monitoring Physical Access",
+      "family": "PE",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.10.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - monitors facility and infrastructure"
+    },
+    {
+      "controlId": "03.10.06",
+      "title": "Alternate Work Site",
+      "family": "PE",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.10.6",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - safeguards CUI at alternate work sites"
+    },
+    {
+      "controlId": "03.10.07",
+      "title": "Physical Access Control",
+      "family": "PE",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.10.3,3.10.4,3.10.5",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Visitor control and access logging"
+    },
+    {
+      "controlId": "03.10.08",
+      "title": "Access Control for Transmission",
+      "family": "PE",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Physical protection of transmission media"
+    },
+    {
+      "controlId": "03.11.01",
+      "title": "Risk Assessment",
+      "family": "RA",
+      "dodPoints": 3,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.11.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - periodic risk assessment"
+    },
+    {
+      "controlId": "03.11.02",
+      "title": "Vulnerability Monitoring and Scanning",
+      "family": "RA",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.11.2",
+      "mappingType": "Direct",
+      "rationale": "High impact - identifies exploitable vulnerabilities"
+    },
+    {
+      "controlId": "03.11.04",
+      "title": "Risk Response",
+      "family": "RA",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.11.3",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - remediates vulnerabilities per risk assessment"
+    },
+    {
+      "controlId": "03.12.01",
+      "title": "Security Assessment",
+      "family": "CA",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.12.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - assesses control effectiveness"
+    },
+    {
+      "controlId": "03.12.02",
+      "title": "Plan of Action and Milestones",
+      "family": "CA",
+      "dodPoints": 3,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.12.2",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - documents remediation plans"
+    },
+    {
+      "controlId": "03.12.03",
+      "title": "Continuous Monitoring",
+      "family": "CA",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.12.3",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - ongoing security control monitoring"
+    },
+    {
+      "controlId": "03.12.05",
+      "title": "Information Exchange",
+      "family": "CA",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Specific effect on inter-organizational CUI sharing"
+    },
+    {
+      "controlId": "03.13.01",
+      "title": "Boundary Protection",
+      "family": "SC",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.13.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - monitors and protects network boundaries"
+    },
+    {
+      "controlId": "03.13.04",
+      "title": "Information in Shared System Resources",
+      "family": "SC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.3,3.13.4",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Prevents unauthorized information transfer"
+    },
+    {
+      "controlId": "03.13.06",
+      "title": "Network Communications — Deny by Default — Allow by Exception",
+      "family": "SC",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.5,3.13.6",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact - deny-by-default significantly reduces attack surface"
+    },
+    {
+      "controlId": "03.13.08",
+      "title": "Transmission and Storage Confidentiality",
+      "family": "SC",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.7,3.13.8",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Protects CUI in transmission"
+    },
+    {
+      "controlId": "03.13.09",
+      "title": "Network Disconnect",
+      "family": "SC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.9",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - terminates network sessions"
+    },
+    {
+      "controlId": "03.13.10",
+      "title": "Cryptographic Key Establishment and Management",
+      "family": "SC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.10",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - manages cryptographic keys"
+    },
+    {
+      "controlId": "03.13.11",
+      "title": "Cryptographic Protection",
+      "family": "SC",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.11",
+      "mappingType": "Direct",
+      "rationale": "High impact - FIPS-validated crypto required for CUI protection",
+      "specialScoring": true,
+      "specialScoringNote": "5 points if no crypto; 3 points if not FIPS validated"
+    },
+    {
+      "controlId": "03.13.12",
+      "title": "Collaborative Computing Devices and Applications",
+      "family": "SC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.12",
+      "mappingType": "Direct",
+      "rationale": "Derived requirement - controls collaborative device activation"
+    },
+    {
+      "controlId": "03.13.13",
+      "title": "Mobile Code",
+      "family": "SC",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.13,3.13.14",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Controls mobile code execution"
+    },
+    {
+      "controlId": "03.13.15",
+      "title": "Session Authenticity",
+      "family": "SC",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.15",
+      "mappingType": "Direct",
+      "rationale": "High impact - protects communications session authenticity"
+    },
+    {
+      "controlId": "03.14.01",
+      "title": "Flaw Remediation",
+      "family": "SI",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.14.1",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - timely system flaw correction"
+    },
+    {
+      "controlId": "03.14.02",
+      "title": "Malicious Code Protection",
+      "family": "SI",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.14.2,3.14.4,3.14.5",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. Basic requirement - anti-malware protection"
+    },
+    {
+      "controlId": "03.14.03",
+      "title": "Security Alerts, Advisories, and Directives",
+      "family": "SI",
+      "dodPoints": 5,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.14.3",
+      "mappingType": "Direct",
+      "rationale": "Basic requirement - monitors and responds to security advisories"
+    },
+    {
+      "controlId": "03.14.06",
+      "title": "System Monitoring",
+      "family": "SI",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.14.6,3.14.7",
+      "mappingType": "Consolidated",
+      "rationale": "Consolidated from Rev 2. High impact - detects attacks and unauthorized use"
+    },
+    {
+      "controlId": "03.14.08",
+      "title": "Information Management and Retention",
+      "family": "SI",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Manages CUI retention per policy"
+    },
+    {
+      "controlId": "03.15.01",
+      "title": "Policy and Procedures",
+      "family": "PL",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Documented policies have specific effect on security posture"
+    },
+    {
+      "controlId": "03.15.02",
+      "title": "System Security Plan",
+      "family": "PL",
+      "dodPoints": 0,
+      "requirementType": "Basic",
+      "rev2Mapping": "3.12.4",
+      "mappingType": "Moved",
+      "rationale": "Moved from CA family. N/A scoring - absence means assessment cannot be completed",
+      "prerequisite": true,
+      "prerequisiteNote": "Assessment cannot be completed without SSP per DoD methodology"
+    },
+    {
+      "controlId": "03.15.03",
+      "title": "Rules of Behavior",
+      "family": "PL",
+      "dodPoints": 1,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Establishes user responsibilities"
+    },
+    {
+      "controlId": "03.16.01",
+      "title": "Security Engineering Principles",
+      "family": "SA",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": "3.13.2",
+      "mappingType": "Moved",
+      "rationale": "Moved from SC family (was 3.13.2). Architectural security principles"
+    },
+    {
+      "controlId": "03.16.02",
+      "title": "Unsupported System Components",
+      "family": "SA",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Manages unsupported components that may have unpatched vulnerabilities"
+    },
+    {
+      "controlId": "03.16.03",
+      "title": "External System Services",
+      "family": "SA",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Controls external services that may access CUI"
+    },
+    {
+      "controlId": "03.17.01",
+      "title": "Supply Chain Risk Management Plan",
+      "family": "SR",
+      "dodPoints": 5,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. High impact - supply chain compromises can affect entire system"
+    },
+    {
+      "controlId": "03.17.02",
+      "title": "Acquisition Strategies, Tools, and Methods",
+      "family": "SR",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Specific effect on acquisition security"
+    },
+    {
+      "controlId": "03.17.03",
+      "title": "Supply Chain Requirements and Processes",
+      "family": "SR",
+      "dodPoints": 3,
+      "requirementType": "Derived",
+      "rev2Mapping": null,
+      "mappingType": "New",
+      "rationale": "New in Rev 3. Specific effect on supply chain integrity"
+    }
+  ]
+}

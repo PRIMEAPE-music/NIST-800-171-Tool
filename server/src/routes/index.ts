@@ -13,6 +13,7 @@ import { gapRoutes } from './gap.routes';
 import manualReviewRoutes from './manualReview.routes';
 import surveyRoutes from './survey.routes';
 import coverageRoutes from './coverage';
+import dodScoringRoutes from './dodScoring';
 // gapAnalysisRoutes import removed - standalone routes deleted
 
 const router = Router();
@@ -32,6 +33,7 @@ router.use('/gaps', gapRoutes);
 router.use('/manual-reviews', manualReviewRoutes);
 router.use('/surveys', surveyRoutes);
 router.use('/coverage', coverageRoutes);
+router.use('/dod-score', dodScoringRoutes);
 // Standalone gap analysis routes removed - use Gap Analysis tab on control detail pages
 
 export default router;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Typography, TextField, Divider, Paper, LinearProgress, Chip, Button } from '@mui/material';
-import { CheckCircle, Schedule, RadioButtonUnchecked, Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
+import { Box, Typography, TextField, Divider, Paper, LinearProgress, Chip, Button, Alert, Grid } from '@mui/material';
+import { CheckCircle, Schedule, RadioButtonUnchecked, Edit as EditIcon, Save as SaveIcon, Security as SecurityIcon } from '@mui/icons-material';
 import { Control } from '@/services/controlService';
 import { M365CoverageStatus } from './M365CoverageStatus';
 
@@ -221,6 +221,97 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               </Typography>
             </Box>
           </Box>
+        </Paper>
+      </Box>
+
+      {/* DoD Assessment Scoring */}
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', color: '#E0E0E0' }}>
+          <SecurityIcon sx={{ mr: 1 }} />
+          DoD Assessment Scoring
+        </Typography>
+        <Paper
+          variant="outlined"
+          sx={{
+            p: 2,
+            bgcolor: '#1a1a1a',
+            borderColor: '#4A4A4A',
+          }}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" sx={{ color: '#B0B0B0' }}>
+                Penalty Points
+              </Typography>
+              <Chip
+                label={`${(control as any).dodPoints || 1} pts`}
+                sx={{
+                  mt: 0.5,
+                  bgcolor:
+                    (control as any).dodPoints === 5
+                      ? '#f44336'
+                      : (control as any).dodPoints === 3
+                      ? '#ff9800'
+                      : (control as any).dodPoints === 0
+                      ? '#9e9e9e'
+                      : '#4caf50',
+                  color: 'white',
+                  fontWeight: 'bold',
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" sx={{ color: '#B0B0B0' }}>
+                Rev 2 Mapping
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#E0E0E0' }}>
+                {(control as any).dodRev2Mapping || 'New in Rev 3'}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" sx={{ color: '#B0B0B0' }}>
+                Mapping Type
+              </Typography>
+              <Chip
+                label={(control as any).dodMappingType || 'Direct'}
+                size="small"
+                variant="outlined"
+                sx={{ mt: 0.5, borderColor: '#4A4A4A', color: '#E0E0E0' }}
+              />
+            </Grid>
+
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" sx={{ color: '#B0B0B0' }}>
+                Impact on SPRS
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#E0E0E0' }}>
+                -{(control as any).dodPoints || 1} if not verified
+              </Typography>
+            </Grid>
+          </Grid>
+
+          {/* Special Scoring Indicators */}
+          {(control as any).dodSpecialScoring && (
+            <Alert severity="info" sx={{ mt: 2 }}>
+              <Typography variant="body2">
+                <strong>Special Scoring:</strong>{' '}
+                {control.controlId === '03.05.03'
+                  ? 'MFA: 5pts if none, 3pts if partial, 0pts if all users'
+                  : 'FIPS Crypto: 5pts if none, 3pts if non-FIPS, 0pts if FIPS-validated'}
+              </Typography>
+            </Alert>
+          )}
+
+          {(control as any).dodNaAllowed && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              <Typography variant="body2">
+                <strong>N/A Allowed:</strong> This control can be marked Not Applicable if the
+                capability is not used AND a policy prevents inadvertent enablement.
+              </Typography>
+            </Alert>
+          )}
         </Paper>
       </Box>
 

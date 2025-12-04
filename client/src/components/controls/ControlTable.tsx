@@ -13,6 +13,7 @@ import {
   Toolbar,
   Typography,
   Button,
+  Chip,
 } from '@mui/material';
 import {
   ArrowUpward,
@@ -134,6 +135,9 @@ export const ControlTable: React.FC<ControlTableProps> = ({
                   <SortIcon column="priority" />
                 </Box>
               </TableCell>
+              <TableCell align="center" sx={{ color: '#E0E0E0', fontWeight: 'bold' }}>
+                DoD Pts
+              </TableCell>
               <TableCell sx={{ color: '#E0E0E0', fontWeight: 'bold' }}>Status</TableCell>
               <TableCell sx={{ color: '#E0E0E0', fontWeight: 'bold' }}>Assigned To</TableCell>
               <TableCell sx={{ color: '#E0E0E0', fontWeight: 'bold', minWidth: 180 }}>
@@ -204,6 +208,25 @@ export const ControlTable: React.FC<ControlTableProps> = ({
                   >
                     {control.priority}
                   </Typography>
+                </TableCell>
+                <TableCell align="center" onClick={() => handleRowClick(control.id)}>
+                  <Chip
+                    label={(control as any).dodPoints || 1}
+                    size="small"
+                    sx={{
+                      bgcolor:
+                        (control as any).dodPoints === 5
+                          ? '#f44336'
+                          : (control as any).dodPoints === 3
+                          ? '#ff9800'
+                          : (control as any).dodPoints === 0
+                          ? '#9e9e9e'
+                          : '#4caf50',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      minWidth: 32,
+                    }}
+                  />
                 </TableCell>
                 <TableCell onClick={() => handleRowClick(control.id)}>
                   <StatusBadge status={control.status?.status || 'Not Started'} />

@@ -16,6 +16,7 @@ import RecentActivityFeed from '@/components/dashboard/RecentActivityFeed';
 import TopGapsCard from '@/components/dashboard/TopGapsCard';
 import QuickActions from '@/components/dashboard/QuickActions';
 import SecureScoreCard from '@/components/dashboard/SecureScoreCard';
+import DoDScoreCard from '@/components/Dashboard/DoDScoreCard';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
 
 export const Dashboard: React.FC = () => {
@@ -61,9 +62,10 @@ export const Dashboard: React.FC = () => {
         <ControlsByStatusCard stats={stats?.overall?.byStatus} />
       </Box>
 
-      {/* Row 1.5: Microsoft Secure Score */}
-      <Box sx={{ mb: 3 }}>
+      {/* Row 1.5: Microsoft Secure Score & DoD Score */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 3, mb: 3 }}>
         <SecureScoreCard />
+        <DoDScoreCard />
       </Box>
 
       {/* Row 2: Progress Metrics */}
