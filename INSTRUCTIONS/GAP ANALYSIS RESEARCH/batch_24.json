@@ -1,0 +1,305 @@
+{
+  "batchNumber": 24,
+  "controlsAnalyzed": 3,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.17.01",
+      "controlTitle": "Supply Chain Risk Management Plan",
+      "controlFamily": "SR",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Supply Chain Risk Management Policy",
+            "description": "Organizational policy governing supply chain risk management practices, roles, and responsibilities",
+            "rationale": "NIST 03.17.01 requires 'develop a plan for managing supply chain risks' which necessitates high-level policy guidance on SCRM approach and governance"
+          },
+          {
+            "name": "Information Security Policy",
+            "description": "Policy covering protection of sensitive organizational documents and plans",
+            "rationale": "Control requirement (c) mandates 'protect the supply chain risk management plan from unauthorized disclosure'"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Supply Chain Risk Assessment Procedure",
+            "description": "Step-by-step process for identifying and assessing supply chain risks across the system development life cycle",
+            "rationale": "NIST discussion states 'SCRM activities include identifying and assessing risks' requiring documented methodology"
+          },
+          {
+            "name": "SCRM Plan Development and Maintenance Procedure",
+            "description": "Process for creating, reviewing, updating, and maintaining the Supply Chain Risk Management Plan",
+            "rationale": "Control requires developing and periodically updating the SCRM plan, necessitating a documented process"
+          },
+          {
+            "name": "SCRM Plan Access Control Procedure",
+            "description": "Process for controlling access to the SCRM plan and protecting it from unauthorized disclosure",
+            "rationale": "Control requirement (c) requires protection mechanisms for the plan"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Supply Chain Risk Management Plan",
+            "description": "Comprehensive plan documenting: supply chain elements, identified risks, risk response actions, SCRM roles/responsibilities, monitoring approach, lifecycle coverage (research/development/design/manufacturing/acquisition/delivery/integration/operations/maintenance/disposal), implementation constraints, policy implementation details",
+            "frequency": "Reviewed per organization-defined frequency (typically annually)",
+            "freshnessThreshold": "18 months",
+            "rationale": "Core deliverable required by control (a); NIST states plan addresses 'management, implementation, and monitoring of SCRM requirements across the system development life cycle'"
+          },
+          {
+            "name": "SCRM Plan Review and Update Records",
+            "description": "Documentation showing: review date, reviewer names/roles, changes made, rationale for updates, approval signatures, next review date",
+            "frequency": "Per organization-defined frequency (typically annually)",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control requirement (b) mandates periodic review and update of the SCRM plan"
+          },
+          {
+            "name": "Supply Chain Risk Assessment Reports",
+            "description": "Reports documenting: identified supply chain risks, risk severity/likelihood ratings, affected systems/components, threat actors considered (counterfeits, tampering, malicious code insertion, poor development practices), risk response determinations, residual risk levels",
+            "frequency": "Annually or when significant supply chain changes occur",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST discussion states 'SCRM activities include identifying and assessing risks, determining appropriate risk response actions'"
+          },
+          {
+            "name": "SCRM Plan Access Control Logs",
+            "description": "Audit logs showing: user accessing the plan, date/time of access, access granted/denied, document version accessed",
+            "frequency": "Ongoing (every access)",
+            "freshnessThreshold": "90 days of retention",
+            "rationale": "Control requirement (c) requires protection from unauthorized disclosure, necessitating access monitoring"
+          },
+          {
+            "name": "SCRM Performance Monitoring Reports",
+            "description": "Reports showing: SCRM plan implementation status, metrics on supply chain security, effectiveness of risk response actions, incidents/issues encountered, corrective actions taken",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "6 months",
+            "rationale": "NIST discussion states SCRM activities include 'monitoring performance against the plans'"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Identify supply chain elements across entire system lifecycle (R&D through disposal)",
+          "Conduct supply chain risk assessments",
+          "Determine appropriate risk response actions for identified threats",
+          "Develop and maintain comprehensive SCRM plan",
+          "Review and update SCRM plan per defined frequency",
+          "Implement access controls to protect SCRM plan from unauthorized disclosure",
+          "Monitor SCRM plan implementation and effectiveness",
+          "Build trust relationships with supply chain partners",
+          "Communicate supply chain risks with internal and external stakeholders"
+        ]
+      }
+    },
+    {
+      "controlId": "03.17.02",
+      "controlTitle": "Acquisition Strategies, Tools, and Methods",
+      "controlFamily": "SR",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Supply Chain Risk Management Policy",
+            "description": "High-level policy governing supply chain security requirements and practices",
+            "rationale": "NIST 03.17.02 requires 'develop and implement acquisition strategies' to protect supply chain, necessitating policy-level guidance"
+          },
+          {
+            "name": "Procurement Security Policy",
+            "description": "Policy establishing security requirements for procurement and vendor management",
+            "rationale": "Control requires 'contract tools and procurement methods' requiring policy framework for secure acquisition"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Secure Acquisition Procedure",
+            "description": "Step-by-step process for implementing secure procurement methods including blind purchases, tamper-evident packaging, trusted distribution, and obscuring end use",
+            "rationale": "NIST discussion lists 'many useful tools and techniques' requiring documented implementation procedures"
+          },
+          {
+            "name": "Supplier Evaluation and Vetting Procedure",
+            "description": "Process for assessing supplier trustworthiness, security practices, and transparency before approval",
+            "rationale": "NIST discussion states organizations 'restrict purchases from untrustworthy suppliers' requiring evaluation methodology"
+          },
+          {
+            "name": "Contract Security Requirements Procedure",
+            "description": "Process for incorporating security requirements into contracts, including language prohibiting tainted/counterfeit components",
+            "rationale": "NIST discussion emphasizes 'contract language that addresses the prohibition of tainted or counterfeit components'"
+          },
+          {
+            "name": "Supply Chain Training Procedure",
+            "description": "Process for delivering training programs on supply chain risks and mitigation strategies to relevant personnel",
+            "rationale": "NIST discussion states organizations 'consider providing training, education, and awareness programs for personnel regarding supply chain risks'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Acquisition Strategy Documents",
+            "description": "Documented strategies showing: security objectives for acquisitions, risk mitigation approaches, tool/technique selection rationale, alignment with supply chain risk assessment results, protection methods against unauthorized production/theft/tampering/counterfeits",
+            "frequency": "Updated annually or when acquisition approach changes",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control requires developing 'acquisition strategies' informed by 'results from a supply chain risk assessment'"
+          },
+          {
+            "name": "Secure Procurement Contract Templates",
+            "description": "Contract templates incorporating: security requirements for suppliers, prohibition of counterfeit components, transparency requirements, supplier safeguard obligations, documentation protection requirements, remediation provisions",
+            "frequency": "Reviewed annually, applied per contract",
+            "freshnessThreshold": "24 months for template review",
+            "rationale": "NIST discussion states 'contract language that addresses the prohibition of tainted or counterfeit components' and 'Contracts may specify documentation protection requirements'"
+          },
+          {
+            "name": "Supplier Risk Assessment Reports",
+            "description": "Assessment reports showing: supplier security practices evaluated, transparency of processes, development practice maturity, trustworthiness determination, approval/rejection decision with rationale",
+            "frequency": "Per new supplier or annually for existing suppliers",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control requires methods to 'identify, protect against, and mitigate supply chain risks' necessitating supplier evaluation"
+          },
+          {
+            "name": "Supply Chain Training Records",
+            "description": "Training certificates and attendance records showing: personnel trained, training completion dates, topics covered (supply chain risks, mitigation strategies, when to employ countermeasures), comprehension assessment results",
+            "frequency": "Annually for all personnel involved in procurement/acquisition",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST discussion states organizations provide 'training, education, and awareness programs for personnel regarding supply chain risks, available mitigation strategies'"
+          },
+          {
+            "name": "Contract Security Review Records",
+            "description": "Documentation showing: contracts reviewed for security requirements, security provisions verified, deficiencies identified and corrected, approval signatures, review date",
+            "frequency": "Per contract execution",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Control requires implementing 'contract tools' with security provisions necessitating verification of inclusion"
+          },
+          {
+            "name": "Approved Supplier List",
+            "description": "List of vetted suppliers showing: supplier name, security capabilities, evaluation date, approval status, restrictions/conditions, re-evaluation schedule",
+            "frequency": "Updated quarterly or as suppliers are evaluated",
+            "freshnessThreshold": "6 months",
+            "rationale": "NIST discussion states organizations 'restrict purchases from untrustworthy suppliers' requiring maintained list"
+          },
+          {
+            "name": "Secure Procurement Implementation Records",
+            "description": "Records showing: use of blind purchases, tamper-evident packaging verification, trusted distribution channels used, end-use obscuring methods applied, per acquisition",
+            "frequency": "Per acquisition",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Control requires implementing 'procurement methods' and NIST lists specific techniques that should be documented when used"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Develop acquisition strategies aligned with supply chain risk assessments",
+          "Create and maintain secure contract templates with security requirements",
+          "Evaluate and vet suppliers for security practices and trustworthiness",
+          "Incorporate security language into procurement contracts",
+          "Train personnel on supply chain risks and mitigation strategies",
+          "Review contracts for adequate security provisions before execution",
+          "Maintain approved supplier list and restrict purchases to vetted suppliers",
+          "Implement secure procurement techniques (blind purchases, tamper-evident packaging, trusted distribution)",
+          "Provide incentives for suppliers to implement safeguards",
+          "Promote transparency in supplier processes and security practices",
+          "Review and protect development plans and documentation per security requirements"
+        ]
+      }
+    },
+    {
+      "controlId": "03.17.03",
+      "controlTitle": "Supply Chain Requirements and Processes",
+      "controlFamily": "SR",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Supply Chain Risk Management Policy",
+            "description": "Organizational policy establishing supply chain security requirements and governance",
+            "rationale": "NIST 03.17.03 requires 'enforce security requirements to protect against supply chain risks' necessitating policy-level requirements definition"
+          },
+          {
+            "name": "Supplier Security Requirements Policy",
+            "description": "Policy defining mandatory security requirements for all supply chain elements and suppliers",
+            "rationale": "Control requirement (b) mandates enforcing 'organization-defined security requirements' requiring formal policy"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Supply Chain Weakness Identification Procedure",
+            "description": "Step-by-step process for identifying weaknesses and deficiencies in supply chain elements (organizations, entities, tools) and processes (development, shipping, handling, personnel security, configuration management)",
+            "rationale": "Control requirement (a) mandates 'establish a process for identifying and addressing weaknesses or deficiencies'"
+          },
+          {
+            "name": "Supply Chain Remediation Procedure",
+            "description": "Process for addressing identified supply chain weaknesses, including prioritization, corrective actions, timelines, and verification",
+            "rationale": "Control requirement (a) requires 'addressing weaknesses or deficiencies' necessitating remediation methodology"
+          },
+          {
+            "name": "Supplier Security Requirements Procedure",
+            "description": "Process for defining, communicating, and enforcing security requirements with suppliers and external service providers",
+            "rationale": "Control requirement (b) requires enforcing security requirements to protect against supply chain risks"
+          },
+          {
+            "name": "Supply Chain Element Verification Procedure",
+            "description": "Process for verifying authenticity and integrity of supply chain elements including provenance tracking and configuration management",
+            "rationale": "NIST discussion emphasizes 'configuration management tools, techniques, and measures to maintain provenance'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Supply Chain Security Requirements Document",
+            "description": "Comprehensive requirements document defining: security requirements for hardware/software/firmware development, shipping/handling requirements, physical security requirements, personnel security requirements, configuration management requirements, provenance tracking requirements, disposal requirements, compliance verification methods",
+            "frequency": "Reviewed annually",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control requirement (b) mandates defining and enforcing 'organization-defined security requirements' for supply chain protection"
+          },
+          {
+            "name": "Supply Chain Weakness Assessment Reports",
+            "description": "Assessment reports documenting: supply chain elements reviewed, processes evaluated, weaknesses/deficiencies identified, vulnerability severity ratings, potential adversary exploitation vectors, impact on mission/business functions, prioritization for remediation",
+            "frequency": "Quarterly or when significant supply chain changes occur",
+            "freshnessThreshold": "6 months",
+            "rationale": "Control requirement (a) requires process for identifying weaknesses; NIST states 'weaknesses represent potential vulnerabilities that can be exploited by adversaries'"
+          },
+          {
+            "name": "Supply Chain Remediation Plans and Records",
+            "description": "Plans showing: identified weakness, root cause, corrective action plan, responsible parties, implementation timeline, completion status, verification method, residual risk assessment",
+            "frequency": "Per identified weakness",
+            "freshnessThreshold": "N/A - tracked until closure",
+            "rationale": "Control requirement (a) requires 'addressing weaknesses or deficiencies' necessitating remediation tracking"
+          },
+          {
+            "name": "Supplier Compliance Audit Reports",
+            "description": "Audit reports showing: supplier evaluated, security requirements assessed, compliance verification results, non-compliance items identified, corrective action requirements, follow-up schedule",
+            "frequency": "Annually per supplier or service provider",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control requirement (b) requires enforcing security requirements, necessitating verification of supplier compliance"
+          },
+          {
+            "name": "Supply Chain Process Documentation",
+            "description": "Documented processes for each supply chain element covering: hardware/software/firmware development processes, shipping/handling procedures, physical security programs, personnel security programs, configuration management approach, provenance maintenance, acquisition/maintenance/disposal procedures",
+            "frequency": "Reviewed annually or when processes change",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST discussion defines 'supply chain processes' requiring documentation of all relevant procedures"
+          },
+          {
+            "name": "Configuration Management and Provenance Records",
+            "description": "Records showing: component tracking from acquisition through disposal, configuration baselines, changes tracked, authenticity verification, chain of custody documentation, counterfeit detection methods applied",
+            "frequency": "Ongoing for all supply chain components",
+            "freshnessThreshold": "Current - real-time tracking required",
+            "rationale": "NIST discussion emphasizes 'configuration management tools, techniques, and measures to maintain provenance' as key supply chain process"
+          },
+          {
+            "name": "Supply Chain Element Inventory",
+            "description": "Inventory of all supply chain elements showing: organizations/entities/tools used, their role in supply chain (R&D, design, manufacturing, acquisition, delivery, integration, operations, maintenance, disposal), security assessment status, compliance verification date",
+            "frequency": "Updated monthly or as supply chain changes",
+            "freshnessThreshold": "60 days",
+            "rationale": "NIST discussion defines 'supply chain elements include organizations, entities, or tools' requiring comprehensive inventory"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Identify and document all supply chain elements (organizations, entities, tools)",
+          "Document supply chain processes for hardware, software, firmware development",
+          "Define security requirements for all supply chain elements and suppliers",
+          "Conduct regular assessments to identify supply chain weaknesses and deficiencies",
+          "Address identified weaknesses through remediation plans",
+          "Enforce security requirements with suppliers and service providers",
+          "Verify supplier compliance with defined security requirements through audits",
+          "Implement configuration management to maintain component provenance",
+          "Track supply chain components from acquisition through disposal",
+          "Monitor supply chain for potential adversary exploitation vectors",
+          "Maintain inventory of all supply chain elements and their security status",
+          "Coordinate physical security, personnel security, and technical security across supply chain"
+        ]
+      }
+    }
+  ]
+}

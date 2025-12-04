@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { EvidenceService } from '../services/evidence.service';
 import { getRelativePath } from '../utils/file-helpers';
+import { prisma } from '@/config/database';
 import path from 'path';
 import fs from 'fs';
 
@@ -226,6 +227,41 @@ export class EvidenceController {
       const stats = await evidenceService.getEvidenceStats();
 
       res.json({ stats });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Get evidence requirements for a control
+   */
+  async getEvidenceRequirements(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { controlId } = req.params;
+
+      // Get control by controlId string (e.g., "03.01.01")
+      const control = await prisma.control.findUnique({
+        where: { controlId },
+        select: { id: true },
+      });
+
+      if (!control) {
+        return res.status(404).json({ error: 'Control not found' });
+      }
+
+      const requirements = await prisma.evidenceRequirement.findMany({
+        where: { controlId: control.id },
+        include: {
+          policy: true,
+          procedure: true,
+          uploadedEvidence: {
+            orderBy: { uploadedAt: 'desc' },
+          },
+        },
+        orderBy: [{ evidenceType: 'asc' }, { name: 'asc' }],
+      });
+
+      res.json(requirements);
     } catch (error) {
       next(error);
     }

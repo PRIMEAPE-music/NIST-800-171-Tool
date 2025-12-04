@@ -1,0 +1,333 @@
+{
+  "batchNumber": 18,
+  "controlsAnalyzed": 4,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.12.01",
+      "controlTitle": "Security Assessment",
+      "controlFamily": "CA",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Security Assessment Policy",
+            "description": "Organizational policy governing the conduct of security assessments including frequency, scope, methodology, and reporting requirements",
+            "rationale": "NIST 03.12.01 requires organizations to 'assess the security requirements' at defined frequencies, necessitating formal policy guidance on assessment planning, execution, and reporting"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Security Assessment Planning Procedure",
+            "description": "Step-by-step process for developing security assessment plans including defining scope, selecting requirements to assess, determining assessment procedures, and defining assessment environment and team roles",
+            "rationale": "Control part (b) explicitly requires development of security assessment plan describing scope, requirements to assess, assessment procedures, and assessment team structure"
+          },
+          {
+            "name": "Security Assessment Execution Procedure",
+            "description": "Process for conducting security assessments to test whether security requirements are implemented correctly, operating as intended, and producing desired outcomes",
+            "rationale": "Control part (a) requires determining 'the extent to which requirements are implemented correctly, operating as intended, and producing desired outcome' which necessitates structured execution methodology"
+          },
+          {
+            "name": "Security Assessment Reporting Procedure",
+            "description": "Process for documenting assessment results, creating assessment reports with sufficient detail, and distributing reports to appropriate personnel",
+            "rationale": "Control parts (c) and (d) require producing security assessment reports and providing results to organization-defined personnel or roles"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Security Assessment Plans",
+            "description": "Documented plans showing: security requirements to be assessed, assessment procedures to be used, assessment environment details, assessment team members and roles, assessment schedule",
+            "frequency": "Per assessment cycle (typically annual)",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control part (b) requires documented assessment plan; annual assessment aligns with NIST SP 800-37 authorization timelines; 18-month threshold allows for scheduled annual assessments plus reasonable delay"
+          },
+          {
+            "name": "Security Assessment Reports",
+            "description": "Reports showing: assessment date, requirements assessed, assessment methods used, findings and weaknesses identified, recommendations for remediation, assessor signatures, results accuracy and completeness validation",
+            "frequency": "Per assessment cycle (typically annual)",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control part (c) requires producing security assessment report documenting results; discussion emphasizes 'sufficient detail' for accuracy determination; 18-month threshold aligns with annual assessment frequency"
+          },
+          {
+            "name": "Assessment Results Distribution Records",
+            "description": "Records showing: report recipients, distribution date, acknowledgment of receipt, personnel roles receiving results",
+            "frequency": "Per assessment (when reports are completed)",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Control part (d) requires providing assessment results to organization-defined personnel; distribution records demonstrate compliance with information sharing requirements"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Develop security assessment plan defining scope and requirements to assess",
+          "Assemble assessment team and assign roles and responsibilities",
+          "Execute security assessment procedures to test control implementation",
+          "Document assessment findings identifying weaknesses and deficiencies",
+          "Produce formal security assessment report with detailed results",
+          "Distribute assessment reports to appropriate organizational personnel",
+          "Use assessment results as input to risk management decisions"
+        ]
+      }
+    },
+    {
+      "controlId": "03.12.02",
+      "controlTitle": "Plan of Action and Milestones",
+      "controlFamily": "CA",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Security Assessment Policy",
+            "description": "Organizational policy governing security assessments, findings management, and remediation planning including POAM requirements",
+            "rationale": "NIST 03.12.02 discussion states 'POAMs are important documents in organizational security programs' requiring policy-level guidance on POAM development, maintenance, and integration with security plans"
+          },
+          {
+            "name": "Risk Management Policy",
+            "description": "High-level policy governing organizational approach to identifying, assessing, and responding to security risks including remediation planning",
+            "rationale": "Control requires documenting 'planned remediation actions to correct weaknesses' and 'reduce or eliminate known vulnerabilities' which are fundamental risk management activities requiring policy guidance"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "POAM Development Procedure",
+            "description": "Step-by-step process for creating POAMs including identifying weaknesses from assessments, defining remediation actions, assigning responsible parties, setting milestones and target dates, prioritizing based on risk",
+            "rationale": "Control part (a) requires developing POAM to document planned remediation actions for weaknesses and vulnerabilities; structured procedure ensures consistent POAM creation"
+          },
+          {
+            "name": "POAM Tracking and Update Procedure",
+            "description": "Process for maintaining POAMs including tracking remediation progress, updating status, incorporating new findings from assessments and monitoring, closing completed items, escalating overdue items",
+            "rationale": "Control part (b) requires updating existing POAMs based on findings from assessments, audits, and continuous monitoring; procedure ensures POAMs remain current and actionable"
+          },
+          {
+            "name": "Remediation Planning Procedure",
+            "description": "Process for determining appropriate remediation strategies, estimating resources needed, developing implementation timelines, coordinating with system owners and stakeholders",
+            "rationale": "Control requires documenting 'planned remediation actions' which necessitates structured approach to determining HOW weaknesses will be corrected and vulnerabilities will be reduced or eliminated"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Current POAM Document",
+            "description": "Living document showing: unique identifier for each item, weakness or vulnerability description, source of finding (assessment/audit/monitoring), planned remediation action, resources required, responsible party, target completion date, current status, risk level, actual completion date when closed",
+            "frequency": "Continuously maintained, updated per assessment/audit/monitoring cycle",
+            "freshnessThreshold": "90 days",
+            "rationale": "Control requires developing and updating POAM based on ongoing findings; 90-day threshold ensures POAM is updated at least quarterly aligning with typical continuous monitoring reporting cycles per 03.12.03"
+          },
+          {
+            "name": "POAM Update Records",
+            "description": "Records showing: date of update, source of new findings (specific assessment/audit/monitoring activity), items added, items modified, items closed, approver signature",
+            "frequency": "Per assessment, audit, or monitoring cycle",
+            "freshnessThreshold": "90 days",
+            "rationale": "Control part (b) explicitly requires updates based on findings from assessments, audits, and continuous monitoring; records demonstrate compliance with update requirement; 90-day threshold aligns with quarterly monitoring"
+          },
+          {
+            "name": "Remediation Completion Records",
+            "description": "Evidence showing: POAM item identifier, remediation action taken, completion date, validation testing results, approver sign-off, closure justification",
+            "frequency": "Per remediation completion",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Demonstrates planned remediation actions from POAMs are actually implemented; provides evidence that weaknesses are corrected and vulnerabilities are reduced or eliminated per control requirement"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Create POAM entries for weaknesses identified in security assessments",
+          "Add POAM entries for vulnerabilities requiring remediation",
+          "Document planned remediation actions with specific milestones",
+          "Assign responsibility and target dates for each POAM item",
+          "Update POAM based on new findings from audits and reviews",
+          "Update POAM based on continuous monitoring activities",
+          "Track remediation progress and update POAM status regularly",
+          "Close POAM items when remediation is completed and validated",
+          "Review POAM with leadership and stakeholders regularly"
+        ]
+      }
+    },
+    {
+      "controlId": "03.12.03",
+      "controlTitle": "Continuous Monitoring",
+      "controlFamily": "CA",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Continuous Monitoring Policy",
+            "description": "Organizational policy establishing requirements for ongoing system security monitoring including monitoring scope, frequency, methodologies, reporting requirements, and integration with risk management",
+            "rationale": "NIST 03.12.03 requires organizations to 'develop and implement a system-level continuous monitoring strategy' necessitating policy-level governance of continuous monitoring program objectives and requirements"
+          },
+          {
+            "name": "Security Assessment Policy",
+            "description": "Organizational policy governing security assessments and ongoing monitoring activities",
+            "rationale": "Discussion states 'continuous monitoring facilitates ongoing awareness of system security posture to support risk management decisions' which ties directly to assessment program requiring policy coordination"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Continuous Monitoring Strategy Development Procedure",
+            "description": "Process for creating system-level continuous monitoring strategy including defining what will be monitored, how frequently, what tools will be used, roles and responsibilities, reporting structure",
+            "rationale": "Control requires 'develop and implement a system-level continuous monitoring strategy' necessitating structured approach to strategy creation that addresses all required elements"
+          },
+          {
+            "name": "Security Requirement Monitoring Procedure",
+            "description": "Step-by-step process for monitoring implementation status of security requirements including reviewing configuration baselines, validating control implementation, documenting status changes",
+            "rationale": "Control part (a) explicitly requires 'monitoring of security requirement implementation status' which necessitates defined procedure for how implementation status is determined and tracked"
+          },
+          {
+            "name": "Vulnerability Monitoring Procedure",
+            "description": "Process for ongoing monitoring of system vulnerabilities including running automated scans, reviewing vulnerability feeds, tracking remediation, escalating critical findings",
+            "rationale": "Control part (b) explicitly requires 'monitoring of system vulnerabilities' necessitating procedure that defines how vulnerabilities are identified, tracked, and reported"
+          },
+          {
+            "name": "Trend Analysis Procedure",
+            "description": "Process for analyzing security data over time to identify patterns, trends, anomalies including data collection, analysis methodology, identifying concerning trends, reporting significant findings",
+            "rationale": "Control part (c) explicitly requires 'trend analyses' as component of continuous monitoring strategy; procedure ensures systematic approach to identifying security posture trends"
+          },
+          {
+            "name": "Security Status Reporting Procedure",
+            "description": "Process for compiling and distributing security requirement status reports to defined personnel including report format, distribution list, frequency, escalation thresholds",
+            "rationale": "Control part (d) explicitly requires 'security requirement status reporting to organization-defined personnel or roles at organization-defined frequency' necessitating structured reporting procedure"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Continuous Monitoring Strategy Document",
+            "description": "Strategy document showing: system scope, security requirements monitored, monitoring methodologies and tools, monitoring frequency for each requirement type, roles and responsibilities, reporting structure and frequency, integration with incident response and POAM processes",
+            "frequency": "Maintained continuously, reviewed annually",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control requires developing continuous monitoring strategy; strategy document must exist and be current; annual review aligns with NIST SP 800-137 recommendations; 18-month threshold allows for annual review plus reasonable delay"
+          },
+          {
+            "name": "Security Requirement Implementation Status Reports",
+            "description": "Reports showing: security requirements assessed, implementation status (implemented/partially implemented/not implemented), changes from previous assessment, remediation actions needed, compliance percentage",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Control part (a) requires monitoring implementation status; quarterly reporting aligns with typical continuous monitoring cycles per NIST SP 800-137; 120-day threshold accommodates quarterly schedule"
+          },
+          {
+            "name": "Vulnerability Monitoring Reports",
+            "description": "Reports showing: scan date, systems scanned, vulnerabilities identified by severity (critical/high/medium/low), newly discovered vulnerabilities, remediation status, risk acceptance documentation for exceptions, comparison to previous scans",
+            "frequency": "Weekly for automated scans, monthly for comprehensive vulnerability reports",
+            "freshnessThreshold": "14 days for scan execution, 45 days for comprehensive reports",
+            "rationale": "Control part (b) requires vulnerability monitoring; weekly scanning is industry standard per CIS Benchmark; 14-day threshold for scans ensures timely vulnerability detection; 45-day threshold for reports allows monthly reporting plus processing time"
+          },
+          {
+            "name": "Trend Analysis Reports",
+            "description": "Reports showing: time period analyzed, security metrics tracked (vulnerability counts, incident frequency, control effectiveness), trend direction (improving/stable/declining), graphical representations of trends, analysis of root causes, recommendations for improvement",
+            "frequency": "Quarterly or semi-annually",
+            "freshnessThreshold": "180 days",
+            "rationale": "Control part (c) requires trend analyses; quarterly or semi-annual analysis provides sufficient data for meaningful trends; 180-day threshold accommodates semi-annual analysis plus processing time"
+          },
+          {
+            "name": "Security Status Reports to Leadership",
+            "description": "Reports showing: overall security posture summary, key metrics and trends, critical findings requiring attention, POAM status summary, compliance status, resource needs, recommendations; includes distribution records showing delivery to defined personnel",
+            "frequency": "Monthly or quarterly based on organization definition",
+            "freshnessThreshold": "90 days",
+            "rationale": "Control part (d) requires status reporting at organization-defined frequency; monthly or quarterly aligns with typical management reporting cycles; 90-day threshold accommodates quarterly reporting"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Develop and maintain system-level continuous monitoring strategy",
+          "Monitor security requirement implementation status continuously",
+          "Execute automated vulnerability scans weekly",
+          "Review and analyze vulnerability scan results",
+          "Track remediation of identified vulnerabilities",
+          "Collect security monitoring data from various sources",
+          "Perform trend analysis on security metrics quarterly or semi-annually",
+          "Compile and distribute security status reports to defined personnel",
+          "Update POAM based on continuous monitoring findings",
+          "Escalate critical findings to incident response team",
+          "Review and update monitoring strategy annually"
+        ]
+      }
+    },
+    {
+      "controlId": "03.12.05",
+      "controlTitle": "Information Exchange",
+      "controlFamily": "CA",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Information Exchange Policy",
+            "description": "Organizational policy governing exchange of CUI with external systems including approval requirements, agreement types required, interface documentation standards, review frequency, risk assessment requirements",
+            "rationale": "NIST 03.12.05 requires organizations to 'approve and manage the exchange of CUI between the system and other systems' necessitating formal policy guidance on information exchange governance and agreement requirements"
+          },
+          {
+            "name": "Third-Party Risk Management Policy",
+            "description": "High-level policy governing relationships with external organizations including risk assessment, security requirements, ongoing monitoring of third-party connections",
+            "rationale": "Discussion states organizations must 'consider the risks related to new or increased threats when systems exchange information with other systems that may have different security requirements or policies' requiring risk management policy framework"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Information Exchange Agreement Development Procedure",
+            "description": "Step-by-step process for creating information exchange agreements including identifying need for exchange, assessing risks, selecting appropriate agreement type (ISA/IESA/MOU/SLA/NDA), defining terms and conditions, documenting interface characteristics and security requirements",
+            "rationale": "Control part (a) requires approving and managing CUI exchange through various agreement types; discussion emphasizes agreement selection based on organizational relationship factors necessitating structured development procedure"
+          },
+          {
+            "name": "Interface Documentation Procedure",
+            "description": "Process for documenting technical interface characteristics including data flows, protocols used, connection methods, security controls at interface boundaries, responsibilities for each system, data protection requirements",
+            "rationale": "Control part (b) explicitly requires documenting 'interface characteristics, security requirements, and responsibilities for each system as part of exchange agreements' necessitating technical documentation procedure"
+          },
+          {
+            "name": "Agreement Review and Approval Procedure",
+            "description": "Process for reviewing and approving information exchange agreements including technical review, security review, legal review, approval authority, signature requirements, periodic review and update process",
+            "rationale": "Control part (a) requires 'approve and manage' information exchanges and part (c) requires periodic review and update of agreements necessitating formal review and approval procedure"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Interconnection Security Agreements (ISAs)",
+            "description": "Signed agreements showing: connected systems identification, CUI exchanged, connection purpose and scope, technical interface details, security controls at interconnection, data protection requirements, incident response procedures, responsibilities of each party, review and update schedule, signatures and approval dates",
+            "frequency": "Per interconnection (ongoing maintenance)",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control part (a) lists ISAs as primary agreement type for CUI exchange between systems; ISAs are standard for system-to-system connections per NIST SP 800-47; 18-month threshold aligns with typical annual review cycle plus grace period"
+          },
+          {
+            "name": "Information Exchange Security Agreements (IESAs)",
+            "description": "Signed agreements showing: participating organizations, information types exchanged, exchange methods and frequency, security requirements for exchange, data handling procedures, responsibilities and points of contact, review schedule, signatures and dates",
+            "frequency": "Per information exchange relationship",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control part (a) lists IESAs as agreement option; IESAs used when formal interconnection not present but information exchange occurs; 18-month threshold aligns with annual review requirement"
+          },
+          {
+            "name": "Memoranda of Understanding or Agreement (MOUs/MOAs)",
+            "description": "Signed documents showing: parties involved, purpose of information exchange, scope of CUI sharing, security obligations, duration of agreement, review requirements, authorized signatories and dates",
+            "frequency": "Per partnership or collaboration",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control part (a) lists MOUs/MOAs as agreement option; discussion notes these used based on organizational relationship factors; 18-month threshold accommodates annual review schedule"
+          },
+          {
+            "name": "Service Level Agreements with Security Requirements",
+            "description": "Contracts showing: service provider details, services provided involving CUI, security requirements and controls, incident response obligations, audit rights, data protection and retention requirements, termination provisions, signatures and dates",
+            "frequency": "Per service provider relationship",
+            "freshnessThreshold": "18 months for review, contract term for validity",
+            "rationale": "Control part (a) lists SLAs as agreement option; discussion notes agreements may be incorporated into contracts with service providers; 18-month review threshold while recognizing multi-year contract terms"
+          },
+          {
+            "name": "Technical Interface Documentation",
+            "description": "Technical specifications showing: network diagrams, connection methods and protocols, IP addresses and ports, authentication mechanisms, encryption requirements, data flows and CUI identification, security controls at boundaries, monitoring and logging requirements, responsible parties for each system component",
+            "frequency": "Per interface, updated when changes occur",
+            "freshnessThreshold": "12 months or upon change",
+            "rationale": "Control part (b) explicitly requires documenting interface characteristics and security requirements; technical documentation essential for managing secure information exchange; 12-month threshold ensures documentation stays current with system changes"
+          },
+          {
+            "name": "Agreement Review Records",
+            "description": "Records showing: agreement identifier, review date, reviewer names and roles, changes identified, updates made, re-approval signatures, next review due date",
+            "frequency": "Per organization-defined frequency (typically annually)",
+            "freshnessThreshold": "18 months",
+            "rationale": "Control part (c) explicitly requires reviewing and updating agreements at organization-defined frequency; review records demonstrate compliance with periodic review requirement; 18-month threshold accommodates annual reviews"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Identify need for CUI exchange with external systems",
+          "Assess risks of information exchange with external parties",
+          "Select appropriate agreement type based on organizational relationship",
+          "Develop information exchange agreement with defined terms and conditions",
+          "Document technical interface characteristics for each connection",
+          "Define security requirements and responsibilities for each party",
+          "Obtain necessary approvals and signatures for agreements",
+          "Review information exchange agreements at defined frequency",
+          "Update agreements based on changes to systems, threats, or requirements",
+          "Monitor compliance with agreement terms and security requirements",
+          "Terminate agreements when information exchange is no longer needed"
+        ]
+      }
+    }
+  ]
+}

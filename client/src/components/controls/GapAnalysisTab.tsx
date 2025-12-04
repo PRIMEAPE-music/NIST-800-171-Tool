@@ -1,82 +1,82 @@
-import React from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Box, Typography, Button, Alert, Paper, CircularProgress } from '@mui/material';
-import { Download as DownloadIcon, Warning as AlertTriangleIcon, CheckCircle } from '@mui/icons-material';
-import { CoverageProgressBars } from '../gaps/CoverageProgressBars';
-import { GapList } from '../gaps/GapList';
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import {
+  Box,
+  Typography,
+  Alert,
+  Paper,
+  CircularProgress,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+} from '@mui/material';
+import {
+  ExpandMore,
+  CheckCircle,
+  Warning,
+  Error,
+  Policy as PolicyIcon,
+  Description as ProcedureIcon,
+  PlayArrow as ExecutionIcon,
+  Business as PhysicalIcon,
+} from '@mui/icons-material';
+import ControlCoverageCard from '../ControlCoverageCard';
+import { format } from 'date-fns';
 
 interface GapAnalysisTabProps {
   controlId: string;
 }
 
+interface EvidenceRequirement {
+  id: number;
+  evidenceType: string;
+  name: string;
+  description: string;
+  rationale: string;
+  frequency: string | null;
+  freshnessThreshold: number | null;
+  policy: { name: string; fileName: string | null } | null;
+  procedure: { name: string; fileName: string | null } | null;
+  uploadedEvidence: Array<{
+    id: number;
+    fileName: string;
+    uploadedAt: string;
+    executionDate: string | null;
+  }>;
+}
+
 export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => {
-  const queryClient = useQueryClient();
+  const [expandedType, setExpandedType] = useState<string | false>('policy');
 
-  // Fetch gap analysis
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['gap-analysis', controlId],
+  // Fetch coverage data
+  const { data: coverage, isLoading: loadingCoverage } = useQuery({
+    queryKey: ['coverage', controlId],
     queryFn: async () => {
-      const response = await fetch(`/api/gaps/control/${controlId}`);
-      if (!response.ok) throw new Error('Failed to fetch gap analysis');
+      const response = await fetch(`/api/coverage/control/${controlId}`);
+      if (!response.ok) throw new Error('Failed to fetch coverage');
       return response.json();
     },
   });
 
-  // Mutation for updating gap status
-  const updateGapMutation = useMutation({
-    mutationFn: async ({ gapId, status }: { gapId: number; status: string }) => {
-      const response = await fetch(`/api/gaps/${gapId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-      if (!response.ok) throw new Error('Failed to update gap');
+  // Fetch evidence requirements
+  const { data: requirements, isLoading: loadingRequirements } = useQuery({
+    queryKey: ['evidence-requirements', controlId],
+    queryFn: async () => {
+      const response = await fetch(`/api/evidence/requirements/${controlId}`);
+      if (!response.ok) throw new Error('Failed to fetch requirements');
       return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['gap-analysis', controlId] });
     },
   });
 
-  // Mutation for creating POA&M
-  const createPOAMMutation = useMutation({
-    mutationFn: async (gapId: number) => {
-      const response = await fetch(`/api/gaps/${gapId}/poam`, {
-        method: 'POST',
-      });
-      if (!response.ok) throw new Error('Failed to create POA&M');
-      return response.json();
-    },
-    onSuccess: () => {
-      alert('POA&M item created successfully!');
-    },
-  });
-
-  const handleStatusChange = (gapId: number, status: string) => {
-    updateGapMutation.mutate({ gapId, status });
-  };
-
-  const handleCreatePOAM = (gapId: number) => {
-    if (confirm('Create a POA&M item from this gap?')) {
-      createPOAMMutation.mutate(gapId);
-    }
-  };
-
-  const handleExportPOAM = async () => {
-    const response = await fetch('/api/gaps/poam/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ controlId }),
-    });
-
-    const poam = await response.json();
-    const blob = new Blob([JSON.stringify(poam, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `POAM_${controlId}_${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-  };
+  const isLoading = loadingCoverage || loadingRequirements;
 
   if (isLoading) {
     return (
@@ -87,7 +87,7 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
     );
   }
 
-  if (error || !data) {
+  if (!coverage || !requirements) {
     return (
       <Box sx={{ p: 3 }}>
         <Alert severity="error">
@@ -97,115 +97,326 @@ export const GapAnalysisTab: React.FC<GapAnalysisTabProps> = ({ controlId }) => 
     );
   }
 
-  const hasGaps = data.gaps.length > 0;
-  const hasCriticalGaps = data.criticalGaps > 0;
+  // Group requirements by type
+  const requirementsByType = {
+    policy: requirements.filter((r: EvidenceRequirement) => r.evidenceType === 'policy'),
+    procedure: requirements.filter((r: EvidenceRequirement) => r.evidenceType === 'procedure'),
+    execution: requirements.filter((r: EvidenceRequirement) => r.evidenceType === 'execution'),
+    physical: requirements.filter((r: EvidenceRequirement) => r.evidenceType === 'physical'),
+  };
+
+  const getTypeIcon = (type: string) => {
+    const icons: Record<string, React.ReactElement> = {
+      policy: <PolicyIcon />,
+      procedure: <ProcedureIcon />,
+      execution: <ExecutionIcon />,
+      physical: <PhysicalIcon />,
+    };
+    return icons[type];
+  };
+
+  const getTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      policy: '#2196F3',
+      procedure: '#4CAF50',
+      execution: '#FF9800',
+      physical: '#9C27B0',
+    };
+    return colors[type] || '#757575';
+  };
+
+  const getRequirementStatus = (req: EvidenceRequirement) => {
+    if (req.uploadedEvidence.length === 0) {
+      return { status: 'missing', color: '#f44336', label: 'Missing' };
+    }
+
+    if (req.evidenceType === 'execution' && req.freshnessThreshold) {
+      const latest = req.uploadedEvidence[0];
+      const referenceDate = latest.executionDate || latest.uploadedAt;
+      const ageInDays = Math.floor(
+        (Date.now() - new Date(referenceDate).getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      if (ageInDays <= req.freshnessThreshold) {
+        return { status: 'fresh', color: '#4caf50', label: 'Fresh' };
+      } else if (ageInDays <= req.freshnessThreshold * 2) {
+        return { status: 'aging', color: '#ff9800', label: 'Aging' };
+      } else if (ageInDays <= req.freshnessThreshold * 3) {
+        return { status: 'stale', color: '#ff5722', label: 'Stale' };
+      } else {
+        return { status: 'critical', color: '#d32f2f', label: 'Critical' };
+      }
+    }
+
+    return { status: 'uploaded', color: '#4caf50', label: 'Uploaded' };
+  };
+
+  const renderRequirementsTable = (reqs: EvidenceRequirement[], type: string) => {
+    if (reqs.length === 0) {
+      return (
+        <Typography variant="body2" sx={{ color: '#B0B0B0', fontStyle: 'italic', p: 2 }}>
+          No {type} requirements for this control
+        </Typography>
+      );
+    }
+
+    return (
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Requirement</TableCell>
+              <TableCell>Description</TableCell>
+              {type === 'execution' && <TableCell>Frequency</TableCell>}
+              <TableCell>Status</TableCell>
+              <TableCell>Evidence</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {reqs.map((req) => {
+              const status = getRequirementStatus(req);
+              return (
+                <TableRow key={req.id}>
+                  <TableCell>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {req.name}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                      {req.description.length > 100
+                        ? `${req.description.substring(0, 100)}...`
+                        : req.description}
+                    </Typography>
+                  </TableCell>
+                  {type === 'execution' && (
+                    <TableCell>
+                      <Chip
+                        label={req.frequency || 'N/A'}
+                        size="small"
+                        variant="outlined"
+                      />
+                    </TableCell>
+                  )}
+                  <TableCell>
+                    <Chip
+                      label={status.label}
+                      size="small"
+                      sx={{ bgcolor: status.color, color: '#fff' }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {req.uploadedEvidence.length > 0 ? (
+                      <Box>
+                        <Typography variant="caption">
+                          {req.uploadedEvidence[0].fileName}
+                        </Typography>
+                        <Typography variant="caption" display="block" sx={{ color: '#B0B0B0' }}>
+                          {format(new Date(req.uploadedEvidence[0].uploadedAt), 'MMM d, yyyy')}
+                        </Typography>
+                        {req.uploadedEvidence.length > 1 && (
+                          <Typography variant="caption" sx={{ color: '#90CAF9' }}>
+                            +{req.uploadedEvidence.length - 1} more
+                          </Typography>
+                        )}
+                      </Box>
+                    ) : (
+                      <Typography variant="caption" sx={{ color: '#f44336' }}>
+                        No evidence uploaded
+                      </Typography>
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
+  const totalMissing =
+    requirementsByType.policy.filter(r => r.uploadedEvidence.length === 0).length +
+    requirementsByType.procedure.filter(r => r.uploadedEvidence.length === 0).length +
+    requirementsByType.execution.filter(r => r.uploadedEvidence.length === 0).length +
+    requirementsByType.physical.filter(r => r.uploadedEvidence.length === 0).length;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      {/* Header with Actions */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+      {/* Header */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h5" sx={{ fontWeight: 700, color: '#E0E0E0' }}>
-          📊 Gap Analysis & Compliance Coverage
+          Coverage & Evidence Requirements
         </Typography>
         <Button
           variant="outlined"
-          startIcon={<DownloadIcon />}
-          onClick={handleExportPOAM}
+          onClick={() => window.open('/gap-analysis', '_blank')}
         >
-          Export POA&M
+          View Full Dashboard
         </Button>
       </Box>
 
-      {/* Critical Gaps Alert */}
-      {hasCriticalGaps && (
-        <Alert severity="warning" icon={<AlertTriangleIcon />}>
+      {/* Alert if coverage is low */}
+      {coverage.overallCoverage < 50 && (
+        <Alert severity="warning" icon={<Warning />}>
           <Typography variant="body2">
-            <strong>Warning:</strong> This control has {data.criticalGaps} critical gap(s) that require immediate attention.
+            <strong>Action Required:</strong> This control has {coverage.overallCoverage}% coverage and {totalMissing} missing evidence item(s).
           </Typography>
         </Alert>
       )}
 
-      {/* Coverage Progress Bars */}
-      <Paper sx={{ p: 3, backgroundColor: '#2A2A2A' }}>
-        <Typography variant="h6" sx={{ mb: 3, fontWeight: 600, color: '#E0E0E0' }}>
-          Compliance Coverage
-        </Typography>
-        <CoverageProgressBars
-          technicalCoverage={data.technicalCoverage}
-          policyCoverage={data.policyCoverage}
-          proceduralCoverage={data.proceduralCoverage}
-          evidenceCoverage={data.evidenceCoverage}
-          physicalCoverage={0}
-          overallCoverage={data.overallCoverage}
-        />
+      {/* Coverage Card */}
+      {coverage && <ControlCoverageCard coverage={coverage} />}
 
-        {/* Coverage Explanation */}
-        <Box sx={{ mt: 3, p: 2, backgroundColor: '#1E3A5F', borderRadius: 1 }}>
-          <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#90CAF9' }}>
-            Understanding Your Coverage:
-          </Typography>
-          <Box component="ul" sx={{ pl: 2, color: '#E0E0E0', '& li': { mb: 0.5 } }}>
-            <li>
-              <Typography variant="body2">
-                <strong>Technical ({data.technicalCoverage}%):</strong> Microsoft 365 configurations and settings
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body2">
-                <strong>Operational ({data.proceduralCoverage}%):</strong> Operational procedures and processes
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body2">
-                <strong>Documentation ({data.policyCoverage}%):</strong> Policies and supporting documentation
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="body2">
-                <strong>Physical (0%):</strong> Physical security controls (Not applicable to M365)
-              </Typography>
-            </li>
-          </Box>
-        </Box>
-        <Typography variant="body2" sx={{ mt: 2, color: '#B0B0B0' }}>
-          <strong>Note:</strong> NIST compliance requires Technical, Operational, Documentation, and Physical controls.
-          Microsoft 365 primarily addresses Technical controls. You must implement the others.
+      {/* Evidence Requirements by Type */}
+      <Paper sx={{ p: 3, backgroundColor: '#2A2A2A' }}>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#E0E0E0' }}>
+          Evidence Requirements ({requirements.length})
         </Typography>
+
+        <Typography variant="body2" sx={{ mb: 3, color: '#B0B0B0' }}>
+          This control requires the following evidence to demonstrate compliance. Upload evidence through the Evidence tab.
+        </Typography>
+
+        {/* Policy Requirements */}
+        <Accordion
+          expanded={expandedType === 'policy'}
+          onChange={() => setExpandedType(expandedType === 'policy' ? false : 'policy')}
+          sx={{ bgcolor: '#1E1E1E', mb: 1 }}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+              <Box sx={{ color: getTypeColor('policy') }}>
+                {getTypeIcon('policy')}
+              </Box>
+              <Typography sx={{ fontWeight: 600 }}>
+                Policy Requirements ({requirementsByType.policy.length})
+              </Typography>
+              <Chip
+                size="small"
+                label={`${requirementsByType.policy.filter(r => r.uploadedEvidence.length > 0).length}/${requirementsByType.policy.length} uploaded`}
+                sx={{
+                  bgcolor: requirementsByType.policy.filter(r => r.uploadedEvidence.length > 0).length === requirementsByType.policy.length
+                    ? '#4caf50'
+                    : '#ff9800',
+                  color: '#fff',
+                }}
+              />
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            {renderRequirementsTable(requirementsByType.policy, 'policy')}
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Procedure Requirements */}
+        <Accordion
+          expanded={expandedType === 'procedure'}
+          onChange={() => setExpandedType(expandedType === 'procedure' ? false : 'procedure')}
+          sx={{ bgcolor: '#1E1E1E', mb: 1 }}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+              <Box sx={{ color: getTypeColor('procedure') }}>
+                {getTypeIcon('procedure')}
+              </Box>
+              <Typography sx={{ fontWeight: 600 }}>
+                Procedure Requirements ({requirementsByType.procedure.length})
+              </Typography>
+              <Chip
+                size="small"
+                label={`${requirementsByType.procedure.filter(r => r.uploadedEvidence.length > 0).length}/${requirementsByType.procedure.length} uploaded`}
+                sx={{
+                  bgcolor: requirementsByType.procedure.filter(r => r.uploadedEvidence.length > 0).length === requirementsByType.procedure.length
+                    ? '#4caf50'
+                    : '#ff9800',
+                  color: '#fff',
+                }}
+              />
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            {renderRequirementsTable(requirementsByType.procedure, 'procedure')}
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Execution Evidence Requirements */}
+        <Accordion
+          expanded={expandedType === 'execution'}
+          onChange={() => setExpandedType(expandedType === 'execution' ? false : 'execution')}
+          sx={{ bgcolor: '#1E1E1E', mb: 1 }}
+        >
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+              <Box sx={{ color: getTypeColor('execution') }}>
+                {getTypeIcon('execution')}
+              </Box>
+              <Typography sx={{ fontWeight: 600 }}>
+                Execution Evidence Requirements ({requirementsByType.execution.length})
+              </Typography>
+              <Chip
+                size="small"
+                label={`${requirementsByType.execution.filter(r => r.uploadedEvidence.length > 0).length}/${requirementsByType.execution.length} uploaded`}
+                sx={{
+                  bgcolor: requirementsByType.execution.filter(r => r.uploadedEvidence.length > 0).length === requirementsByType.execution.length
+                    ? '#4caf50'
+                    : '#ff9800',
+                  color: '#fff',
+                }}
+              />
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            {renderRequirementsTable(requirementsByType.execution, 'execution')}
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Physical Evidence Requirements */}
+        {requirementsByType.physical.length > 0 && (
+          <Accordion
+            expanded={expandedType === 'physical'}
+            onChange={() => setExpandedType(expandedType === 'physical' ? false : 'physical')}
+            sx={{ bgcolor: '#1E1E1E' }}
+          >
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+                <Box sx={{ color: getTypeColor('physical') }}>
+                  {getTypeIcon('physical')}
+                </Box>
+                <Typography sx={{ fontWeight: 600 }}>
+                  Physical Evidence Requirements ({requirementsByType.physical.length})
+                </Typography>
+                <Chip
+                  size="small"
+                  label={`${requirementsByType.physical.filter(r => r.uploadedEvidence.length > 0).length}/${requirementsByType.physical.length} uploaded`}
+                  sx={{
+                    bgcolor: requirementsByType.physical.filter(r => r.uploadedEvidence.length > 0).length === requirementsByType.physical.length
+                      ? '#4caf50'
+                      : '#ff9800',
+                    color: '#fff',
+                  }}
+                />
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              {renderRequirementsTable(requirementsByType.physical, 'physical')}
+            </AccordionDetails>
+          </Accordion>
+        )}
       </Paper>
 
-      {/* Gaps List */}
-      {
-        hasGaps ? (
-          <Paper sx={{ p: 3, backgroundColor: '#2A2A2A' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-              <AlertTriangleIcon sx={{ color: '#FF9800' }} />
-              <Typography variant="h6" sx={{ fontWeight: 600, color: '#E0E0E0' }}>
-                Identified Gaps ({data.totalGaps})
-              </Typography>
-            </Box>
-            <GapList
-              gaps={data.gaps}
-              onStatusChange={handleStatusChange}
-              onCreatePOAM={handleCreatePOAM}
-            />
-          </Paper>
-        ) : (
-          <Paper sx={{ p: 6, backgroundColor: '#2A2A2A', textAlign: 'center' }}>
-            <CheckCircle sx={{ fontSize: 64, color: '#4CAF50', mb: 2 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#E0E0E0' }}>
-              No Gaps Detected!
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#B0B0B0' }}>
-              This control appears to be fully compliant based on current analysis.
-            </Typography>
-          </Paper>
-        )
-      }
-
-      {/* Last Assessed */}
-      <Typography variant="caption" sx={{ textAlign: 'right', color: '#B0B0B0' }}>
-        Last assessed: {new Date(data.lastAssessed).toLocaleString()}
-      </Typography>
-    </Box >
+      {/* Summary Stats */}
+      <Paper sx={{ p: 2, backgroundColor: '#1E3A5F' }}>
+        <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#90CAF9' }}>
+          Quick Stats:
+        </Typography>
+        <Box component="ul" sx={{ pl: 2, m: 0, color: '#E0E0E0', '& li': { mb: 0.5 } }}>
+          <li>Total Requirements: {requirements.length}</li>
+          <li>Evidence Uploaded: {requirements.filter((r: EvidenceRequirement) => r.uploadedEvidence.length > 0).length}</li>
+          <li>Missing Evidence: {totalMissing}</li>
+          <li>Overall Coverage: {coverage.overallCoverage}%</li>
+        </Box>
+      </Paper>
+    </Box>
   );
 };

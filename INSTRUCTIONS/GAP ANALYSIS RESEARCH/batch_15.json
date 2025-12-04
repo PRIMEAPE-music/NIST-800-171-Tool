@@ -1,0 +1,199 @@
+{
+  "batchNumber": 15,
+  "controlsAnalyzed": 2,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.08.07",
+      "controlTitle": "Media Use",
+      "controlFamily": "MP",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Media Protection Policy",
+            "description": "Organizational policy governing the use, restriction, and prohibition of system media types including removable storage devices",
+            "rationale": "NIST 03.08.07 requires restricting or prohibiting use of organization-defined media types using technical and non-technical measures including policies and procedures"
+          },
+          {
+            "name": "Acceptable Use Policy",
+            "description": "Policy defining acceptable use of organizational systems and peripheral devices including media usage restrictions",
+            "rationale": "Control requires rules of behavior for media use; AUP provides organizational standards for acceptable media usage practices"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Media Use Control Procedure",
+            "description": "Step-by-step process for implementing technical controls to restrict media usage including disabling USB ports, configuring device control policies, and managing approved device lists",
+            "rationale": "Control discusses technical measures such as physical cages, disabling ports, and removing write capabilities requiring documented implementation procedures"
+          },
+          {
+            "name": "Approved Media Device Registration Procedure",
+            "description": "Process for registering, approving, and tracking organization-provided and approved removable media devices with identifiable owners",
+            "rationale": "Control requires prohibiting removable media without identifiable owners and limiting use to approved devices requiring formal registration process"
+          },
+          {
+            "name": "Media Use Exception Request Procedure",
+            "description": "Process for requesting, approving, and documenting exceptions to media use restrictions with compensating controls",
+            "rationale": "Organizations may need exception processes for legitimate business needs while maintaining security controls and accountability"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Approved Removable Media Device Inventory",
+            "description": "Current list showing: device type, serial number, assigned owner, approval date, business justification, expiration date",
+            "frequency": "Updated continuously, reviewed monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Control requires identifiable owners for removable media; inventory demonstrates ongoing compliance with ownership requirements"
+          },
+          {
+            "name": "USB/Media Port Disable Configuration Reports",
+            "description": "Technical reports showing: systems with disabled USB ports, GPO/Intune policies applied, configuration verification dates, exception systems with justification",
+            "frequency": "Monthly verification",
+            "freshnessThreshold": "45 days",
+            "rationale": "Control discusses disabling ports and removing capabilities; reports demonstrate technical controls are implemented and maintained"
+          },
+          {
+            "name": "Device Control Policy Compliance Scans",
+            "description": "Automated scan results showing: systems scanned, device control policy status, unauthorized devices detected, remediation actions taken",
+            "frequency": "Weekly automated scans",
+            "freshnessThreshold": "14 days",
+            "rationale": "Continuous monitoring required to detect unauthorized media usage; weekly scans align with industry best practices for endpoint compliance"
+          },
+          {
+            "name": "Media Use Violation Reports",
+            "description": "Incident reports showing: violation date, user, device type, detection method, corrective action, disciplinary action if applicable",
+            "frequency": "As incidents occur",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Demonstrates enforcement of media use restrictions and organizational response to policy violations"
+          },
+          {
+            "name": "Quarterly Media Use Compliance Audits",
+            "description": "Audit reports showing: technical controls tested, approved device list reviewed, compliance rate, gaps identified, remediation plan",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Periodic validation that media use controls remain effective; quarterly frequency aligns with typical audit cycles"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Maintain approved removable media device inventory with identifiable owners",
+          "Configure and enforce USB port restrictions via GPO or Intune policies",
+          "Deploy device control policies to prevent unauthorized media usage",
+          "Scan endpoints weekly for compliance with media use restrictions",
+          "Register and approve new removable media devices before use",
+          "Investigate and document media use policy violations",
+          "Review and update approved device list monthly",
+          "Test technical controls quarterly to verify effectiveness",
+          "Remove or disable media access for terminated employees within 24 hours",
+          "Audit media use controls quarterly and document findings"
+        ]
+      }
+    },
+    {
+      "controlId": "03.08.09",
+      "controlTitle": "System Backup – Cryptographic Protection",
+      "controlFamily": "MP",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Media Protection Policy",
+            "description": "Organizational policy requiring cryptographic protection for backup media and storage locations containing CUI",
+            "rationale": "NIST 03.08.09 requires protecting confidentiality of backup information using cryptographic mechanisms at backup storage locations"
+          },
+          {
+            "name": "Data Protection and Encryption Policy",
+            "description": "Policy defining encryption requirements for data at rest including backup data, minimum encryption standards, and key management requirements",
+            "rationale": "Control requires implementing cryptographic mechanisms; policy establishes organizational standards for encryption strength and methods"
+          },
+          {
+            "name": "Cryptographic Standards Policy",
+            "description": "Policy specifying approved cryptographic algorithms, key lengths, and cryptographic module requirements (FIPS 140-2/3 validated)",
+            "rationale": "Control discussion references cryptographic mechanism selection and HSM devices; policy ensures use of validated cryptographic implementations"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Backup Encryption Configuration Procedure",
+            "description": "Step-by-step process for configuring backup software to encrypt backup data, selecting encryption algorithms, managing encryption keys, and verifying encryption is active",
+            "rationale": "Control requires implementing cryptographic mechanisms for backups requiring documented implementation procedures"
+          },
+          {
+            "name": "Backup Key Management Procedure",
+            "description": "Process for generating, storing, rotating, and destroying cryptographic keys used for backup encryption including HSM usage if applicable",
+            "rationale": "Control discussion mentions HSM devices for key management; procedure ensures proper cryptographic key lifecycle management"
+          },
+          {
+            "name": "Encrypted Backup Restoration Testing Procedure",
+            "description": "Process for periodically testing encrypted backup restoration including key retrieval, decryption verification, and data integrity validation",
+            "rationale": "Organizations must verify encrypted backups can be successfully restored; testing ensures cryptographic protection doesn't prevent recovery"
+          },
+          {
+            "name": "Backup Storage Location Security Procedure",
+            "description": "Process for securing physical and cloud backup storage locations including access controls, encryption verification, and monitoring",
+            "rationale": "Control requires preventing unauthorized disclosure at backup storage locations requiring secured storage procedures"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Backup Encryption Configuration Reports",
+            "description": "Reports showing: backup systems inventoried, encryption enabled status, encryption algorithm used, key length, FIPS validation status, configuration verification date",
+            "frequency": "Monthly verification",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates ongoing compliance with encryption requirements; monthly verification ensures configurations remain secure"
+          },
+          {
+            "name": "Backup Job Completion Logs with Encryption Verification",
+            "description": "Automated logs showing: backup date/time, systems backed up, backup success/failure, encryption applied confirmation, backup destination",
+            "frequency": "Daily automated backups",
+            "freshnessThreshold": "7 days",
+            "rationale": "Daily backups are industry standard; logs demonstrate encryption is consistently applied to all backup operations"
+          },
+          {
+            "name": "Encrypted Backup Restoration Test Results",
+            "description": "Test reports showing: test date, backup selected, restoration success, decryption successful, data integrity verified, time to restore, tester signature",
+            "frequency": "Quarterly testing",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST SP 800-34 recommends quarterly backup restoration testing; validates encrypted backups remain recoverable"
+          },
+          {
+            "name": "Cryptographic Key Rotation Logs",
+            "description": "Logs showing: key rotation date, systems affected, old key archived, new key deployed, rotation completed successfully",
+            "frequency": "Annually or per policy",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST SP 800-57 recommends periodic key rotation; logs demonstrate proper cryptographic key lifecycle management"
+          },
+          {
+            "name": "Backup Storage Location Security Assessments",
+            "description": "Assessment reports showing: storage location reviewed, physical/logical access controls verified, encryption at rest confirmed, vulnerabilities identified, remediation status",
+            "frequency": "Semi-annually",
+            "freshnessThreshold": "210 days",
+            "rationale": "Control requires preventing unauthorized disclosure at storage locations; assessments verify storage security remains adequate"
+          },
+          {
+            "name": "HSM Device Audit Logs",
+            "description": "If applicable, logs showing: cryptographic operations performed, key access events, administrative actions, anomaly detection alerts",
+            "frequency": "Continuous logging, reviewed monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Control discussion references HSM devices; audit logs demonstrate secure key management and detect unauthorized access attempts"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Configure all backup systems to encrypt backup data using approved cryptographic algorithms",
+          "Verify backup encryption is enabled and functioning for all daily backup jobs",
+          "Store backup encryption keys securely using HSM or approved key management system",
+          "Rotate backup encryption keys annually or per policy requirements",
+          "Test encrypted backup restoration quarterly to ensure recoverability",
+          "Monitor backup storage locations for unauthorized access attempts",
+          "Maintain backup encryption configuration documentation",
+          "Review backup encryption logs monthly for anomalies or failures",
+          "Conduct semi-annual security assessments of backup storage locations",
+          "Update backup encryption configurations when cryptographic standards change",
+          "Validate FIPS 140-2/3 compliance of cryptographic modules used for backup encryption",
+          "Archive old encryption keys securely per retention requirements",
+          "Document and investigate any backup encryption failures immediately"
+        ]
+      }
+    }
+  ]
+}

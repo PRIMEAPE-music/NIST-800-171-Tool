@@ -36,6 +36,12 @@ router.get(
   (req, res, next) => evidenceController.downloadEvidence(req, res, next)
 );
 
+// Get evidence requirements for control
+router.get(
+  '/requirements/:controlId',
+  (req, res, next) => evidenceController.getEvidenceRequirements(req, res, next)
+);
+
 // Get evidence for specific control
 router.get(
   '/control/:controlId',

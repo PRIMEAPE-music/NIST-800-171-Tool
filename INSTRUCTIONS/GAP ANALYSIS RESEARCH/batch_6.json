@@ -1,0 +1,252 @@
+{
+  "batchNumber": 6,
+  "controlsAnalyzed": 3,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.03.06",
+      "controlTitle": "Audit Record Reduction and Report Generation",
+      "controlFamily": "AU",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Audit and Accountability Policy",
+            "description": "Organizational policy governing audit logging, audit record reduction, and report generation practices",
+            "rationale": "NIST 03.03.06 requires 'implement an audit record reduction and report generation capability' which necessitates formal policy guidance on audit log analysis and reporting"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Audit Record Reduction Procedure",
+            "description": "Step-by-step process for reducing and summarizing audit records using data mining techniques and filters to identify anomalous behavior",
+            "rationale": "Control requires audit record reduction capability that 'manipulates collected audit information and organizes it in a summary format that is more meaningful to analysts'"
+          },
+          {
+            "name": "Audit Report Generation Procedure",
+            "description": "Process for generating customizable audit reports that support review, analysis, and reporting requirements for different audiences",
+            "rationale": "Control requires report generation capability that 'supports audit record review, analysis, reporting requirements, and after-the-fact investigations of incidents'"
+          },
+          {
+            "name": "Incident Investigation Procedure",
+            "description": "Process for utilizing audit records to conduct after-the-fact investigations of security incidents",
+            "rationale": "Control explicitly requires capability that 'supports...after-the-fact investigations of incidents'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Monthly Audit Summary Reports",
+            "description": "Reports showing: period covered, total events analyzed, events by category, anomalies identified, summary statistics, trends analysis, original log references maintained",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates audit record reduction capability in operation; monthly frequency aligns with NIST AU-06 recommendation for regular audit review"
+          },
+          {
+            "name": "Quarterly Security Analysis Reports",
+            "description": "Reports showing: cross-system correlation analysis, organization-wide situational awareness findings, identified security concerns, remediation recommendations, executive summary",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates audit record reduction across different repositories supporting 'analysis, reporting requirements'; quarterly provides strategic overview"
+          },
+          {
+            "name": "Incident Investigation Reports",
+            "description": "Reports showing: incident timeline constructed from audit records, systems involved, user activities traced, evidence chain maintained, original audit record references, time ordering preserved",
+            "frequency": "As needed (per incident)",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Demonstrates capability supports 'after-the-fact investigations of incidents' and preserves 'original content and time ordering of audit records'"
+          },
+          {
+            "name": "Audit Log Integrity Verification Reports",
+            "description": "Reports showing: hash verification of original logs, confirmation no alterations made during reduction process, time stamp sequence validation, original content preservation confirmed",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates compliance with requirement to 'preserve the original content and time ordering of audit records'"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Implement audit log reduction tools with data mining and filtering capabilities",
+          "Generate regular audit summary reports from reduced audit data",
+          "Maintain original audit records while creating summarized versions",
+          "Provide customizable report generation for different stakeholders",
+          "Support incident investigations with audit record analysis",
+          "Correlate audit records across different system repositories",
+          "Preserve time ordering and original content of all audit records"
+        ]
+      }
+    },
+    {
+      "controlId": "03.03.07",
+      "controlTitle": "Time Stamps",
+      "controlFamily": "AU",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Audit and Accountability Policy",
+            "description": "Organizational policy governing audit logging requirements including time stamp standards",
+            "rationale": "NIST 03.03.07 requires 'use internal system clocks to generate time stamps for audit records' which necessitates policy-level guidance on time synchronization requirements"
+          },
+          {
+            "name": "Time Synchronization Policy",
+            "description": "Policy defining time synchronization requirements, authoritative time sources, granularity standards, and UTC usage",
+            "rationale": "Control requires organization to define 'granularity of time measurement' and specify time source standards (UTC, local time with offset)"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Time Synchronization Configuration Procedure",
+            "description": "Step-by-step process for configuring NTP clients, selecting authoritative time sources, setting synchronization intervals, and configuring UTC or UTC offset",
+            "rationale": "Control requires 'use internal system clocks' which must be properly synchronized; 'time is often expressed in Coordinated Universal Time (UTC)'"
+          },
+          {
+            "name": "Time Stamp Validation Procedure",
+            "description": "Process for verifying time stamp accuracy, checking time drift, validating granularity meets requirements, and confirming proper format (UTC or offset)",
+            "rationale": "Control requires time stamps 'meet organization-defined granularity of time measurement'; 'granularity of time measurements refers to the degree of synchronization between system clocks and reference clocks'"
+          },
+          {
+            "name": "Audit System Clock Configuration Procedure",
+            "description": "Process for configuring internal system clocks on all audit-generating systems to ensure consistent time stamping",
+            "rationale": "Control explicitly requires 'use internal system clocks to generate time stamps for audit records'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Time Synchronization Configuration Documentation",
+            "description": "Documentation showing: NTP server configurations, authoritative time sources configured, synchronization intervals set, UTC or UTC offset settings, granularity configured (e.g., milliseconds)",
+            "frequency": "Annual review",
+            "freshnessThreshold": "18 months",
+            "rationale": "Demonstrates systems are configured to 'use internal system clocks' synchronized to authoritative sources; configuration typically stable unless infrastructure changes"
+          },
+          {
+            "name": "Time Drift Monitoring Reports",
+            "description": "Reports showing: systems monitored, time drift measurements, synchronization success rate, systems out of sync identified, corrective actions taken",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "Demonstrates ongoing compliance with 'granularity of time measurement' requirement; 'granularity...refers to the degree of synchronization...clocks synchronizing within hundreds or tens of milliseconds'"
+          },
+          {
+            "name": "Audit Log Time Stamp Samples",
+            "description": "Sample audit logs showing: time stamps in proper format (UTC or UTC with offset), appropriate granularity (date, time, subseconds), consistent formatting across systems",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates actual implementation of 'record time stamps for audit records that meet organization-defined granularity' and use UTC or UTC offset as required"
+          },
+          {
+            "name": "NTP Synchronization Logs",
+            "description": "Logs showing: successful NTP synchronization events, time adjustments made, synchronization failures and resolutions, time server availability",
+            "frequency": "Daily (automated)",
+            "freshnessThreshold": "7 days",
+            "rationale": "Demonstrates continuous operation of time synchronization to maintain 'granularity of time measurement' requirement"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Configure internal system clocks on all audit-generating systems",
+          "Configure NTP synchronization to authoritative time sources",
+          "Set time stamp granularity to meet organizational requirements (e.g., milliseconds)",
+          "Configure time stamps to use UTC or UTC offset",
+          "Monitor time drift across systems generating audit records",
+          "Investigate and remediate time synchronization failures",
+          "Validate audit log time stamps meet format and granularity requirements"
+        ]
+      }
+    },
+    {
+      "controlId": "03.03.08",
+      "controlTitle": "Protection of Audit Information",
+      "controlFamily": "AU",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Audit and Accountability Policy",
+            "description": "Organizational policy governing protection of audit information and audit logging tools",
+            "rationale": "NIST 03.03.08 requires 'protect audit information and audit logging tools from unauthorized access, modification, and deletion' which necessitates formal policy-level guidance"
+          },
+          {
+            "name": "Access Control Policy",
+            "description": "Policy governing who can access audit information and under what circumstances, including separation of audit-related privileges from other privileges",
+            "rationale": "Control requires 'authorize access to management of audit logging functionality to only a subset of privileged users or roles'; 'requiring privileged access to be further defined between audit-related privileges and other privileges'"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Audit Log Access Control Procedure",
+            "description": "Step-by-step process for granting, reviewing, and revoking access to audit logs and audit information, ensuring least privilege access",
+            "rationale": "Control requires protecting 'audit information...from unauthorized access'; 'audit information includes...audit records, audit log settings, audit reports, and personally identifiable information'"
+          },
+          {
+            "name": "Audit Log Backup and Recovery Procedure",
+            "description": "Process for backing up audit logs, testing backup integrity, and recovering audit information to prevent deletion",
+            "rationale": "Control requires protecting audit information 'from...deletion'; backups ensure logs can be recovered if deleted"
+          },
+          {
+            "name": "Privileged Access Management for Audit Systems Procedure",
+            "description": "Process for managing who can administer audit logging functionality, separating audit-related privileges from other system privileges, and reviewing privileged access",
+            "rationale": "Control requires 'authorize access to management of audit logging functionality to only a subset of privileged users or roles'; 'requiring privileged access to be further defined between audit-related privileges and other privileges limits the number of users...with audit-related privileges'"
+          },
+          {
+            "name": "Audit Logging Tool Protection Procedure",
+            "description": "Process for securing audit logging tools (SIEM systems, log collectors, analysis tools) from unauthorized access and modification",
+            "rationale": "Control requires protecting 'audit logging tools from unauthorized access, modification, and deletion'; 'audit logging tools are programs and devices used to conduct audit and logging activities'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Audit Log Access Control Lists",
+            "description": "Documentation showing: users/roles with audit log access, specific permissions granted (read-only vs. management), justification for access, approval documentation, access control configurations (RBAC/ACLs)",
+            "frequency": "Quarterly review",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates implementation of access controls to protect 'audit information...from unauthorized access' and 'authorize access to management...to only a subset of privileged users'"
+          },
+          {
+            "name": "Audit Log Permission Review Reports",
+            "description": "Reports showing: users with audit access reviewed, inappropriate access identified and removed, privilege separation verified (audit vs. other privileges), reviewer signatures, review date",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates ongoing validation that only authorized subset has access; verifies 'privileged access to be further defined between audit-related privileges and other privileges'"
+          },
+          {
+            "name": "Audit Log Backup Verification Reports",
+            "description": "Reports showing: backup completion status, backup integrity verified, retention period met, recovery testing results, backup storage protection measures",
+            "frequency": "Weekly (backups), Monthly (verification)",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates protection 'from...deletion'; regular backups ensure audit information can be recovered"
+          },
+          {
+            "name": "Audit Log Integrity Validation Reports",
+            "description": "Reports showing: hash verification of audit logs, unauthorized modification checks, file integrity monitoring results, tampering detection, investigation of any anomalies",
+            "frequency": "Daily (automated checks), Monthly (reporting)",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates protection 'from...modification'; 'individuals...who are also the subject of an audit...may affect the reliability...by...modifying audit records'"
+          },
+          {
+            "name": "Privileged Audit Access Review Reports",
+            "description": "Reports showing: privileged users with audit management capabilities, separation of audit privileges from other admin privileges, justification for audit management access, review of usage, recertification",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates 'authorize access to management of audit logging functionality to only a subset of privileged users or roles' with proper separation of duties"
+          },
+          {
+            "name": "Audit Log Access Attempts Reports",
+            "description": "Reports showing: attempted access to audit logs (successful and failed), privileged actions on audit systems, unusual access patterns identified, investigations of unauthorized attempts",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "Demonstrates monitoring of audit information protection; detects potential 'unauthorized access' attempts to audit information"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Configure RBAC or ACLs to restrict audit log access to authorized personnel only",
+          "Implement separate privileged roles for audit management vs. other system administration",
+          "Configure file system permissions to protect audit log files from modification and deletion",
+          "Implement automated backup of audit logs to protected storage",
+          "Enable file integrity monitoring on audit log files and directories",
+          "Review and approve all requests for audit log access",
+          "Conduct quarterly reviews of who has access to audit information",
+          "Investigate all unauthorized audit log access attempts",
+          "Protect audit logging tools (SIEM, log collectors) with access controls",
+          "Separate audit-related privileges from other system privileges in role definitions"
+        ]
+      }
+    }
+  ]
+}

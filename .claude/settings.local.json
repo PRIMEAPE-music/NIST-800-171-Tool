@@ -20,7 +20,18 @@
       "Bash(pip install:*)",
       "Bash(ls:*)",
       "Bash(taskkill /F /PID 26596)",
-      "Bash(taskkill //F //PID 26596)"
+      "Bash(taskkill //F //PID 26596)",
+      "Bash(tasklist:*)",
+      "Bash(taskkill /F /PID 84300)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(nul)",
+      "Bash(exit 0)",
+      "Bash(taskkill:*)",
+      "Bash(timeout /t 5 /nobreak)",
+      "Bash(sqlite3:*)",
+      "Bash(timeout /t 2)",
+      "Bash(dir:*)",
+      "Bash(copy compliance.db \"backups\\compliance_backup_20251203_141735_before_gap_analysis.db\")"
     ],
     "deny": [],
     "ask": []

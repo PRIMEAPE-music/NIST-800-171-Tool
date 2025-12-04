@@ -1,0 +1,198 @@
+{
+  "batchNumber": 9,
+  "controlsAnalyzed": 2,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.04.11",
+      "controlTitle": "Information Location",
+      "controlFamily": "CM",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Configuration Management Policy",
+            "description": "Organizational policy governing system configuration management practices including information location tracking",
+            "rationale": "NIST 03.04.11 requires documenting CUI locations and changes; policy provides governance framework for this tracking"
+          },
+          {
+            "name": "Data Management Policy",
+            "description": "Policy defining how organizational data is classified, stored, and tracked throughout its lifecycle",
+            "rationale": "Control requires identifying where CUI is processed and stored; data management policy establishes requirements for data location tracking"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "CUI Identification and Location Documentation Procedure",
+            "description": "Step-by-step process for identifying CUI, determining where it resides, documenting system components that process/store it, and maintaining location inventory",
+            "rationale": "Control 03.04.11.a requires identifying and documenting CUI location; procedure provides systematic approach"
+          },
+          {
+            "name": "System Change Documentation Procedure",
+            "description": "Process for documenting changes to system or component locations where CUI is processed and stored, including change approval and location registry updates",
+            "rationale": "Control 03.04.11.b requires documenting changes to CUI locations; procedure ensures changes are systematically recorded"
+          },
+          {
+            "name": "Data Flow Mapping Procedure",
+            "description": "Process for creating and maintaining data flow diagrams showing how CUI moves through systems and where it is processed/stored",
+            "rationale": "NIST discussion emphasizes understanding 'specific system components where CUI is being processed and stored'; data flow mapping provides visual documentation"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "CUI Location Inventory/Register",
+            "description": "Comprehensive registry showing: CUI data types, system components where processed/stored (servers, databases, applications, file shares), physical/logical locations, data owners, access controls applied, last verification date",
+            "frequency": "Ongoing with periodic reviews",
+            "freshnessThreshold": "90 days",
+            "rationale": "Control 03.04.11.a requires identification and documentation of CUI locations; inventory provides centralized record. Quarterly review aligns with typical configuration management cycles"
+          },
+          {
+            "name": "System Component Inventory with CUI Designation",
+            "description": "Asset inventory showing: component ID, component type, whether component processes/stores CUI (yes/no), CUI categories if applicable, location, ownership, related controls applied",
+            "frequency": "Ongoing with updates per changes",
+            "freshnessThreshold": "60 days",
+            "rationale": "NIST requires documenting 'system components on which the information is processed and stored'; component inventory must flag CUI-handling systems"
+          },
+          {
+            "name": "CUI Location Change Logs",
+            "description": "Records of location changes showing: change date, system/component affected, old location, new location, reason for change, approver, updated documentation references",
+            "frequency": "Per change occurrence",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Control 03.04.11.b specifically requires documenting changes to CUI locations; change log provides audit trail of modifications"
+          },
+          {
+            "name": "Data Flow Diagrams",
+            "description": "Visual diagrams showing: CUI data flows between systems, processing locations, storage repositories, network boundaries crossed, encryption points, access control points, last update date",
+            "frequency": "Reviewed and updated semi-annually or per major system changes",
+            "freshnessThreshold": "180 days",
+            "rationale": "NIST discussion emphasizes understanding where CUI is processed; data flow diagrams provide comprehensive visualization of CUI movement and location"
+          },
+          {
+            "name": "Quarterly CUI Location Verification Reports",
+            "description": "Validation reports showing: systems reviewed, CUI locations verified, discrepancies found, corrections made, new CUI locations identified, reviewer signatures, completion date",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Periodic verification ensures CUI location documentation remains accurate and complete as systems change; quarterly frequency balances thoroughness with operational impact"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Identify all CUI data within the organization",
+          "Document system components that process or store CUI",
+          "Map data flows showing CUI movement through systems",
+          "Maintain centralized CUI location inventory",
+          "Update location documentation when systems change",
+          "Verify CUI location accuracy quarterly",
+          "Review and update data flow diagrams semi-annually",
+          "Apply appropriate access controls based on CUI location",
+          "Train personnel on CUI identification and location documentation requirements"
+        ]
+      }
+    },
+    {
+      "controlId": "03.04.12",
+      "controlTitle": "System and Component Configuration for High-Risk Areas",
+      "controlFamily": "CM",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Configuration Management Policy",
+            "description": "Organizational policy governing system configuration standards including special configurations for high-risk scenarios",
+            "rationale": "NIST 03.04.12 requires defined system configurations for high-risk travel; policy establishes governance framework"
+          },
+          {
+            "name": "Travel Security Policy",
+            "description": "Policy defining security requirements for organizational systems taken to high-risk locations, including pre-travel preparations and post-travel procedures",
+            "rationale": "Control specifically addresses travel to high-risk areas; dedicated travel security policy provides comprehensive guidance on requirements, definitions, and procedures"
+          },
+          {
+            "name": "Acceptable Use Policy",
+            "description": "Policy defining acceptable use of organizational systems including restrictions during high-risk travel",
+            "rationale": "NIST discussion mentions 'limited applications and more stringent configuration settings' for high-risk travel; acceptable use policy defines usage restrictions"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "High-Risk Travel Device Provisioning Procedure",
+            "description": "Step-by-step process for: identifying high-risk locations, determining required hardened configurations, provisioning travel devices with sanitized drives and limited applications, pre-travel security briefing",
+            "rationale": "Control 03.04.12.a requires issuing systems with specific configurations for high-risk travel; procedure defines provisioning process"
+          },
+          {
+            "name": "Post-Travel Device Security Check Procedure",
+            "description": "Process for examining returned devices including: physical inspection for tampering, malware scanning, log review, determination of purge/reimage requirements, approval for reconnection to network",
+            "rationale": "Control 03.04.12.b requires applying security requirements upon return; NIST discussion specifically mentions examining for tampering and purging/reimaging"
+          },
+          {
+            "name": "Device Sanitization and Reimaging Procedure",
+            "description": "Technical process for securely wiping device storage, reimaging with approved baseline, verifying configuration compliance, documenting sanitization completion",
+            "rationale": "NIST discussion states 'purging and reimaging the device storage' as action applied to devices upon return from travel"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "High-Risk Location Designation List",
+            "description": "Approved list showing: countries/regions designated as high-risk, threat assessment summary, designation date, review/approval authority, last review date",
+            "frequency": "Reviewed and updated quarterly or based on threat intelligence",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST discussion states organizations must determine 'whether the locations are of concern'; formal designation list provides basis for control application"
+          },
+          {
+            "name": "Travel Device Hardened Configuration Standards",
+            "description": "Technical specifications showing: baseline configuration for travel devices, applications permitted, disabled features/services, encryption requirements, remote wipe capability, logging requirements",
+            "frequency": "Reviewed annually or per threat changes",
+            "freshnessThreshold": "365 days",
+            "rationale": "Control 03.04.12.a requires 'organization-defined system configurations'; documented standards define these hardened configurations"
+          },
+          {
+            "name": "Pre-Travel Device Checkout Records",
+            "description": "Records for each travel event showing: traveler name, destination, travel dates, device issued (serial number), configuration verification checklist completed, security briefing provided, checkout date/time, authorizing official",
+            "frequency": "Per travel occurrence",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "NIST discussion requires 'ensuring that the components are configured as intended before travel is initiated'; checkout records document compliance"
+          },
+          {
+            "name": "Post-Travel Device Inspection Reports",
+            "description": "Inspection reports showing: device serial number, return date, physical inspection results (signs of tampering), malware scan results, log analysis findings, purge/reimage decision and rationale, inspection date, inspector signature",
+            "frequency": "Upon each device return from travel",
+            "freshnessThreshold": "N/A - must occur before network reconnection",
+            "rationale": "Control 03.04.12.b requires applying security requirements upon return; NIST discussion specifically mentions examining for physical tampering"
+          },
+          {
+            "name": "Device Sanitization/Reimaging Logs",
+            "description": "Technical logs showing: device identifier, sanitization method used (wipe/reimage), completion timestamp, verification of baseline restoration, technician performing work, approval for network reconnection",
+            "frequency": "Per device return requiring sanitization",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "NIST discussion states 'purging and reimaging the device storage' as post-travel action; logs document execution of this requirement"
+          },
+          {
+            "name": "Travel Device Inventory and Status Tracking",
+            "description": "Inventory showing: travel devices available, devices currently deployed (with traveler/location), devices pending post-travel inspection, devices cleared for reuse, device status (checked out/in use/inspecting/cleared)",
+            "frequency": "Real-time updates",
+            "freshnessThreshold": "7 days",
+            "rationale": "Operational necessity to track travel device lifecycle from checkout through return and clearance; enables accountability and prevents unapproved device usage"
+          }
+        ],
+        "physicalEvidence": [
+          {
+            "name": "Device Physical Inspection Checklists",
+            "description": "Physical inspection forms documenting: device exterior examination, port covers inspected, case integrity verified, unusual components/modifications noted, tamper seals checked, photographs of any anomalies, inspector signature",
+            "rationale": "NIST discussion specifically mentions 'examining the device for signs of physical tampering' upon return from travel; physical inspection checklists document this examination"
+          }
+        ],
+        "operationalActivities": [
+          "Maintain and update list of high-risk locations based on threat intelligence",
+          "Define and document hardened configurations for travel devices",
+          "Provision travel devices with sanitized drives and limited applications",
+          "Provide security briefing to travelers before departure",
+          "Issue hardened travel devices with checkout documentation",
+          "Track travel device deployment status",
+          "Perform physical inspection of devices upon return",
+          "Conduct malware scans and log analysis on returned devices",
+          "Purge and reimage devices per post-travel security requirements",
+          "Maintain inventory of travel devices and their deployment status",
+          "Review and update travel security procedures annually",
+          "Train IT staff on device provisioning and inspection procedures"
+        ]
+      }
+    }
+  ]
+}

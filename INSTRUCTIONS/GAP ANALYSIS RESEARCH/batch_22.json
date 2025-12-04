@@ -1,0 +1,371 @@
+{
+  "batchNumber": 22,
+  "controlsAnalyzed": 3,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.15.01",
+      "controlTitle": "Policy and Procedures",
+      "controlFamily": "PL",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Organizational Security Policy for CUI Protection",
+            "description": "High-level policy document addressing purpose, scope, roles, responsibilities, management commitment, coordination among organizational entities, and compliance for protecting CUI",
+            "rationale": "NIST 03.15.01.a.1 requires 'System security and privacy policy that addresses purpose, scope, roles, responsibilities, management commitment, coordination among organizational entities, and compliance'"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Access Control Family Procedures",
+            "description": "Step-by-step procedures for implementing all AC (Access Control) family requirements including account management, access enforcement, least privilege, and remote access controls",
+            "rationale": "NIST 03.15.01.a.2 requires 'Procedures to facilitate the implementation of the system security and privacy policy and the associated system security and privacy requirements' - AC family procedures"
+          },
+          {
+            "name": "Audit and Accountability Family Procedures",
+            "description": "Step-by-step procedures for implementing all AU (Audit and Accountability) family requirements including event logging, log review, and audit record protection",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - AU family procedures"
+          },
+          {
+            "name": "Configuration Management Family Procedures",
+            "description": "Step-by-step procedures for implementing all CM (Configuration Management) family requirements including baseline configuration, change control, and component inventory",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - CM family procedures"
+          },
+          {
+            "name": "Identification and Authentication Family Procedures",
+            "description": "Step-by-step procedures for implementing all IA (Identification and Authentication) family requirements including user authentication, MFA, and authenticator management",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - IA family procedures"
+          },
+          {
+            "name": "Incident Response Family Procedures",
+            "description": "Step-by-step procedures for implementing all IR (Incident Response) family requirements including incident handling, monitoring, reporting, and testing",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - IR family procedures"
+          },
+          {
+            "name": "Maintenance Family Procedures",
+            "description": "Step-by-step procedures for implementing all MA (Maintenance) family requirements including maintenance tools, nonlocal maintenance, and maintenance personnel controls",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - MA family procedures"
+          },
+          {
+            "name": "Media Protection Family Procedures",
+            "description": "Step-by-step procedures for implementing all MP (Media Protection) family requirements including media storage, sanitization, marking, and transport",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - MP family procedures"
+          },
+          {
+            "name": "Physical Protection Family Procedures",
+            "description": "Step-by-step procedures for implementing all PE (Physical Protection) family requirements including physical access controls, monitoring, and alternate work sites",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - PE family procedures"
+          },
+          {
+            "name": "Personnel Security Family Procedures",
+            "description": "Step-by-step procedures for implementing all PS (Personnel Security) family requirements including personnel screening, termination, and transfer processes",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - PS family procedures"
+          },
+          {
+            "name": "Risk Assessment Family Procedures",
+            "description": "Step-by-step procedures for implementing all RA (Risk Assessment) family requirements including risk assessment, vulnerability scanning, and risk response",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - RA family procedures"
+          },
+          {
+            "name": "Security Assessment Family Procedures",
+            "description": "Step-by-step procedures for implementing all CA (Security Assessment) family requirements including security assessments, POAMs, continuous monitoring, and information exchange",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - CA family procedures"
+          },
+          {
+            "name": "System and Communications Protection Family Procedures",
+            "description": "Step-by-step procedures for implementing all SC (System and Communications Protection) family requirements including boundary protection, transmission confidentiality, and cryptographic key management",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - SC family procedures"
+          },
+          {
+            "name": "System and Information Integrity Family Procedures",
+            "description": "Step-by-step procedures for implementing all SI (System and Information Integrity) family requirements including flaw remediation, malicious code protection, and system monitoring",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - SI family procedures"
+          },
+          {
+            "name": "Planning Family Procedures",
+            "description": "Step-by-step procedures for implementing all PL (Planning) family requirements including policy development, system security plan maintenance, and rules of behavior management",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - PL family procedures"
+          },
+          {
+            "name": "System and Services Acquisition Family Procedures",
+            "description": "Step-by-step procedures for implementing all SA (System and Services Acquisition) family requirements including security engineering principles, unsupported components, and external system services",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - SA family procedures"
+          },
+          {
+            "name": "Supply Chain Risk Management Family Procedures",
+            "description": "Step-by-step procedures for implementing all SR (Supply Chain Risk Management) family requirements including SCRM plan development, acquisition strategies, and supply chain requirements",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - SR family procedures"
+          },
+          {
+            "name": "Awareness and Training Family Procedures",
+            "description": "Step-by-step procedures for implementing all AT (Awareness and Training) family requirements including literacy training and role-based training",
+            "rationale": "NIST 03.15.01.a.2 requires procedures for each family of security requirements - AT family procedures"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Policy Review Meeting Minutes",
+            "description": "Annual meeting minutes showing: policies reviewed, participants present, changes identified, approval signatures, review completion date, next scheduled review date",
+            "frequency": "Annually",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST 03.15.01.b requires 'Review and update policies [Assignment: organization-defined frequency]' - annual reviews are industry standard per NIST SP 800-12"
+          },
+          {
+            "name": "Procedure Review Records",
+            "description": "Annual procedure review records showing: procedures reviewed, changes made, testing of updated procedures, approval signatures, distribution records to personnel, review completion date",
+            "frequency": "Annually",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST 03.15.01.b requires 'Review and update procedures [Assignment: organization-defined frequency]' - annual reviews align with policy review cycles"
+          },
+          {
+            "name": "Policy Distribution Acknowledgments",
+            "description": "Acknowledgment records showing: policy name, version number, recipient name and role, acknowledgment date, signature or electronic confirmation, distribution method",
+            "frequency": "Upon hire and annually",
+            "freshnessThreshold": "13 months",
+            "rationale": "NIST 03.15.01.a requires 'disseminate to organizational personnel or roles' - acknowledgments prove dissemination occurred"
+          },
+          {
+            "name": "Policy Official Designation Letter",
+            "description": "Formal designation letter showing: official's name and title, scope of authority, responsibilities for policy/procedure development and management, signature of authorizing executive, designation date",
+            "frequency": "Upon assignment or change",
+            "freshnessThreshold": "N/A - maintained for duration of assignment",
+            "rationale": "NIST 03.15.01.b requires 'Designate an organization-defined official to manage the development, documentation, and dissemination' - formal designation provides accountability"
+          },
+          {
+            "name": "Policy Compliance Assessment Reports",
+            "description": "Annual compliance assessment reports showing: policies assessed, implementation status, gaps identified, corrective actions required, responsible parties, completion timelines",
+            "frequency": "Annually",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST 03.15.01.a requires policies must 'address compliance' - periodic assessment validates compliance with established policies"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Develop and document organizational security policies for CUI protection",
+          "Create procedures for each of the 17 security control families",
+          "Designate official responsible for policy and procedure management",
+          "Disseminate policies and procedures to all personnel with CUI access",
+          "Collect and maintain acknowledgment records from personnel",
+          "Review and update policies annually or when significant events occur",
+          "Review and update procedures annually or when significant events occur",
+          "Ensure policies are consistent with applicable laws, executive orders, and regulations",
+          "Coordinate policy implementation across organizational entities",
+          "Maintain version control for all policies and procedures"
+        ]
+      }
+    },
+    {
+      "controlId": "03.15.02",
+      "controlTitle": "System Security Plan",
+      "controlFamily": "PL",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "System Security Planning Policy",
+            "description": "Policy governing the development, maintenance, review, and protection of system security plans including requirements for plan content, update frequency, and distribution controls",
+            "rationale": "NIST 03.15.02 requires comprehensive SSP development and maintenance - policy provides governance framework for SSP lifecycle management"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "System Security Plan Development Procedure",
+            "description": "Step-by-step process for creating new SSPs including: system component documentation, information type identification, threat modeling, security requirement mapping, safeguard documentation, and role assignment",
+            "rationale": "NIST 03.15.02.a requires 'Develop a system security plan' with 8 specific elements - procedure ensures consistent SSP development"
+          },
+          {
+            "name": "System Security Plan Review and Update Procedure",
+            "description": "Process for conducting periodic SSP reviews including: review schedule, participants, change identification, approval workflow, version control, distribution of updated plans",
+            "rationale": "NIST 03.15.02.b requires 'Review and update the system security plan [Assignment: organization-defined frequency]' - procedure ensures systematic reviews"
+          },
+          {
+            "name": "System Security Plan Protection Procedure",
+            "description": "Process for protecting SSPs from unauthorized disclosure including: classification marking, access controls, encryption requirements, secure storage, distribution tracking, and disposal procedures",
+            "rationale": "NIST 03.15.02.c requires 'Protect the system security plan from unauthorized disclosure' - procedure implements protection controls"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Current System Security Plan",
+            "description": "Complete SSP document showing: constituent system components, information types processed/stored/transmitted, specific threats, operational environment and dependencies, security requirements overview, safeguards in place or planned, individuals with system roles, other relevant CUI protection information",
+            "frequency": "Maintained continuously, updated as needed",
+            "freshnessThreshold": "12 months since last review",
+            "rationale": "NIST 03.15.02.a requires SSP containing 8 specific elements - SSP itself is primary evidence of compliance"
+          },
+          {
+            "name": "System Security Plan Review Records",
+            "description": "Annual SSP review records showing: review date, reviewers present, sections reviewed, changes identified, changes implemented, approval signatures, next review date scheduled",
+            "frequency": "Annually",
+            "freshnessThreshold": "15 months",
+            "rationale": "NIST 03.15.02.b requires periodic review - annual reviews align with NIST SP 800-18 guidance for SSP maintenance"
+          },
+          {
+            "name": "System Security Plan Change Log",
+            "description": "Version control log showing: change date, sections modified, reason for change, approver name, version number, distribution date, personnel notified of changes",
+            "frequency": "Upon each SSP update",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "NIST 03.15.02.b requires updates - change log demonstrates SSP maintenance and version control"
+          },
+          {
+            "name": "System Security Plan Access Control Records",
+            "description": "Access logs showing: individuals granted SSP access, access justification/role, access grant date, access restrictions applied, periodic access reviews conducted, revoked access records",
+            "frequency": "Ongoing (per access request)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "NIST 03.15.02.c requires protection from unauthorized disclosure - access logs demonstrate protection controls implementation"
+          },
+          {
+            "name": "System Component Inventory Reconciliation",
+            "description": "Quarterly reconciliation reports showing: components listed in SSP, components discovered in environment, discrepancies identified, SSP updates made, reconciliation completion date",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "4 months",
+            "rationale": "NIST 03.15.02.a.1 requires SSP to 'Defines the constituent system components' - reconciliation ensures SSP accuracy"
+          },
+          {
+            "name": "Information Type Classification Records",
+            "description": "Documentation showing: CUI information types identified, systems processing each type, storage locations, transmission paths, classification rationale, data flow diagrams",
+            "frequency": "Annually or upon system changes",
+            "freshnessThreshold": "15 months",
+            "rationale": "NIST 03.15.02.a.2 requires 'Identifies the information types processed, stored, and transmitted by the system' - classification records support SSP accuracy"
+          },
+          {
+            "name": "Threat Assessment Documentation",
+            "description": "Threat assessment reports showing: specific threats to the system, threat actors identified, attack vectors analyzed, threat likelihood ratings, impact assessments, organization concerns documented",
+            "frequency": "Annually or when threat landscape changes",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST 03.15.02.a.3 requires 'Describes specific threats to the system that are of concern to the organization' - threat assessment informs SSP content"
+          },
+          {
+            "name": "System Dependencies and Connections Documentation",
+            "description": "Network diagrams and documentation showing: operational environment description, dependencies on other systems, connections to external systems, trust relationships, system interconnections, data flows",
+            "frequency": "Annually or upon infrastructure changes",
+            "freshnessThreshold": "15 months",
+            "rationale": "NIST 03.15.02.a.4 requires 'Describes the operational environment for the system and any dependencies on or connections to other systems or system components'"
+          },
+          {
+            "name": "Security Requirements Matrix",
+            "description": "Matrix document showing: overview of security requirements, applicable NIST controls, implementation status, safeguards in place or planned, control owners assigned, implementation timelines",
+            "frequency": "Maintained continuously, reviewed annually",
+            "freshnessThreshold": "15 months",
+            "rationale": "NIST 03.15.02.a.5-6 requires 'overview of the security requirements' and 'safeguards in place or planned for meeting the security requirements'"
+          },
+          {
+            "name": "System Roles and Responsibilities Documentation",
+            "description": "Documentation showing: individuals fulfilling system roles, role definitions, responsibilities assigned, contact information, backup personnel identified, role assignment dates",
+            "frequency": "Maintained continuously, reviewed quarterly",
+            "freshnessThreshold": "4 months",
+            "rationale": "NIST 03.15.02.a.7 requires 'Identifies individuals that fulfill system roles and responsibilities' - personnel changes require frequent updates"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Develop comprehensive system security plan with all 8 required elements",
+          "Define and document all system components in the SSP",
+          "Identify and document all CUI information types in the SSP",
+          "Conduct threat assessments and document threats in the SSP",
+          "Document operational environment and system dependencies in the SSP",
+          "Map security requirements to implemented safeguards in the SSP",
+          "Assign and document individuals to system roles in the SSP",
+          "Review system security plan annually or more frequently as needed",
+          "Update SSP when system changes occur or during periodic reviews",
+          "Implement access controls to protect SSP from unauthorized disclosure",
+          "Maintain version control and change tracking for the SSP",
+          "Distribute SSP updates to appropriate personnel",
+          "Reconcile SSP content with actual system configuration quarterly",
+          "Integrate SSP with other security documentation and operational procedures"
+        ]
+      }
+    },
+    {
+      "controlId": "03.15.03",
+      "controlTitle": "Rules of Behavior",
+      "controlFamily": "PL",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Acceptable Use Policy",
+            "description": "Policy defining acceptable and unacceptable uses of organizational systems and CUI including responsibilities for protecting CUI, prohibited activities, personal use restrictions, and consequences of violations",
+            "rationale": "NIST 03.15.03.a requires 'Establish rules that describe the responsibilities and expected behavior for system usage and protecting CUI' - acceptable use policy provides these rules"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Rules of Behavior Acknowledgment Procedure",
+            "description": "Step-by-step process for providing rules to users and obtaining acknowledgments including: rules presentation method, acknowledgment collection process, record retention, enforcement for non-compliance",
+            "rationale": "NIST 03.15.03.b-c requires providing rules and 'Receive a documented acknowledgement from individuals' before granting access - procedure ensures consistent implementation"
+          },
+          {
+            "name": "Rules of Behavior Review and Update Procedure",
+            "description": "Process for periodic review and update of rules including: review schedule, stakeholders involved, change approval workflow, user notification process, re-acknowledgment requirements",
+            "rationale": "NIST 03.15.03.d requires 'Review and update the rules of behavior [Assignment: organization-defined frequency]' - procedure ensures systematic reviews"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Current Rules of Behavior Document",
+            "description": "Complete rules document showing: user responsibilities for CUI protection, expected behavior for system usage, prohibited activities, security requirements by user role, differentiation between privileged and general user rules, consequences of violations",
+            "frequency": "Maintained continuously, reviewed annually",
+            "freshnessThreshold": "18 months since last review",
+            "rationale": "NIST 03.15.03.a requires establishing rules - the rules document itself is primary evidence of requirement establishment"
+          },
+          {
+            "name": "User Acknowledgment Records",
+            "description": "Signed acknowledgment forms or electronic confirmations showing: user name, user role, acknowledgment date, rules version acknowledged, signature or electronic acceptance, confirmation that user read and understands rules, agreement to abide by rules",
+            "frequency": "Upon hire, annually, and after rule updates",
+            "freshnessThreshold": "13 months for annual acknowledgments",
+            "rationale": "NIST 03.15.03.c requires 'Receive a documented acknowledgement from individuals indicating that they have read, understand, and agree to abide by the rules of behavior before authorizing access'"
+          },
+          {
+            "name": "Rules of Behavior Distribution Records",
+            "description": "Records showing: distribution date, distribution method (email, portal, orientation), recipients list, version distributed, distribution confirmation, follow-up for non-responders",
+            "frequency": "Upon hire, annually, and after updates",
+            "freshnessThreshold": "13 months",
+            "rationale": "NIST 03.15.03.b requires 'Provide rules to individuals who require access to the system' - distribution records prove rules were provided"
+          },
+          {
+            "name": "Rules of Behavior Review Records",
+            "description": "Annual review records showing: review date, reviewers present, rules sections reviewed, changes identified, approval signatures, update implementation date, next scheduled review",
+            "frequency": "Annually",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST 03.15.03.d requires periodic review and update - annual reviews are industry standard for rules of behavior documents"
+          },
+          {
+            "name": "Access Enforcement Audit Logs",
+            "description": "System audit logs showing: access attempts before acknowledgment (blocked), access grants after acknowledgment confirmation, acknowledgment status verification in access control system, enforcement of acknowledgment requirement",
+            "frequency": "Ongoing (automated)",
+            "freshnessThreshold": "7 days",
+            "rationale": "NIST 03.15.03.c requires acknowledgment 'before authorizing access to CUI and the system' - audit logs demonstrate enforcement of this requirement"
+          },
+          {
+            "name": "Role-Specific Rules Documentation",
+            "description": "Documentation showing: rules differentiation for privileged users, rules differentiation for general users, role-specific responsibilities, enhanced requirements for privileged access, CUI handling requirements by role",
+            "frequency": "Annually or when roles change",
+            "freshnessThreshold": "18 months",
+            "rationale": "NIST discussion states 'Organizations consider rules of behavior for the handling of CUI based on individual user roles and responsibilities and differentiate between rules that apply to privileged users and rules that apply to general users'"
+          },
+          {
+            "name": "Rules Violation Incident Reports",
+            "description": "Incident reports showing: violation description, user involved, date of violation, investigation findings, disciplinary action taken, corrective measures implemented, prevention measures added to rules",
+            "frequency": "Per incident",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Violation records demonstrate that rules are enforced and serve as basis for rule improvements during reviews"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Establish comprehensive rules of behavior for system usage and CUI protection",
+          "Differentiate rules between privileged users and general users based on roles",
+          "Provide rules of behavior to all individuals requiring system access",
+          "Present rules during new hire orientation and onboarding",
+          "Collect documented acknowledgments from users before granting access",
+          "Verify acknowledgment completion before activating user accounts",
+          "Enforce technical controls to block access without current acknowledgment",
+          "Review and update rules of behavior annually",
+          "Notify users of rules changes and collect re-acknowledgments",
+          "Investigate and document rules of behavior violations",
+          "Track acknowledgment status in access control systems",
+          "Maintain acknowledgment records for audit purposes",
+          "Update rules based on new threats, incidents, or policy changes"
+        ]
+      }
+    }
+  ]
+}

@@ -136,12 +136,14 @@ export const PolicyComparisonModal: React.FC<PolicyComparisonModalProps> = ({
     },
   });
 
-  // Filter catalog settings
+  // Filter catalog settings - show settings that are configured in the policy OR manually reviewed
   const filteredCatalogSettings = React.useMemo(() => {
     if (!comparison) return [];
     return comparison.catalogSettings.filter((setting) => {
-      // Exclude already-reviewed settings (already mapped to this policy)
-      if (setting.manualReview?.isReviewed) {
+      // INCLUDE settings that are either:
+      // 1. Configured in the policy's raw data (status === 'CONFIGURED')
+      // 2. OR manually reviewed/associated with this policy
+      if (setting.status !== 'CONFIGURED' && !setting.manualReview?.isReviewed) {
         return false;
       }
       // Search filter
@@ -219,7 +221,10 @@ export const PolicyComparisonModal: React.FC<PolicyComparisonModalProps> = ({
             {/* Left Panel - Policy Settings Overview */}
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                Policy Settings Comparison
+                Policy Settings
+              </Typography>
+              <Typography variant="body2" color="text.secondary" gutterBottom sx={{ mb: 2 }}>
+                Settings configured in this policy or manually associated
               </Typography>
 
               {/* Summary */}
@@ -227,9 +232,11 @@ export const PolicyComparisonModal: React.FC<PolicyComparisonModalProps> = ({
                 <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                   <Paper sx={{ p: 1.5, flex: 1, bgcolor: '#2C2C2C' }}>
                     <Typography variant="caption" color="text.secondary">
-                      Catalog Settings
+                      Policy Settings
                     </Typography>
-                    <Typography variant="h6">{comparison.summary.totalCatalogSettings}</Typography>
+                    <Typography variant="h6">
+                      {comparison.catalogSettings.filter(s => s.status === 'CONFIGURED' || s.manualReview?.isReviewed).length}
+                    </Typography>
                   </Paper>
                   <Paper sx={{ p: 1.5, flex: 1, bgcolor: '#2C2C2C' }}>
                     <Typography variant="caption" color="text.secondary">
@@ -241,18 +248,18 @@ export const PolicyComparisonModal: React.FC<PolicyComparisonModalProps> = ({
                   </Paper>
                   <Paper sx={{ p: 1.5, flex: 1, bgcolor: '#2C2C2C' }}>
                     <Typography variant="caption" color="text.secondary">
-                      Not Configured
+                      Manually Reviewed
                     </Typography>
-                    <Typography variant="h6" color="error.main">
-                      {comparison.summary.notConfiguredCount}
+                    <Typography variant="h6" color="info.main">
+                      {comparison.summary.reviewedCount}
                     </Typography>
                   </Paper>
                   <Paper sx={{ p: 1.5, flex: 1, bgcolor: '#2C2C2C' }}>
                     <Typography variant="caption" color="text.secondary">
-                      Reviewed
+                      Available in Catalog
                     </Typography>
-                    <Typography variant="h6" color="info.main">
-                      {comparison.summary.reviewedCount}
+                    <Typography variant="h6" color="text.secondary">
+                      {comparison.summary.totalCatalogSettings}
                     </Typography>
                   </Paper>
                 </Box>
@@ -290,41 +297,67 @@ export const PolicyComparisonModal: React.FC<PolicyComparisonModalProps> = ({
 
               {/* Settings List */}
               <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
-                {filteredCatalogSettings.map((setting) => (
-                  <Accordion key={setting.id} sx={{ bgcolor: '#2C2C2C', mb: 1 }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
-                        <Chip
-                          label={setting.status === 'CONFIGURED' ? '✓' : '✗'}
-                          size="small"
-                          color={setting.status === 'CONFIGURED' ? 'success' : 'error'}
-                          sx={{ minWidth: 32 }}
-                        />
-                        <Typography variant="body2" sx={{ flex: 1 }}>
-                          {setting.displayName}
-                        </Typography>
-                        {setting.manualReview?.isReviewed && (
-                          <Tooltip title="Manually Reviewed">
-                            <Chip label="Reviewed" size="small" color="info" variant="outlined" />
-                          </Tooltip>
-                        )}
-                      </Box>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography variant="caption" color="text.secondary" display="block">
-                        Path: {setting.settingPath}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" display="block">
-                        Expected: {setting.expectedValue}
-                      </Typography>
-                      {setting.actualValue && (
+                {filteredCatalogSettings.length === 0 ? (
+                  <Alert severity="info">
+                    <Typography variant="body2">
+                      No settings found in this policy. This policy either has no configured settings or they haven't been mapped to the catalog yet.
+                    </Typography>
+                  </Alert>
+                ) : (
+                  filteredCatalogSettings.map((setting) => (
+                    <Accordion key={setting.id} sx={{ bgcolor: '#2C2C2C', mb: 1 }}>
+                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
+                          <Chip
+                            label={setting.status === 'CONFIGURED' ? '✓' : '✗'}
+                            size="small"
+                            color={setting.status === 'CONFIGURED' ? 'success' : 'error'}
+                            sx={{ minWidth: 32 }}
+                          />
+                          <Typography variant="body2" sx={{ flex: 1 }}>
+                            {setting.displayName}
+                          </Typography>
+                          {setting.manualReview?.manualComplianceStatus && (
+                            <Tooltip title={`Manual Status: ${setting.manualReview.manualComplianceStatus}`}>
+                              <Chip
+                                label={setting.manualReview.manualComplianceStatus}
+                                size="small"
+                                color={
+                                  setting.manualReview.manualComplianceStatus === 'COMPLIANT' ? 'success' :
+                                  setting.manualReview.manualComplianceStatus === 'PARTIAL' ? 'warning' : 'error'
+                                }
+                                variant="outlined"
+                              />
+                            </Tooltip>
+                          )}
+                        </Box>
+                      </AccordionSummary>
+                      <AccordionDetails>
                         <Typography variant="caption" color="text.secondary" display="block">
-                          Actual: {setting.actualValue}
+                          Path: {setting.settingPath}
                         </Typography>
-                      )}
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
+                        <Typography variant="caption" color="text.secondary" display="block">
+                          Expected: {setting.expectedValue}
+                        </Typography>
+                        {setting.actualValue && (
+                          <Typography variant="caption" color="text.secondary" display="block">
+                            Actual: {setting.actualValue}
+                          </Typography>
+                        )}
+                        {setting.manualReview?.rationale && (
+                          <Box sx={{ mt: 1, p: 1, bgcolor: '#1a1a1a', borderRadius: 1 }}>
+                            <Typography variant="caption" color="text.secondary" display="block" fontWeight="bold">
+                              Rationale:
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary" display="block">
+                              {setting.manualReview.rationale}
+                            </Typography>
+                          </Box>
+                        )}
+                      </AccordionDetails>
+                    </Accordion>
+                  ))
+                )}
               </Box>
             </Box>
 

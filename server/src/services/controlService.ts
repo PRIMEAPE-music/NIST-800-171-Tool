@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { logger } from '@/utils/logger';
 import { ControlStatus } from '@/types/enums';
 import { controlProgressService } from './controlProgress.service';
+import { coverageService } from './coverageService';
 // REMOVED: settingsMapper import - no longer mapping policies to controls
 
 export class ControlService {
@@ -271,6 +272,15 @@ export class ControlService {
               milestones: true,
             },
           },
+          evidenceRequirements: {
+            include: {
+              policy: true,
+              procedure: true,
+              uploadedEvidence: {
+                orderBy: { uploadedAt: 'desc' },
+              },
+            },
+          },
         },
       });
 
@@ -278,12 +288,16 @@ export class ControlService {
         return null;
       }
 
-      // Add improvement action progress
-      const progress = await controlProgressService.calculateControlProgress(control.controlId);
+      // Add improvement action progress and coverage calculation
+      const [progress, coverage] = await Promise.all([
+        controlProgressService.calculateControlProgress(control.controlId),
+        coverageService.calculateControlCoverage(control.controlId),
+      ]);
 
       return {
         ...control,
         improvementActionProgress: progress,
+        coverage,
       };
     } catch (error) {
       logger.error(`Error fetching control ${controlId}:`, error);

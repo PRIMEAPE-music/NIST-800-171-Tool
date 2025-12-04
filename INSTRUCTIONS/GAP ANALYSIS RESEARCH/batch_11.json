@@ -1,0 +1,169 @@
+{
+  "batchNumber": 11,
+  "controlsAnalyzed": 2,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.05.11",
+      "controlTitle": "Authentication Feedback",
+      "controlFamily": "IA",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Identification and Authentication Policy",
+            "description": "Organizational policy governing authentication mechanisms and feedback obscuring requirements",
+            "rationale": "NIST 03.05.11 requires obscuring authentication feedback during the authentication process, which necessitates formal policy guidance on acceptable methods"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Authentication Configuration Procedure",
+            "description": "Step-by-step process for configuring authentication interfaces to obscure feedback (asterisks for passwords, limited-time display, etc.)",
+            "rationale": "Control requires implementing obscuring mechanisms; procedure documents how to configure systems to display asterisks or obscure passwords after limited time"
+          },
+          {
+            "name": "Authentication System Testing Procedure",
+            "description": "Process for testing authentication interfaces to verify feedback is properly obscured across all platforms (desktop, mobile, web)",
+            "rationale": "Discussion mentions different threat levels for large monitors vs small mobile displays; testing ensures appropriate obscuring methods are applied"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Authentication Interface Configuration Screenshots",
+            "description": "Screenshots showing: login screens with password fields displaying asterisks, mobile authentication screens with appropriate feedback obscuring, web application login forms with masked input",
+            "frequency": "Annual (or when authentication systems are updated)",
+            "freshnessThreshold": "365 days",
+            "rationale": "Demonstrates technical implementation of feedback obscuring across all authentication interfaces; annual verification ensures configurations remain in place"
+          },
+          {
+            "name": "Authentication System Testing Reports",
+            "description": "Reports showing: systems tested, feedback obscuring methods verified (asterisks, timeout-based obscuring), platforms tested (Windows, macOS, iOS, Android, web browsers), test results, tester signatures",
+            "frequency": "Annual",
+            "freshnessThreshold": "365 days",
+            "rationale": "NIST discussion requires selecting obscuring means based on platform; annual testing verifies proper implementation across all platforms"
+          },
+          {
+            "name": "Authentication System Configuration Standards",
+            "description": "Documentation showing: technical configuration standards for login screens, password field settings (masked input enabled), timeout values for limited-time display, browser-specific configurations",
+            "frequency": "Annual review/update",
+            "freshnessThreshold": "365 days",
+            "rationale": "Provides audit trail of organizational standards for implementing authentication feedback obscuring"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Configure all authentication interfaces to obscure password entry with asterisks or dots",
+          "Implement timeout-based feedback obscuring where temporary display is needed",
+          "Test authentication interfaces across all platforms (desktop, mobile, web) for proper feedback obscuring",
+          "Review authentication system configurations annually to verify feedback obscuring remains enabled",
+          "Update authentication standards when new systems or platforms are deployed"
+        ]
+      }
+    },
+    {
+      "controlId": "03.05.12",
+      "controlTitle": "Authenticator Management",
+      "controlFamily": "IA",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Identification and Authentication Policy",
+            "description": "Organizational policy governing authenticator lifecycle management including distribution, protection, and revocation",
+            "rationale": "NIST 03.05.12 requires comprehensive authenticator management spanning initial distribution through revocation, necessitating formal policy framework"
+          },
+          {
+            "name": "Authenticator Protection Policy",
+            "description": "Policy defining requirements for protecting authenticator content from unauthorized disclosure and modification",
+            "rationale": "Control requirement 03.05.12.f explicitly requires protecting authenticator content; policy establishes organizational standards for storage and transmission protection"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Initial Authenticator Distribution Procedure",
+            "description": "Step-by-step process for: verifying recipient identity, establishing initial authenticator content, distributing authenticators securely, documenting distribution",
+            "rationale": "Control requirements 03.05.12.a and 03.05.12.b require identity verification and establishing initial content during distribution"
+          },
+          {
+            "name": "Authenticator Lifecycle Management Procedure",
+            "description": "Process for: changing default authenticators at first use, periodic authenticator refresh schedule, handling lost/compromised/damaged authenticators, revoking authenticators upon termination",
+            "rationale": "Control requirements 03.05.12.c, 03.05.12.d, and 03.05.12.e require administrative procedures for entire authenticator lifecycle"
+          },
+          {
+            "name": "Authenticator Storage and Protection Procedure",
+            "description": "Process for: storing passwords in cryptographically protected form, transmitting authenticators over encrypted channels, protecting cryptographic devices and certificates, handling biometric templates",
+            "rationale": "Control requirement 03.05.12.f requires protecting authenticator content; discussion mentions passwords stored in hashed/encrypted formats"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Authenticator Distribution Records",
+            "description": "Records showing: recipient identity verification method (ID check, manager approval), authenticator type issued (password, certificate, token, badge), initial content established, distribution date, recipient signature acknowledging receipt",
+            "frequency": "Ongoing (per distribution event)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Demonstrates execution of 03.05.12.a and 03.05.12.b requirements for identity verification and initial content establishment"
+          },
+          {
+            "name": "Default Authenticator Change Logs",
+            "description": "System logs showing: temporary passwords expired on first use, default certificates replaced before production use, system accounts with default credentials changed, timestamps of changes",
+            "frequency": "Ongoing (per first use event)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Proves compliance with 03.05.12.d requirement to change default authenticators at first use"
+          },
+          {
+            "name": "Authenticator Refresh/Rotation Reports",
+            "description": "Reports showing: passwords changed per organization-defined frequency (e.g., 90 days), certificates renewed before expiration, cryptographic keys rotated, authenticator refresh events triggered (role changes, suspected compromise), completion dates",
+            "frequency": "Per organization-defined schedule (typically 90 days for passwords, annually for certificates)",
+            "freshnessThreshold": "120 days (assuming 90-day password policy with 30-day grace)",
+            "rationale": "Demonstrates 03.05.12.e requirement to change/refresh authenticators at defined frequency or when specific events occur"
+          },
+          {
+            "name": "Lost/Compromised Authenticator Incident Records",
+            "description": "Records showing: incident report filed, old authenticator revoked/disabled, new authenticator issued, user re-verified, completion date, approvals",
+            "frequency": "Ongoing (per incident)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Proves 03.05.12.c requirement for procedures handling lost, compromised, or damaged authenticators"
+          },
+          {
+            "name": "Authenticator Revocation Logs",
+            "description": "System logs showing: authenticators disabled upon termination, access revoked within required timeframe, group/role account authenticators changed when membership changes, certificates revoked, physical badges deactivated",
+            "frequency": "Ongoing (per termination/transfer event)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Demonstrates 03.05.12.c revocation procedures and supports related control 03.01.01 for account management"
+          },
+          {
+            "name": "Authenticator Protection Audit Evidence",
+            "description": "Evidence showing: password hashing algorithms used (bcrypt, PBKDF2, Argon2), database encryption status for password stores, TLS/HTTPS enforcement for password transmission, key vault configurations for certificate storage, access controls on authenticator repositories",
+            "frequency": "Quarterly review",
+            "freshnessThreshold": "120 days",
+            "rationale": "Proves 03.05.12.f requirement to protect authenticator content from unauthorized disclosure and modification; NIST discussion explicitly mentions hashed/encrypted password storage"
+          },
+          {
+            "name": "Authenticator Inventory",
+            "description": "Comprehensive inventory showing: all authenticator types in use (passwords, certificates, tokens, biometrics, badges), systems using each authenticator type, authenticator lifecycle status, refresh/expiration dates, responsible owners",
+            "frequency": "Quarterly update",
+            "freshnessThreshold": "120 days",
+            "rationale": "Supports overall authenticator management requirement; enables tracking of all authenticators subject to protection and lifecycle management"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Verify identity of individuals before distributing authenticators (check government ID, verify with manager)",
+          "Establish initial authenticator content for new accounts (temporary password, certificate, token)",
+          "Distribute authenticators securely and obtain recipient acknowledgment",
+          "Force change of temporary/default authenticators on first use",
+          "Refresh passwords every 90 days (or organization-defined frequency)",
+          "Renew certificates before expiration",
+          "Rotate cryptographic keys per key management policy",
+          "Handle lost/compromised authenticator incidents within 24 hours",
+          "Revoke authenticators immediately upon employee termination",
+          "Change group/role account authenticators when membership changes",
+          "Store passwords using strong hashing algorithms (bcrypt, Argon2)",
+          "Transmit passwords only over TLS/HTTPS encrypted channels",
+          "Protect certificate private keys in secure key stores",
+          "Maintain audit logs of all authenticator lifecycle events",
+          "Review authenticator protection mechanisms quarterly"
+        ]
+      }
+    }
+  ]
+}

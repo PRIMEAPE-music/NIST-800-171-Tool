@@ -1,6 +1,6 @@
 // client/src/components/manual-review/SettingAssociationButton.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Tooltip } from '@mui/material';
 import { Link as LinkIcon } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
@@ -51,14 +51,6 @@ export const SettingAssociationButton: React.FC<SettingAssociationButtonProps> =
     enabled: !!policyId,
   });
 
-  // Auto-open comparison modal if policy is preselected
-  useEffect(() => {
-    if (preselectedPolicy && policyId) {
-      setSelectedPolicy(preselectedPolicy);
-      setComparisonOpen(true);
-    }
-  }, [preselectedPolicy, policyId]);
-
   const handleSelectPolicy = (policy: PolicyForSelector) => {
     setSelectedPolicy(policy);
     setDrawerOpen(false);
@@ -67,9 +59,7 @@ export const SettingAssociationButton: React.FC<SettingAssociationButtonProps> =
 
   const handleCloseComparison = () => {
     setComparisonOpen(false);
-    if (!policyId) {
-      setSelectedPolicy(null);
-    }
+    setSelectedPolicy(null);
   };
 
   const handleSuccess = () => {
@@ -80,6 +70,7 @@ export const SettingAssociationButton: React.FC<SettingAssociationButtonProps> =
   const handleButtonClick = () => {
     if (policyId && preselectedPolicy) {
       // Skip drawer, go directly to comparison
+      setSelectedPolicy(preselectedPolicy);
       setComparisonOpen(true);
     } else {
       // Open drawer to select policy

@@ -59,9 +59,9 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     label: 'Gap Analysis',
-    path: '/m365/gap-analysis',
+    path: '/gap-analysis',
     icon: FindInPageIcon,
-    description: 'Identify M365 compliance gaps',
+    description: 'Coverage analysis and compliance gaps',
   },
   {
     label: 'Surveys',

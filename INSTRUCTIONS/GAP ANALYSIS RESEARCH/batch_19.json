@@ -1,0 +1,462 @@
+{
+  "batchNumber": 19,
+  "controlsAnalyzed": 6,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.13.01",
+      "controlTitle": "Boundary Protection",
+      "controlFamily": "SC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "System and Communications Protection Policy",
+            "description": "Organizational policy governing boundary protection, network security architecture, and managed interface requirements",
+            "rationale": "NIST 03.13.01 requires monitoring and controlling communications at managed interfaces and implementing boundary protection devices arranged in accordance with organizational security architecture"
+          },
+          {
+            "name": "Network Security Policy",
+            "description": "Policy defining requirements for network segmentation, DMZ implementation, and boundary device deployment",
+            "rationale": "Control requires implementing subnetworks for publicly accessible components that are physically or logically separated from internal networks"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Boundary Device Management Procedure",
+            "description": "Step-by-step process for deploying, configuring, and maintaining firewalls, routers, gateways, and other boundary protection devices",
+            "rationale": "Control requires connecting to external systems only through managed interfaces consisting of boundary protection devices"
+          },
+          {
+            "name": "DMZ Configuration Procedure",
+            "description": "Process for implementing and maintaining demilitarized zones for publicly accessible system components",
+            "rationale": "NIST discussion states subnetworks must be physically or logically separated from internal networks"
+          },
+          {
+            "name": "Network Traffic Monitoring Procedure",
+            "description": "Process for monitoring and controlling communications at external and key internal managed interfaces",
+            "rationale": "Control explicitly requires monitoring and controlling communications at managed interfaces"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Firewall Rule Review Reports",
+            "description": "Monthly reports showing: firewall rules reviewed, unauthorized rules removed, rule justifications verified, reviewer signatures, date completed",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates ongoing monitoring and control of communications at boundary devices per 03.13.01.a"
+          },
+          {
+            "name": "Network Traffic Analysis Logs",
+            "description": "Daily logs showing: monitored traffic at managed interfaces, detected anomalies, blocked spoofed traffic, alert responses, traffic patterns analyzed",
+            "frequency": "Daily (continuous monitoring)",
+            "freshnessThreshold": "7 days",
+            "rationale": "NIST discussion requires restricting traffic that appears to be spoofing internal/external addresses"
+          },
+          {
+            "name": "Boundary Device Configuration Audits",
+            "description": "Quarterly audits showing: boundary devices inventoried, configurations validated against security architecture, deviations identified, remediation completed",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Validates that boundary protection devices are arranged in accordance with organizational security architecture per 03.13.01.c"
+          },
+          {
+            "name": "DMZ Segregation Verification Reports",
+            "description": "Quarterly reports showing: publicly accessible components identified, network segregation verified, unauthorized connections blocked, segmentation effectiveness tested",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates implementation of subnetworks that are physically or logically separated from internal networks per 03.13.01.b"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Monitor communications at external managed interfaces continuously",
+          "Control communications at key internal managed interfaces",
+          "Review and update firewall rules monthly",
+          "Verify DMZ segregation from internal networks quarterly",
+          "Analyze network traffic for spoofing attempts daily",
+          "Audit boundary device configurations quarterly",
+          "Test network segmentation effectiveness quarterly",
+          "Block unauthorized connections to external systems"
+        ]
+      }
+    },
+    {
+      "controlId": "03.13.04",
+      "controlTitle": "Information in Shared System Resources",
+      "controlFamily": "SC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "System and Communications Protection Policy",
+            "description": "Organizational policy governing object reuse, residual information protection, and shared resource management",
+            "rationale": "NIST 03.13.04 requires preventing unauthorized information transfer via shared system resources, which is referred to as object reuse and residual information protection"
+          },
+          {
+            "name": "Data Sanitization Policy",
+            "description": "Policy defining requirements for clearing information from shared resources before reallocation",
+            "rationale": "Control requires stopping information from prior users being available to current users after resources are released back to the system"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Object Reuse Procedure",
+            "description": "Step-by-step process for sanitizing shared system resources including memory, storage, and processing resources before reallocation",
+            "rationale": "Control requires preventing information from prior users/roles from being available to current users/roles"
+          },
+          {
+            "name": "Memory Sanitization Procedure",
+            "description": "Technical process for securely clearing memory buffers, caches, and temporary storage when released",
+            "rationale": "NIST discussion states information in shared system resources includes encrypted representations requiring protection"
+          },
+          {
+            "name": "Device Wipe Procedure",
+            "description": "Process for wiping mobile devices and shared workstations when reassigned to new users",
+            "rationale": "Ensures prior user information is not available to subsequent users on shared devices"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Resource Deallocation Logs",
+            "description": "Continuous logs showing: resources released, sanitization method applied, verification of successful clearing, timestamp, next allocation recorded",
+            "frequency": "Continuous (per deallocation event)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Demonstrates that shared resources are sanitized before reallocation per 03.13.04"
+          },
+          {
+            "name": "Memory Sanitization Verification Reports",
+            "description": "Quarterly reports showing: sanitization mechanisms tested, memory clearing verified, residual data checks performed, failures addressed",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Validates effectiveness of mechanisms preventing unauthorized information transfer via shared resources"
+          },
+          {
+            "name": "Device Wipe Completion Records",
+            "description": "Records showing: device identification, wipe method used, wipe completion verified, reassignment authorized, date completed",
+            "frequency": "Per reassignment event",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Proves prior user information is removed before device reassignment"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Sanitize memory buffers when released from processes",
+          "Clear temporary storage before reallocation",
+          "Wipe devices completely when reassigned to new users",
+          "Verify sanitization mechanisms quarterly",
+          "Test memory clearing effectiveness quarterly",
+          "Log all resource deallocation and sanitization activities",
+          "Monitor for residual information leakage"
+        ]
+      }
+    },
+    {
+      "controlId": "03.13.06",
+      "controlTitle": "Network Communications – Deny by Default – Allow by Exception",
+      "controlFamily": "SC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Network Security Policy",
+            "description": "Organizational policy establishing deny-all, allow-by-exception network communications traffic requirements",
+            "rationale": "NIST 03.13.06 requires denying network communications traffic by default and allowing by exception to ensure only essential connections are permitted"
+          },
+          {
+            "name": "Firewall Management Policy",
+            "description": "Policy defining requirements for implementing default-deny posture and exception approval processes",
+            "rationale": "Control requires implementing deny-all policy at system boundary and identified internal points"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Firewall Rule Approval Procedure",
+            "description": "Step-by-step process for requesting, reviewing, approving, and documenting exceptions to default-deny policy",
+            "rationale": "Control requires allowing network communications by exception, necessitating formal approval process"
+          },
+          {
+            "name": "Connection Whitelist Management Procedure",
+            "description": "Process for maintaining and reviewing approved network connections and services",
+            "rationale": "NIST discussion states policy ensures only essential and approved connections are allowed"
+          },
+          {
+            "name": "Default-Deny Configuration Procedure",
+            "description": "Technical process for configuring firewalls, ACLs, and network devices with default-deny rules",
+            "rationale": "Control requires implementing deny-all policy at inbound and outbound network traffic points"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Firewall Rule Change Logs",
+            "description": "Continuous logs showing: rule change requested, business justification provided, approver identification, rule implemented, date completed",
+            "frequency": "Continuous (per change event)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Demonstrates that exceptions to default-deny are formally approved per 03.13.06"
+          },
+          {
+            "name": "Approved Connections List Reviews",
+            "description": "Quarterly reports showing: all allowed connections reviewed, business need revalidated, unnecessary exceptions removed, approvals renewed",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Ensures only essential and approved connections remain allowed per NIST discussion"
+          },
+          {
+            "name": "Default-Deny Verification Reports",
+            "description": "Monthly reports showing: default-deny policy tested, unauthorized traffic blocked, exceptions validated, policy effectiveness verified",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Validates that deny-all, allow-by-exception policy is effectively implemented"
+          },
+          {
+            "name": "Blocked Connection Reports",
+            "description": "Weekly reports showing: denied connection attempts, source/destination analysis, attack patterns identified, false positives reviewed",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "Demonstrates default-deny posture is blocking unauthorized traffic as required"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Configure all network devices with default-deny rules",
+          "Review and approve exceptions to default-deny policy",
+          "Test default-deny policy effectiveness monthly",
+          "Review approved connections list quarterly",
+          "Remove unnecessary exceptions quarterly",
+          "Log all denied connection attempts",
+          "Analyze blocked traffic patterns weekly",
+          "Validate firewall rules against approved exceptions monthly"
+        ]
+      }
+    },
+    {
+      "controlId": "03.13.08",
+      "controlTitle": "Transmission and Storage Confidentiality",
+      "controlFamily": "SC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Cryptographic Protection Policy",
+            "description": "Organizational policy establishing requirements for cryptographic mechanisms to protect CUI during transmission and while in storage",
+            "rationale": "NIST 03.13.08 requires implementing cryptographic mechanisms to prevent unauthorized disclosure of CUI during transmission and storage"
+          },
+          {
+            "name": "Data Protection Policy",
+            "description": "Policy defining encryption requirements for CUI across all system components including endpoints, servers, mobile devices, and network communications",
+            "rationale": "Control applies to internal and external networks and any system components that can transmit or store CUI"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Encryption Implementation Procedure",
+            "description": "Step-by-step process for implementing encryption on servers, workstations, mobile devices, storage devices, and databases containing CUI",
+            "rationale": "Control requires protecting CUI in storage which resides on internal/external storage devices, storage area networks, and databases"
+          },
+          {
+            "name": "TLS/IPsec Configuration Procedure",
+            "description": "Technical process for configuring and maintaining TLS for web communications and IPsec for network-level encryption",
+            "rationale": "NIST discussion specifies TLS and IPsec as cryptographic mechanisms protecting CUI confidentiality during transmission"
+          },
+          {
+            "name": "Full Disk Encryption Procedure",
+            "description": "Process for deploying and managing BitLocker or equivalent full disk encryption on endpoints and servers",
+            "rationale": "Protects information at rest on desktop computers, notebook computers, and mobile devices per control requirements"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Encryption Verification Scans",
+            "description": "Monthly scans showing: all devices inventoried, encryption status verified, unencrypted CUI storage identified, remediation completed",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates cryptographic mechanisms are protecting CUI in storage per 03.13.08"
+          },
+          {
+            "name": "TLS Certificate Validation Reports",
+            "description": "Quarterly reports showing: TLS certificates inventoried, expiration dates verified, weak ciphers identified, certificate renewals completed",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Validates TLS cryptographic mechanisms protecting CUI during transmission are properly maintained"
+          },
+          {
+            "name": "Encrypted Storage Inventory",
+            "description": "Quarterly inventory showing: all CUI storage locations identified, encryption method documented, compliance verified, gaps remediated",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST requires encryption of information at rest on all storage devices containing CUI"
+          },
+          {
+            "name": "Network Traffic Encryption Reports",
+            "description": "Weekly reports showing: network traffic analyzed, unencrypted CUI transmission detected, IPsec/TLS enforcement verified, violations addressed",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "Control requires preventing unauthorized disclosure during transmission on internal and external networks"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Deploy full disk encryption on all endpoints and servers storing CUI",
+          "Configure TLS for all web-based CUI transmissions",
+          "Implement IPsec for network-level CUI protection",
+          "Verify encryption status on all devices monthly",
+          "Scan network traffic for unencrypted CUI weekly",
+          "Review and update TLS certificates quarterly",
+          "Inventory all CUI storage locations quarterly",
+          "Remediate unencrypted CUI storage within 30 days of discovery"
+        ]
+      }
+    },
+    {
+      "controlId": "03.13.09",
+      "controlTitle": "Network Disconnect",
+      "controlFamily": "SC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Session Management Policy",
+            "description": "Organizational policy defining requirements for terminating network connections after session completion or defined inactivity periods",
+            "rationale": "NIST 03.13.09 requires terminating network connections associated with communications sessions at end of session or after organization-defined inactivity period"
+          },
+          {
+            "name": "Network Security Policy",
+            "description": "Policy establishing inactivity timeout periods by network access type and specific network accesses",
+            "rationale": "NIST discussion states time periods of inactivity may be established by type of network access or for specific network accesses"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Session Timeout Configuration Procedure",
+            "description": "Step-by-step process for configuring network connection timeouts on firewalls, VPN concentrators, application servers, and network devices",
+            "rationale": "Control requires terminating connections at operating system level or application level after defined inactivity"
+          },
+          {
+            "name": "Network Session Termination Procedure",
+            "description": "Technical process for deallocating TCP/IP addresses, port pairs, and networking assignments when sessions end",
+            "rationale": "NIST discussion specifies termination includes deallocating TCP/IP addresses or port pairs at OS level or networking assignments at application level"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Session Timeout Configuration Audits",
+            "description": "Quarterly audits showing: timeout configurations inventoried, inactivity periods validated against policy, non-compliant systems identified, remediation completed",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Validates that organization-defined inactivity timeouts are configured per 03.13.09"
+          },
+          {
+            "name": "Terminated Session Logs",
+            "description": "Daily logs showing: sessions terminated due to inactivity, session duration recorded, resource deallocation verified, user notified",
+            "frequency": "Daily (continuous monitoring)",
+            "freshnessThreshold": "7 days",
+            "rationale": "Demonstrates network connections are being terminated after inactivity as required"
+          },
+          {
+            "name": "Inactive Connection Reports",
+            "description": "Weekly reports showing: long-running connections identified, inactive sessions detected, automatic termination verified, timeout policy effectiveness",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "Monitors effectiveness of session termination mechanisms across internal and external networks"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Configure session timeouts on all network access points",
+          "Set VPN connection inactivity timeout to 15 minutes",
+          "Configure application session timeouts based on risk level",
+          "Monitor and log all session terminations daily",
+          "Review inactive connection patterns weekly",
+          "Audit timeout configurations quarterly",
+          "Verify TCP/IP resource deallocation on session end",
+          "Test session timeout enforcement quarterly"
+        ]
+      }
+    },
+    {
+      "controlId": "03.13.10",
+      "controlTitle": "Cryptographic Key Establishment and Management",
+      "controlFamily": "SC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Cryptographic Key Management Policy",
+            "description": "Organizational policy establishing requirements for key generation, distribution, storage, access, and destruction in accordance with federal laws and regulations",
+            "rationale": "NIST 03.13.10 requires establishing and managing cryptographic keys per organization-defined requirements for key lifecycle management"
+          },
+          {
+            "name": "Key Lifecycle Management Policy",
+            "description": "Policy defining specific requirements for cryptographic key establishment and management including FIPS compliance",
+            "rationale": "Organizations must satisfy requirements in accordance with applicable federal laws, Executive Orders, policies, directives, regulations, and standards"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Key Generation Procedure",
+            "description": "Step-by-step process for generating cryptographic keys using FIPS 140-3 validated modules and approved algorithms",
+            "rationale": "Control requires establishing cryptographic keys per organization-defined requirements for key generation"
+          },
+          {
+            "name": "Key Distribution Procedure",
+            "description": "Technical process for securely distributing cryptographic keys to authorized systems and users",
+            "rationale": "Control explicitly requires key distribution requirements as part of key management"
+          },
+          {
+            "name": "Key Storage and Protection Procedure",
+            "description": "Process for storing cryptographic keys in Hardware Security Modules (HSMs) or key management systems with appropriate access controls",
+            "rationale": "Control requires defining storage requirements; supporting publications reference SP 800-57 key storage guidance"
+          },
+          {
+            "name": "Key Destruction Procedure",
+            "description": "Process for securely destroying cryptographic keys at end of lifecycle including verification of destruction",
+            "rationale": "Control explicitly requires key destruction requirements as part of key management"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Key Generation Logs",
+            "description": "Continuous logs showing: key generated, algorithm used, key length, FIPS module validation, purpose documented, timestamp",
+            "frequency": "Continuous (per key generation)",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Demonstrates keys are generated per organization-defined requirements per 03.13.10"
+          },
+          {
+            "name": "Key Rotation Records",
+            "description": "Quarterly records showing: keys rotated per schedule, old keys retired, new keys distributed, systems updated, rotation completed",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Key rotation is essential key management requirement per SP 800-57 guidance"
+          },
+          {
+            "name": "Key Destruction Certificates",
+            "description": "Records showing: key identification, destruction method used, destruction verified, authorization documented, date completed",
+            "frequency": "Per destruction event",
+            "freshnessThreshold": "N/A - maintained for audit",
+            "rationale": "Proves keys are destroyed per organization-defined requirements"
+          },
+          {
+            "name": "Key Inventory Audits",
+            "description": "Annual audits showing: all cryptographic keys inventoried, key metadata verified, unauthorized keys identified, compliance validated",
+            "frequency": "Annually",
+            "freshnessThreshold": "18 months",
+            "rationale": "Comprehensive inventory validates all keys are managed per established requirements"
+          },
+          {
+            "name": "HSM Access Logs",
+            "description": "Continuous logs showing: key access requests, authorized users verified, keys retrieved, operations performed, timestamp",
+            "frequency": "Continuous monitoring",
+            "freshnessThreshold": "7 days",
+            "rationale": "Demonstrates key access controls are enforced per organization-defined requirements"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Generate cryptographic keys using FIPS 140-3 validated modules",
+          "Store keys in Hardware Security Modules (HSMs) or approved key management systems",
+          "Rotate encryption keys quarterly or per policy requirements",
+          "Distribute keys securely to authorized systems only",
+          "Destroy retired keys using approved destruction methods",
+          "Audit key inventory annually",
+          "Monitor HSM access logs continuously",
+          "Verify key generation uses approved algorithms",
+          "Document all key lifecycle events"
+        ]
+      }
+    }
+  ]
+}

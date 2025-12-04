@@ -44,6 +44,7 @@ model Control {
   m365Compliance  ControlM365Compliance?
   improvementActionMappings ImprovementActionMapping[]
   manualSettingReviews ManualSettingReview[]
+  evidenceRequirements EvidenceRequirement[]
 
   @@index([family])
   @@index([priority])
@@ -715,10 +716,97 @@ model ControlEvidence {
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
 
+  // Link to evidence requirement definition
+  requirementId   Int?
+  requirement     EvidenceRequirement? @relation(fields: [requirementId], references: [id], onDelete: SetNull)
+
+  // Execution evidence tracking
+  executionDate   DateTime?  @map("execution_date") // When the activity was performed
+  freshnessStatus String?    @map("freshness_status") // "fresh", "aging", "stale", "critical"
+
   @@index([controlId])
   @@index([status])
   @@index([evidenceType])
   @@map("control_evidence")
+}
+
+// Master list of required evidence items per control
+model EvidenceRequirement {
+  id                  Int      @id @default(autoincrement())
+  controlId           Int      @map("control_id")
+  control             Control  @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  evidenceType        String   @map("evidence_type") // "policy", "procedure", "execution", "physical"
+  name                String
+  description         String
+  rationale           String?
+
+  // For execution evidence
+  frequency           String?  // "Daily", "Weekly", "Monthly", "Quarterly", "Annually"
+  freshnessThreshold  Int?     @map("freshness_threshold") // Days before evidence is considered stale
+
+  // Relationships
+  policyId            Int?     @map("policy_id")
+  policy              PolicyDocument? @relation(fields: [policyId], references: [id], onDelete: SetNull)
+  procedureId         Int?     @map("procedure_id")
+  procedure           ProcedureDocument? @relation(fields: [procedureId], references: [id], onDelete: SetNull)
+
+  uploadedEvidence    ControlEvidence[]
+
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@index([controlId])
+  @@index([evidenceType])
+  @@map("evidence_requirements")
+}
+
+// Master policy documents (shared across controls)
+model PolicyDocument {
+  id                  Int      @id @default(autoincrement())
+  name                String   @unique
+  description         String?
+  fileName            String?  @map("file_name")
+  filePath            String?  @map("file_path")
+  uploadedAt          DateTime? @map("uploaded_at")
+  lastReviewedAt      DateTime? @map("last_reviewed_at")
+
+  requirements        EvidenceRequirement[]
+
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("policy_documents")
+}
+
+// Master procedure documents (may be shared)
+model ProcedureDocument {
+  id                  Int      @id @default(autoincrement())
+  name                String   @unique
+  description         String?
+  fileName            String?  @map("file_name")
+  filePath            String?  @map("file_path")
+  uploadedAt          DateTime? @map("uploaded_at")
+  lastReviewedAt      DateTime? @map("last_reviewed_at")
+
+  requirements        EvidenceRequirement[]
+
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("procedure_documents")
+}
+
+// Deployment configuration for physical coverage
+model DeploymentConfig {
+  id                  Int      @id @default(autoincrement())
+  deploymentModel     String   @map("deployment_model") // "cloud-only", "hybrid", "on-premises"
+  description         String?
+  physicalEvidence    Boolean  @default(false) @map("physical_evidence") // Does org need physical evidence?
+
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("deployment_config")
 }
 
 // ============================================================================

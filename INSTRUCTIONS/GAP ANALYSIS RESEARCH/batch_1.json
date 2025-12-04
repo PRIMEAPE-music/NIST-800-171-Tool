@@ -1,0 +1,510 @@
+{
+  "batchNumber": 1,
+  "controlsAnalyzed": 6,
+  "analysisDate": "2024-12-03",
+  "controls": [
+    {
+      "controlId": "03.01.01",
+      "controlTitle": "Account Management",
+      "controlFamily": "AC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Access Control Policy",
+            "description": "Organizational policy governing all access control practices including account management, authorization processes, and access enforcement",
+            "rationale": "NIST 03.01.01 requires managing system accounts 'in accordance with policy, procedures, prerequisites, and criteria' necessitating formal policy guidance"
+          },
+          {
+            "name": "Account Management Policy",
+            "description": "Specific policy defining types of accounts allowed and prohibited, account lifecycle management requirements, and notification timelines",
+            "rationale": "Control requirement (a) explicitly requires defining 'types of system accounts allowed and prohibited' which necessitates documented policy"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Account Provisioning Procedure",
+            "description": "Step-by-step process for creating, enabling, modifying accounts including authorization requirements, approval workflows, and access assignment criteria",
+            "rationale": "Control requirement (b) requires creating and enabling accounts 'in accordance with procedures' and requirement (d) requires 'valid access authorization' before granting access"
+          },
+          {
+            "name": "Account Deprovisioning Procedure",
+            "description": "Process for disabling and removing accounts including triggers for deactivation, notification requirements, and timeline specifications",
+            "rationale": "Control requirement (f) requires disabling accounts under specific conditions and (g) requires notifications within defined timeframes"
+          },
+          {
+            "name": "Account Review Procedure",
+            "description": "Process for periodic review of active accounts, group memberships, and access authorizations including review frequency, responsibilities, and remediation steps",
+            "rationale": "Control requirement (e) requires 'monitor the use of system accounts' which necessitates defined monitoring and review procedures"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Quarterly Account Review Reports",
+            "description": "Reports showing: list of all accounts reviewed, group and role memberships validated, inactive accounts identified (with last login date), unauthorized or excessive privileges removed, accounts disabled per policy criteria, reviewer name and signature, date review completed",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST requires monitoring account use (requirement e) and CIS Benchmark recommends quarterly access reviews; accounts not reviewed within 120 days indicate gap in monitoring controls"
+          },
+          {
+            "name": "Account Creation/Modification Tickets",
+            "description": "Helpdesk or IAM system tickets showing: requester name, account details, access level requested, business justification, approver name and approval date, date processed, system access granted",
+            "frequency": "Ongoing (per request)",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Demonstrates compliance with requirements (b), (c), and (d) requiring proper authorization and specification of access rights before account creation or modification"
+          },
+          {
+            "name": "Terminated Employee Account Deactivation Records",
+            "description": "Records showing: employee name, termination date, accounts disabled, date accounts disabled, HR notification received date, gaps between termination and deactivation, approver confirmation",
+            "frequency": "Ongoing (per termination)",
+            "freshnessThreshold": "24 hours from termination",
+            "rationale": "Requirement (g)(2) requires notification and action when 'users are terminated or transferred'; industry best practice is 24-hour deactivation to prevent unauthorized access"
+          },
+          {
+            "name": "Inactive Account Deactivation Reports",
+            "description": "Reports showing: accounts with no login activity exceeding organization-defined period (typically 90 days), date last login, date account disabled, exceptions documented with approvals",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Requirement (f)(2) requires disabling accounts 'inactive for organization-defined time period'; monthly reviews prevent accumulation of stale accounts posing security risk"
+          },
+          {
+            "name": "Account Manager Notification Logs",
+            "description": "Logs showing: notification sent to account managers, event triggering notification (expiration, termination, role change), date notification sent, recipient confirmation, action taken with date",
+            "frequency": "Ongoing (event-triggered)",
+            "freshnessThreshold": "Per policy-defined timeframes",
+            "rationale": "Requirement (g) mandates notifications to account managers within defined timeframes for various account events; logs demonstrate compliance with notification requirements"
+          },
+          {
+            "name": "Privileged Account Approval Documentation",
+            "description": "Records showing: privileged access requests, business justification for elevated privileges, additional scrutiny review notes, approver name and date, periodic re-certification of need",
+            "frequency": "Per request and quarterly re-certification",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST Discussion states 'users who require administrative privileges receive additional scrutiny'; documentation proves enhanced review process for high-risk accounts"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Define and document allowed and prohibited account types",
+          "Create new user accounts with proper authorization and approval",
+          "Modify account permissions based on role changes with authorization",
+          "Specify authorized users, group memberships, and privileges for each account",
+          "Authorize access based on valid authorization and intended system usage",
+          "Monitor active accounts and usage patterns",
+          "Disable accounts within 24 hours of employee termination",
+          "Disable accounts exceeding inactivity threshold (typically 90 days)",
+          "Disable accounts violating organizational policy",
+          "Remove accounts no longer associated with users",
+          "Notify account managers when accounts no longer required",
+          "Notify appropriate personnel of user terminations and transfers within defined timeframe",
+          "Notify managers of need-to-know changes within defined timeframe",
+          "Review all active accounts quarterly for appropriateness",
+          "Apply additional scrutiny to privileged account requests"
+        ]
+      }
+    },
+    {
+      "controlId": "03.01.02",
+      "controlTitle": "Access Enforcement",
+      "controlFamily": "AC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Access Control Policy",
+            "description": "Comprehensive organizational policy defining access control requirements, enforcement mechanisms, and applicable access control models (RBAC, MAC, DAC)",
+            "rationale": "NIST 03.01.02 requires enforcing 'approved authorizations in accordance with applicable access control policies' and Discussion states 'access control policies are defined in 03.15.01'"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Access Authorization Procedure",
+            "description": "Process for determining and approving logical access rights to CUI and system resources based on job roles, business need, and security clearances",
+            "rationale": "Control requires enforcing 'approved authorizations' which necessitates documented process for determining what constitutes an approved authorization"
+          },
+          {
+            "name": "Access Enforcement Configuration Procedure",
+            "description": "Technical procedure for implementing access controls in systems, applications, and network devices including RBAC configuration, permission assignment, and enforcement verification",
+            "rationale": "NIST Discussion states 'access enforcement mechanisms can be employed at the application and service levels' requiring documented technical implementation procedures"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Access Control Configuration Exports",
+            "description": "System exports showing: user accounts, assigned roles and groups, resource permissions, access control lists (ACLs), file and folder permissions, database access rights, export date and system covered",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates actual enforcement of approved authorizations; monthly exports enable detection of unauthorized permission changes or privilege creep"
+          },
+          {
+            "name": "Access Authorization Approval Records",
+            "description": "Records showing: access requests, resources requested, business justification, approver review and decision, date approved/denied, access level granted matching request",
+            "frequency": "Ongoing (per request)",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Proves access enforcement is based on 'approved authorizations' as required by control; creates audit trail linking granted access to formal approvals"
+          },
+          {
+            "name": "Remote Access Authorization and Enforcement Records",
+            "description": "Logs showing: VPN connections with user authentication, conditional access policy enforcement, MFA verification, access denied events with reasons, remote sessions to CUI systems",
+            "frequency": "Daily",
+            "freshnessThreshold": "7 days",
+            "rationale": "NIST Discussion specifically mentions 'types of system access include remote access'; logs prove enforcement of access policies for external connections"
+          },
+          {
+            "name": "Failed Access Attempt Logs",
+            "description": "Security logs showing: unauthorized access attempts, access denied events, user attempting access, resource accessed, reason for denial, timestamp, follow-up investigation for repeated failures",
+            "frequency": "Daily",
+            "freshnessThreshold": "3 days",
+            "rationale": "Demonstrates active enforcement of access control policies by blocking unauthorized attempts; critical for identifying potential security incidents requiring rapid review"
+          },
+          {
+            "name": "Application-Level Access Control Audit Logs",
+            "description": "Application logs showing: user access to CUI data within applications, enforced permissions by role, data access requests and approvals, enforcement of segregation of duties, query-level access controls",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "NIST Discussion states enforcement mechanisms 'can be employed at the application and service levels'; proves CUI protection extends beyond network and OS layers"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Define and approve access authorizations for all users and system processes",
+          "Configure and maintain role-based access controls (RBAC) in all systems",
+          "Enforce access controls at network, system, application, and data layers",
+          "Implement access enforcement for remote access and external connections",
+          "Block unauthorized access attempts to CUI and system resources",
+          "Monitor and log all access enforcement actions and denied attempts",
+          "Review access denied logs weekly for patterns requiring policy adjustment",
+          "Verify access enforcement configuration matches approved policies quarterly"
+        ]
+      }
+    },
+    {
+      "controlId": "03.01.03",
+      "controlTitle": "Information Flow Enforcement",
+      "controlFamily": "AC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Information Flow Control Policy",
+            "description": "Policy defining approved information flows within systems and between connected systems, prohibited flows, CUI transmission requirements, and enforcement mechanisms",
+            "rationale": "NIST 03.01.03 requires enforcing 'approved authorizations for controlling the flow of CUI' necessitating policy defining what flows are approved"
+          },
+          {
+            "name": "Data Loss Prevention Policy",
+            "description": "Policy governing use of DLP technologies to prevent unauthorized CUI transmission via email, web, removable media, and cloud services",
+            "rationale": "NIST Discussion states enforcement occurs through 'message-filtering capability based on message content' which describes DLP functionality"
+          },
+          {
+            "name": "External Information Exchange Policy",
+            "description": "Policy governing CUI exchange with external organizations including agreement requirements referenced in 03.12.05",
+            "rationale": "NIST Discussion states 'transferring CUI between organizations may require an agreement that specifies how the information flow is enforced (see 03.12.05)'"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Network Segmentation and Flow Control Procedure",
+            "description": "Technical procedure for implementing network segmentation, firewall rules, router ACLs, and boundary protection devices to control CUI flows",
+            "rationale": "NIST Discussion states enforcement occurs in 'boundary protection devices (e.g., encrypted tunnels, routers, gateways, and firewalls) that use rule sets or establish configuration settings'"
+          },
+          {
+            "name": "Data Loss Prevention Configuration Procedure",
+            "description": "Procedure for configuring and maintaining DLP policies, rules, and exceptions for CUI identification and flow control across communication channels",
+            "rationale": "Control requires enforcement mechanisms; DLP provides 'message-filtering capability based on message content' as described in NIST Discussion"
+          },
+          {
+            "name": "Encrypted Tunnel Configuration Procedure",
+            "description": "Procedure for establishing and maintaining encrypted tunnels for authorized CUI flows between systems and external organizations",
+            "rationale": "NIST Discussion mentions 'encrypted tunnels' as enforcement mechanism and states 'flow control restrictions include keeping CUI from being transmitted in the clear to the internet'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Firewall and Router Rule Set Documentation",
+            "description": "Configuration exports showing: firewall rules controlling CUI flows, router ACLs, blocked traffic patterns, allowed information flows with justification, rule review date, configuration backup date",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST Discussion states enforcement occurs through 'rule sets or configuration settings'; quarterly reviews ensure rules still match approved information flows"
+          },
+          {
+            "name": "DLP Incident and Block Logs",
+            "description": "DLP system logs showing: attempted unauthorized CUI transmissions blocked, policy rule triggered, content type and sensitivity detected, user involved, destination blocked, incident disposition",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "Demonstrates active enforcement of information flow controls by preventing unauthorized CUI transmission; weekly review enables rapid incident response"
+          },
+          {
+            "name": "Network Flow Analysis Reports",
+            "description": "Reports showing: CUI data flows mapped within system, inter-system connections identified, unauthorized flow patterns detected, flows compared against approved authorization matrix",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "NIST requires controlling flows 'within the system and between connected systems'; flow analysis proves enforcement matches approved authorizations"
+          },
+          {
+            "name": "External CUI Transfer Logs",
+            "description": "Logs showing: CUI transfers to external organizations, information exchange agreement referenced, encryption method used, authorized recipient verified, transfer approval documentation",
+            "frequency": "Ongoing (per transfer)",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "NIST Discussion states external transfers 'may require an agreement that specifies how the information flow is enforced'; logs prove compliance with agreement terms"
+          },
+          {
+            "name": "Network Segmentation Verification Reports",
+            "description": "Reports showing: network segments mapped, CUI systems isolated from public systems, VLAN configurations verified, subnet isolation tested, unauthorized connections blocked",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST Discussion mentions need to 'block external communications traffic that claims to be sourced from within the organization'; segmentation verification ensures isolation"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Define and document approved CUI information flows within and between systems",
+          "Configure firewalls and routers to enforce approved information flows",
+          "Implement DLP policies to prevent unauthorized CUI transmission",
+          "Establish encrypted tunnels for authorized external CUI transfers",
+          "Block CUI transmission in clear text to the internet",
+          "Block external traffic claiming to originate from internal network",
+          "Restrict internet requests to only those from internal web proxy",
+          "Monitor and log information flow enforcement actions daily",
+          "Review DLP incidents weekly and firewall logs monthly",
+          "Verify network segmentation quarterly for proper CUI isolation",
+          "Establish information exchange agreements before external CUI transfers"
+        ]
+      }
+    },
+    {
+      "controlId": "03.01.04",
+      "controlTitle": "Separation of Duties",
+      "controlFamily": "AC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Separation of Duties Policy",
+            "description": "Organizational policy defining duties requiring separation, incompatible function combinations, and enforcement through access controls",
+            "rationale": "NIST 03.01.04 requirement (a) explicitly requires 'identify the duties of individuals requiring separation' necessitating formal policy guidance"
+          },
+          {
+            "name": "Access Control Policy",
+            "description": "Policy addressing how separation of duties is enforced through system access authorizations and role definitions",
+            "rationale": "Control requirement (b) requires 'define system access authorizations to support separation of duties' which must be documented in access control policy"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Duty Separation Analysis Procedure",
+            "description": "Process for identifying conflicting duties, analyzing job functions for separation requirements, and documenting incompatible role combinations",
+            "rationale": "Requirement (a) requires identifying duties requiring separation; systematic procedure ensures comprehensive analysis of organizational functions"
+          },
+          {
+            "name": "Role-Based Access Control (RBAC) Design Procedure",
+            "description": "Procedure for designing roles and access authorizations that enforce separation of duties including role conflict matrices and approval workflows",
+            "rationale": "Requirement (b) requires defining 'system access authorizations to support separation of duties'; RBAC design prevents single users from holding conflicting roles"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Separation of Duties Matrix",
+            "description": "Documentation showing: incompatible duties identified, role combinations prohibited, users mapped to roles, conflicts checked, exceptions documented with compensating controls, last review date",
+            "frequency": "Annual review with quarterly verification",
+            "freshnessThreshold": "15 months",
+            "rationale": "Demonstrates compliance with requirement (a) to identify duties requiring separation; annual updates account for organizational changes while quarterly checks prevent drift"
+          },
+          {
+            "name": "Role Assignment Conflict Reports",
+            "description": "Reports showing: user role assignments checked against conflict matrix, violations identified, conflicting roles held by single users, remediation actions taken, compensating controls for approved exceptions",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Proves ongoing enforcement of defined separation requirements; quarterly checks detect unauthorized role combinations or privilege creep violating separation policies"
+          },
+          {
+            "name": "Access Control Configuration Demonstrating Separation",
+            "description": "System configuration exports showing: administrative functions separated from audit functions, quality assurance roles separated from development roles, security roles separated from operational roles, enforcement through RBAC permissions",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "NIST Discussion requires 'personnel who administer access control functions do not also administer audit functions'; configuration proves technical enforcement"
+          },
+          {
+            "name": "Transaction Authorization and Approval Logs",
+            "description": "Logs showing: critical transactions requiring multiple approvals, initiator and approver are different individuals, segregation enforced for financial and security functions, override attempts logged and investigated",
+            "frequency": "Monthly review of logs",
+            "freshnessThreshold": "45 days",
+            "rationale": "Demonstrates operational enforcement of separation preventing 'malevolent activity without collusion' as stated in NIST requirement; proves controls function in daily operations"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Identify all duties requiring separation across organization",
+          "Document incompatible function combinations in duty separation matrix",
+          "Define system roles that enforce separation of duties",
+          "Configure RBAC to prevent assignment of conflicting roles to single user",
+          "Separate administration of access controls from audit functions",
+          "Separate quality assurance roles from development roles",
+          "Separate security management roles from operations roles",
+          "Review user role assignments quarterly for conflicts",
+          "Investigate and remediate detected separation violations",
+          "Document approved exceptions with compensating controls",
+          "Update separation of duties matrix annually or when functions change"
+        ]
+      }
+    },
+    {
+      "controlId": "03.01.05",
+      "controlTitle": "Least Privilege",
+      "controlFamily": "AC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Least Privilege Policy",
+            "description": "Organizational policy requiring minimum necessary access for all users and processes, defining security functions and security-relevant information requiring authorization",
+            "rationale": "NIST 03.01.05 requirement (b) requires authorizing access to 'organization-defined security functions and security-relevant information' necessitating policy definition"
+          },
+          {
+            "name": "Access Control Policy",
+            "description": "Policy establishing principles of least privilege across system development, implementation, and operations",
+            "rationale": "NIST Discussion states 'organizations employ the principle of least privilege for specific duties and authorized access for users and system processes'"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Privilege Assignment Procedure",
+            "description": "Process for determining minimum access required for organizational tasks, authorizing access to security functions, and limiting access to security-relevant information",
+            "rationale": "Requirement (a) requires allowing 'only authorized system access that is necessary to accomplish assigned organizational tasks'; systematic procedure ensures consistent application"
+          },
+          {
+            "name": "Privilege Review and Validation Procedure",
+            "description": "Process for periodic review of assigned privileges, validation of continued need, and removal or reassignment of unnecessary privileges",
+            "rationale": "Requirement (c) requires reviewing 'privileges assigned to roles or classes of users at organization-defined frequency to validate the need' and (d) requires 'reassign or remove privileges, as necessary'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Privilege Inventory and Assignment Records",
+            "description": "Documentation showing: all user accounts and assigned privileges, job roles mapped to minimum required permissions, security function access authorizations, security-relevant information access lists, business justification for each privilege",
+            "frequency": "Maintained continuously, reviewed quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates implementation of requirement (a) allowing only necessary access; inventory enables systematic review required by requirement (c)"
+          },
+          {
+            "name": "Quarterly Privilege Review Reports",
+            "description": "Reports showing: privileges reviewed for each role and user class, validation of continued need documented, unnecessary privileges identified, privileges removed or reassigned, reviewer signature and date",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Requirement (c) explicitly requires reviews at 'organization-defined frequency to validate the need for such privileges'; quarterly reviews align with industry best practices"
+          },
+          {
+            "name": "Security Function Authorization Records",
+            "description": "Records showing: access to security functions (account management, software installation, audit configuration, vulnerability scanning, cryptographic key management), authorized personnel, approval documentation, periodic re-authorization",
+            "frequency": "Annual re-authorization, quarterly verification",
+            "freshnessThreshold": "15 months",
+            "rationale": "Requirement (b) specifically requires authorizing access to security functions; NIST Discussion lists examples including 'establishing system accounts and assigning privileges, installing software'"
+          },
+          {
+            "name": "Privilege Removal Logs",
+            "description": "System logs showing: privileges removed when no longer needed, role changes triggering privilege removal, accounts downgraded from privileged to standard, justification for removal actions, date and administrator performing change",
+            "frequency": "Ongoing (per role change)",
+            "freshnessThreshold": "N/A - maintained for audit trail",
+            "rationale": "Demonstrates compliance with requirement (d) to 'reassign or remove privileges, as necessary'; logs prove responsive privilege management"
+          },
+          {
+            "name": "Excessive Privilege Detection Reports",
+            "description": "Reports showing: users with privileges exceeding role requirements, unused permissions identified through usage monitoring, excessive administrative rights detected, remediation actions and timelines",
+            "frequency": "Monthly",
+            "freshnessThreshold": "45 days",
+            "rationale": "Proactive identification of least privilege violations enables continuous compliance; monthly checks prevent privilege creep that undermines the control"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Apply least privilege principle to all system development and operations",
+          "Authorize only minimum access necessary for assigned organizational tasks",
+          "Define and document organization's security functions requiring authorization",
+          "Define and document security-relevant information requiring authorization",
+          "Review assigned privileges quarterly to validate continued need",
+          "Remove privileges immediately when no longer required for job role",
+          "Reassign privileges when job duties change",
+          "Monitor privilege usage to detect excessive or unused permissions",
+          "Create additional processes and roles as needed to achieve least privilege",
+          "Authorize access to security functions only to designated personnel",
+          "Restrict access to security-relevant information (cryptographic keys, audit data, security architecture, ACLs, vulnerability data)"
+        ]
+      }
+    },
+    {
+      "controlId": "03.01.06",
+      "controlTitle": "Least Privilege – Privileged Accounts",
+      "controlFamily": "AC",
+      "evidenceRequirements": {
+        "policies": [
+          {
+            "name": "Privileged Account Management Policy",
+            "description": "Policy restricting privileged accounts to specific personnel or roles and requiring use of non-privileged accounts for non-security functions",
+            "rationale": "NIST 03.01.06 requirement (a) requires restricting 'privileged accounts on the system to organization-defined personnel or roles' necessitating policy defining who is authorized"
+          },
+          {
+            "name": "Privileged Access Policy",
+            "description": "Policy governing when compelling operational needs justify privileged account access to CUI and defining separation of privileged and non-privileged account usage",
+            "rationale": "Control title states 'authorize access to CUI for privileged accounts only when compelling operational needs require such access' requiring policy defining compelling needs"
+          }
+        ],
+        "procedures": [
+          {
+            "name": "Privileged Account Request and Approval Procedure",
+            "description": "Process for requesting privileged access including justification requirements, approval workflow, periodic re-certification, and access removal process",
+            "rationale": "Requirement (a) requires restricting privileged accounts to defined personnel; formal procedure ensures consistent evaluation and approval of privileged access requests"
+          },
+          {
+            "name": "Privileged Account Usage Procedure",
+            "description": "Procedure requiring administrators to use standard accounts for routine work and privileged accounts only when performing security functions or accessing security-relevant information",
+            "rationale": "Requirement (b) requires 'users with privileged accounts use non-privileged accounts when accessing non-security functions or non-security information'"
+          }
+        ],
+        "executionEvidence": [
+          {
+            "name": "Privileged Account Inventory",
+            "description": "Comprehensive list showing: all privileged accounts (administrators, super users), account holder name and role, access level granted (domain admin, local admin, security function access), business justification for privileged access, approval documentation, last review date",
+            "frequency": "Maintained continuously, reviewed quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Demonstrates restriction of privileged accounts to authorized personnel as required by (a); enables verification that only defined personnel/roles hold elevated privileges"
+          },
+          {
+            "name": "Privileged Account Approval and Justification Records",
+            "description": "Records showing: privileged access requests, compelling operational need documented, approver review notes, elevated scrutiny applied, approval or denial decision with rationale, effective and expiration dates",
+            "frequency": "Per request and annual re-certification",
+            "freshnessThreshold": "15 months",
+            "rationale": "Proves privileged access granted only when justified per control title; approval documentation demonstrates enhanced review before granting elevated privileges"
+          },
+          {
+            "name": "Privileged vs. Non-Privileged Account Usage Logs",
+            "description": "Authentication logs showing: privileged account logins only for administrative tasks, standard account usage for routine work (email, document editing, browsing), violations of separation detected, investigation records for improper privileged account use",
+            "frequency": "Weekly review",
+            "freshnessThreshold": "14 days",
+            "rationale": "Requirement (b) mandates using non-privileged accounts for non-security functions; logs prove administrators follow procedure to separate privileged and standard account usage"
+          },
+          {
+            "name": "Privileged Account Activity Monitoring Reports",
+            "description": "Reports showing: privileged account activities logged, security functions performed (account creation, permission changes, security configuration), security-relevant information accessed, suspicious activity flagged, date and time of activities",
+            "frequency": "Weekly",
+            "freshnessThreshold": "14 days",
+            "rationale": "NIST Discussion states privileged accounts access 'security functions or security-relevant information'; monitoring proves privileged accounts used only for intended security purposes"
+          },
+          {
+            "name": "Quarterly Privileged Account Review Reports",
+            "description": "Reports showing: all privileged accounts re-certified for continued need, account holders validated as still requiring elevated access, unused privileged accounts removed, role changes triggering privilege removal, reviewer signatures",
+            "frequency": "Quarterly",
+            "freshnessThreshold": "120 days",
+            "rationale": "Maintains restriction of privileged accounts per requirement (a); quarterly re-certification prevents accumulation of unnecessary privileged accounts"
+          }
+        ],
+        "physicalEvidence": [],
+        "operationalActivities": [
+          "Restrict privileged accounts to specifically authorized personnel and roles",
+          "Document compelling operational needs before granting privileged access",
+          "Apply enhanced scrutiny to all privileged account requests",
+          "Require administrators to use non-privileged accounts for routine work",
+          "Require privileged accounts only when performing security functions",
+          "Limit privileged account usage to accessing security-relevant information",
+          "Monitor privileged account activities weekly for inappropriate usage",
+          "Review privileged account inventory quarterly for appropriateness",
+          "Remove privileged access when no longer required by job role",
+          "Re-certify all privileged accounts quarterly for continued need",
+          "Investigate violations of privileged account usage policies"
+        ]
+      }
+    }
+  ]
+}

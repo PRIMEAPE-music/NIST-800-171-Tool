@@ -4,6 +4,7 @@ import { Dashboard } from '@/pages/Dashboard';
 import { ControlLibrary } from '@/pages/ControlLibrary';
 import { ControlDetailPage } from '@/pages/ControlDetailPage';
 // GapAnalysis import removed - standalone page deleted
+import GapAnalysis from '@/pages/GapAnalysis';
 import { POAMManager } from '@/pages/POAMManager';
 import { EvidenceLibrary } from '@/pages/EvidenceLibrary';
 import { EvidenceGapReport } from '@/pages/EvidenceGapReport';
@@ -27,6 +28,7 @@ export const AppRoutes: React.FC = () => {
       <Route path="/controls/:id" element={<ControlDetailPage />} />
       {/* Assessment Wizard removed - use control detail pages instead */}
       {/* Gap Analysis standalone page removed - use Gap Analysis tab on control detail pages */}
+      <Route path="/gap-analysis" element={<GapAnalysis />} />
       <Route path="/poams" element={<POAMManager />} />
       <Route path="/evidence" element={<EvidenceLibrary />} />
       <Route path="/evidence/gaps" element={<EvidenceGapReport />} />
