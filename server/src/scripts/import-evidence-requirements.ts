@@ -163,8 +163,20 @@ async function importEvidenceRequirements() {
       for (const policy of control.evidenceRequirements.policies) {
         const dbPolicyId = policyMap.get(policy.policyId);
 
-        await prisma.evidenceRequirement.create({
-          data: {
+        await prisma.evidenceRequirement.upsert({
+          where: {
+            controlId_evidenceType_name: {
+              controlId: existingControl.id,
+              evidenceType: 'policy',
+              name: policy.standardizedName,
+            }
+          },
+          update: {
+            description: policy.description,
+            rationale: policy.rationale,
+            policyId: dbPolicyId,
+          },
+          create: {
             controlId: existingControl.id,
             evidenceType: 'policy',
             name: policy.standardizedName,
@@ -180,8 +192,20 @@ async function importEvidenceRequirements() {
       for (const procedure of control.evidenceRequirements.procedures) {
         const dbProcedureId = procedureMap.get(procedure.procedureId);
 
-        await prisma.evidenceRequirement.create({
-          data: {
+        await prisma.evidenceRequirement.upsert({
+          where: {
+            controlId_evidenceType_name: {
+              controlId: existingControl.id,
+              evidenceType: 'procedure',
+              name: procedure.standardizedName,
+            }
+          },
+          update: {
+            description: procedure.description,
+            rationale: procedure.rationale,
+            procedureId: dbProcedureId,
+          },
+          create: {
             controlId: existingControl.id,
             evidenceType: 'procedure',
             name: procedure.standardizedName,
@@ -199,8 +223,21 @@ async function importEvidenceRequirements() {
         const thresholdMatch = execution.freshnessThreshold.match(/(\d+)/);
         const thresholdDays = thresholdMatch ? parseInt(thresholdMatch[1]) : null;
 
-        await prisma.evidenceRequirement.create({
-          data: {
+        await prisma.evidenceRequirement.upsert({
+          where: {
+            controlId_evidenceType_name: {
+              controlId: existingControl.id,
+              evidenceType: 'execution',
+              name: execution.name,
+            }
+          },
+          update: {
+            description: execution.description,
+            rationale: execution.rationale,
+            frequency: execution.frequency,
+            freshnessThreshold: thresholdDays,
+          },
+          create: {
             controlId: existingControl.id,
             evidenceType: 'execution',
             name: execution.name,
@@ -215,8 +252,19 @@ async function importEvidenceRequirements() {
 
       // Import physical evidence requirements
       for (const physical of control.evidenceRequirements.physicalEvidence) {
-        await prisma.evidenceRequirement.create({
-          data: {
+        await prisma.evidenceRequirement.upsert({
+          where: {
+            controlId_evidenceType_name: {
+              controlId: existingControl.id,
+              evidenceType: 'physical',
+              name: physical.name,
+            }
+          },
+          update: {
+            description: physical.description,
+            rationale: physical.rationale,
+          },
+          create: {
             controlId: existingControl.id,
             evidenceType: 'physical',
             name: physical.name,
