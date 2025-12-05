@@ -246,6 +246,27 @@ class ControlController {
       next(error);
     }
   }
+
+  /**
+   * GET /api/controls/:id/missing-settings
+   * Get non-compliant M365 settings for a control
+   */
+  async getMissingSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = parseInt(req.params.id, 10);
+
+      if (isNaN(id)) {
+        throw new AppError('Invalid control ID', 400);
+      }
+
+      const missingSettings = await controlService.getMissingSettings(id);
+
+      res.status(200).json(missingSettings);
+    } catch (error) {
+      logger.error(`Error in getMissingSettings (${req.params.id}):`, error);
+      next(error);
+    }
+  }
 }
 
 export const controlController = new ControlController();

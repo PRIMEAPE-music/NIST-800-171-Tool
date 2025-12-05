@@ -8,6 +8,8 @@ import GapAnalysis from '@/pages/GapAnalysis';
 import { POAMManager } from '@/pages/POAMManager';
 import { EvidenceLibrary } from '@/pages/EvidenceLibrary';
 import { EvidenceGapReport } from '@/pages/EvidenceGapReport';
+import SystemSecurityPlan from '@/pages/SystemSecurityPlan';
+import Documents from '@/pages/Documents';
 import { M365Integration } from '@/pages/M365Integration';
 import SuggestedMappingsPage from '@/pages/SuggestedMappings';
 import PolicyViewer from '@/pages/PolicyViewer';
@@ -32,6 +34,8 @@ export const AppRoutes: React.FC = () => {
       <Route path="/poams" element={<POAMManager />} />
       <Route path="/evidence" element={<EvidenceLibrary />} />
       <Route path="/evidence/gaps" element={<EvidenceGapReport />} />
+      <Route path="/ssp" element={<SystemSecurityPlan />} />
+      <Route path="/documents" element={<Documents />} />
       <Route path="/m365" element={<M365Integration />} />
       <Route path="/m365/suggested-mappings" element={<SuggestedMappingsPage />} />
       <Route path="/m365/gap-analysis" element={<GapAnalysisPage />} />

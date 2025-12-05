@@ -640,6 +640,44 @@ export class ControlService {
   //   // Policy mapping functionality has been removed
   //   return { valid: false, message: 'Policy mapping disabled' };
   // }
+
+  /**
+   * Get non-compliant M365 settings for a control
+   */
+  async getMissingSettings(controlId: number) {
+    try {
+      const mappings = await prisma.controlSettingMapping.findMany({
+        where: { controlId },
+        include: {
+          setting: {
+            include: {
+              complianceChecks: {
+                orderBy: { lastChecked: 'desc' },
+                take: 1,
+              },
+            },
+          },
+        },
+      });
+
+      // Filter to only non-compliant settings
+      const missingSettings = mappings
+        .filter((mapping) => {
+          const latestCheck = mapping.setting.complianceChecks[0];
+          return latestCheck && latestCheck.complianceState === 'nonCompliant';
+        })
+        .map((mapping) => ({
+          id: mapping.setting.id,
+          displayName: mapping.setting.displayName,
+          settingId: mapping.setting.settingId,
+        }));
+
+      return missingSettings;
+    } catch (error) {
+      logger.error(`Error getting missing settings for control ${controlId}:`, error);
+      return [];
+    }
+  }
 }
 
 export const controlService = new ControlService();

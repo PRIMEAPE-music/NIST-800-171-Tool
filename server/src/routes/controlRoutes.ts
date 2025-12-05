@@ -33,6 +33,9 @@ router.post('/bulk', controlController.bulkUpdateControls);
 // GET /api/controls/control/:controlId - Get control by control ID (e.g., "03.01.01")
 router.get('/control/:controlId', controlController.getControlByControlId);
 
+// GET /api/controls/:id/missing-settings - Get non-compliant M365 settings for a control
+router.get('/:id/missing-settings', controlController.getMissingSettings);
+
 // GET /api/controls/:id - Get control by database ID
 router.get('/:id', controlController.getControlById);
 

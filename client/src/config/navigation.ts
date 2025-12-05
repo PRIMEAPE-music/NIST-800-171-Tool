@@ -10,6 +10,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import QuizIcon from '@mui/icons-material/Quiz';
 // FactCheckIcon removed - no longer used
 import FindInPageIcon from '@mui/icons-material/FindInPage';
+import SecurityIcon from '@mui/icons-material/Security';
+import ArticleIcon from '@mui/icons-material/Article';
 
 export interface NavigationItem {
   label: string;
@@ -44,6 +46,18 @@ export const navigationItems: NavigationItem[] = [
     path: '/evidence',
     icon: FolderIcon,
     description: 'Compliance documentation repository',
+  },
+  {
+    label: 'System Security Plan',
+    path: '/ssp',
+    icon: SecurityIcon,
+    description: 'Official System Security Plan document',
+  },
+  {
+    label: 'Documents',
+    path: '/documents',
+    icon: ArticleIcon,
+    description: 'External compliance documents library',
   },
   {
     label: 'M365 Integration',

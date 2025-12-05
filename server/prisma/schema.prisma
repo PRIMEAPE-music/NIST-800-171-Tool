@@ -279,6 +279,54 @@ model EvidenceUploadSession {
 }
 
 // ============================================================================
+// Documents (External Compliance Documents & System Security Plan)
+// ============================================================================
+
+model Document {
+  id           Int      @id @default(autoincrement())
+
+  // File information
+  fileName     String   @map("file_name")
+  originalName String   @map("original_name")
+  filePath     String   @map("file_path")
+  fileType     String   @map("file_type")
+  fileSize     Int      @map("file_size")
+
+  // Document classification
+  category     String   @default("general") // 'ssp', 'external_compliance', 'certification', 'audit', 'general'
+
+  // Metadata
+  title        String?
+  description  String?
+  uploadedBy   String?  @map("uploaded_by")
+  uploadedDate DateTime @default(now()) @map("uploaded_date")
+
+  // Versioning
+  version      String   @default("1.0")
+
+  // Organization/Source information
+  organization String?  // Organization this document is from/for
+  expiryDate   DateTime? @map("expiry_date")
+
+  // Categorization
+  tags         String?  // JSON array stored as string
+
+  // Status
+  isActive     Boolean  @default(true) @map("is_active")
+
+  // Timestamps
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([uploadedDate])
+  @@index([fileType])
+  @@index([isActive])
+  @@index([organization])
+  @@map("documents")
+}
+
+// ============================================================================
 // POAMs (Plan of Action & Milestones)
 // ============================================================================
 

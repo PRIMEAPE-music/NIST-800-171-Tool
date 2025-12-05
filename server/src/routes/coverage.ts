@@ -49,6 +49,20 @@ router.get('/all', async (req, res) => {
 });
 
 /**
+ * GET /api/coverage/all-with-metadata
+ * Get coverage for all controls with metadata (id, title, dodPoints)
+ */
+router.get('/all-with-metadata', async (req, res) => {
+  try {
+    const coverages = await coverageService.calculateAllCoverageWithMetadata();
+    res.json(coverages);
+  } catch (error) {
+    console.error('Error fetching all coverages with metadata:', error);
+    res.status(500).json({ error: 'Failed to fetch all coverages with metadata' });
+  }
+});
+
+/**
  * GET /api/coverage/family/:family
  * Get coverage breakdown by control family
  */

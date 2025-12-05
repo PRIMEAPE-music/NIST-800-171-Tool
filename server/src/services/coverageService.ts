@@ -17,6 +17,12 @@ export interface ControlCoverage {
   };
 }
 
+export interface ControlCoverageWithMetadata extends ControlCoverage {
+  id: number;           // Numeric control ID for navigation
+  title: string;        // Control title
+  dodPoints: number;    // DoD assessment points
+}
+
 export interface CoverageDetail {
   percentage: number;
   numerator: number;
@@ -378,6 +384,36 @@ export class CoverageService {
     );
 
     return coverages;
+  }
+
+  /**
+   * Calculate coverage for all controls with metadata (id, title, dodPoints)
+   * Used for gap analysis All Controls tab
+   */
+  async calculateAllCoverageWithMetadata(): Promise<ControlCoverageWithMetadata[]> {
+    const controls = await prisma.control.findMany({
+      select: {
+        id: true,
+        controlId: true,
+        title: true,
+        dodPoints: true,
+      },
+      orderBy: { controlId: 'asc' },
+    });
+
+    const coveragesWithMetadata = await Promise.all(
+      controls.map(async (control) => {
+        const coverage = await this.calculateControlCoverage(control.controlId);
+        return {
+          ...coverage,
+          id: control.id,
+          title: control.title,
+          dodPoints: control.dodPoints,
+        };
+      })
+    );
+
+    return coveragesWithMetadata;
   }
 
   /**

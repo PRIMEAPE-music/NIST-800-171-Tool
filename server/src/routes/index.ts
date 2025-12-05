@@ -3,6 +3,7 @@ import { controlRoutes } from './controlRoutes';
 // assessmentRoutes import removed - routes deleted
 import poamRoutes from './poam.routes';
 import evidenceRoutes from './evidence.routes';
+import documentRoutes from './document.routes';
 import authRoutes from './auth.routes';
 import m365Routes from './m365.routes';
 import reportRoutes from './reportRoutes';
@@ -23,6 +24,7 @@ router.use('/controls', controlRoutes);
 // Assessment routes removed - use control detail pages instead
 router.use('/poams', poamRoutes);
 router.use('/evidence', evidenceRoutes);
+router.use('/documents', documentRoutes);
 router.use('/auth', authRoutes);
 router.use('/m365', m365Routes);
 router.use('/reports', reportRoutes);

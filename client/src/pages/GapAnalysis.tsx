@@ -32,6 +32,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { Warning, CheckCircle, Error } from '@mui/icons-material';
+import { AllControlsTable } from '@/components/gap-analysis/AllControlsTable';
+import { ControlCoverageWithMetadata } from '@/types/gapAnalysis.types';
 
 interface CoverageSummary {
   totalControls: number;
@@ -88,6 +90,7 @@ export default function GapAnalysis() {
   const [tab, setTab] = useState(0);
   const [summary, setSummary] = useState<CoverageSummary | null>(null);
   const [allCoverages, setAllCoverages] = useState<ControlCoverage[]>([]);
+  const [allCoveragesWithMetadata, setAllCoveragesWithMetadata] = useState<ControlCoverageWithMetadata[]>([]);
   const [familyCoverages, setFamilyCoverages] = useState<FamilyCoverage[]>([]);
 
   useEffect(() => {
@@ -102,10 +105,15 @@ export default function GapAnalysis() {
       const summaryData = await summaryRes.json();
       setSummary(summaryData);
 
-      // Fetch all coverages
+      // Fetch all coverages (basic)
       const allRes = await fetch('/api/coverage/all');
       const allData = await allRes.json();
       setAllCoverages(allData);
+
+      // Fetch all coverages with metadata (for All Controls tab)
+      const allMetadataRes = await fetch('/api/coverage/all-with-metadata');
+      const allMetadataData = await allMetadataRes.json();
+      setAllCoveragesWithMetadata(allMetadataData);
 
       // Calculate family averages
       const familyMap = new Map<string, { total: number; count: number }>();
@@ -236,7 +244,7 @@ export default function GapAnalysis() {
       <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 3 }}>
         <Tab label="Overview" />
         <Tab label="By Control Family" />
-        <Tab label="Critical Controls" />
+        <Tab label="All Controls" />
       </Tabs>
 
       {/* Tab 0: Overview */}
@@ -373,51 +381,17 @@ export default function GapAnalysis() {
         </Card>
       )}
 
-      {/* Tab 2: Critical Controls */}
+      {/* Tab 2: All Controls */}
       {tab === 2 && (
         <Card sx={{ bgcolor: '#1E1E1E' }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              Critical Controls (Coverage &lt; 50%)
+              All Controls
             </Typography>
-            <TableContainer component={Paper} sx={{ bgcolor: '#242424' }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Control ID</TableCell>
-                    <TableCell>Overall</TableCell>
-                    <TableCell>Technical</TableCell>
-                    <TableCell>Operational</TableCell>
-                    <TableCell>Documentation</TableCell>
-                    <TableCell>Physical</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {allCoverages
-                    .filter((c) => c.overallCoverage < 50)
-                    .sort((a, b) => a.overallCoverage - b.overallCoverage)
-                    .map((cov) => (
-                      <TableRow key={cov.controlId}>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            {getCoverageIcon(cov.overallCoverage)}
-                            {cov.controlId}
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Typography sx={{ color: getCoverageColor(cov.overallCoverage) }}>
-                            {cov.overallCoverage}%
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{cov.technicalCoverage}%</TableCell>
-                        <TableCell>{cov.operationalCoverage}%</TableCell>
-                        <TableCell>{cov.documentationCoverage}%</TableCell>
-                        <TableCell>{cov.physicalCoverage}%</TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Typography variant="body2" sx={{ mb: 2, color: '#B0B0B0' }}>
+              View and manage gap analysis for all controls. Click on a control to expand details, or click the control ID to navigate to the detail page.
+            </Typography>
+            <AllControlsTable controls={allCoveragesWithMetadata} loading={loading} />
           </CardContent>
         </Card>
       )}
