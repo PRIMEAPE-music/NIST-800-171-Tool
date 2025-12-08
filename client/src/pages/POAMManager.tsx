@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -20,12 +20,16 @@ import { POAMForm } from '../components/poam/POAMForm';
 import { POAMDetailDialog } from '../components/poam/POAMDetailDialog';
 import { POAMFilters } from '../components/poam/POAMFilters';
 import { POAMStatsCards } from '../components/poam/POAMStatsCards';
+import { BulkActionsToolbar } from '../components/poam/BulkActionsToolbar';
+import { POAMTabs } from '../components/poam/POAMTabs';
+import { BulkStatusUpdateDialog } from '../components/poam/BulkStatusUpdateDialog';
 import {
   PoamWithControl,
   CreatePoamDto,
   UpdatePoamDto,
   CreateMilestoneDto,
 } from '../types/poam.types';
+import { poamApi, downloadBlob } from '../services/poam.api';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -64,6 +68,25 @@ export const POAMManager: React.FC = () => {
     message: '',
     severity: 'success' as 'success' | 'error',
   });
+
+  // New state for tabs and bulk operations
+  const [activeTab, setActiveTab] = useState<'active' | 'completed'>('active');
+  const [selectedPoamIds, setSelectedPoamIds] = useState<number[]>([]);
+  const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
+
+  // Filter POAMs by tab
+  const filteredPoams = useMemo(() => {
+    if (activeTab === 'completed') {
+      return poams.filter((p) => p.status === 'Completed');
+    } else {
+      return poams.filter((p) => p.status !== 'Completed');
+    }
+  }, [poams, activeTab]);
+
+  // Calculate counts for tabs
+  const activeCount = poams.filter((p) => p.status !== 'Completed').length;
+  const completedCount = poams.filter((p) => p.status === 'Completed').length;
 
   // Handlers
   const handleCreateClick = () => {
@@ -198,6 +221,123 @@ export const POAMManager: React.FC = () => {
     setFilters({});
   };
 
+  // New handlers for uncomplete milestone
+  const handleUncompleteMilestone = async (poamId: number, milestoneId: number) => {
+    try {
+      await poamApi.uncompleteMilestone(poamId, milestoneId);
+      setSnackbar({
+        open: true,
+        message: 'Milestone unmarked successfully',
+        severity: 'success',
+      });
+      const updated = poams.find((p) => p.id === poamId);
+      if (updated) setSelectedPoam(updated);
+    } catch (error: any) {
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.error || 'Failed to uncomplete milestone',
+        severity: 'error',
+      });
+    }
+  };
+
+  // Export handlers
+  const handleExportPdf = async () => {
+    try {
+      const blob = await poamApi.exportBulkPdf(selectedPoamIds);
+      downloadBlob(blob, `POAMs_Export_${Date.now()}.zip`);
+      setSnackbar({
+        open: true,
+        message: `Successfully exported ${selectedPoamIds.length} POAM(s) as PDF`,
+        severity: 'success',
+      });
+      setSelectedPoamIds([]);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'Failed to export PDFs',
+        severity: 'error',
+      });
+    }
+  };
+
+  const handleExportExcel = async () => {
+    try {
+      const blob = await poamApi.exportExcel(selectedPoamIds);
+      downloadBlob(blob, `POAMs_Export_${Date.now()}.xlsx`);
+      setSnackbar({
+        open: true,
+        message: `Successfully exported ${selectedPoamIds.length} POAM(s) to Excel`,
+        severity: 'success',
+      });
+      setSelectedPoamIds([]);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'Failed to export Excel',
+        severity: 'error',
+      });
+    }
+  };
+
+  const handleExportCsv = async () => {
+    try {
+      const blob = await poamApi.exportCsv(selectedPoamIds);
+      downloadBlob(blob, `POAMs_Export_${Date.now()}.csv`);
+      setSnackbar({
+        open: true,
+        message: `Successfully exported ${selectedPoamIds.length} POAM(s) to CSV`,
+        severity: 'success',
+      });
+      setSelectedPoamIds([]);
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'Failed to export CSV',
+        severity: 'error',
+      });
+    }
+  };
+
+  // Bulk operations handlers
+  const handleBulkStatusUpdate = async (newStatus: string) => {
+    try {
+      const result = await poamApi.bulkUpdateStatus(selectedPoamIds, newStatus);
+      setSnackbar({
+        open: true,
+        message: result.message,
+        severity: 'success',
+      });
+      setSelectedPoamIds([]);
+      setBulkStatusDialogOpen(false);
+    } catch (error: any) {
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.error || 'Failed to update POAMs',
+        severity: 'error',
+      });
+    }
+  };
+
+  const handleBulkDeleteConfirm = async () => {
+    try {
+      const result = await poamApi.bulkDelete(selectedPoamIds);
+      setSnackbar({
+        open: true,
+        message: result.message,
+        severity: 'success',
+      });
+      setSelectedPoamIds([]);
+      setBulkDeleteDialogOpen(false);
+    } catch (error: any) {
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.error || 'Failed to delete POAMs',
+        severity: 'error',
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <Box
@@ -245,6 +385,25 @@ export const POAMManager: React.FC = () => {
       {/* Statistics Cards */}
       <POAMStatsCards stats={stats} />
 
+      {/* Tabs */}
+      <POAMTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        activeCount={activeCount}
+        completedCount={completedCount}
+      />
+
+      {/* Bulk Actions Toolbar */}
+      <BulkActionsToolbar
+        selectedCount={selectedPoamIds.length}
+        onClearSelection={() => setSelectedPoamIds([])}
+        onExportPdf={handleExportPdf}
+        onExportExcel={handleExportExcel}
+        onExportCsv={handleExportCsv}
+        onBulkStatusUpdate={() => setBulkStatusDialogOpen(true)}
+        onBulkDelete={() => setBulkDeleteDialogOpen(true)}
+      />
+
       {/* Filters */}
       <POAMFilters
         filters={filters}
@@ -254,10 +413,13 @@ export const POAMManager: React.FC = () => {
 
       {/* POAM List */}
       <POAMList
-        poams={poams}
+        poams={filteredPoams}
         onView={handleViewClick}
         onEdit={handleEditClick}
         onDelete={handleDeleteClick}
+        selectedIds={selectedPoamIds}
+        onSelectionChange={setSelectedPoamIds}
+        showCheckboxes={true}
       />
 
       {/* POAM Form Dialog */}
@@ -280,6 +442,7 @@ export const POAMManager: React.FC = () => {
         onAddMilestone={handleAddMilestone}
         onCompleteMilestone={handleCompleteMilestone}
         onDeleteMilestone={handleDeleteMilestone}
+        onUncompleteMilestone={handleUncompleteMilestone}
         onEdit={() => handleEditClick(selectedPoam!)}
       />
 
@@ -300,6 +463,35 @@ export const POAMManager: React.FC = () => {
           <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
           <Button onClick={handleDeleteConfirm} color="error" variant="contained">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Bulk Status Update Dialog */}
+      <BulkStatusUpdateDialog
+        open={bulkStatusDialogOpen}
+        onClose={() => setBulkStatusDialogOpen(false)}
+        selectedCount={selectedPoamIds.length}
+        onConfirm={handleBulkStatusUpdate}
+      />
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <Dialog
+        open={bulkDeleteDialogOpen}
+        onClose={() => setBulkDeleteDialogOpen(false)}
+        PaperProps={{ sx: { bgcolor: '#242424' } }}
+      >
+        <DialogTitle>Confirm Bulk Delete</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete {selectedPoamIds.length} POAM(s)? This action
+            cannot be undone. All associated milestones will also be deleted.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setBulkDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleBulkDeleteConfirm} color="error" variant="contained">
+            Delete {selectedPoamIds.length} POAM(s)
           </Button>
         </DialogActions>
       </Dialog>

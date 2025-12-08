@@ -444,6 +444,100 @@ export class PoamService {
     }
   }
 
+  /**
+   * Bulk update POAM status
+   */
+  async bulkUpdateStatus(
+    poamIds: number[],
+    status: 'Open' | 'In Progress' | 'Completed' | 'Risk Accepted'
+  ): Promise<{ count: number }> {
+    const updateData: any = {
+      status,
+      updatedAt: new Date(),
+    };
+
+    // If completing, set actual completion date
+    if (status === PoamStatus.COMPLETED) {
+      updateData.actualCompletionDate = new Date();
+    }
+
+    const result = await prisma.poam.updateMany({
+      where: {
+        id: { in: poamIds },
+      },
+      data: updateData,
+    });
+
+    return { count: result.count };
+  }
+
+  /**
+   * Bulk delete POAMs (with cascade to milestones)
+   */
+  async bulkDelete(poamIds: number[]): Promise<{ count: number }> {
+    // Delete milestones first (Prisma should handle cascade, but being explicit)
+    await prisma.poamMilestone.deleteMany({
+      where: { poamId: { in: poamIds } },
+    });
+
+    const result = await prisma.poam.deleteMany({
+      where: { id: { in: poamIds } },
+    });
+
+    return { count: result.count };
+  }
+
+  /**
+   * Uncomplete milestone (change from Completed back to In Progress)
+   */
+  async uncompleteMilestone(poamId: number, milestoneId: number) {
+    const milestone = await prisma.poamMilestone.findFirst({
+      where: { id: milestoneId, poamId },
+    });
+
+    if (!milestone) {
+      throw new Error('Milestone not found');
+    }
+
+    const updated = await prisma.poamMilestone.update({
+      where: { id: milestoneId },
+      data: {
+        status: 'In Progress',
+        completionDate: null,
+        updatedAt: new Date(),
+      },
+    });
+
+    return updated;
+  }
+
+  /**
+   * Get unique controls from POAMs for autocomplete
+   */
+  async getUniqueControls(): Promise<
+    Array<{ id: number; controlId: string; title: string }>
+  > {
+    const poams = await prisma.poam.findMany({
+      select: {
+        control: {
+          select: {
+            id: true,
+            controlId: true,
+            title: true,
+          },
+        },
+      },
+      distinct: ['controlId'],
+    });
+
+    // Remove duplicates based on control ID and return unique controls
+    const uniqueControls = Array.from(
+      new Map(poams.map((p) => [p.control.id, p.control])).values()
+    );
+
+    return uniqueControls;
+  }
+
   // ============================================================================
   // Gap Analysis POA&M Methods (for POAMItem model)
   // ============================================================================

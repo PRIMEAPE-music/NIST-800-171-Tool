@@ -87,6 +87,12 @@ export interface PoamFilters {
   controlId?: number;
   assignedTo?: string;
   overdue?: boolean;
+  // New filter fields
+  controlIdSearch?: string;
+  startDateFrom?: string;
+  startDateTo?: string;
+  targetDateFrom?: string;
+  targetDateTo?: string;
 }
 
 export interface PoamStats {
@@ -104,4 +110,26 @@ export interface PoamStats {
   };
   overdue: number;
   completedThisMonth: number;
+}
+
+// New types for bulk operations and exports
+export interface BulkOperationRequest {
+  poamIds: number[];
+}
+
+export interface BulkStatusUpdateRequest extends BulkOperationRequest {
+  status: 'Open' | 'In Progress' | 'Completed' | 'Risk Accepted';
+}
+
+export interface BulkOperationResponse {
+  success: boolean;
+  updated?: number;
+  deleted?: number;
+  message: string;
+}
+
+export interface ControlOption {
+  id: number;
+  controlId: string;
+  title: string;
 }

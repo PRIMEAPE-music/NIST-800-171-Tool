@@ -178,13 +178,21 @@ export const POAMForm: React.FC<POAMFormProps> = ({
             fullWidth
             label="Gap Description *"
             multiline
-            rows={3}
+            minRows={3}
             value={formData.gapDescription}
             onChange={(e) =>
               setFormData({ ...formData, gapDescription: e.target.value })
             }
             error={!!errors.gapDescription}
             helperText={errors.gapDescription || 'Describe the identified gap or weakness'}
+            InputProps={{
+              sx: {
+                '& textarea': {
+                  resize: 'vertical',
+                  overflow: 'auto',
+                },
+              },
+            }}
           />
 
           {/* Remediation Plan */}
@@ -192,7 +200,7 @@ export const POAMForm: React.FC<POAMFormProps> = ({
             fullWidth
             label="Remediation Plan *"
             multiline
-            rows={4}
+            minRows={4}
             value={formData.remediationPlan}
             onChange={(e) =>
               setFormData({ ...formData, remediationPlan: e.target.value })
@@ -202,6 +210,14 @@ export const POAMForm: React.FC<POAMFormProps> = ({
               errors.remediationPlan ||
               'Describe the planned actions to address the gap'
             }
+            InputProps={{
+              sx: {
+                '& textarea': {
+                  resize: 'vertical',
+                  overflow: 'auto',
+                },
+              },
+            }}
           />
 
           {/* Row 1: Priority, Status, Assigned To */}
@@ -279,12 +295,20 @@ export const POAMForm: React.FC<POAMFormProps> = ({
             fullWidth
             label="Resources Required"
             multiline
-            rows={2}
+            minRows={2}
             value={formData.resourcesRequired}
             onChange={(e) =>
               setFormData({ ...formData, resourcesRequired: e.target.value })
             }
             helperText="List personnel, tools, or other resources needed"
+            InputProps={{
+              sx: {
+                '& textarea': {
+                  resize: 'vertical',
+                  overflow: 'auto',
+                },
+              },
+            }}
           />
 
           {/* Budget Estimate */}

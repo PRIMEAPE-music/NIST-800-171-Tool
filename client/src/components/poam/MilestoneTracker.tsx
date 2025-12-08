@@ -22,6 +22,7 @@ import {
   Add,
   Delete,
   AccessTime,
+  Undo,
 } from '@mui/icons-material';
 import { PoamMilestone, CreateMilestoneDto } from '../../types/poam.types';
 import { format, isPast } from 'date-fns';
@@ -32,6 +33,7 @@ interface MilestoneTrackerProps {
   onAddMilestone: (data: CreateMilestoneDto) => Promise<void>;
   onCompleteMilestone: (milestoneId: number) => Promise<void>;
   onDeleteMilestone: (milestoneId: number) => Promise<void>;
+  onUncompleteMilestone?: (milestoneId: number) => Promise<void>;
   readOnly?: boolean;
 }
 
@@ -41,6 +43,7 @@ export const MilestoneTracker: React.FC<MilestoneTrackerProps> = ({
   onAddMilestone,
   onCompleteMilestone,
   onDeleteMilestone,
+  onUncompleteMilestone,
   readOnly = false,
 }) => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -148,19 +151,32 @@ export const MilestoneTracker: React.FC<MilestoneTrackerProps> = ({
                 secondaryAction={
                   !readOnly && (
                     <Box>
-                      {milestone.status !== 'Completed' && (
+                      {milestone.status !== 'Completed' ? (
                         <IconButton
                           edge="end"
                           onClick={() => onCompleteMilestone(milestone.id)}
                           sx={{ color: '#66BB6A' }}
+                          title="Mark as complete"
                         >
                           <CheckCircle />
                         </IconButton>
+                      ) : (
+                        onUncompleteMilestone && (
+                          <IconButton
+                            edge="end"
+                            onClick={() => onUncompleteMilestone(milestone.id)}
+                            sx={{ color: '#FFA726' }}
+                            title="Unmark as complete"
+                          >
+                            <Undo />
+                          </IconButton>
+                        )
                       )}
                       <IconButton
                         edge="end"
                         onClick={() => onDeleteMilestone(milestone.id)}
                         sx={{ color: '#F44336' }}
+                        title="Delete milestone"
                       >
                         <Delete />
                       </IconButton>

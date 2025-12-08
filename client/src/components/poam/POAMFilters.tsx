@@ -9,9 +9,14 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
+  Autocomplete,
 } from '@mui/material';
 import { FilterList, Clear } from '@mui/icons-material';
-import { PoamFilters } from '../../types/poam.types';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { PoamFilters, ControlOption } from '../../types/poam.types';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 interface POAMFiltersProps {
   filters: PoamFilters;
@@ -24,6 +29,17 @@ export const POAMFilters: React.FC<POAMFiltersProps> = ({
   onFiltersChange,
   onClearFilters,
 }) => {
+  // Fetch unique controls for autocomplete
+  const { data: controlOptions = [] } = useQuery({
+    queryKey: ['poam-controls'],
+    queryFn: async () => {
+      const response = await axios.get<{ success: boolean; data: ControlOption[] }>(
+        `${API_BASE}/poams/controls`
+      );
+      return response.data.data || [];
+    },
+  });
+
   const handleChange = (field: keyof PoamFilters, value: any) => {
     onFiltersChange({ ...filters, [field]: value || undefined });
   };
@@ -31,6 +47,8 @@ export const POAMFilters: React.FC<POAMFiltersProps> = ({
   const hasActiveFilters = Object.values(filters).some(
     (v) => v !== undefined && v !== ''
   );
+
+  const selectedControl = controlOptions.find((c) => c.id === filters.controlId) || null;
 
   return (
     <Box
@@ -76,12 +94,71 @@ export const POAMFilters: React.FC<POAMFiltersProps> = ({
         </Select>
       </FormControl>
 
+      <Autocomplete
+        options={controlOptions}
+        getOptionLabel={(option) => `${option.controlId} - ${option.title}`}
+        value={selectedControl}
+        onChange={(_, newValue) => {
+          handleChange('controlId', newValue?.id);
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Control ID"
+            size="small"
+            placeholder="Search by control"
+          />
+        )}
+        sx={{ minWidth: 250 }}
+        size="small"
+      />
+
       <TextField
         label="Assigned To"
         size="small"
         value={filters.assignedTo || ''}
         onChange={(e) => handleChange('assignedTo', e.target.value)}
         sx={{ minWidth: 200 }}
+      />
+
+      <TextField
+        label="Start Date From"
+        type="date"
+        size="small"
+        value={filters.startDateFrom || ''}
+        onChange={(e) => handleChange('startDateFrom', e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        sx={{ minWidth: 160 }}
+      />
+
+      <TextField
+        label="Start Date To"
+        type="date"
+        size="small"
+        value={filters.startDateTo || ''}
+        onChange={(e) => handleChange('startDateTo', e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        sx={{ minWidth: 160 }}
+      />
+
+      <TextField
+        label="Target Date From"
+        type="date"
+        size="small"
+        value={filters.targetDateFrom || ''}
+        onChange={(e) => handleChange('targetDateFrom', e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        sx={{ minWidth: 160 }}
+      />
+
+      <TextField
+        label="Target Date To"
+        type="date"
+        size="small"
+        value={filters.targetDateTo || ''}
+        onChange={(e) => handleChange('targetDateTo', e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        sx={{ minWidth: 160 }}
       />
 
       <FormControlLabel
