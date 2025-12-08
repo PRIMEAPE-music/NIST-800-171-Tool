@@ -51,6 +51,21 @@ export const SystemSecurityPlan: React.FC = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
   const [pdfLoading, setPdfLoading] = useState<boolean>(true);
+  const [pageError, setPageError] = useState<string | null>(null);
+  const [documentKey, setDocumentKey] = useState<number>(0);
+  const pageLoadTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  // Memoize file and options to prevent unnecessary reloads
+  const fileConfig = React.useMemo(() => ({
+    url: document?.id ? documentService.getDocumentViewUrl(document.id) : '',
+    httpHeaders: {},
+    withCredentials: false,
+  }), [document?.id]);
+
+  const pdfOptions = React.useMemo(() => ({
+    cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
+    cMapPacked: true,
+  }), []);
 
   const loadSSP = async () => {
     try {
@@ -59,6 +74,8 @@ export const SystemSecurityPlan: React.FC = () => {
       const ssp = await documentService.getSystemSecurityPlan();
       setDocument(ssp);
       setPageNumber(1); // Reset to first page when loading new document
+      setPdfLoading(true); // Reset PDF loading state for new document
+      setNumPages(0); // Reset page count
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load System Security Plan');
     } finally {
@@ -139,13 +156,56 @@ export const SystemSecurityPlan: React.FC = () => {
     setPdfLoading(false);
   };
 
+  const clearPageLoadTimeout = () => {
+    if (pageLoadTimeoutRef.current) {
+      clearTimeout(pageLoadTimeoutRef.current);
+      pageLoadTimeoutRef.current = null;
+    }
+  };
+
+  const startPageLoadTimeout = () => {
+    clearPageLoadTimeout();
+    pageLoadTimeoutRef.current = setTimeout(() => {
+      setPageError(`Page ${pageNumber} is taking too long to load. It may be stuck.`);
+    }, 10000); // 10 second timeout
+  };
+
   const handlePreviousPage = () => {
+    setPageError(null);
+    clearPageLoadTimeout();
     setPageNumber((prev) => Math.max(prev - 1, 1));
   };
 
   const handleNextPage = () => {
+    setPageError(null);
+    clearPageLoadTimeout();
     setPageNumber((prev) => Math.min(prev + 1, numPages));
   };
+
+  const handleReloadDocument = () => {
+    setPageError(null);
+    clearPageLoadTimeout();
+    setDocumentKey((prev) => prev + 1);
+  };
+
+  const onPageRenderSuccess = () => {
+    clearPageLoadTimeout();
+    setPageError(null);
+  };
+
+  const onPageRenderError = (error: Error) => {
+    clearPageLoadTimeout();
+    console.error('Error rendering page:', error);
+    setPageError(`Failed to render page ${pageNumber}: ${error.message}`);
+  };
+
+  // Start timeout when page number changes
+  React.useEffect(() => {
+    if (pageNumber > 0) {
+      startPageLoadTimeout();
+    }
+    return () => clearPageLoadTimeout();
+  }, [pageNumber]);
 
   const handleZoomIn = () => {
     setScale((prev) => Math.min(prev + 0.25, 3.0));
@@ -254,7 +314,8 @@ export const SystemSecurityPlan: React.FC = () => {
                 justifyContent="space-between"
                 alignItems="center"
                 mb={2}
-                p={2}
+                px={2}
+                py={1}
                 sx={{
                   backgroundColor: 'background.default',
                   borderRadius: 1,
@@ -329,41 +390,62 @@ export const SystemSecurityPlan: React.FC = () => {
                   borderRadius: 1,
                   overflow: 'auto',
                   display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: '#525659',
                   p: 2,
                 }}
               >
-                {pdfLoading && (
-                  <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-                    <CircularProgress />
+                {pageError ? (
+                  <Box textAlign="center" p={3}>
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                      {pageError}
+                    </Alert>
+                    <Stack direction="row" spacing={2} justifyContent="center">
+                      <Button
+                        variant="outlined"
+                        onClick={handleReloadDocument}
+                        startIcon={<RefreshIcon />}
+                      >
+                        Reload Document
+                      </Button>
+                      {pageNumber > 1 && (
+                        <Button variant="outlined" onClick={handlePreviousPage}>
+                          Try Previous Page
+                        </Button>
+                      )}
+                      {pageNumber < numPages && (
+                        <Button variant="outlined" onClick={handleNextPage}>
+                          Skip to Next Page
+                        </Button>
+                      )}
+                    </Stack>
                   </Box>
+                ) : (
+                  <PDFDocument
+                    key={`document_${documentKey}`}
+                    file={fileConfig}
+                    onLoadSuccess={onDocumentLoadSuccess}
+                    onLoadError={onDocumentLoadError}
+                    loading={
+                      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+                        <CircularProgress />
+                      </Box>
+                    }
+                    options={pdfOptions}
+                  >
+                    <PDFPage
+                      key={`page_${pageNumber}`}
+                      pageNumber={pageNumber}
+                      scale={scale}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                      onRenderSuccess={onPageRenderSuccess}
+                      onRenderError={onPageRenderError}
+                    />
+                  </PDFDocument>
                 )}
-                <PDFDocument
-                  file={{
-                    url: documentService.getDocumentViewUrl(document.id),
-                    httpHeaders: {},
-                    withCredentials: false,
-                  }}
-                  onLoadSuccess={onDocumentLoadSuccess}
-                  onLoadError={onDocumentLoadError}
-                  loading={
-                    <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-                      <CircularProgress />
-                    </Box>
-                  }
-                  options={{
-                    cMapUrl: 'https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/',
-                    cMapPacked: true,
-                  }}
-                >
-                  <PDFPage
-                    pageNumber={pageNumber}
-                    scale={scale}
-                    renderTextLayer={true}
-                    renderAnnotationLayer={true}
-                  />
-                </PDFDocument>
               </Box>
             </Box>
           ) : (

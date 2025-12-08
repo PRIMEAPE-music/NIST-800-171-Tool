@@ -22,6 +22,7 @@ import {
   Unarchive as UnarchiveIcon,
   Verified as VerifiedIcon,
   Link as LinkIcon,
+  Visibility as ViewIcon,
 } from '@mui/icons-material';
 import { Evidence } from '@/types/evidence.types';
 import { evidenceService } from '@/services/evidenceService';
@@ -33,6 +34,7 @@ interface EvidenceCardProps {
   onArchive?: (id: number) => void;
   onUnarchive?: (id: number) => void;
   onViewDetails?: (evidence: Evidence) => void;
+  onView?: (evidence: Evidence) => void;
 }
 
 export const EvidenceCard: React.FC<EvidenceCardProps> = ({
@@ -42,6 +44,7 @@ export const EvidenceCard: React.FC<EvidenceCardProps> = ({
   onArchive,
   onUnarchive,
   onViewDetails,
+  onView,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -55,6 +58,11 @@ export const EvidenceCard: React.FC<EvidenceCardProps> = ({
 
   const handleDownload = () => {
     evidenceService.downloadEvidence(evidence.id);
+    handleMenuClose();
+  };
+
+  const handleView = () => {
+    if (onView) onView(evidence);
     handleMenuClose();
   };
 
@@ -240,6 +248,12 @@ export const EvidenceCard: React.FC<EvidenceCardProps> = ({
 
       {/* Context menu */}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+        {evidence.fileType === 'application/pdf' && onView && (
+          <MenuItem onClick={handleView}>
+            <ViewIcon fontSize="small" sx={{ mr: 1 }} />
+            View
+          </MenuItem>
+        )}
         <MenuItem onClick={handleDownload}>
           <DownloadIcon fontSize="small" sx={{ mr: 1 }} />
           Download

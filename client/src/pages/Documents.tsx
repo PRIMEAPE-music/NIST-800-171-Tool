@@ -33,9 +33,11 @@ import {
   Search as SearchIcon,
   Description as DocumentIcon,
   PictureAsPdf as PdfIcon,
+  Visibility as ViewIcon,
 } from '@mui/icons-material';
 import { documentService } from '@/services/documentService';
 import { Document, DocumentCategory } from '@/types/document.types';
+import { PDFViewerDialog } from '@/components/PDFViewerDialog';
 
 export const Documents: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -64,6 +66,8 @@ export const Documents: React.FC = () => {
   });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [menuDocument, setMenuDocument] = useState<Document | null>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewingDocument, setViewingDocument] = useState<Document | null>(null);
 
   const loadDocuments = async () => {
     try {
@@ -189,6 +193,23 @@ export const Documents: React.FC = () => {
     setSelectedDocument(document);
     setDeleteDialogOpen(true);
     handleMenuClose();
+  };
+
+  const handleViewDocument = (document: Document) => {
+    if (document.fileType === 'application/pdf') {
+      setViewingDocument(document);
+      setViewerOpen(true);
+    } else {
+      // For non-PDF documents, download them
+      handleDownload(document);
+    }
+    handleMenuClose();
+  };
+
+  const handleViewerDownload = () => {
+    if (viewingDocument) {
+      handleDownload(viewingDocument);
+    }
   };
 
   const getFileIcon = (fileType: string) => {
@@ -376,6 +397,15 @@ export const Documents: React.FC = () => {
                 </CardContent>
 
                 <CardActions>
+                  {document.fileType === 'application/pdf' && (
+                    <Button
+                      size="small"
+                      startIcon={<ViewIcon />}
+                      onClick={() => handleViewDocument(document)}
+                    >
+                      View
+                    </Button>
+                  )}
                   <Button
                     size="small"
                     startIcon={<DownloadIcon />}
@@ -396,6 +426,12 @@ export const Documents: React.FC = () => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
+        {menuDocument?.fileType === 'application/pdf' && (
+          <MenuItem onClick={() => menuDocument && handleViewDocument(menuDocument)}>
+            <ViewIcon fontSize="small" sx={{ mr: 1 }} />
+            View
+          </MenuItem>
+        )}
         <MenuItem onClick={() => menuDocument && openEditDialog(menuDocument)}>
           <EditIcon fontSize="small" sx={{ mr: 1 }} />
           Edit
@@ -608,6 +644,17 @@ export const Documents: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* PDF Viewer Dialog */}
+      {viewingDocument && (
+        <PDFViewerDialog
+          open={viewerOpen}
+          onClose={() => setViewerOpen(false)}
+          documentUrl={documentService.getDocumentViewUrl(viewingDocument.id)}
+          documentTitle={viewingDocument.title || viewingDocument.originalName}
+          onDownload={handleViewerDownload}
+        />
+      )}
     </Box>
   );
 };

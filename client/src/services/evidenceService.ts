@@ -293,6 +293,13 @@ class EvidenceService {
   }
 
   /**
+   * Get evidence view URL for preview
+   */
+  getEvidenceViewUrl(id: number): string {
+    return `${API_BASE_URL}/evidence/${id}/view`;
+  }
+
+  /**
    * Format file size for display
    */
   formatFileSize(bytes: number): string {

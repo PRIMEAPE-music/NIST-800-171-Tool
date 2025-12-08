@@ -23,7 +23,9 @@ import {
 import { EvidenceUploadDialog } from '../components/evidence/EvidenceUploadDialog';
 import { EvidenceCard } from '../components/evidence/EvidenceCard';
 import { useEvidence, useDeleteEvidence } from '../hooks/useEvidence';
-import { EvidenceFilters } from '../types/evidence.types';
+import { EvidenceFilters, Evidence } from '../types/evidence.types';
+import { PDFViewerDialog } from '../components/PDFViewerDialog';
+import { evidenceService } from '../services/evidenceService';
 
 export const EvidenceLibrary: React.FC = () => {
   const [filters] = useState<EvidenceFilters>({});
@@ -31,6 +33,8 @@ export const EvidenceLibrary: React.FC = () => {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [evidenceToDelete, setEvidenceToDelete] = useState<number | null>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewingEvidence, setViewingEvidence] = useState<Evidence | null>(null);
 
   const { data: evidence, isLoading, error, refetch } = useEvidence(filters);
   const deleteMutation = useDeleteEvidence();
@@ -53,6 +57,19 @@ export const EvidenceLibrary: React.FC = () => {
       } catch (err) {
         console.error('Delete failed:', err);
       }
+    }
+  };
+
+  const handleViewEvidence = (evidence: Evidence) => {
+    if (evidence.fileType === 'application/pdf') {
+      setViewingEvidence(evidence);
+      setViewerOpen(true);
+    }
+  };
+
+  const handleViewerDownload = () => {
+    if (viewingEvidence) {
+      evidenceService.downloadEvidence(viewingEvidence.id);
     }
   };
 
@@ -145,6 +162,7 @@ export const EvidenceLibrary: React.FC = () => {
                 <EvidenceCard
                   evidence={item}
                   onDelete={handleDeleteClick}
+                  onView={handleViewEvidence}
                 />
               </Grid>
             ))
@@ -184,6 +202,17 @@ export const EvidenceLibrary: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* PDF Viewer Dialog */}
+      {viewingEvidence && (
+        <PDFViewerDialog
+          open={viewerOpen}
+          onClose={() => setViewerOpen(false)}
+          documentUrl={evidenceService.getEvidenceViewUrl(viewingEvidence.id)}
+          documentTitle={viewingEvidence.originalName}
+          onDownload={handleViewerDownload}
+        />
+      )}
     </Container>
   );
 };

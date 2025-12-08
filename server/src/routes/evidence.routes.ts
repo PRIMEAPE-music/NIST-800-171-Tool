@@ -311,6 +311,56 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
+ * GET /api/evidence/:id/view
+ * View evidence file inline (for PDFs in viewer)
+ */
+router.get('/:id/view', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const evidence = await evidenceService.getEvidenceById(id);
+
+    if (!evidence) {
+      return res.status(404).json({
+        success: false,
+        error: 'Evidence not found',
+      });
+    }
+
+    // Check if file exists
+    try {
+      await fs.access(evidence.filePath);
+    } catch {
+      return res.status(404).json({
+        success: false,
+        error: 'Evidence file not found on disk',
+      });
+    }
+
+    // Set headers for inline viewing
+    res.setHeader('Content-Type', evidence.fileType);
+    res.setHeader('Content-Disposition', `inline; filename="${evidence.originalName}"`);
+    res.setHeader('Content-Length', evidence.fileSize);
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Range');
+    res.setHeader('Accept-Ranges', 'bytes');
+
+    // Stream the file
+    const fileStream = require('fs').createReadStream(evidence.filePath);
+    fileStream.pipe(res);
+    return;
+  } catch (error) {
+    console.error('Error viewing evidence:', error);
+    return res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
  * GET /api/evidence/:id/download
  * Download evidence file
  */
