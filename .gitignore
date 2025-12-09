@@ -60,3 +60,6 @@ server/prisma/migrations/*
 
 # OS
 Thumbs.db
+# Server database files
+server/database/*.db
+server/database/*.db-journal

@@ -29,6 +29,7 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
-    "react-dropzone": "^14.3.8"
+    "react-dropzone": "^14.3.8",
+    "sqlite3": "^5.1.7"
   }
 }

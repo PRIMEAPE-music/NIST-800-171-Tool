@@ -44,7 +44,21 @@
       "Bash(npx tsx:*)",
       "Bash(npm run build:*)",
       "Bash(timeout 30 npm run dev:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(node -e:*)",
+      "Bash(test:*)",
+      "Bash(node:*)",
+      "Bash(npm run dev:server:*)",
+      "Bash(timeout 3 sleep:*)",
+      "Bash(timeout 6 npm run dev:*)",
+      "Bash(xargs -I {} taskkill //PID {} //F)",
+      "Bash(timeout 8 npm run dev:*)",
+      "Bash(git checkout:*)",
+      "Bash(.gitignore)",
+      "Bash(git rm:*)",
+      "Bash(git restore:*)",
+      "Bash(npx prisma:*)",
+      "Bash(cmd //c \"mklink /D database ..\\database\")"
     ],
     "deny": [],
     "ask": []
