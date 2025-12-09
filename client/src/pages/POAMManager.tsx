@@ -167,9 +167,12 @@ export const POAMManager: React.FC = () => {
         message: 'Milestone added successfully',
         severity: 'success',
       });
-      // Refresh selected POAM
-      const updated = poams.find((p) => p.id === poamId);
-      if (updated) setSelectedPoam(updated);
+      // Fetch fresh POAM data
+      const freshPoam = await poamApi.getPoamById(poamId);
+      setSelectedPoam(freshPoam);
+      if (editingPoam?.id === poamId) {
+        setEditingPoam(freshPoam);
+      }
     } catch (error: any) {
       setSnackbar({
         open: true,
@@ -187,8 +190,12 @@ export const POAMManager: React.FC = () => {
         message: 'Milestone marked as complete',
         severity: 'success',
       });
-      const updated = poams.find((p) => p.id === poamId);
-      if (updated) setSelectedPoam(updated);
+      // Fetch fresh POAM data
+      const freshPoam = await poamApi.getPoamById(poamId);
+      setSelectedPoam(freshPoam);
+      if (editingPoam?.id === poamId) {
+        setEditingPoam(freshPoam);
+      }
     } catch (error: any) {
       setSnackbar({
         open: true,
@@ -206,8 +213,12 @@ export const POAMManager: React.FC = () => {
         message: 'Milestone deleted successfully',
         severity: 'success',
       });
-      const updated = poams.find((p) => p.id === poamId);
-      if (updated) setSelectedPoam(updated);
+      // Fetch fresh POAM data
+      const freshPoam = await poamApi.getPoamById(poamId);
+      setSelectedPoam(freshPoam);
+      if (editingPoam?.id === poamId) {
+        setEditingPoam(freshPoam);
+      }
     } catch (error: any) {
       setSnackbar({
         open: true,
@@ -230,8 +241,12 @@ export const POAMManager: React.FC = () => {
         message: 'Milestone unmarked successfully',
         severity: 'success',
       });
-      const updated = poams.find((p) => p.id === poamId);
-      if (updated) setSelectedPoam(updated);
+      // Fetch fresh POAM data
+      const freshPoam = await poamApi.getPoamById(poamId);
+      setSelectedPoam(freshPoam);
+      if (editingPoam?.id === poamId) {
+        setEditingPoam(freshPoam);
+      }
     } catch (error: any) {
       setSnackbar({
         open: true,
@@ -432,6 +447,10 @@ export const POAMManager: React.FC = () => {
         onSubmit={handleFormSubmit}
         editPoam={editingPoam}
         controls={controls}
+        onAddMilestone={handleAddMilestone}
+        onCompleteMilestone={handleCompleteMilestone}
+        onDeleteMilestone={handleDeleteMilestone}
+        onUncompleteMilestone={handleUncompleteMilestone}
       />
 
       {/* POAM Detail Dialog */}

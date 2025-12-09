@@ -12,8 +12,10 @@ import {
   MenuItem,
   Box,
   Autocomplete,
+  Divider,
 } from '@mui/material';
-import { CreatePoamDto, UpdatePoamDto, PoamWithControl } from '../../types/poam.types';
+import { CreatePoamDto, UpdatePoamDto, PoamWithControl, CreateMilestoneDto } from '../../types/poam.types';
+import { MilestoneTracker } from './MilestoneTracker';
 
 interface POAMFormProps {
   open: boolean;
@@ -21,6 +23,10 @@ interface POAMFormProps {
   onSubmit: (data: CreatePoamDto | UpdatePoamDto) => Promise<void>;
   editPoam?: PoamWithControl | null;
   controls: Array<{ id: number; controlId: string; title: string; family: string }>;
+  onAddMilestone?: (poamId: number, data: CreateMilestoneDto) => Promise<void>;
+  onCompleteMilestone?: (poamId: number, milestoneId: number) => Promise<void>;
+  onDeleteMilestone?: (poamId: number, milestoneId: number) => Promise<void>;
+  onUncompleteMilestone?: (poamId: number, milestoneId: number) => Promise<void>;
 }
 
 export const POAMForm: React.FC<POAMFormProps> = ({
@@ -29,6 +35,10 @@ export const POAMForm: React.FC<POAMFormProps> = ({
   onSubmit,
   editPoam,
   controls,
+  onAddMilestone,
+  onCompleteMilestone,
+  onDeleteMilestone,
+  onUncompleteMilestone,
 }) => {
   const [formData, setFormData] = useState<any>({
     controlId: '',
@@ -323,6 +333,25 @@ export const POAMForm: React.FC<POAMFormProps> = ({
             InputProps={{ startAdornment: '$' }}
             helperText="Estimated cost for remediation"
           />
+
+          {/* Milestones Section - Only for editing existing POAMs */}
+          {editPoam?.id && onAddMilestone && onCompleteMilestone && onDeleteMilestone && (
+            <>
+              <Divider sx={{ my: 3 }} />
+              <MilestoneTracker
+                milestones={editPoam.milestones || []}
+                poamId={editPoam.id}
+                onAddMilestone={(data) => onAddMilestone(editPoam.id, data)}
+                onCompleteMilestone={(milestoneId) => onCompleteMilestone(editPoam.id, milestoneId)}
+                onDeleteMilestone={(milestoneId) => onDeleteMilestone(editPoam.id, milestoneId)}
+                onUncompleteMilestone={
+                  onUncompleteMilestone
+                    ? (milestoneId) => onUncompleteMilestone(editPoam.id, milestoneId)
+                    : undefined
+                }
+              />
+            </>
+          )}
         </Box>
       </DialogContent>
       <DialogActions sx={{ p: 2 }}>
